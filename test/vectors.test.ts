@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import { indexContains } from '../src/addressIndex.ts';
 import { openVault, VaultError, encodeVault, decodeVault } from '../src/vault.ts';
 import { deriveAll, makeEnvelopes, makeAddressIndex } from '../scripts/make-vectors.ts';
+import { makeSigningVector } from '../scripts/signing-vector.ts';
 
 const load = (f: string) => JSON.parse(readFileSync(new URL(`./vectors/${f}`, import.meta.url), 'utf8'));
 const hex = (h: string) => Uint8Array.from(Buffer.from(h, 'hex'));
@@ -57,4 +58,8 @@ test('vault rejects malformed wallet records', () => {
   ];
   for (const w of bad) assert.throws(() => encodeVault([w]), VaultError);
   assert.throws(() => decodeVault(new TextEncoder().encode('{"v":2,"wallets":[]}')), VaultError);
+});
+
+test('signing vector reproduces the EIP-155 transaction', async () => {
+  assert.deepEqual(await makeSigningVector(), load('signing.json'));
 });

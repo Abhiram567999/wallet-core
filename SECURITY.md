@@ -27,7 +27,7 @@ services. Report those to the same address.
 - Secrets (phrases, private keys) never leave the phone in readable form and
   are never sent to any Foxsafe server.
 - Every stored secret is encrypted with AES-256-GCM (docs/SPEC.md).
-- Only audited libraries: Trust Wallet Core, CryptoKit, libsodium,
+- Only audited libraries: Trust Wallet Core, CryptoKit, the Argon2 reference code,
   BouncyCastle, @noble.
 - No secret, API key or signing key is ever committed to this repository.
   Every push is scanned with gitleaks.

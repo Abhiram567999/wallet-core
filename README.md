@@ -30,7 +30,9 @@ The full design, file formats and parameters are in
 | Path | Contents |
 |---|---|
 | `src/` | TypeScript API for the app, plus the reference implementation of the encryption format |
-| `ios/`, `android/` | Native module (Swift, Kotlin) built on Trust Wallet Core — in progress |
+| `ios/` | Native module for iPhone (Swift) on Trust Wallet Core, plus the vendored Argon2 reference code |
+| `android/` | Native module for Android (Kotlin) — in progress |
+| `src/selftest.ts` | On-device self-test: vectors plus a full create / sign / recover / backup cycle |
 | `test/vectors/` | Fixed inputs and outputs every platform must reproduce |
 | `docs/SPEC.md` | The specification |
 
@@ -40,7 +42,7 @@ Requires Node 24.
 
 ```sh
 npm ci --ignore-scripts
-npm test          # encryption, cross-library checks, 168-chain derivation vectors
+npm test          # encryption, cross-library checks, 168-chain and signing vectors
 npm run typecheck
 npm run vectors   # regenerate test vectors (only when the spec changes)
 ```

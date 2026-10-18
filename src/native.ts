@@ -1,7 +1,10 @@
 // JavaScript face of the native module (ios/, android/). Secrets stay in
 // native code: these calls return wallet descriptions and addresses, never a
-// phrase or key, except `revealSecret`, which asks for biometrics first and
-// exists so the owner can write their phrase down.
+// phrase or key, except `revealSecret`, which asks for Face ID / the device
+// passcode first and exists so the owner can write their phrase down.
+//
+// Errors are thrown with a code prefix: PASSCODE, INVALID, NOT_FOUND,
+// ENVELOPE_AUTH (wrong passcode/password or a changed file), CRYPTO, KEYCHAIN.
 
 import { requireNativeModule } from 'expo-modules-core';
 import type { AddressInfo, CoinType, WalletInfo } from './types.ts';
@@ -13,6 +16,10 @@ export interface CreateWalletOptions {
   coin?: CoinType;
   /** 12 (default) or 24 words. */
   wordCount?: 12 | 24;
+  /** Chains shown on the home screen (multi only). Addresses for every chain are derived anyway. */
+  coins?: CoinType[];
+  /** App passcode: checked, and used to lock the on-phone recovery copy. */
+  passcode: string;
 }
 
 export interface ImportMnemonicOptions {
@@ -21,6 +28,8 @@ export interface ImportMnemonicOptions {
   passphrase?: string;
   kind: 'multi' | 'single';
   coin?: CoinType;
+  coins?: CoinType[];
+  passcode: string;
 }
 
 export interface ImportPrivateKeyOptions {
@@ -28,56 +37,64 @@ export interface ImportPrivateKeyOptions {
   /** Hex, with or without 0x. */
   privateKey: string;
   coin: CoinType;
+  passcode: string;
 }
+
+export type BackupLock = { type: 'password'; password: string } | { type: 'prf'; prf: string /* base64 */ };
 
 export interface RecoveryScan {
   /** True when an on-phone recovery copy was found. */
   found: boolean;
-  /** Number of wallets inside, if known without the passcode. */
-  walletCount?: number;
+  walletCount: number;
 }
 
-interface NativeWalletCore {
+export interface NativeWalletCore {
+  /** False in the simulator (no Secure Enclave). */
+  isHardwareBacked(): boolean;
+  validateMnemonic(words: string): boolean;
+  validateAddress(address: string, coin: CoinType): boolean;
+
+  // App passcode (also locks the on-phone recovery copy)
+  hasPasscode(): Promise<boolean>;
+  setPasscode(passcode: string): Promise<void>;
+  verifyPasscode(passcode: string): Promise<boolean>;
+  changePasscode(oldPasscode: string, newPasscode: string): Promise<void>;
+
   // Wallets
   createWallet(options: CreateWalletOptions): Promise<WalletInfo>;
   importMnemonic(options: ImportMnemonicOptions): Promise<WalletInfo>;
   importPrivateKey(options: ImportPrivateKeyOptions): Promise<WalletInfo>;
-  validateMnemonic(words: string): boolean;
   listWallets(): Promise<WalletInfo[]>;
   renameWallet(id: string, name: string): Promise<WalletInfo>;
   setCoins(id: string, coins: CoinType[]): Promise<WalletInfo>;
-  deleteWallet(id: string): Promise<void>;
+  deleteWallet(id: string, passcode: string): Promise<void>;
   getAddresses(id: string, coins: CoinType[]): Promise<AddressInfo[]>;
-  validateAddress(address: string, coin: CoinType): boolean;
+  markBackedUp(id: string, method: 'manual' | 'cloud'): Promise<WalletInfo>;
 
-  // Signing. `input` is a Trust Wallet Core SigningInput protobuf, base64.
-  // The user is asked for biometrics or the passcode before the key is used.
+  // Signing. `input` is a Trust Wallet Core SigningInput protobuf (base64)
+  // built WITHOUT a private key; returns the SigningOutput protobuf (base64).
   signTransaction(id: string, coin: CoinType, input: string): Promise<string>;
   signMessage(id: string, coin: CoinType, message: string): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string): Promise<string>;
-
-  // Showing the phrase to its owner (screenshots blocked while shown)
   revealSecret(id: string): Promise<string>;
-  markBackedUp(id: string, method: 'manual' | 'cloud'): Promise<WalletInfo>;
-
-  // App passcode, which also locks the on-phone recovery copy
-  hasPasscode(): Promise<boolean>;
-  setPasscode(passcode: string): Promise<void>;
-  changePasscode(oldPasscode: string, newPasscode: string): Promise<void>;
-  verifyPasscode(passcode: string): Promise<boolean>;
 
   // On-phone recovery (survives uninstalling the app)
   scanRecovery(): Promise<RecoveryScan>;
   recoveryHasAddress(address: string): Promise<boolean>;
-  restoreFromRecovery(passcode: string): Promise<WalletInfo[]>;
+  /** `currentPasscode` is needed only if a different passcode was set after reinstalling. */
+  restoreFromRecovery(passcode: string, currentPasscode?: string | null): Promise<WalletInfo[]>;
   deleteRecovery(): Promise<void>;
 
-  // Backups to the user's own cloud. Returns / takes an envelope JSON string.
-  exportBackup(ids: string[], lock: { type: 'password'; password: string } | { type: 'prf'; prf: string }): Promise<string>;
-  importBackup(envelope: string, lock: { type: 'password'; password: string } | { type: 'prf'; prf: string }): Promise<WalletInfo[]>;
+  // Backups to the user's own cloud: an envelope JSON string
+  exportBackup(ids: string[], lock: BackupLock): Promise<string>;
+  importBackup(envelope: string, lock: BackupLock, passcode: string): Promise<WalletInfo[]>;
 
-  // Logout: removes wallets from the phone. keepRecovery leaves the recovery copy.
-  wipe(options: { keepRecovery: boolean }): Promise<void>;
+  /** Logout: removes wallets from the phone. keepRecovery leaves the passcode-locked recovery copy. */
+  wipe(keepRecovery: boolean): Promise<void>;
+
+  // Helpers that never read stored secrets (import preview, test vectors)
+  previewAddresses(words: string, passphrase: string | null, coins: CoinType[]): Promise<AddressInfo[]>;
+  envelopeDigest(json: string, secret: { passcode?: string; prfHex?: string; keyHex?: string }): Promise<string>;
 }
 
 export const WalletCore = requireNativeModule<NativeWalletCore>('FoxsafeWalletCore');

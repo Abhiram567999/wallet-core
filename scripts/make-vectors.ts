@@ -9,6 +9,7 @@ import { initWasm } from '@trustwallet/wallet-core';
 import { buildAddressIndex } from '../src/addressIndex.ts';
 import { sealVault } from '../src/vault.ts';
 import type { WalletRecord } from '../src/types.ts';
+import { makeSigningVector } from './signing-vector.ts';
 
 export const MNEMONICS = [
   'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
@@ -95,6 +96,7 @@ if (import.meta.main) {
   const derived = await deriveAll();
   writeFileSync('test/vectors/derivation.json', JSON.stringify(derived, null, 2) + '\n');
   writeFileSync('test/vectors/envelopes.json', JSON.stringify(await makeEnvelopes(), null, 2) + '\n');
+  writeFileSync('test/vectors/signing.json', JSON.stringify(await makeSigningVector(), null, 2) + '\n');
   writeFileSync('test/vectors/address-index.json', JSON.stringify(makeAddressIndex(derived), null, 2) + '\n');
   const m = derived.mnemonic[0]!;
   console.log(`${Object.keys(m.addresses).length} of ${derived.coinCount} coins derived; unsupported: ${m.unsupported.join(', ') || 'none'}`);
