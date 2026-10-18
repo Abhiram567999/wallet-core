@@ -1,0 +1,94 @@
+{
+  "note": "Fixed salt and IV are for these vectors only. Real envelopes always use fresh random values.",
+  "wallets": [
+    {
+      "id": "7d3f6b1e-1a2b-4c3d-8e9f-0a1b2c3d4e5f",
+      "name": "Wallet 1",
+      "kind": "multi",
+      "coins": [
+        0,
+        60,
+        195,
+        501
+      ],
+      "createdAt": "2026-10-19T00:00:00.000Z",
+      "secret": {
+        "type": "mnemonic",
+        "words": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+      }
+    },
+    {
+      "id": "0f9e8d7c-6b5a-4f3e-9d2c-1b0a9f8e7d6c",
+      "name": "TRON only",
+      "kind": "single",
+      "coins": [
+        195
+      ],
+      "createdAt": "2026-10-19T00:00:00.000Z",
+      "secret": {
+        "type": "privateKey",
+        "hex": "4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318",
+        "coin": 195
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "recovery-passcode",
+      "secret": {
+        "passcode": "482915"
+      },
+      "envelope": {
+        "format": "foxsafe-envelope",
+        "v": 1,
+        "kind": "recovery",
+        "kdf": {
+          "alg": "argon2id",
+          "version": 19,
+          "m": 19456,
+          "t": 2,
+          "p": 1,
+          "salt": "AAECAwQFBgcICQoLDA0ODw=="
+        },
+        "cipher": "aes-256-gcm",
+        "iv": "oKGio6Slpqeoqaqr",
+        "ct": "uEyi7gwtsXmypq8CaJ03/14BG3EEBUp/gYjmqQR3uHIXsH5CxGh+OOpmlMHiVHIrx6ix10u/7kgyOSO3TlSubpnabkZ4goYz1HHtvcg9zoIMadF0wgYeE9T29BV383mWo7kSMeNrNGQTDAYujJLlWMvPaFVgWuACKhC/JrwCQZlufzXcSSLU3UhcP2GxIyH/YPaxec7UfwxRTDae7T94MIiRhqRZMIU7BDPXAkdfVKbfbw0LjFCXW41fXMhXMH9WeKRzt36nTLqTse2NnJXwhpg+fCzr9kBmyc+3G6KmBbm++2xi+3kViJz3iiGqMTVPUeEtrWBmVyXA8Q/j8xdVjcwEvAya+2D3bjrvYL7uhJIeQVvFlfN8RKkjkMVdmszmed0/2onyFeJ97v7jWsckq76SXOiaYAaVJi2GyGw8CvQjJWERLe9rKH36R+C2QXfjiTb7XMpJlzGnWZF1M2H6rO8+Ojy3j6J2guAgP8YIGxrd6PLlYIUbl77JEGO3ScHD2xBpUh4qpEmkGphTnde1HgBCRnnGjFoutdcnVCn6dvV5LjwXqU/0v+C4x0nsI70fhSMBiOOT8olE98ki6VOOzKIl3X1HRFeCtIm9MDeOxpw2sj2KILvM4FznJLlSM8LG2sbQNVBI6kjdX8eGJL6jYc4AWFa/05U53kbrSSyEa+3jCrLBa6/Qiql53jM6gxjHXa6eBLgxEwIRUMAU7ghwLl7purM688Y/VjXX3Mog"
+      }
+    },
+    {
+      "name": "backup-passkey",
+      "secret": {
+        "prfHex": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f"
+      },
+      "envelope": {
+        "format": "foxsafe-envelope",
+        "v": 1,
+        "kind": "backup",
+        "kdf": {
+          "alg": "hkdf-sha256",
+          "salt": "AAECAwQFBgcICQoLDA0ODw=="
+        },
+        "cipher": "aes-256-gcm",
+        "iv": "oKGio6Slpqeoqaqr",
+        "ct": "r5e8DTX1JWMAxuYQeOK2SoYHlRLicvWiw1PkL71H9hlAC4OpZQ0ENps7mf0QFuWhOUV30BWV63td1FPj6tcN4UYbnAOM9zsYvhArLqOMnNT+eVo5ZgUfHTAlIiios/e82i1vHXXpQs5Hg40P5YcYSMjU83Ggdzq6CsEax+HcgTYBMD4Be3i0/hYF2M9u97j7S9YSVF5Gj0JjWedYvb9bwlUNUxeGLTsD5ZASj6gTwzsArgaXBMUscXIfM7BaMcyvr5pb+oVkPzKDRAwqJXv4pdY0CGnKd7F3/nQXCeggPJOyU41kHviQyrpmv+ctjRdnuXI/rOv/vlMWYbhILIVG23aaQdpoMOm+1EguZy40rd6B5S0iJNT6QMsvtmjnAFQVowiGXE0k+0Uv5KiPDvvYiKdQbRdeQ/yqhy4ojA5Zubix2jOnTXLQyLHV5Lx26TbucrcdVBIcGFqH/M+2N4uiweqXFbSdac31L2IEvQcO/U7uFKklYBB1cPvQiOFn0e/IpOTcz7eCZl8abs1+FDFma1D5BlYFIhJJ/RIQvxknyUAKVTXvKe0dpXtaZgyIlcg7kFGysXgPwRPZXn8ZmzRVLhpmrV1xhAdZkhiao756BE+YnNDgPv/dq5IKFQSywKmpetwRPWFiwibmzF559YwJeoyiJDugY6JFMSphi/T+IRGd1OccZQs8vafjCo7mAjHlkXy4lXUz0TJU+kbJxJKfUVQqI1hC815/ze4+epdn"
+      }
+    },
+    {
+      "name": "device-key",
+      "secret": {
+        "keyHex": "808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9f"
+      },
+      "envelope": {
+        "format": "foxsafe-envelope",
+        "v": 1,
+        "kind": "device",
+        "kdf": {
+          "alg": "none"
+        },
+        "cipher": "aes-256-gcm",
+        "iv": "oKGio6Slpqeoqaqr",
+        "ct": "ey0GEmaRvxIJDmra4XX5pJdxfZNG7KAX4pfiCGbgs+2rVR+L7Me85f3KsqO7ugAz3wwmcoKFn9aWY+j5Kdfrs8nPUWQ28C1J3CLCe1xNb5aO6tw0RtZbUlahHSyDD2suHpuiODpJOMthBINSA6v0UAjYkniLqVhvwxIkQuQQ56vgG4TI20Z/1SSi2CnLX3mOIrp0o1opfnkT0mI1G+SxPCRRBppibnoCBCRO8bY5qzk5CIfDM76Stc8k7a8jWNRtypTlqgvRmqJh9pkwSJQ+2Fbva/O0m4hC8bmaov3JqAsdwafOY7HJG2U9nPVUdg7sLEJ+K4i17yv7F2aU014bGFB6LlwMlHyIQveZfO0ydmE2r/2scHTXW0agoarVf4L7NLTfI4DcW/aDIMvlYgjhRqnQM3Zd"
+      }
+    }
+  ]
+}

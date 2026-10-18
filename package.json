@@ -1,0 +1,32 @@
+{
+  "name": "@foxsafe/wallet-core",
+  "version": "0.1.0",
+  "description": "Foxsafe's open-source key management: create and import wallets, encrypt and store keys on the device, sign transactions. Built on Trust Wallet Core.",
+  "license": "Apache-2.0",
+  "repository": "github:Abhiram567999/wallet-core",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "type": "module",
+  "files": ["src", "ios", "android", "expo-module.config.json", "docs", "LICENSE", "NOTICE"],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "vectors": "node scripts/make-vectors.ts"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react-native": "*"
+  },
+  "dependencies": {
+    "@noble/ciphers": "2.4.0",
+    "@noble/hashes": "2.4.0"
+  },
+  "devDependencies": {
+    "@trustwallet/wallet-core": "4.8.4",
+    "@types/node": "26.6.5",
+    "expo-modules-core": "58.0.22",
+    "libsodium-wrappers-sumo": "0.8.4",
+    "typescript": "7.0.2"
+  },
+  "engines": { "node": ">=24" }
+}

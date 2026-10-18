@@ -1,0 +1,18 @@
+{
+  "addresses": [
+    "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu",
+    "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+    "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+    "GjJyeC1r2RgkuoCWMyPYkCWSGSGLcz266EaAkLA27AhL"
+  ],
+  "index": {
+    "v": 1,
+    "salt": "AAECAwQFBgcICQoLDA0ODw==",
+    "hashes": [
+      "4bdf9c3861726e24cba5f2136227a54d2f1326009e49692d19e1ccf59bf4f0e4",
+      "ba401594b519c096f61f81748693ff52ade91e3a2c1b36c52cfe6bdb2f2a9cec",
+      "cbccbf3618bf6b5a3c076ecb6338fc94a2bdfc37803dd598c659adf31834375f",
+      "fe5e2a45b902f4c86ef9fba0e29ca2438b854b14263104b74db1e8a7f444bb84"
+    ]
+  }
+}
