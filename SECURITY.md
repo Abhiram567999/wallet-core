@@ -6,7 +6,7 @@ phone.
 
 ## Reporting a vulnerability
 
-Email **security@thefoxsafe.com** with the details and, if you can, a way to
+Email **support@thefoxsafe.com** with the details and, if you can, a way to
 reproduce it. Please do not open a public issue for security problems.
 
 We reply within 3 working days and keep you updated until it is fixed. We
