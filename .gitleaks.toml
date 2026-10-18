@@ -3,4 +3,4 @@ useDefault = true
 
 # Public test vectors: well-known test phrases and keys that must never hold funds.
 [allowlist]
-paths = ['''test/vectors/.*\.json''', '''scripts/make-vectors\.ts''']
+paths = ['''test/vectors/.*\.json''', '''scripts/make-vectors\.ts''', '''scripts/signing-vector\.ts''']
