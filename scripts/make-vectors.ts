@@ -10,6 +10,7 @@ import { buildAddressIndex } from '../src/addressIndex.ts';
 import { sealVault } from '../src/vault.ts';
 import type { WalletRecord } from '../src/types.ts';
 import { makeSigningVector } from './signing-vector.ts';
+import { accountPath } from '../src/hd.ts';
 
 export const MNEMONICS = [
   'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
@@ -69,6 +70,32 @@ const wallets: WalletRecord[] = [
 const salt = Uint8Array.from({ length: 16 }, (_, i) => i);
 const iv = Uint8Array.from({ length: 12 }, (_, i) => 0xa0 + i);
 
+/** Accounts 1 and 2 (shown to users as Account 2 and 3) on every chain. */
+export async function deriveAccounts() {
+  const core = await initWasm();
+  const { HDWallet, CoinType, CoinTypeExt, Blockchain } = core;
+  const chainName = new Map(
+    Object.entries(Blockchain as unknown as Record<string, { value: number }>)
+      .filter(([, b]) => typeof b?.value === 'number')
+      .map(([n, b]) => [b.value, n]),
+  );
+  const coins = Object.entries(CoinType as unknown as Record<string, { value: number }>)
+    .filter(([, c]) => typeof c?.value === 'number')
+    .sort(([, a], [, b]) => a.value - b.value);
+  const words = MNEMONICS[0]!;
+  const w = HDWallet.createWithMnemonic(words, '');
+  const accounts: Record<string, { coin: number; blockchain: string; paths: string[]; addresses: string[] }> = {};
+  for (const [name, coin] of coins) {
+    const blockchain = chainName.get(CoinTypeExt.blockchain(coin as never).value)!;
+    const base = CoinTypeExt.derivationPath(coin as never);
+    const paths = [0, 1, 2].map((i) => accountPath(base, blockchain, i));
+    const addresses = paths.map((p) => CoinTypeExt.deriveAddress(coin as never, w.getKey(coin as never, p)));
+    accounts[name] = { coin: coin.value, blockchain, paths, addresses };
+  }
+  w.delete();
+  return { words, accounts };
+}
+
 export async function makeEnvelopes() {
   const passcode = await sealVault('recovery', wallets, { type: 'passcode', passcode: '482915' }, { argon2: { m: 19456, t: 2 }, fixedSalt: salt, fixedIv: iv });
   const prf = Uint8Array.from({ length: 32 }, (_, i) => 0x40 + i);
@@ -96,6 +123,7 @@ if (import.meta.main) {
   const derived = await deriveAll();
   writeFileSync('test/vectors/derivation.json', JSON.stringify(derived, null, 2) + '\n');
   writeFileSync('test/vectors/envelopes.json', JSON.stringify(await makeEnvelopes(), null, 2) + '\n');
+  writeFileSync('test/vectors/hd.json', JSON.stringify(await deriveAccounts(), null, 2) + '\n');
   writeFileSync('test/vectors/signing.json', JSON.stringify(await makeSigningVector(), null, 2) + '\n');
   writeFileSync('test/vectors/address-index.json', JSON.stringify(makeAddressIndex(derived), null, 2) + '\n');
   const m = derived.mnemonic[0]!;

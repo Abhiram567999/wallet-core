@@ -42,6 +42,29 @@ Android) and turned into words by Trust Wallet Core (`HDWallet(entropy:)`).
 The library's own random generator is never used for keys: in 2023 Trust
 Wallet Core's WebAssembly build was found to produce weak randomness.
 
+### 2.1 HD accounts
+
+A phrase wallet holds one or more accounts derived from the same phrase
+("Account 1", "Account 2" …). The record lists them as
+`"accounts": [{ "index": 0, "name": "Account 1" }, …]` (missing means just
+account 0). Account 0 always uses each chain's default path. For account
+`i > 0` (`src/hd.ts`, mirrored in Swift and Kotlin):
+
+| Chains | Rule | Example (i = 2) |
+|---|---|---|
+| EVM networks (61), TRON, Cosmos family (32) | last index counts up | `m/44'/60'/0'/0/2` (as MetaMask, TokenPocket) |
+| Chains whose default account level isn't `0'` (Pactus) | last index counts up | `m/44'/21888'/3'/2'` |
+| All others (Bitcoin family, Solana, TON, Aptos, Sui …) | account level counts up | `m/84'/0'/2'/0/0`, `m/44'/501'/2'` |
+
+`test/vectors/hd.json` pins accounts 1 and 2 for all 168 chains; for the
+standard test phrase, Ethereum account 1 is
+`0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0`, the same as MetaMask.
+
+Account names are public data (stored with the wallet's info, renaming needs
+no secret); adding or removing an account re-seals the wallet and its
+recovery entry with the current names. Account 0 can't be removed.
+Private-key wallets have only account 0.
+
 ## 3. Where secrets live on the phone
 
 There are two independent copies. Either one can bring the wallets back.

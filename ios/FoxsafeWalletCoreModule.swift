@@ -76,6 +76,13 @@ private func u32(_ v: Int) throws -> UInt32 {
   return c
 }
 
+/// HD account index; missing means account 0.
+private func idx(_ v: Int?) throws -> UInt32 {
+  guard let v else { return 0 }
+  guard v >= 0, v <= 0x7fff_ffff else { throw WalletError.invalid("bad account index") }
+  return UInt32(v)
+}
+
 public class FoxsafeWalletCoreModule: Module {
   private let store = WalletStore.shared
 
@@ -124,8 +131,17 @@ public class FoxsafeWalletCoreModule: Module {
       try run { try self.store.setCoins(id: id, coins: try coins.map(u32)) }
     }
     AsyncFunction("deleteWallet") { (id: String, passcode: String) in try run { try self.store.delete(id: id, passcode: passcode) } }
-    AsyncFunction("getAddresses") { (id: String, coins: [Int]) in
-      try run { try self.store.addresses(id: id, coins: try coins.map(u32)) }
+    AsyncFunction("getAddresses") { (id: String, coins: [Int], account: Int?) in
+      try run { try self.store.addresses(id: id, coins: try coins.map(u32), account: try idx(account)) }
+    }
+    AsyncFunction("addAccount") { (id: String, name: String?, passcode: String) in
+      try run { try self.store.addAccount(id: id, name: name, passcode: passcode) }
+    }
+    AsyncFunction("removeAccount") { (id: String, index: Int, passcode: String) in
+      try run { try self.store.removeAccount(id: id, index: try idx(index), passcode: passcode) }
+    }
+    AsyncFunction("renameAccount") { (id: String, index: Int, name: String) in
+      try run { try self.store.renameAccount(id: id, index: try idx(index), name: name) }
     }
     AsyncFunction("markBackedUp") { (id: String, method: String) in
       try run {
@@ -140,14 +156,14 @@ public class FoxsafeWalletCoreModule: Module {
     }
 
     // Signing and showing the phrase (ask for Face ID / passcode on device)
-    AsyncFunction("signTransaction") { (id: String, coin: Int, input: String) in
-      try run { try self.store.signTransaction(id: id, coin: try u32(coin), inputBase64: input) }
+    AsyncFunction("signTransaction") { (id: String, coin: Int, input: String, account: Int?) in
+      try run { try self.store.signTransaction(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account)) }
     }
-    AsyncFunction("signMessage") { (id: String, coin: Int, message: String) in
-      try run { try self.store.signMessage(id: id, coin: try u32(coin), message: message, typed: false) }
+    AsyncFunction("signMessage") { (id: String, coin: Int, message: String, account: Int?) in
+      try run { try self.store.signMessage(id: id, coin: try u32(coin), message: message, typed: false, account: try idx(account)) }
     }
-    AsyncFunction("signTypedData") { (id: String, coin: Int, json: String) in
-      try run { try self.store.signMessage(id: id, coin: try u32(coin), message: json, typed: true) }
+    AsyncFunction("signTypedData") { (id: String, coin: Int, json: String, account: Int?) in
+      try run { try self.store.signMessage(id: id, coin: try u32(coin), message: json, typed: true, account: try idx(account)) }
     }
     AsyncFunction("revealSecret") { (id: String) in try run { try self.store.revealSecret(id: id) } }
 
@@ -171,8 +187,8 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("wipe") { (keepRecovery: Bool) in try run { try self.store.wipe(keepRecovery: keepRecovery) } }
 
     // Helpers that never read stored secrets
-    AsyncFunction("previewAddresses") { (words: String, passphrase: String?, coins: [Int]) in
-      try run { try WalletStore.previewAddresses(words: words, passphrase: passphrase, coins: try coins.map(u32)) }
+    AsyncFunction("previewAddresses") { (words: String, passphrase: String?, coins: [Int], account: Int?) in
+      try run { try WalletStore.previewAddresses(words: words, passphrase: passphrase, coins: try coins.map(u32), account: try idx(account)) }
     }
     AsyncFunction("envelopeDigest") { (json: String, secret: VectorSecret) in
       try run { try WalletStore.envelopeDigest(json, source: try secret.source()) }

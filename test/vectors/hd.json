@@ -1,0 +1,2357 @@
+{
+  "words": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+  "accounts": {
+    "bitcoin": {
+      "coin": 0,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/84'/0'/0'/0/0",
+        "m/84'/0'/1'/0/0",
+        "m/84'/0'/2'/0/0"
+      ],
+      "addresses": [
+        "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu",
+        "bc1qku0qh0mc00y8tk0n65x2tqw4trlspak0fnjmfz",
+        "bc1qkljqd65ax6mdpyzm9c2r8scg8euymkfqauukae"
+      ]
+    },
+    "litecoin": {
+      "coin": 2,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/84'/2'/0'/0/0",
+        "m/84'/2'/1'/0/0",
+        "m/84'/2'/2'/0/0"
+      ],
+      "addresses": [
+        "ltc1qjmxnz78nmc8nq77wuxh25n2es7rzm5c2rkk4wh",
+        "ltc1q6he42udnkdx2m5dctfyjs2z9xl76xcdshd5htt",
+        "ltc1qwhn05vvpfzv8f9g7zn5sym95xmtx5dc7w9nkg7"
+      ]
+    },
+    "dogecoin": {
+      "coin": 3,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/3'/0'/0/0",
+        "m/44'/3'/1'/0/0",
+        "m/44'/3'/2'/0/0"
+      ],
+      "addresses": [
+        "DBus3bamQjgJULBJtYXpEzDWQRwF5iwxgC",
+        "DEiUcV7xvCRdpQmsW3i8T9EVsb7zeiUQRt",
+        "D9NBWKR2NrcD71vm36AvG2Vx5DwCDXgLiz"
+      ]
+    },
+    "dash": {
+      "coin": 5,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/5'/0'/0/0",
+        "m/44'/5'/1'/0/0",
+        "m/44'/5'/2'/0/0"
+      ],
+      "addresses": [
+        "XoJA8qE3N2Y3jMLEtZ3vcN42qseZ8LvFf5",
+        "XfoXRyRePBFFhg7fKbsGRQBixHipJSGqNf",
+        "XjyXzp9HCAnxBw8c9ksN2bWSAjRMYK53G4"
+      ]
+    },
+    "viacoin": {
+      "coin": 14,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/84'/14'/0'/0/0",
+        "m/84'/14'/1'/0/0",
+        "m/84'/14'/2'/0/0"
+      ],
+      "addresses": [
+        "via1qzu0vjyksqalc6u0m2738yk2k7dudcmr02cpdk5",
+        "via1q9eu6tvnzpy5hjwxu3k8ynmdceukns6g9rc0n89",
+        "via1qw3s272flmngy4fdx3k7ma8gfj3jj3y0q0m45gu"
+      ]
+    },
+    "groestlcoin": {
+      "coin": 17,
+      "blockchain": "groestlcoin",
+      "paths": [
+        "m/84'/17'/0'/0/0",
+        "m/84'/17'/1'/0/0",
+        "m/84'/17'/2'/0/0"
+      ],
+      "addresses": [
+        "grs1qrm2uggqj846nljryvmuga56vtwfey0dtnc4z55",
+        "grs1qychteyac02e3pgelynejkgrayjlwhs0w88j5j5",
+        "grs1qcq7px3y7asgkah0rp3vexv364l66upwtvhlfx7"
+      ]
+    },
+    "digiByte": {
+      "coin": 20,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/84'/20'/0'/0/0",
+        "m/84'/20'/1'/0/0",
+        "m/84'/20'/2'/0/0"
+      ],
+      "addresses": [
+        "dgb1q9gmf0pv8jdymcly6lz6fl7lf6mhslsd72e2jq8",
+        "dgb1q7zmmuf2np3mnxf2rteuywaxz82w8pmwjgxgcnk",
+        "dgb1q69dcajr8n47favj23zd939kjve2s79dt7ctmc2"
+      ]
+    },
+    "monacoin": {
+      "coin": 22,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/22'/0'/0/0",
+        "m/44'/22'/1'/0/0",
+        "m/44'/22'/2'/0/0"
+      ],
+      "addresses": [
+        "MM2pSkUSMnVvbH2D2JMCZNjGMitzB9pYga",
+        "MMfn7ZF7VhA4LWweT1SpyJVVnFaxiQZ5iL",
+        "MRFrBRZB1pczJXXse7UPR5j4Hy4VecUcGZ"
+      ]
+    },
+    "decred": {
+      "coin": 42,
+      "blockchain": "decred",
+      "paths": [
+        "m/44'/42'/0'/0/0",
+        "m/44'/42'/1'/0/0",
+        "m/44'/42'/2'/0/0"
+      ],
+      "addresses": [
+        "Dso5BhFYjnymYwAzsCDEUENmmh7Y9TA4FM7",
+        "DsV6x8ShVR3yCGUGWT8kqFnv4k2nx1aMsUi",
+        "DsXLXbF1eMGP5hFk8rxQSpL64CJTCnHcNfd"
+      ]
+    },
+    "syscoin": {
+      "coin": 57,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/84'/57'/0'/0/0",
+        "m/84'/57'/1'/0/0",
+        "m/84'/57'/2'/0/0"
+      ],
+      "addresses": [
+        "sys1q2fs58xaj4tp7qrr3slpdsm65j3nw030d246lmx",
+        "sys1qqha258zqeww2s3shduwcayphjugltgqp439k68",
+        "sys1qw5zg28ukrszeml7zj78665qy4chr6s476q2syh"
+      ]
+    },
+    "ethereum": {
+      "coin": 60,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "ethereumClassic": {
+      "coin": 61,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/61'/0'/0/0",
+        "m/44'/61'/0'/0/1",
+        "m/44'/61'/0'/0/2"
+      ],
+      "addresses": [
+        "0xFA22515E43658ce56A7682B801e9B5456f511420",
+        "0xAee144cB8098B17BCD98D82802fDf32E8ca518cF",
+        "0x6A9F90A1241E1960AD1A0cCb2400C9d235eA0846"
+      ]
+    },
+    "icon": {
+      "coin": 74,
+      "blockchain": "icon",
+      "paths": [
+        "m/44'/74'/0'/0/0",
+        "m/44'/74'/1'/0/0",
+        "m/44'/74'/2'/0/0"
+      ],
+      "addresses": [
+        "hx8e825d342f8dd76af9dba2f53464c9781833d39f",
+        "hx391b1e285f94df4deba98fe3679bd3ca65d410cf",
+        "hx6c5823f7b96bf8d78aa4cd08ea869cdb4f5ab218"
+      ]
+    },
+    "verge": {
+      "coin": 77,
+      "blockchain": "verge",
+      "paths": [
+        "m/84'/77'/0'/0/0",
+        "m/84'/77'/1'/0/0",
+        "m/84'/77'/2'/0/0"
+      ],
+      "addresses": [
+        "DQuqKVhfLLFWTMi9ovWq2NLb7HRro1xn2j",
+        "DPD4wbN4AcCEFaJDCxtMbV8TdXQsyFHEen",
+        "DSbC7SctibLnRhyyn2wehwUsjYiPaH1UXe"
+      ]
+    },
+    "cosmos": {
+      "coin": 118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "cosmos19rl4cm2hmr8afy4kldpxz3fka4jguq0auqdal4",
+        "cosmos1jrkmdcwgq94uaamx6zax2luewlhf7u4kucx3kz",
+        "cosmos1kng7tv83qesgvv2ze7hxlw4urfrjk8vqqnpqdt"
+      ]
+    },
+    "pivx": {
+      "coin": 119,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/119'/0'/0/0",
+        "m/44'/119'/1'/0/0",
+        "m/44'/119'/2'/0/0"
+      ],
+      "addresses": [
+        "DPo9TNvPwy2ZfmVM3CRCxbBvh6NojguWXJ",
+        "D7JjaUVjH66XgK7ivqBMWsWiAMqKEREUp4",
+        "DJ88Rj3maFjTdsbQ5upXnLSaPq7idzd9jS"
+      ]
+    },
+    "zen": {
+      "coin": 121,
+      "blockchain": "zen",
+      "paths": [
+        "m/44'/121'/0'/0/0",
+        "m/44'/121'/1'/0/0",
+        "m/44'/121'/2'/0/0"
+      ],
+      "addresses": [
+        "zngWJRgpBa45KUeRuCmdMsqti4ohhe9sVwC",
+        "znjaUuY43Y2HZFvqAhCL6Lw8khhjT7x6sNT",
+        "znjWem3uHmnK5NQdQk6VFCqe53ZsVWYkopc"
+      ]
+    },
+    "zcash": {
+      "coin": 133,
+      "blockchain": "zcash",
+      "paths": [
+        "m/44'/133'/0'/0/0",
+        "m/44'/133'/1'/0/0",
+        "m/44'/133'/2'/0/0"
+      ],
+      "addresses": [
+        "t1XVXWCvpMgBvUaed4XDqWtgQgJSu1Ghz7F",
+        "t1Hxm2pmTLYuKhyLeZoSPjsHPFLWePSTDka",
+        "t1f3QaAHGhBnynPf4Lgd2MJpZhnN8jHN1E2"
+      ]
+    },
+    "firo": {
+      "coin": 136,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/136'/0'/0/0",
+        "m/44'/136'/1'/0/0",
+        "m/44'/136'/2'/0/0"
+      ],
+      "addresses": [
+        "a1bW3sVVUsLqgKuTMXtSaAHGvpxKwugxPH",
+        "a1Jw6iULodhe1bzeGjEFqTesrF7ip7PXqN",
+        "a8K7Q6LM9bHNvo9qyMJykw4xFCTV7XybeF"
+      ]
+    },
+    "rootstock": {
+      "coin": 137,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/137'/0'/0/0",
+        "m/44'/137'/0'/0/1",
+        "m/44'/137'/0'/0/2"
+      ],
+      "addresses": [
+        "0xa2CC70eE855b5f577eeCA688539D8a022550de45",
+        "0x4A1c2637DE1B50Ae62Ac01eb8D7a51F6d9ed7408",
+        "0x8360360f3F86d8cE0CCfF00570624E4B2de73400"
+      ]
+    },
+    "komodo": {
+      "coin": 141,
+      "blockchain": "komodo",
+      "paths": [
+        "m/44'/141'/0'/0/0",
+        "m/44'/141'/1'/0/0",
+        "m/44'/141'/2'/0/0"
+      ],
+      "addresses": [
+        "RW8gfgpCUdgZbkPAs1uJQF2S9681JVkGRi",
+        "RQDCW7TKPoY7D4pNXuPYBsbSEWr5eHJQ6q",
+        "RJTBqMuk5J9PZ7m62jqeM3ZqJE9oj1wNyf"
+      ]
+    },
+    "xrp": {
+      "coin": 144,
+      "blockchain": "ripple",
+      "paths": [
+        "m/44'/144'/0'/0/0",
+        "m/44'/144'/1'/0/0",
+        "m/44'/144'/2'/0/0"
+      ],
+      "addresses": [
+        "rHsMGQEkVNJmpGWs8XUBoTBiAAbwxZN5v3",
+        "rNAB7uPziNwZAkdzyeo6xRA9pKTsJxZ6td",
+        "r3v67qjCkMUnhsVSdJo3gRvCq1rditeeA3"
+      ]
+    },
+    "bitcoinCash": {
+      "coin": 145,
+      "blockchain": "bitcoinCash",
+      "paths": [
+        "m/44'/145'/0'/0/0",
+        "m/44'/145'/1'/0/0",
+        "m/44'/145'/2'/0/0"
+      ],
+      "addresses": [
+        "bitcoincash:qqyx49mu0kkn9ftfj6hje6g2wfer34yfnq5tahq3q6",
+        "bitcoincash:qqsmeq8pee5px5z3f3uj57cu8dch9d5x55sn68q6wd",
+        "bitcoincash:qp96rfak0qf8hpx80c52kyg36827fmx9zge3mf7mjq"
+      ]
+    },
+    "nebl": {
+      "coin": 146,
+      "blockchain": "verge",
+      "paths": [
+        "m/44'/146'/0'/0/0",
+        "m/44'/146'/1'/0/0",
+        "m/44'/146'/2'/0/0"
+      ],
+      "addresses": [
+        "NcbvAoFK8WWkAHbs7ZBMeWT7mRFmEEFJss",
+        "NY5TrGeynrnHGjtpEJbDqRsku1qhF8iYAm",
+        "NVn2FK9d7pyVfsVynQ7sgSi7zmarPm2uyT"
+      ]
+    },
+    "stellar": {
+      "coin": 148,
+      "blockchain": "stellar",
+      "paths": [
+        "m/44'/148'/0'",
+        "m/44'/148'/1'",
+        "m/44'/148'/2'"
+      ],
+      "addresses": [
+        "GB3JDWCQJCWMJ3IILWIGDTQJJC5567PGVEVXSCVPEQOTDN64VJBDQBYX",
+        "GDVSYYTUAJ3ACHTPQNSTQBDQ4LDHQCMNY4FCEQH5TJUMSSLWQSTG42MV",
+        "GBFPWBTN4AXHPWPTQVQBP4KRZ2YVYYOGRMV2PEYL2OBPPJDP7LECEVHR"
+      ]
+    },
+    "bitcoinGold": {
+      "coin": 156,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/84'/156'/0'/0/0",
+        "m/84'/156'/1'/0/0",
+        "m/84'/156'/2'/0/0"
+      ],
+      "addresses": [
+        "btg1qkwnu2phwvard2spr2n0a9d84x590ahywl3yacu",
+        "btg1qm9qa2ha9pg6arnv3xcef800lyv27en205sxhys",
+        "btg1qglfl4fq9kwr3c8n4vcpezvgx9a3lw7lqf9wjhv"
+      ]
+    },
+    "nano": {
+      "coin": 165,
+      "blockchain": "nano",
+      "paths": [
+        "m/44'/165'/0'",
+        "m/44'/165'/1'",
+        "m/44'/165'/2'"
+      ],
+      "addresses": [
+        "nano_1p6hocygi1pzjidi3hho3wn85qiw3ykapg7khu9b45dwf7momgqoytn1c1jz",
+        "nano_3azjx8batwxj4edfsc3jzkh7sf1dga8e1cdwtw7w3dh6jkm5dbm1ickbuaic",
+        "nano_3x7krewi4pmbbumgu5pqkwszwounw7uy1w3fpdeuufccwyyyykpa85furt9u"
+      ]
+    },
+    "mantaPacific": {
+      "coin": 169,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "ravencoin": {
+      "coin": 175,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/175'/0'/0/0",
+        "m/44'/175'/1'/0/0",
+        "m/44'/175'/2'/0/0"
+      ],
+      "addresses": [
+        "RDjNvZL1TJQ7R8L23jDutdEioQG4eTC38V",
+        "RGqBLjnyqS29NL9YHt37uEQ15oUCt9gFsP",
+        "RFaVCmiDtTjy5cGcb2wRmXYA24ExDuXHf7"
+      ]
+    },
+    "poanetwork": {
+      "coin": 178,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/178'/0'/0/0",
+        "m/44'/178'/0'/0/1",
+        "m/44'/178'/0'/0/2"
+      ],
+      "addresses": [
+        "0xE7018f0307779D077457E6b9b93ee1ae711C7897",
+        "0x2e62A8dAA6E705B01d5B7d690b2d5124f5Edc600",
+        "0x7eeb40aFFA6C3B6395f25423e1a9419afbAa8266"
+      ]
+    },
+    "eos": {
+      "coin": 194,
+      "blockchain": "eos",
+      "paths": [
+        "m/44'/194'/0'/0/0",
+        "m/44'/194'/1'/0/0",
+        "m/44'/194'/2'/0/0"
+      ],
+      "addresses": [
+        "EOS6zpSNY1YoLxNt2VsvJjoDfBueU6xC1M1ERJw1UoekL1NHn8KNA",
+        "EOS6iJSkqn5emYaCZY8PA3USWihqN1wPZtmfam5dk9RvFDUUikJ9x",
+        "EOS5p66h6GMcGo8xWZt7qwUbdD9KAE9VgxLkUj4Uv3VyYJBjuVFSp"
+      ]
+    },
+    "tron": {
+      "coin": 195,
+      "blockchain": "tron",
+      "paths": [
+        "m/44'/195'/0'/0/0",
+        "m/44'/195'/0'/0/1",
+        "m/44'/195'/0'/0/2"
+      ],
+      "addresses": [
+        "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+        "TSeJkUh4Qv67VNFwY8LaAxERygNdy6NQZK",
+        "TYJPRrdB5APNeRs4R7fYZSwW3TcrTKw2gx"
+      ]
+    },
+    "opBNB": {
+      "coin": 204,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "internetComputer": {
+      "coin": 223,
+      "blockchain": "internetComputer",
+      "paths": [
+        "m/44'/223'/0'/0/0",
+        "m/44'/223'/1'/0/0",
+        "m/44'/223'/2'/0/0"
+      ],
+      "addresses": [
+        "f24b889e8efba3d8008512e5f928af25be0fea33c9a44e161649f12912907cbd",
+        "b8fb6e6f27f3ed34644fcbf91169d95e5172f085932e0405c6126a2d0ca0fb68",
+        "521be23ac4b268fd9b16c3b343f5eafc6d5597ea68a266f62a6fe1cb0d6dab57"
+      ]
+    },
+    "fio": {
+      "coin": 235,
+      "blockchain": "fio",
+      "paths": [
+        "m/44'/235'/0'/0/0",
+        "m/44'/235'/1'/0/0",
+        "m/44'/235'/2'/0/0"
+      ],
+      "addresses": [
+        "FIO87wawwaniQzqWPmNaCqGkiUNmCAhq9PiGUVNKKjRMTYgoBfKYa",
+        "FIO5riXujRxa6WfHqEcgk118ND5TFb6ZsC6WQf1Yqj4ofhpXoLpFk",
+        "FIO5BJ42ytrCEPSjdskLJ6J9iaTTtifi5twkY3Uz3siE3CN9LCqbU"
+      ]
+    },
+    "nimiq": {
+      "coin": 242,
+      "blockchain": "nimiq",
+      "paths": [
+        "m/44'/242'/0'/0'",
+        "m/44'/242'/1'/0'",
+        "m/44'/242'/2'/0'"
+      ],
+      "addresses": [
+        "NQ45 1KUT 73F7 ADV4 UCT8 TX64 2DE4 CHBP SJBF",
+        "NQ32 30MU 4RP6 M7BV NR37 QC5H F7UP 9KRY CRNY",
+        "NQ86 8N70 LL52 UF1R QUFC G7QM H7H2 P8Q0 CH39"
+      ]
+    },
+    "algorand": {
+      "coin": 283,
+      "blockchain": "algorand",
+      "paths": [
+        "m/44'/283'/0'/0'/0'",
+        "m/44'/283'/1'/0'/0'",
+        "m/44'/283'/2'/0'/0'"
+      ],
+      "addresses": [
+        "EP2D7TV7IAFANZHK3B6QLKB53N5UTD7RARVXZTWCPCRQQBKYVGM2XIMT2Q",
+        "QZZDQJOKCARLYFRNDGKTGGPCP7ZCMZP7M76CIMTPHP5SUQVGFI4WEMNWZM",
+        "FZE5QGPAFJR5LG3D4FNMT2PGWNHSRRW3B7JMVTG56ISEBKTBE4R45CZFJE"
+      ]
+    },
+    "iost": {
+      "coin": 291,
+      "blockchain": "iost",
+      "paths": [
+        "m/44'/899'/0'/0/0",
+        "m/44'/899'/1'/0/0",
+        "m/44'/899'/2'/0/0"
+      ],
+      "addresses": [
+        "7MjMKVB7kQjvnyLQFL6mPK72ensy5yxg7p41v7sTkzz3",
+        "D6m58Rw6rPDcrqNMfWyC3spsyCGq5EV9i3HNjGu3gWQR",
+        "FfDsvTRHhzqyUT5H6MRMdddkhNLC3XqeHSj3trz8wpmC"
+      ]
+    },
+    "ioTeX": {
+      "coin": 304,
+      "blockchain": "ioTeX",
+      "paths": [
+        "m/44'/304'/0'/0/0",
+        "m/44'/304'/1'/0/0",
+        "m/44'/304'/2'/0/0"
+      ],
+      "addresses": [
+        "io1r5ua6qf5ygpmt6deckczqk56c2ug0nsqehptsx",
+        "io1lmcpqw3ghg65ct8lpdg6ta0n5ht8xckl6ezhdf",
+        "io1256x7atvyysc3usut0kupffk9g95wph8dwqm5n"
+      ]
+    },
+    "nervos": {
+      "coin": 309,
+      "blockchain": "nervos",
+      "paths": [
+        "m/44'/309'/0'/0/0",
+        "m/44'/309'/1'/0/0",
+        "m/44'/309'/2'/0/0"
+      ],
+      "addresses": [
+        "ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqgedakp7g0hm0cdlq298xuyqpvl4ja0cfqhp5jft",
+        "ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqdzha4gchtkcfl22p35jyaqwe6shcvk58spccycs",
+        "ckb1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqdac8k4hn5v2sz7qgdpmnrt7ueemdfxgvc4tg0r4"
+      ]
+    },
+    "zilliqa": {
+      "coin": 313,
+      "blockchain": "zilliqa",
+      "paths": [
+        "m/44'/313'/0'/0/0",
+        "m/44'/313'/1'/0/0",
+        "m/44'/313'/2'/0/0"
+      ],
+      "addresses": [
+        "zil1y8cv5w9u3l4nz4vxga3a8uuafyu0xn387npzy7",
+        "zil1lw6jz7w2rsaz4zq28exflu7w3tmpl54trg7m09",
+        "zil1uzxrng0g4paypu9ud9u8jdd9g787j9y3gnf6jx"
+      ]
+    },
+    "terra": {
+      "coin": 330,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/330'/0'/0/0",
+        "m/44'/330'/0'/0/1",
+        "m/44'/330'/0'/0/2"
+      ],
+      "addresses": [
+        "terra1amdttz2937a3dytmxmkany53pp6ma6dy4vsllv",
+        "terra1lpywxkky22stctm9yzn5quwkr9fnxu3atqk2ax",
+        "terra1was3u69zgthug7duuen2mulfrvvjrq3rasw7dr"
+      ]
+    },
+    "polkadot": {
+      "coin": 354,
+      "blockchain": "polkadot",
+      "paths": [
+        "m/44'/354'/0'/0'/0'",
+        "m/44'/354'/1'/0'/0'",
+        "m/44'/354'/2'/0'/0'"
+      ],
+      "addresses": [
+        "14E9StbjYhJiAfsNMEcq5tETq79Q6EqaGyebdziY214hNWDH",
+        "13AMSon6B2uoUnUSUjRV3ATSFDv6g4ckJ3he2jhRJJ69xfpV",
+        "15hiYYV5kUg7qpeaSQzwRUUqSnvvfb7jRCTbhcuRGi72TT52"
+      ]
+    },
+    "thetaFuel": {
+      "coin": 361,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/500'/0'/0/0",
+        "m/44'/500'/0'/0/1",
+        "m/44'/500'/0'/0/2"
+      ],
+      "addresses": [
+        "0xB16f8D941d7D281aDCEf3e950aBF2147D7AC2D33",
+        "0xf2142cb79CEEC9aD39C15151CdEa90f0b853EA1C",
+        "0x17C6899cbD8628a614E69CeF96E6CB2Ea47A5Ace"
+      ]
+    },
+    "cryptoOrg": {
+      "coin": 394,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/394'/0'/0/0",
+        "m/44'/394'/0'/0/1",
+        "m/44'/394'/0'/0/2"
+      ],
+      "addresses": [
+        "cro1r3ywhs4ng96dnm9zkc5y3etl7tps5cvvz26lr4",
+        "cro105alq8tfp2stp723kcrqs4vcrh2smf786lme5z",
+        "cro1kvt8r5gd04dd8fn9swhz7gnrqyxqxqszf5hgz5"
+      ]
+    },
+    "everscale": {
+      "coin": 396,
+      "blockchain": "everscale",
+      "paths": [
+        "m/44'/396'/0'/0/0",
+        "m/44'/396'/1'/0/0",
+        "m/44'/396'/2'/0/0"
+      ],
+      "addresses": [
+        "0:031d12d94e785e05d02f51fb3a69cef5349e8f80083191c4e07185a4c00cd3fa",
+        "0:12d1e35c251c815c91167995a72343c25829ba08c15226872caf9949f9ccc258",
+        "0:228558ae034949050087e65f8cb8c1abb378467da2229d8ee47c7d4631604c22"
+      ]
+    },
+    "near": {
+      "coin": 397,
+      "blockchain": "near",
+      "paths": [
+        "m/44'/397'/0'",
+        "m/44'/397'/1'",
+        "m/44'/397'/2'"
+      ],
+      "addresses": [
+        "5510e2b44cae6eb807e3e0e45d579dda058c274abcba15e5cb84636f5d1ee412",
+        "3b93b03253b9715213ec314eb50ecc99d25602ccb5b059f91f51d24710d54326",
+        "06ff7a6fae3da4d225a93da1fac0eb9adc64a33c417dd14a99a373b4bab4047a"
+      ]
+    },
+    "aion": {
+      "coin": 425,
+      "blockchain": "aion",
+      "paths": [
+        "m/44'/425'/0'/0'/0'",
+        "m/44'/425'/1'/0'/0'",
+        "m/44'/425'/2'/0'/0'"
+      ],
+      "addresses": [
+        "0xa098ddc886db773b21f55470f4b2b2da93272da9224a445cd62c495fa6b14420",
+        "0xa047f044a9632faf41dbf7ce7afc8fba01eb5de2a2b0ba29707a2acb03753309",
+        "0xa0192f4d623295da4847648fa8b43a3f10dab6038bcb44a57c81814afffd71e8"
+      ]
+    },
+    "kusama": {
+      "coin": 434,
+      "blockchain": "kusama",
+      "paths": [
+        "m/44'/434'/0'/0'/0'",
+        "m/44'/434'/1'/0'/0'",
+        "m/44'/434'/2'/0'/0'"
+      ],
+      "addresses": [
+        "D8B1pUPu14f4NssXcTgwecFjbRX32aes3v3vqdbUcXzQG9R",
+        "D75jDui6kHDmjAVoUVdcqaKGiemjYdz5YmfprV5W6G99BcM",
+        "D1zfoxeRccVMMyu552PoPDwgsbesSqWPVir4GK7tTDXiuGT"
+      ]
+    },
+    "aeternity": {
+      "coin": 457,
+      "blockchain": "aeternity",
+      "paths": [
+        "m/44'/457'/0'/0'/0'",
+        "m/44'/457'/1'/0'/0'",
+        "m/44'/457'/2'/0'/0'"
+      ],
+      "addresses": [
+        "ak_21SBPc3yHP7bpQDvD1KMKzZZEgLtSXpDsK97LTjVwjiskra6Ka",
+        "ak_iV7sCUsuKZytEEBEsX9N2K37m26X132LegogrgJEWzzPVjmmS",
+        "ak_2D8fAoXC3dweJkpstEp89uXQby7i4RU6HeXyPNmyCjXLGH6pPz"
+      ]
+    },
+    "kava": {
+      "coin": 459,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/459'/0'/0/0",
+        "m/44'/459'/0'/0/1",
+        "m/44'/459'/0'/0/2"
+      ],
+      "addresses": [
+        "kava1fzgm3840v4xwme059mfnx9rc5qgzl0enq7qgac",
+        "kava1uunhkf3jfpk6rtg4s72ttvhxmje4rdyygr4g8r",
+        "kava1ntjgd6dsqns85h74rk9xs4ep26lmnucvtyypjq"
+      ]
+    },
+    "filecoin": {
+      "coin": 461,
+      "blockchain": "filecoin",
+      "paths": [
+        "m/44'/461'/0'/0/0",
+        "m/44'/461'/1'/0/0",
+        "m/44'/461'/2'/0/0"
+      ],
+      "addresses": [
+        "f1qode47ievxlxzk6z2viuovedabmn3tq6t57uqhq",
+        "f12oiips7bvuo3owfeietpqwhb6jf2zlcyoitbvra",
+        "f1tjkofc2hhvnhbac6dkemg7m7wp7drjygx2evu5i"
+      ]
+    },
+    "oasis": {
+      "coin": 474,
+      "blockchain": "oasisNetwork",
+      "paths": [
+        "m/44'/474'/0'",
+        "m/44'/474'/1'",
+        "m/44'/474'/2'"
+      ],
+      "addresses": [
+        "oasis1qqx0wgxjwlw3jwatuwqj6582hdm9rjs4pcnvzz66",
+        "oasis1qr4xfjmmfx7zuyvskjw9jl3nxcp6a48e8v5e27ty",
+        "oasis1qqtdpw7jez243dnvmzfrhvgkm8zpndssvuwm346d"
+      ]
+    },
+    "bluzelle": {
+      "coin": 483,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/483'/0'/0/0",
+        "m/44'/483'/0'/0/1",
+        "m/44'/483'/0'/0/2"
+      ],
+      "addresses": [
+        "bluzelle1yfuz55rm5fqfqps43nwvtvc6u7a8cr5janphqh",
+        "bluzelle1v7x9wyn8f346pg8sg0aamsxdedq9637wvytt7p",
+        "bluzelle1m6eqrx3rrtdhvq0xpvapwjh8pg3p0g9wngk79l"
+      ]
+    },
+    "bandChain": {
+      "coin": 494,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/494'/0'/0/0",
+        "m/44'/494'/0'/0/1",
+        "m/44'/494'/0'/0/2"
+      ],
+      "addresses": [
+        "band1vh8tr8ddf7g0gfep23t46yllmlvtqfjknjdd38",
+        "band1c2pramju9wtdz2jqulfalku58pq2ecgxcqj0f8",
+        "band1tzt3hf6vges3wqhl3tuhm70r89tqk80ckndy5a"
+      ]
+    },
+    "theta": {
+      "coin": 500,
+      "blockchain": "theta",
+      "paths": [
+        "m/44'/500'/0'/0/0",
+        "m/44'/500'/1'/0/0",
+        "m/44'/500'/2'/0/0"
+      ],
+      "addresses": [
+        "0xB16f8D941d7D281aDCEf3e950aBF2147D7AC2D33",
+        "0x893a505634061246aEA99eF88949923b83dF7D84",
+        "0xf9abDD1f91dA55Dade0615202e249323bedE6C22"
+      ]
+    },
+    "solana": {
+      "coin": 501,
+      "blockchain": "solana",
+      "paths": [
+        "m/44'/501'/0'",
+        "m/44'/501'/1'",
+        "m/44'/501'/2'"
+      ],
+      "addresses": [
+        "GjJyeC1r2RgkuoCWMyPYkCWSGSGLcz266EaAkLA27AhL",
+        "ANf3TEKFL6jPWjzkndo4CbnNdUNkBk4KHPggJs2nu8Xi",
+        "Ag74i82rUZBTgMGLacCA1ZLnotvAca8CLscXcrG6Nwem"
+      ]
+    },
+    "multiversX": {
+      "coin": 508,
+      "blockchain": "multiversX",
+      "paths": [
+        "m/44'/508'/0'/0'/0'",
+        "m/44'/508'/1'/0'/0'",
+        "m/44'/508'/2'/0'/0'"
+      ],
+      "addresses": [
+        "erd1sqhjrtmsn5yjk6w85099p8v0ly0g8z9pxeqe5dvu5rlf2n7vq3vqytny9g",
+        "erd1ulwdtpufr9sesuvjyd54lqzxwhgs7zfnm70g0pqs7m9caxj4rcjshtntfm",
+        "erd129mhspq7zgr8z7faq2vxm2sm27jlhsts28xzc9zjqxn7ztff55fs8pqyj8"
+      ]
+    },
+    "secret": {
+      "coin": 529,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/529'/0'/0/0",
+        "m/44'/529'/0'/0/1",
+        "m/44'/529'/0'/0/2"
+      ],
+      "addresses": [
+        "secret1gkle2qetd47g4qlruxu8kx4m97875t66qsgr0p",
+        "secret1f955dd4z2ugeenxksglm06v6dv6khqsfykxgpd",
+        "secret1udkmxh9jw637tva7g6a734kke7a6w24lkj25j3"
+      ]
+    },
+    "agoric": {
+      "coin": 564,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/564'/0'/0/0",
+        "m/44'/564'/0'/0/1",
+        "m/44'/564'/0'/0/2"
+      ],
+      "addresses": [
+        "agoric1r0q3ltgz67ldu86l9c6hvmwq5qke3af5h489vm",
+        "agoric1mampxgxf0frggzwfda40n4526jp8cfu65d9wmk",
+        "agoric1w4qw6y2ufw0kx3ec44sl0v0ay7szhxd4yets60"
+      ]
+    },
+    "polymesh": {
+      "coin": 595,
+      "blockchain": "polymesh",
+      "paths": [
+        "m/44'/595'/0'/0'/0'",
+        "m/44'/595'/1'/0'/0'",
+        "m/44'/595'/2'/0'/0'"
+      ],
+      "addresses": [
+        "2DFviJPrdGrPYAbWKv2T9hEy8R8c2xus7x3uB7ZveSL7go7v",
+        "2E6woKoRQ4P2ageEbxDkUMp2ErLCiaZSjk8j7rthZPCcYvth",
+        "2GBju65BcZZf5rPK1JgTcHEbHq58HMjc3xDFHAScgrqRQ7CT"
+      ]
+    },
+    "ton": {
+      "coin": 607,
+      "blockchain": "theOpenNetwork",
+      "paths": [
+        "m/44'/607'/0'",
+        "m/44'/607'/1'",
+        "m/44'/607'/2'"
+      ],
+      "addresses": [
+        "UQAzWZa6nM5mJev91wGc7VCSfBoIsYRqKJpV78N8Add9-RKY",
+        "UQDVJucJT96vGh_bYm3e5uzenasiTOwA9orUHQiyhNsKmBrP",
+        "UQBD2j3nVKonc1Fggvmt6W5zgXadnmTl43spUT4BKeTcS4Cx"
+      ]
+    },
+    "aptos": {
+      "coin": 637,
+      "blockchain": "aptos",
+      "paths": [
+        "m/44'/637'/0'/0'/0'",
+        "m/44'/637'/1'/0'/0'",
+        "m/44'/637'/2'/0'/0'"
+      ],
+      "addresses": [
+        "0xeb663b681209e7087d681c5d3eed12aaa8e1915e7c87794542c3f96e94b3d3bf",
+        "0xf867372dfec13fb6c0740d4b574363685e10e6f243e9554ffa8f6e698e940efa",
+        "0x6b09bb20f7fe6a471e5e0fe9875228e0c1bec845e267e34107b968c9c8952842"
+      ]
+    },
+    "binance": {
+      "coin": 714,
+      "blockchain": "binance",
+      "paths": [
+        "m/44'/714'/0'/0/0",
+        "m/44'/714'/1'/0/0",
+        "m/44'/714'/2'/0/0"
+      ],
+      "addresses": [
+        "bnb1rxhz5vdv4fvdjye8gxqvfv0yvg20jtlwf4f38d",
+        "bnb1aqvp38dzvva5u5nerquf3ucaj8cgptfs96fp9d",
+        "bnb10m9l7r9kw3l3qsn55qf32gxcpm2x4em4hnkvgy"
+      ]
+    },
+    "sui": {
+      "coin": 784,
+      "blockchain": "sui",
+      "paths": [
+        "m/44'/784'/0'/0'/0'",
+        "m/44'/784'/1'/0'/0'",
+        "m/44'/784'/2'/0'/0'"
+      ],
+      "addresses": [
+        "0x5e93a736d04fbb25737aa40bee40171ef79f65fae833749e3c089fe7cc2161f1",
+        "0x082d099250999ab8450a9ef3a962edf9e2449e1045be32ba5a0f2c6117ff7167",
+        "0xf195b51c63745071891b1f53170cac2cab2a49da6ee1fe8eabe50989234c8119"
+      ]
+    },
+    "acala": {
+      "coin": 787,
+      "blockchain": "polkadot",
+      "paths": [
+        "m/44'/787'/0'/0'/0'",
+        "m/44'/787'/1'/0'/0'",
+        "m/44'/787'/2'/0'/0'"
+      ],
+      "addresses": [
+        "26D3bwgV4QvxnZtxsh5qRk9Fv8fi34PHYBGxqhkCvofRDEHu",
+        "252XPqfSZNDFHvGT7WkWtwGTtEsZFxQPMHGuk7QJmXYhkSk3",
+        "24XoSNvNmu7jn4rzXhTab3wrCVCsNVTnavceHm4e6NhWzAGY"
+      ]
+    },
+    "veChain": {
+      "coin": 818,
+      "blockchain": "vechain",
+      "paths": [
+        "m/44'/818'/0'/0/0",
+        "m/44'/818'/1'/0/0",
+        "m/44'/818'/2'/0/0"
+      ],
+      "addresses": [
+        "0xE5d846748409dF0b23D5bd47CEB14afc1CBbbcB3",
+        "0x7Cdc11594Cc89f16c688be56cc5b3069E18b52A3",
+        "0x06d8c1aF67c71BEb1C889781317338fafe8f5AA3"
+      ]
+    },
+    "callisto": {
+      "coin": 820,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/820'/0'/0/0",
+        "m/44'/820'/0'/0/1",
+        "m/44'/820'/0'/0/2"
+      ],
+      "addresses": [
+        "0xF5F343Bf919a4d55d914ef18c5c6C92153B83351",
+        "0x3Ce2f4749b898eb2B209594E698F0859aFaF0A2C",
+        "0x89C5c1d04f1C5001eb43FA3DC7AA4EF098d937f1"
+      ]
+    },
+    "neo": {
+      "coin": 888,
+      "blockchain": "neo",
+      "paths": [
+        "m/44'/888'/0'/0/0",
+        "m/44'/888'/1'/0/0",
+        "m/44'/888'/2'/0/0"
+      ],
+      "addresses": [
+        "AJHeWQn2qKKqD4nBE82etebgT3GEM9HDRH",
+        "AaySPQ8R2yvbBrngvhAcbYRpS9t6NmbnyN",
+        "AHfXZZgvAvLwJNtkLpQybhpQJtvUnXz1Gr"
+      ]
+    },
+    "viction": {
+      "coin": 889,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/889'/0'/0/0",
+        "m/44'/889'/0'/0/1",
+        "m/44'/889'/0'/0/2"
+      ],
+      "addresses": [
+        "0x1e5f45aCD6B60648184ff323A682eb672590f052",
+        "0x8DbA3A1AD2ED855BdE1a94A973b70d1Dfc65d6DF",
+        "0xdD4bBbeE86eBC6f4d539aD6121B6252f47DE3580"
+      ]
+    },
+    "ecash": {
+      "coin": 899,
+      "blockchain": "bitcoinCash",
+      "paths": [
+        "m/44'/899'/0'/0/0",
+        "m/44'/899'/1'/0/0",
+        "m/44'/899'/2'/0/0"
+      ],
+      "addresses": [
+        "ecash:qpluxjhhlxfjwsymf9nmctvsdrwzwygadsh2pq0ang",
+        "ecash:qqf6qtfvljvj5cfpzkmldg93rjfq53khvuwzzyhse2",
+        "ecash:qp0nskrl9kryjddjxdu4h78s5lgmm8c8av6epwhs73"
+      ]
+    },
+    "thorchain": {
+      "coin": 931,
+      "blockchain": "thorchain",
+      "paths": [
+        "m/44'/931'/0'/0/0",
+        "m/44'/931'/1'/0/0",
+        "m/44'/931'/2'/0/0"
+      ],
+      "addresses": [
+        "thor1gm00vwsfcp48enm4uv9e5dhm37jtd0ye27wrx0",
+        "thor1kz4z0xh7ec9dszje2qntle2rlqkccqpz0ljmrj",
+        "thor1r0zr9mr7fsgatpyhj6s2amukduwrp33fy88qcg"
+      ]
+    },
+    "polygon": {
+      "coin": 966,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "okxchain": {
+      "coin": 996,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "bitcoinDiamond": {
+      "coin": 999,
+      "blockchain": "bitcoinDiamond",
+      "paths": [
+        "m/84'/999'/0'/0/0",
+        "m/84'/999'/1'/0/0",
+        "m/84'/999'/2'/0/0"
+      ],
+      "addresses": [
+        "1FpFJu6GVMyrmpQzq92m2vAfkLzeCPx1aL",
+        "16UBbzfNEf6tyEWEFgqkXzBr7h3oQ7xQE4",
+        "1B4RW48vwwbAN8rtxYZq4oR57ZByVrckyb"
+      ]
+    },
+    "thunderCore": {
+      "coin": 1001,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/1001'/0'/0/0",
+        "m/44'/1001'/0'/0/1",
+        "m/44'/1001'/0'/0/2"
+      ],
+      "addresses": [
+        "0x8a3fC546B113520e8f68cE5C97Db2a1B982De64A",
+        "0xB2f04c0aacfff8aBD556E957E9830C8AEC5090c8",
+        "0xbC5D899E68d308D2d12564a54aFEe9c2CD529502"
+      ]
+    },
+    "harmony": {
+      "coin": 1023,
+      "blockchain": "harmony",
+      "paths": [
+        "m/44'/1023'/0'/0/0",
+        "m/44'/1023'/1'/0/0",
+        "m/44'/1023'/2'/0/0"
+      ],
+      "addresses": [
+        "one1q6gkzcap0uruuu8r6sldxuu47pd4ww9w9t7tg6",
+        "one1shpw9mrekmgmq4027het69kg0q0yfl053jvm63",
+        "one1ksw0l6cvkdukgumlf6hruwpdn6ahtc5m2k9qlg"
+      ]
+    },
+    "ontology": {
+      "coin": 1024,
+      "blockchain": "ontology",
+      "paths": [
+        "m/44'/1024'/0'/0/0",
+        "m/44'/1024'/1'/0/0",
+        "m/44'/1024'/2'/0/0"
+      ],
+      "addresses": [
+        "AZMgu1jizeCvwKx89qtKq3Rd92iPXHJQ9W",
+        "AaisJ9vjB27iXShx9KyxuAFafDyos6Fxc1",
+        "AepjKFJXPTzWPC8hQWwFBr1n7ay4kK8rN5"
+      ]
+    },
+    "confluxeSpace": {
+      "coin": 1030,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "seiEVM": {
+      "coin": 1329,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "tezos": {
+      "coin": 1729,
+      "blockchain": "tezos",
+      "paths": [
+        "m/44'/1729'/0'/0'",
+        "m/44'/1729'/1'/0'",
+        "m/44'/1729'/2'/0'"
+      ],
+      "addresses": [
+        "tz1VQA4RP4fLjEEMW2FR4pE9kAg5abb5h5GL",
+        "tz1gvekQVEwFFdxT2KrcY6kZgFK1qMN3mmWF",
+        "tz1gud9W8wmESYFsjbyqUcD8ZPC3GHQy3zhD"
+      ]
+    },
+    "cardano": {
+      "coin": 1815,
+      "blockchain": "cardano",
+      "paths": [
+        "m/1852'/1815'/0'/0/0",
+        "m/1852'/1815'/1'/0/0",
+        "m/1852'/1815'/2'/0/0"
+      ],
+      "addresses": [
+        "addr1qy8ac7qqy0vtulyl7wntmsxc6wex80gvcyjy33qffrhm7sh927ysx5sftuw0dlft05dz3c7revpf7jx0xnlcjz3g69mq4afdhv",
+        "addr1q9kjqjg3yfql7uspafzanp0xq4fvuqzgyewhqhcqnk94w4gk9jlajcx98yc9g8rxgw0zrdsprlkkjl4l2s9ls6hvxlsqj9j8fm",
+        "addr1qxr0r2u6j5m8zjxa33gfxum2x26vzt6qqgrmcdjl4xvzw9768t369lant874tr0ftdx5jtrynfgehxlwepc6zgcml8vsklqwf3"
+      ]
+    },
+    "lightlink": {
+      "coin": 1890,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "kin": {
+      "coin": 2017,
+      "blockchain": "stellar",
+      "paths": [
+        "m/44'/2017'/0'",
+        "m/44'/2017'/1'",
+        "m/44'/2017'/2'"
+      ],
+      "addresses": [
+        "GBUDDENIP3DWTXMDZCK5SGTHKKSSVBY3KL4HAN3PKTXCP7NUYDQEPNWK",
+        "GDMRY3TCQEC2TESKEYANIRTMV4GEINQ44HIFSIOXKRVKN2S73YLF25MU",
+        "GCBEHYA6USANS5WJYY3E5C5LZRO6RGOAZTQ6N2Z6ISE3CB2H3IQYVK4Y"
+      ]
+    },
+    "qtum": {
+      "coin": 2301,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/2301'/0'/0/0",
+        "m/44'/2301'/1'/0/0",
+        "m/44'/2301'/2'/0/0"
+      ],
+      "addresses": [
+        "QXykR884CoPkbYHCFZ68bNVTMRvicWAFq2",
+        "QdbUvVj6iNieePzMtB8jx9j4xmgNjei2Ay",
+        "QNULC6TnxXcmG9BUxM8qMtxxmd9d9WfRVj"
+      ]
+    },
+    "nebulas": {
+      "coin": 2718,
+      "blockchain": "nebulas",
+      "paths": [
+        "m/44'/2718'/0'/0/0",
+        "m/44'/2718'/1'/0/0",
+        "m/44'/2718'/2'/0/0"
+      ],
+      "addresses": [
+        "n1aag1DExgtiAtz47wmtraMMJvo4aE7HHcp",
+        "n1V6DEqeUsUGowfsysyN7UET1N27w36cFu8",
+        "n1EeKyKKMxrMbCUbNrbBc1YPQoYnuojW4sd"
+      ]
+    },
+    "hedera": {
+      "coin": 3030,
+      "blockchain": "hedera",
+      "paths": [
+        "m/44'/3030'/0'/0'/0",
+        "m/44'/3030'/1'/0'/0",
+        "m/44'/3030'/2'/0'/0"
+      ],
+      "addresses": [
+        "0.0.302a300506032b6570032100793af21fd5a0a7cc1076195263717fab12600496dfc7ad49e902acdd0bf22331",
+        "0.0.302a300506032b6570032100c6b4db86c094acd0841a21b28e938eb9e478e88488412724b17b0d0eb87c8359",
+        "0.0.302a300506032b657003210094003b0d6f2f767caf1b59cb4debe7955d52ffa9dc435f78e41d83ff4b18905e"
+      ]
+    },
+    "merlin": {
+      "coin": 4200,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "megaETH": {
+      "coin": 4326,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "mantle": {
+      "coin": 5000,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "greenfield": {
+      "coin": 5600,
+      "blockchain": "greenfield",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/1'/0/0",
+        "m/44'/60'/2'/0/0"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x78839F6054d7ed13918bAe0473BA31b1Ca9D7265",
+        "0x07B5FdfEB4E11826D233403Fe8Db0611CCF4c231"
+      ]
+    },
+    "bounceBit": {
+      "coin": 6001,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "goChain": {
+      "coin": 6060,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/6060'/0'/0/0",
+        "m/44'/6060'/0'/0/1",
+        "m/44'/6060'/0'/0/2"
+      ],
+      "addresses": [
+        "0xD51e6AD20168fe141fb9f79D8E8f5539702f8734",
+        "0x0d2867bcD0f0d8f77f8cE2f37cb0cDa275833817",
+        "0x42a4E618212804087c2d023C1B2ACEf4EC054041"
+      ]
+    },
+    "zenEON": {
+      "coin": 7332,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "base": {
+      "coin": 8453,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "nuls": {
+      "coin": 8964,
+      "blockchain": "nuls",
+      "paths": [
+        "m/44'/8964'/0'/0/0",
+        "m/44'/8964'/1'/0/0",
+        "m/44'/8964'/2'/0/0"
+      ],
+      "addresses": [
+        "NULSd6HgUzyMzFF5nZdY2DR8qqxUj171WAhdy",
+        "NULSd6HgWtQbXC8Gjyp6AXt7D3WstDzahe7SS",
+        "NULSd6HgitAyw1sXT2Ryyezykzbq93HvTZXW5"
+      ]
+    },
+    "plasma": {
+      "coin": 9745,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "monad": {
+      "coin": 10143,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "wax": {
+      "coin": 14001,
+      "blockchain": "eos",
+      "paths": [
+        "m/44'/194'/0'/0/0",
+        "m/44'/194'/1'/0/0",
+        "m/44'/194'/2'/0/0"
+      ],
+      "addresses": [
+        "EOS6zpSNY1YoLxNt2VsvJjoDfBueU6xC1M1ERJw1UoekL1NHn8KNA",
+        "EOS6iJSkqn5emYaCZY8PA3USWihqN1wPZtmfam5dk9RvFDUUikJ9x",
+        "EOS5p66h6GMcGo8xWZt7qwUbdD9KAE9VgxLkUj4Uv3VyYJBjuVFSp"
+      ]
+    },
+    "meter": {
+      "coin": 18000,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "zelcash": {
+      "coin": 19167,
+      "blockchain": "zcash",
+      "paths": [
+        "m/44'/19167'/0'/0/0",
+        "m/44'/19167'/1'/0/0",
+        "m/44'/19167'/2'/0/0"
+      ],
+      "addresses": [
+        "t1LBwoQo5zp2NvwA2vm1Cgygnzgzra61jeo",
+        "t1fEKEZeF9wj6Hf7kgqFA4nfVBAcdSyeGj6",
+        "t1WGpTT5i3zpn8gHPFWfpLB92pqUw4ZWQch"
+      ]
+    },
+    "pactus": {
+      "coin": 21888,
+      "blockchain": "pactus",
+      "paths": [
+        "m/44'/21888'/3'/0'",
+        "m/44'/21888'/3'/1'",
+        "m/44'/21888'/3'/2'"
+      ],
+      "addresses": [
+        "pc1r0mv5csv4rd7ju52hpukfumh6nxejm0skmrku30",
+        "pc1r8mpcv5jkjfdpusmtgmmqdytrlj558klzxntayg",
+        "pc1r8anxczz7t58raueasuc7z77nrvxeyvdnsedm6r"
+      ]
+    },
+    "celo": {
+      "coin": 52752,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "linea": {
+      "coin": 59144,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "blast": {
+      "coin": 81457,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "stratis": {
+      "coin": 105105,
+      "blockchain": "bitcoin",
+      "paths": [
+        "m/44'/105105'/0'/0/0",
+        "m/44'/105105'/1'/0/0",
+        "m/44'/105105'/2'/0/0"
+      ],
+      "addresses": [
+        "strax1qdzt3m95jvwesmr8eafmxa6r6ac66uzwjpwktc7",
+        "strax1q57en8xjp6xj0rlgwu5jtyhs8836lyycf737t7z",
+        "strax1qejx03wce2kh953r25af9anda6pa9d2na89jj94"
+      ]
+    },
+    "scroll": {
+      "coin": 534352,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "zkLinkNova": {
+      "coin": 810180,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "wanchain": {
+      "coin": 5718350,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/5718350'/0'/0/0",
+        "m/44'/5718350'/0'/0/1",
+        "m/44'/5718350'/0'/0/2"
+      ],
+      "addresses": [
+        "0xE5524B1e073Ba7Daf47954F8692044D7Cb24e0dd",
+        "0x75c9cc8A34020D7D9899127dD45F3B66CEAbbecB",
+        "0x86a7aA45c98c3Bc176146727f9e723689d7AEDC2"
+      ]
+    },
+    "waves": {
+      "coin": 5741564,
+      "blockchain": "waves",
+      "paths": [
+        "m/44'/5741564'/0'/0'/0'",
+        "m/44'/5741564'/1'/0'/0'",
+        "m/44'/5741564'/2'/0'/0'"
+      ],
+      "addresses": [
+        "3PKYScPaKyGKAJxpyntt1rLRGPBPFTNxXWd",
+        "3PP56LpHWLWkTD69a4u2npHPiuh4CCmAtAc",
+        "3PGbg2Hpy4ZC6VeSD3Zq9WLATQYRpaJLhow"
+      ]
+    },
+    "cronosChain": {
+      "coin": 10000025,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "nativeInjective": {
+      "coin": 10000060,
+      "blockchain": "nativeInjective",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/1'/0/0",
+        "m/44'/60'/2'/0/0"
+      ],
+      "addresses": [
+        "inj1npvwllfr9dqr8erajqqr6s0vxnk2ak55re90dz",
+        "inj10zpe7cz56lk38yvt4cz88w33k89f6un9hh75cs",
+        "inj1q76lml45uyvzd53ngql73kcxz8x0fs33mh5u20"
+      ]
+    },
+    "optimism": {
+      "coin": 10000070,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "xdai": {
+      "coin": 10000100,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "osmosis": {
+      "coin": 10000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "osmo19rl4cm2hmr8afy4kldpxz3fka4jguq0a5m7df8",
+        "osmo1jrkmdcwgq94uaamx6zax2luewlhf7u4k5r4pqs",
+        "osmo1kng7tv83qesgvv2ze7hxlw4urfrjk8vqggjsme"
+      ]
+    },
+    "smartBitcoinCash": {
+      "coin": 10000145,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "sonic": {
+      "coin": 10000146,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "fantom": {
+      "coin": 10000250,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "boba": {
+      "coin": 10000288,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "kuCoinCommunityChain": {
+      "coin": 10000321,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "zksync": {
+      "coin": 10000324,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "terraV2": {
+      "coin": 10000330,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/330'/0'/0/0",
+        "m/44'/330'/0'/0/1",
+        "m/44'/330'/0'/0/2"
+      ],
+      "addresses": [
+        "terra1amdttz2937a3dytmxmkany53pp6ma6dy4vsllv",
+        "terra1lpywxkky22stctm9yzn5quwkr9fnxu3atqk2ax",
+        "terra1was3u69zgthug7duuen2mulfrvvjrq3rasw7dr"
+      ]
+    },
+    "ecochain": {
+      "coin": 10000553,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "smartChainLegacy": {
+      "coin": 10000714,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/714'/0'/0/0",
+        "m/44'/714'/0'/0/1",
+        "m/44'/714'/0'/0/2"
+      ],
+      "addresses": [
+        "0xbDea481a6786aE0f036D07a093f20001AB503c22",
+        "0xD9dC7032d9d22c7edd183e377280f7117cCD6f9F",
+        "0x847b1b14Aef2E84A2a0b1E037479A2c8b9d33099"
+      ]
+    },
+    "acalaEVM": {
+      "coin": 10000787,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "coreum": {
+      "coin": 10000990,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/990'/0'/0/0",
+        "m/44'/990'/0'/0/1",
+        "m/44'/990'/0'/0/2"
+      ],
+      "addresses": [
+        "core1qtk3eq20fuu2ndv3529zd7kqlskjefv3r09f8p",
+        "core1krg30fqa87k70uvlka85sjge2qz0h6n86eheah",
+        "core186g98kun2dlrfgkaxuy686cj76vat4h0dfw66k"
+      ]
+    },
+    "hyperEVM": {
+      "coin": 10000999,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "metis": {
+      "coin": 10001088,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "polygonzkEVM": {
+      "coin": 10001101,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "moonbeam": {
+      "coin": 10001284,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "moonriver": {
+      "coin": 10001285,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "ronin": {
+      "coin": 10002020,
+      "blockchain": "ronin",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/1'/0/0",
+        "m/44'/60'/2'/0/0"
+      ],
+      "addresses": [
+        "ronin:9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "ronin:78839F6054d7ed13918bAe0473BA31b1Ca9D7265",
+        "ronin:07B5FdfEB4E11826D233403Fe8Db0611CCF4c231"
+      ]
+    },
+    "kavaEvm": {
+      "coin": 10002222,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "robinhoodChain": {
+      "coin": 10004663,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "ioTeXEVM": {
+      "coin": 10004689,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/304'/0'/0/0",
+        "m/44'/304'/0'/0/1",
+        "m/44'/304'/0'/0/2"
+      ],
+      "addresses": [
+        "0x1D39DD01342203b5E9b9C5b0205a9aC2b887cE00",
+        "0xa7614d3eC7E2A4D6d7Ba52F2D8547627dFA7df01",
+        "0x1DB17d9937CD176E0DF5A9710E29F9b2c603Fd2b"
+      ]
+    },
+    "arc": {
+      "coin": 10005042,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "nativeZetaChain": {
+      "coin": 10007000,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "zeta1npvwllfr9dqr8erajqqr6s0vxnk2ak55l5u792",
+        "zeta1d7ky6xxfzg6rh7r05uzfxexafepy4wwqacmkl0",
+        "zeta1keckja4ra05d8xkwkpph9u30lrngqtt6spgy94"
+      ]
+    },
+    "nativeCanto": {
+      "coin": 10007700,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "canto1npvwllfr9dqr8erajqqr6s0vxnk2ak55mxnmtj",
+        "canto1d7ky6xxfzg6rh7r05uzfxexafepy4wwqe25n3h",
+        "canto1keckja4ra05d8xkwkpph9u30lrngqtt65n8ptd"
+      ]
+    },
+    "kaia": {
+      "coin": 10008217,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "avalancheCChain": {
+      "coin": 10009000,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "evmos": {
+      "coin": 10009001,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "arbitrumNova": {
+      "coin": 10042170,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "arbitrum": {
+      "coin": 10042221,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "sommelier": {
+      "coin": 11000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "somm19rl4cm2hmr8afy4kldpxz3fka4jguq0asuz3wl",
+        "somm1jrkmdcwgq94uaamx6zax2luewlhf7u4ksyfa8g",
+        "somm1kng7tv83qesgvv2ze7hxlw4urfrjk8vqv0wvup"
+      ]
+    },
+    "fetchAI": {
+      "coin": 12000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "fetch19rl4cm2hmr8afy4kldpxz3fka4jguq0a0ayeaz",
+        "fetch1jrkmdcwgq94uaamx6zax2luewlhf7u4k090454",
+        "fetch1kng7tv83qesgvv2ze7hxlw4urfrjk8vqnwgy0u"
+      ]
+    },
+    "mars": {
+      "coin": 13000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "mars19rl4cm2hmr8afy4kldpxz3fka4jguq0apa5y2w",
+        "mars1jrkmdcwgq94uaamx6zax2luewlhf7u4kp9lgre",
+        "mars1kng7tv83qesgvv2ze7hxlw4urfrjk8vqawcecs"
+      ]
+    },
+    "umee": {
+      "coin": 14000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "umee19rl4cm2hmr8afy4kldpxz3fka4jguq0awkszm8",
+        "umee1jrkmdcwgq94uaamx6zax2luewlhf7u4kwwmwjs",
+        "umee1kng7tv83qesgvv2ze7hxlw4urfrjk8vqj9ulfe"
+      ]
+    },
+    "quasar": {
+      "coin": 15000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "quasar19rl4cm2hmr8afy4kldpxz3fka4jguq0ajrhqjs",
+        "quasar1jrkmdcwgq94uaamx6zax2luewlhf7u4kjmuvm8",
+        "quasar1kng7tv83qesgvv2ze7hxlw4urfrjk8vqwsmaqw"
+      ]
+    },
+    "persistence": {
+      "coin": 16000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "persistence19rl4cm2hmr8afy4kldpxz3fka4jguq0ajvtw33",
+        "persistence1jrkmdcwgq94uaamx6zax2luewlhf7u4kj5qzcx",
+        "persistence1kng7tv83qesgvv2ze7hxlw4urfrjk8vqwl8nr0"
+      ]
+    },
+    "akash": {
+      "coin": 17000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "akash19rl4cm2hmr8afy4kldpxz3fka4jguq0a3mq6x0",
+        "akash1jrkmdcwgq94uaamx6zax2luewlhf7u4k3rtk0c",
+        "akash1kng7tv83qesgvv2ze7hxlw4urfrjk8vqdgv853"
+      ]
+    },
+    "noble": {
+      "coin": 18000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "noble19rl4cm2hmr8afy4kldpxz3fka4jguq0a5rc48m",
+        "noble1jrkmdcwgq94uaamx6zax2luewlhf7u4k5mnewv",
+        "noble1kng7tv83qesgvv2ze7hxlw4urfrjk8vqgs5g49"
+      ]
+    },
+    "sei": {
+      "coin": 19000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "sei19rl4cm2hmr8afy4kldpxz3fka4jguq0a3vute5",
+        "sei1jrkmdcwgq94uaamx6zax2luewlhf7u4k35h8sr",
+        "sei1kng7tv83qesgvv2ze7hxlw4urfrjk8vqdlskt2"
+      ]
+    },
+    "stargaze": {
+      "coin": 20000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "stars19rl4cm2hmr8afy4kldpxz3fka4jguq0agu6q5y",
+        "stars1jrkmdcwgq94uaamx6zax2luewlhf7u4kgy3van",
+        "stars1kng7tv83qesgvv2ze7hxlw4urfrjk8vq50kax6"
+      ]
+    },
+    "smartChain": {
+      "coin": 20000714,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "zetaEVM": {
+      "coin": 20007000,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "nativeEvmos": {
+      "coin": 20009001,
+      "blockchain": "nativeEvmos",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/1'/0/0",
+        "m/44'/60'/2'/0/0"
+      ],
+      "addresses": [
+        "evmos1npvwllfr9dqr8erajqqr6s0vxnk2ak55t3r99j",
+        "evmos10zpe7cz56lk38yvt4cz88w33k89f6un9llc7sq",
+        "evmos1q76lml45uyvzd53ngql73kcxz8x0fs33nljkzl"
+      ]
+    },
+    "tia": {
+      "coin": 21000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "celestia19rl4cm2hmr8afy4kldpxz3fka4jguq0ad2ud9c",
+        "celestia1jrkmdcwgq94uaamx6zax2luewlhf7u4kdjhpv0",
+        "celestia1kng7tv83qesgvv2ze7hxlw4urfrjk8vq3esshx"
+      ]
+    },
+    "dydx": {
+      "coin": 22000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "dydx19rl4cm2hmr8afy4kldpxz3fka4jguq0a4erelz",
+        "dydx1jrkmdcwgq94uaamx6zax2luewlhf7u4k4pg4k4",
+        "dydx1kng7tv83qesgvv2ze7hxlw4urfrjk8vqf20ydu"
+      ]
+    },
+    "juno": {
+      "coin": 30000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "juno19rl4cm2hmr8afy4kldpxz3fka4jguq0a2jwxcf",
+        "juno1jrkmdcwgq94uaamx6zax2luewlhf7u4k229237",
+        "juno1kng7tv83qesgvv2ze7hxlw4urfrjk8vqkpzm2h"
+      ]
+    },
+    "tbinance": {
+      "coin": 30000714,
+      "blockchain": "binance",
+      "paths": [
+        "m/44'/714'/0'/0/0",
+        "m/44'/714'/1'/0/0",
+        "m/44'/714'/2'/0/0"
+      ],
+      "addresses": [
+        "tbnb1rxhz5vdv4fvdjye8gxqvfv0yvg20jtlw8qq48u",
+        "tbnb1aqvp38dzvva5u5nerquf3ucaj8cgptfst0q99u",
+        "tbnb10m9l7r9kw3l3qsn55qf32gxcpm2x4em4exlgg4"
+      ]
+    },
+    "stride": {
+      "coin": 40000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "stride19rl4cm2hmr8afy4kldpxz3fka4jguq0altdpte",
+        "stride1jrkmdcwgq94uaamx6zax2luewlhf7u4klnxdzw",
+        "stride1kng7tv83qesgvv2ze7hxlw4urfrjk8vqrcpue8"
+      ]
+    },
+    "axelar": {
+      "coin": 50000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "axelar19rl4cm2hmr8afy4kldpxz3fka4jguq0acwm455",
+        "axelar1jrkmdcwgq94uaamx6zax2luewlhf7u4kcksear",
+        "axelar1kng7tv83qesgvv2ze7hxlw4urfrjk8vqyahgx2"
+      ]
+    },
+    "crescent": {
+      "coin": 60000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "cre19rl4cm2hmr8afy4kldpxz3fka4jguq0acg7c2c",
+        "cre1jrkmdcwgq94uaamx6zax2luewlhf7u4kcs45r0",
+        "cre1kng7tv83qesgvv2ze7hxlw4urfrjk8vqymj9cx"
+      ]
+    },
+    "kujira": {
+      "coin": 70000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "kujira19rl4cm2hmr8afy4kldpxz3fka4jguq0adg09jl",
+        "kujira1jrkmdcwgq94uaamx6zax2luewlhf7u4kdsyfmg",
+        "kujira1kng7tv83qesgvv2ze7hxlw4urfrjk8vq3mrcqp"
+      ]
+    },
+    "comdex": {
+      "coin": 80000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "comdex19rl4cm2hmr8afy4kldpxz3fka4jguq0am00lxz",
+        "comdex1jrkmdcwgq94uaamx6zax2luewlhf7u4kmhyn04",
+        "comdex1kng7tv83qesgvv2ze7hxlw4urfrjk8vq8urz5u"
+      ]
+    },
+    "neutron": {
+      "coin": 90000118,
+      "blockchain": "cosmos",
+      "paths": [
+        "m/44'/118'/0'/0/0",
+        "m/44'/118'/0'/0/1",
+        "m/44'/118'/0'/0/2"
+      ],
+      "addresses": [
+        "neutron19rl4cm2hmr8afy4kldpxz3fka4jguq0aclyl9j",
+        "neutron1jrkmdcwgq94uaamx6zax2luewlhf7u4kc80nv9",
+        "neutron1kng7tv83qesgvv2ze7hxlw4urfrjk8vqyvgzhv"
+      ]
+    },
+    "neon": {
+      "coin": 245022934,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    },
+    "aurora": {
+      "coin": 1323161554,
+      "blockchain": "ethereum",
+      "paths": [
+        "m/44'/60'/0'/0/0",
+        "m/44'/60'/0'/0/1",
+        "m/44'/60'/0'/0/2"
+      ],
+      "addresses": [
+        "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+        "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+        "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
+      ]
+    }
+  }
+}

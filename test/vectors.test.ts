@@ -63,3 +63,20 @@ test('vault rejects malformed wallet records', () => {
 test('signing vector reproduces the EIP-155 transaction', async () => {
   assert.deepEqual(await makeSigningVector(), load('signing.json'));
 });
+
+test('HD account paths follow the wallet conventions', async () => {
+  const { accountPath } = await import('../src/hd.ts');
+  assert.equal(accountPath("m/44'/60'/0'/0/0", 'ethereum', 2), "m/44'/60'/0'/0/2");
+  assert.equal(accountPath("m/84'/0'/0'/0/0", 'bitcoin', 2), "m/84'/0'/2'/0/0");
+  assert.equal(accountPath("m/44'/501'/0'", 'solana', 1), "m/44'/501'/1'");
+  assert.equal(accountPath("m/44'/21888'/3'/0'", 'pactus', 4), "m/44'/21888'/3'/4'");
+  assert.equal(accountPath("m/44'/118'/0'/0/0", 'cosmos', 0), "m/44'/118'/0'/0/0");
+  assert.throws(() => accountPath("m/44'/60'/0'/0/0", 'ethereum', -1));
+});
+
+test('HD vectors: MetaMask-compatible and stable', async () => {
+  const { deriveAccounts } = await import('../scripts/make-vectors.ts');
+  const hd = load('hd.json');
+  assert.equal(hd.accounts.ethereum.addresses[1], '0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0');
+  assert.deepEqual(JSON.parse(JSON.stringify(await deriveAccounts())), hd);
+});

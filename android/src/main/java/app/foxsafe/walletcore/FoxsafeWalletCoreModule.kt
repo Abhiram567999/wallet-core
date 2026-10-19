@@ -119,7 +119,10 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("renameWallet") { id: String, name: String -> call { store.update(id) { it.put("name", name) } } }
     AsyncFunction("setCoins") { id: String, coins: List<Int> -> call { store.setCoins(id, coins) } }
     AsyncFunction("deleteWallet") { id: String, passcode: String -> call { store.delete(id, passcode) } }
-    AsyncFunction("getAddresses") { id: String, coins: List<Int> -> call { store.addresses(id, coins) } }
+    AsyncFunction("getAddresses") { id: String, coins: List<Int>, account: Int? -> call { store.addresses(id, coins, account ?: 0) } }
+    AsyncFunction("addAccount") { id: String, name: String?, passcode: String -> call { store.addAccount(id, name, passcode, activity) } }
+    AsyncFunction("removeAccount") { id: String, index: Int, passcode: String -> call { store.removeAccount(id, index, passcode, activity) } }
+    AsyncFunction("renameAccount") { id: String, index: Int, name: String -> call { store.renameAccount(id, index, name) } }
     AsyncFunction("markBackedUp") { id: String, method: String ->
       call {
         store.update(id) { info ->
@@ -134,9 +137,15 @@ class FoxsafeWalletCoreModule : Module() {
     }
 
     // Signing and showing the phrase (fingerprint / face / PIN on a real device)
-    AsyncFunction("signTransaction") { id: String, coin: Int, input: String -> call { store.signTransaction(id, coin, input, activity) } }
-    AsyncFunction("signMessage") { id: String, coin: Int, message: String -> call { store.signMessage(id, coin, message, false, activity) } }
-    AsyncFunction("signTypedData") { id: String, coin: Int, json: String -> call { store.signMessage(id, coin, json, true, activity) } }
+    AsyncFunction("signTransaction") { id: String, coin: Int, input: String, account: Int? ->
+      call { store.signTransaction(id, coin, input, account ?: 0, activity) }
+    }
+    AsyncFunction("signMessage") { id: String, coin: Int, message: String, account: Int? ->
+      call { store.signMessage(id, coin, message, false, account ?: 0, activity) }
+    }
+    AsyncFunction("signTypedData") { id: String, coin: Int, json: String, account: Int? ->
+      call { store.signMessage(id, coin, json, true, account ?: 0, activity) }
+    }
     AsyncFunction("revealSecret") { id: String -> call { store.revealSecret(id, activity) } }
 
     // On-phone recovery
@@ -155,8 +164,8 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("wipe") { keepRecovery: Boolean -> call { store.wipe(keepRecovery) } }
 
     // Helpers that never read stored secrets
-    AsyncFunction("previewAddresses") { words: String, passphrase: String?, coins: List<Int> ->
-      call { store.previewAddresses(words, passphrase, coins) }
+    AsyncFunction("previewAddresses") { words: String, passphrase: String?, coins: List<Int>, account: Int? ->
+      call { store.previewAddresses(words, passphrase, coins, account ?: 0) }
     }
     AsyncFunction("envelopeDigest") { json: String, secret: VectorSecret -> call { store.envelopeDigest(json, secret.source()) } }
   }

@@ -37,6 +37,15 @@ function checkRecord(w: unknown, i: number): WalletRecord {
     bad('unknown secret type');
   }
   if (r.kind === 'single' && (r.coins as unknown[]).length !== 1) bad('a single-chain wallet has exactly one coin');
+  if (r.accounts !== undefined) {
+    if (s.type !== 'mnemonic' || !Array.isArray(r.accounts) || r.accounts.length === 0) bad('accounts');
+    const idx = (r.accounts as unknown[]).map((a) => {
+      const acc = a as Record<string, unknown>;
+      if (!Number.isInteger(acc?.index) || (acc.index as number) < 0 || (acc.index as number) > 0x7fffffff || typeof acc.name !== 'string') bad('account');
+      return acc.index as number;
+    });
+    if (new Set(idx).size !== idx.length) bad('duplicate account');
+  }
   return r as unknown as WalletRecord;
 }
 

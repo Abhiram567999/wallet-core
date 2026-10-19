@@ -68,14 +68,19 @@ export interface NativeWalletCore {
   renameWallet(id: string, name: string): Promise<WalletInfo>;
   setCoins(id: string, coins: CoinType[]): Promise<WalletInfo>;
   deleteWallet(id: string, passcode: string): Promise<void>;
-  getAddresses(id: string, coins: CoinType[]): Promise<AddressInfo[]>;
+  /** `account` is the HD account index (default 0). */
+  getAddresses(id: string, coins: CoinType[], account?: number): Promise<AddressInfo[]>;
+  /** Adds the next HD account on a phrase wallet (Face ID + passcode). */
+  addAccount(id: string, name: string | null, passcode: string): Promise<WalletInfo>;
+  removeAccount(id: string, index: number, passcode: string): Promise<WalletInfo>;
+  renameAccount(id: string, index: number, name: string): Promise<WalletInfo>;
   markBackedUp(id: string, method: 'manual' | 'cloud'): Promise<WalletInfo>;
 
   // Signing. `input` is a Trust Wallet Core SigningInput protobuf (base64)
   // built WITHOUT a private key; returns the SigningOutput protobuf (base64).
-  signTransaction(id: string, coin: CoinType, input: string): Promise<string>;
-  signMessage(id: string, coin: CoinType, message: string): Promise<string>;
-  signTypedData(id: string, coin: CoinType, json: string): Promise<string>;
+  signTransaction(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
+  signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
+  signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
 
   // On-phone recovery (survives uninstalling the app)
@@ -93,7 +98,7 @@ export interface NativeWalletCore {
   wipe(keepRecovery: boolean): Promise<void>;
 
   // Helpers that never read stored secrets (import preview, test vectors)
-  previewAddresses(words: string, passphrase: string | null, coins: CoinType[]): Promise<AddressInfo[]>;
+  previewAddresses(words: string, passphrase: string | null, coins: CoinType[], account?: number): Promise<AddressInfo[]>;
   envelopeDigest(json: string, secret: { passcode?: string; prfHex?: string; keyHex?: string }): Promise<string>;
 }
 

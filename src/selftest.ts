@@ -9,6 +9,7 @@ import { WalletCore } from './native.ts';
 import { decodeVault } from './vault.ts';
 
 export interface Vectors {
+  hd: { words: string; accounts: Record<string, { coin: number; paths: string[]; addresses: string[] }> };
   derivation: { mnemonic: { words: string; addresses: Record<string, { coin: number; address: string }> }[] };
   envelopes: { wallets: unknown[]; cases: { name: string; secret: Record<string, string>; envelope: { kind: string; [k: string]: unknown } }[] };
   signing: { coin: number; privateKeyHex: string; inputBase64: string; outputBase64: string };
@@ -22,6 +23,7 @@ export interface CheckResult {
 }
 
 const PASSCODE = '482915';
+const ethKeyIdPlaceholder = () => 'no-such-wallet';
 
 export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = () => {}): Promise<CheckResult[]> {
   const results: CheckResult[] = [];
@@ -58,6 +60,20 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
       const byCoin = new Map(got.map((a) => [a.coin, a.address]));
       for (const [name, want] of Object.entries(m.addresses)) {
         expect(byCoin.get(want.coin) === want.address, `${name}: ${byCoin.get(want.coin)} != ${want.address}`);
+        n++;
+      }
+    }
+    return `${n} addresses`;
+  });
+
+  await check('HD accounts 2 and 3 match on every chain', async () => {
+    let n = 0;
+    for (const account of [1, 2]) {
+      const got = await WalletCore.previewAddresses(v.hd.words, null, [], account);
+      const byCoin = new Map(got.map((a) => [a.coin, a]));
+      for (const [name, want] of Object.entries(v.hd.accounts)) {
+        const g = byCoin.get(want.coin);
+        expect(g?.address === want.addresses[account] && g?.derivationPath === want.paths[account], `${name} account ${account}: ${g?.address} ${g?.derivationPath}`);
         n++;
       }
     }
@@ -120,6 +136,20 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     return '4 chains match';
   });
 
+  await check('add, rename and remove HD accounts', async () => {
+    const w1 = await WalletCore.addAccount(importedId, null, PASSCODE);
+    const w2 = await WalletCore.addAccount(importedId, 'Savings', PASSCODE);
+    expect(w2.accounts.length === 3 && w2.accounts[2]!.name === 'Savings' && w1.accounts[1]!.name === 'Account 2', JSON.stringify(w2.accounts));
+    const [eth2] = await WalletCore.getAddresses(importedId, [60], 2);
+    expect(eth2!.address === v.hd.accounts.ethereum!.addresses[2], `account 3 ETH ${eth2!.address}`);
+    await WalletCore.renameAccount(importedId, 1, 'Trading');
+    const w3 = await WalletCore.removeAccount(importedId, 2, PASSCODE);
+    expect(w3.accounts.length === 2 && w3.accounts[1]!.name === 'Trading', `after remove: ${JSON.stringify(w3.accounts)}`);
+    await rejects(WalletCore.removeAccount(importedId, 0, PASSCODE), 'INVALID');
+    await rejects(WalletCore.addAccount(ethKeyIdPlaceholder(), null, PASSCODE), 'NOT_FOUND');
+    return 'accounts 2 and 3 work';
+  });
+
   await check('import a private key and sign (EIP-155)', async () => {
     const w = await WalletCore.importPrivateKey({ name: 'ETH key', privateKey: `0x${v.signing.privateKeyHex}`, coin: v.signing.coin, passcode: PASSCODE });
     ethKeyId = w.id;
@@ -152,6 +182,8 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await rejects(WalletCore.restoreFromRecovery('111111'), 'PASSCODE');
     const restored = await WalletCore.restoreFromRecovery(PASSCODE);
     expect(restored.length === 3, `restored ${restored.length}`);
+    const back = restored.find((w) => w.id === importedId)!;
+    expect(back.accounts.length === 2 && back.accounts[1]!.index === 1, `accounts after recovery: ${JSON.stringify(back.accounts)}`);
     expect(await WalletCore.verifyPasscode(PASSCODE), 'passcode not restored');
     const out = await WalletCore.signTransaction(ethKeyId, v.signing.coin, v.signing.inputBase64);
     expect(out === v.signing.outputBase64, 'restored key signs differently');

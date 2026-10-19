@@ -27,11 +27,15 @@ final class WalletStore {
     var coins: [UInt32]
     var createdAt: String
     var backup: Backup
+    var accounts: [Account]
     struct Backup: Codable { var manual: Bool; var cloud: Bool }
+    /// HD account: index on the phrase (SPEC §2.1) and a display name.
+    struct Account: Codable, Equatable { var index: UInt32; var name: String }
 
     var dict: [String: Any] {
       ["id": id, "name": name, "kind": kind, "secretType": secretType, "coins": coins, "createdAt": createdAt,
-       "backup": ["manual": backup.manual, "cloud": backup.cloud]]
+       "backup": ["manual": backup.manual, "cloud": backup.cloud],
+       "accounts": accounts.map { ["index": $0.index, "name": $0.name] }]
     }
   }
 
@@ -39,7 +43,7 @@ final class WalletStore {
   /// encrypted with a data key that only the wrapping key can unlock.
   struct Stored: Codable {
     var info: Info
-    var addresses: [String: String] // CoinType raw value -> address (public)
+    var addresses: [String: [String: String]] // account index -> CoinType raw value -> address (public)
     var wrappedKey: String
     var envelope: String
   }
@@ -55,6 +59,7 @@ final class WalletStore {
     var passphrase: String?
     var keyHex: String?
     var keyCoin: UInt32?
+    var accounts: [Info.Account] = [.init(index: 0, name: "Account 1")]
 
     var json: [String: Any] {
       var secret: [String: Any]
@@ -64,7 +69,9 @@ final class WalletStore {
       } else {
         secret = ["type": "privateKey", "hex": keyHex!, "coin": keyCoin!]
       }
-      return ["id": id, "name": name, "kind": kind, "coins": coins, "createdAt": createdAt, "secret": secret]
+      var out: [String: Any] = ["id": id, "name": name, "kind": kind, "coins": coins, "createdAt": createdAt, "secret": secret]
+      if words != nil { out["accounts"] = accounts.map { ["index": $0.index, "name": $0.name] } }
+      return out
     }
   }
 
@@ -102,6 +109,15 @@ final class WalletStore {
         throw bad("unknown secret type")
       }
       if kind == "single", coins.count != 1 { throw bad("a single-chain wallet has exactly one coin") }
+      if let list = w["accounts"] {
+        guard r.words != nil, let arr = list as? [[String: Any]], !arr.isEmpty else { throw bad("accounts") }
+        r.accounts = try arr.map { a in
+          guard let n = a["index"] as? NSNumber, n.int64Value >= 0, n.int64Value <= 0x7fff_ffff, let name = a["name"] as? String
+          else { throw bad("account") }
+          return .init(index: n.uint32Value, name: name)
+        }
+        guard Set(r.accounts.map(\.index)).count == r.accounts.count else { throw bad("duplicate account") }
+      }
       return r
     }
   }
@@ -236,21 +252,23 @@ final class WalletStore {
   /// Writes the main copy and the recovery entry for one wallet.
   /// Caller holds the lock and has checked the passcode.
   @discardableResult
-  private func store(_ r: Record, passcode: String?, cache: KeyCache? = nil, writeRecovery: Bool = true) throws -> Stored {
+  private func store(_ r: Record, passcode: String?, cache: KeyCache? = nil, writeRecovery: Bool = true, keep: Info? = nil) throws -> Stored {
     let addresses = try Self.deriveAddresses(r)
     var dataKey = Envelope.random(32)
     defer { dataKey.resetBytes(in: 0..<dataKey.count) }
     let envelope = try Envelope.seal(.device, Self.encodeVault([r]), .key(dataKey))
     let wrapped = try WrappingKey.wrap(dataKey)
-    let info = Info(id: r.id, name: r.name, kind: r.kind, secretType: r.words != nil ? "mnemonic" : "privateKey",
-                    coins: r.coins, createdAt: r.createdAt, backup: .init(manual: false, cloud: false))
+    let info = Info(id: r.id, name: keep?.name ?? r.name, kind: r.kind, secretType: r.words != nil ? "mnemonic" : "privateKey",
+                    coins: keep?.coins ?? r.coins, createdAt: r.createdAt, backup: keep?.backup ?? .init(manual: false, cloud: false),
+                    accounts: r.accounts)
     let stored = Stored(info: info, addresses: addresses, wrappedKey: wrapped.base64EncodedString(), envelope: envelope)
     if writeRecovery, let passcode {
       let meta = try recoveryMeta()
       let entry = try Envelope.seal(.recovery, Self.encodeVault([r]), .passcode(passcode),
                                     salt: Data(base64Encoded: meta.salt)!, argon2: (meta.m, meta.t), cache: cache)
       try recovery.set(entry, for: "w.\(r.id)")
-      try recovery.set(AddressIndex.build(Self.indexCoins.compactMap { addresses[String($0)] }), for: "i.\(r.id)")
+      let remembered = addresses.values.flatMap { byCoin in Self.indexCoins.compactMap { byCoin[String($0)] } }
+      try recovery.set(AddressIndex.build(remembered), for: "i.\(r.id)")
     }
     try save(stored)
     return stored
@@ -268,18 +286,61 @@ final class WalletStore {
   // MARK: Addresses
 
   /// Public addresses, derived once while the secret is at hand.
-  static func deriveAddresses(_ r: Record) throws -> [String: String] {
-    var out: [String: String] = [:]
+  static func deriveAddresses(_ r: Record) throws -> [String: [String: String]] {
+    var out: [String: [String: String]] = [:]
     if let words = r.words {
       guard let hd = HDWallet(mnemonic: words, passphrase: r.passphrase ?? "") else { throw WalletError.invalid("bad phrase") }
       let coins = r.kind == "multi" ? CoinType.allCases : r.coins.compactMap { CoinType(rawValue: $0) }
-      for coin in coins { out[String(coin.rawValue)] = hd.getAddressForCoin(coin: coin) }
+      for account in r.accounts {
+        var byCoin: [String: String] = [:]
+        for coin in coins { byCoin[String(coin.rawValue)] = try address(hd, coin, account.index) }
+        out[String(account.index)] = byCoin
+      }
     } else if let hex = r.keyHex, let raw = r.keyCoin, let coin = CoinType(rawValue: raw), let key = PrivateKey(data: Data(hexString: hex)!) {
       // One secp256k1 key gives the same address on every EVM network.
       let coins = coin.blockchain == .ethereum ? CoinType.allCases.filter { $0.blockchain == .ethereum } : [coin]
-      for c in coins { out[String(c.rawValue)] = c.deriveAddress(privateKey: key) }
+      out["0"] = Dictionary(uniqueKeysWithValues: coins.map { (String($0.rawValue), $0.deriveAddress(privateKey: key)) })
     }
     return out
+  }
+
+  // MARK: HD accounts (SPEC §2.1, mirrors src/hd.ts)
+
+  static func blockchainName(_ coin: CoinType) -> String {
+    switch coin.blockchain {
+    case .ethereum: return "ethereum"
+    case .tron: return "tron"
+    case .cosmos: return "cosmos"
+    default: return "other"
+    }
+  }
+
+  static func accountPath(_ coin: CoinType, _ index: UInt32) throws -> String {
+    let base = coin.derivationPath()
+    guard index > 0 else { return base }
+    guard index <= 0x7fff_ffff else { throw WalletError.invalid("bad account index") }
+    var parts = base.split(separator: "/").map(String.init)
+    guard parts.first == "m", parts.count >= 4 else { throw WalletError.crypto("unexpected path \(base)") }
+    if ["ethereum", "tron", "cosmos"].contains(blockchainName(coin)) || parts[3] != "0'" {
+      parts[parts.count - 1] = parts[parts.count - 1].hasSuffix("'") ? "\(index)'" : "\(index)"
+    } else {
+      parts[3] = "\(index)'"
+    }
+    return parts.joined(separator: "/")
+  }
+
+  static func key(_ hd: HDWallet, _ coin: CoinType, _ index: UInt32) throws -> PrivateKey {
+    if index == 0, let k = hd.getKeyForCoin(coin: coin) { return k }
+    guard let k = hd.getKey(coin: coin, derivationPath: try accountPath(coin, index)) else { throw WalletError.crypto("could not derive the key") }
+    return k
+  }
+
+  static func address(_ hd: HDWallet, _ coin: CoinType, _ index: UInt32) throws -> String {
+    if index == 0 {
+      guard let a = hd.getAddressForCoin(coin: coin) else { throw WalletError.crypto("could not derive an address") }
+      return a
+    }
+    return coin.deriveAddress(privateKey: try key(hd, coin, index))
   }
 
   func list() throws -> [[String: Any]] {
@@ -288,12 +349,56 @@ final class WalletStore {
       .sorted { $0.createdAt < $1.createdAt }.map(\.dict)
   }
 
-  func addresses(id: String, coins: [UInt32]) throws -> [[String: Any]] {
+  func addresses(id: String, coins: [UInt32], account: UInt32) throws -> [[String: Any]] {
     lock.lock(); defer { lock.unlock() }
     let s = try load(id)
-    return coins.compactMap { c in
-      guard let a = s.addresses[String(c)], let coin = CoinType(rawValue: c) else { return nil }
-      return ["coin": c, "address": a, "derivationPath": s.info.secretType == "mnemonic" ? coin.derivationPath() : ""]
+    guard let byCoin = s.addresses[String(account)] else { throw WalletError.notFound("no account \(account)") }
+    return try coins.compactMap { c in
+      guard let a = byCoin[String(c)], let coin = CoinType(rawValue: c) else { return nil }
+      return ["coin": c, "address": a, "derivationPath": s.info.secretType == "mnemonic" ? try Self.accountPath(coin, account) : ""]
+    }
+  }
+
+  /// Adds the next HD account. Needs the secret (Face ID) to derive its
+  /// addresses and the passcode to update the recovery copy.
+  func addAccount(id: String, name: String?, passcode: String) throws -> [String: Any] {
+    lock.lock(); defer { lock.unlock() }
+    try requirePasscode(passcode)
+    let s = try load(id)
+    guard s.info.secretType == "mnemonic" else { throw WalletError.invalid("a private-key wallet has a single account") }
+    return try withSecrets([id], reason: "Add an account") { records in
+      var r = Self.withCurrentNames(records[0], s.info)
+      let next = (r.accounts.map(\.index).max() ?? 0) + 1
+      r.accounts.append(.init(index: next, name: name ?? "Account \(next + 1)"))
+      return try store(r, passcode: passcode, keep: s.info).info.dict
+    }
+  }
+
+  func removeAccount(id: String, index: UInt32, passcode: String) throws -> [String: Any] {
+    lock.lock(); defer { lock.unlock() }
+    try requirePasscode(passcode)
+    guard index != 0 else { throw WalletError.invalid("the first account can't be removed") }
+    let s = try load(id)
+    return try withSecrets([id], reason: "Remove an account") { records in
+      var r = Self.withCurrentNames(records[0], s.info)
+      guard r.accounts.contains(where: { $0.index == index }) else { throw WalletError.notFound("no account \(index)") }
+      r.accounts.removeAll { $0.index == index }
+      return try store(r, passcode: passcode, keep: s.info).info.dict
+    }
+  }
+
+  /// Account names live in the public info (renames don't need the secret); carry them into the sealed record.
+  static func withCurrentNames(_ r: Record, _ info: Info) -> Record {
+    var out = r
+    let names = Dictionary(info.accounts.map { ($0.index, $0.name) }, uniquingKeysWith: { a, _ in a })
+    out.accounts = r.accounts.map { .init(index: $0.index, name: names[$0.index] ?? $0.name) }
+    return out
+  }
+
+  func renameAccount(id: String, index: UInt32, name: String) throws -> [String: Any] {
+    try update(id: id) { info in
+      guard let i = info.accounts.firstIndex(where: { $0.index == index }) else { throw WalletError.notFound("no account \(index)") }
+      info.accounts[i].name = name
     }
   }
 
@@ -342,14 +447,14 @@ final class WalletStore {
     return try body(records)
   }
 
-  private static func privateKey(_ r: Record, coin: CoinType) throws -> PrivateKey {
+  private static func privateKey(_ r: Record, coin: CoinType, account: UInt32) throws -> PrivateKey {
     if let words = r.words {
       guard r.kind == "multi" || r.coins.contains(coin.rawValue) else { throw WalletError.invalid("this wallet is not for that network") }
-      guard let hd = HDWallet(mnemonic: words, passphrase: r.passphrase ?? ""), let key = hd.getKeyForCoin(coin: coin) else {
-        throw WalletError.crypto("could not derive the key")
-      }
-      return key
+      guard r.accounts.contains(where: { $0.index == account }) else { throw WalletError.notFound("no account \(account)") }
+      guard let hd = HDWallet(mnemonic: words, passphrase: r.passphrase ?? "") else { throw WalletError.crypto("could not derive the key") }
+      return try key(hd, coin, account)
     }
+    guard account == 0 else { throw WalletError.notFound("no account \(account)") }
     guard let hex = r.keyHex, let raw = r.keyCoin, let own = CoinType(rawValue: raw),
           own == coin || (own.blockchain == .ethereum && coin.blockchain == .ethereum),
           let key = PrivateKey(data: Data(hexString: hex)!) else { throw WalletError.invalid("this wallet is not for that network") }
@@ -358,11 +463,11 @@ final class WalletStore {
 
   /// Signs a Trust Wallet Core SigningInput built without a key:
   /// pre-image hash, sign inside this process, compile (SPEC §6).
-  func signTransaction(id: String, coin raw: UInt32, inputBase64: String) throws -> String {
+  func signTransaction(id: String, coin raw: UInt32, inputBase64: String, account: UInt32) throws -> String {
     lock.lock(); defer { lock.unlock() }
     guard let coin = CoinType(rawValue: raw), let input = Data(base64Encoded: inputBase64) else { throw WalletError.invalid("bad coin or input") }
     return try withSecrets([id], reason: "Confirm the transaction") { records in
-      let key = try Self.privateKey(records[0], coin: coin)
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
       let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
       guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
       guard let signature = key.sign(digest: pre.dataHash, curve: coin.curve) else { throw WalletError.crypto("signing failed") }
@@ -374,11 +479,11 @@ final class WalletStore {
     }
   }
 
-  func signMessage(id: String, coin raw: UInt32, message: String, typed: Bool) throws -> String {
+  func signMessage(id: String, coin raw: UInt32, message: String, typed: Bool, account: UInt32) throws -> String {
     lock.lock(); defer { lock.unlock() }
     guard let coin = CoinType(rawValue: raw) else { throw WalletError.invalid("unsupported coin") }
     return try withSecrets([id], reason: "Confirm the signature") { records in
-      let key = try Self.privateKey(records[0], coin: coin)
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
       switch (coin.blockchain, typed) {
       case (.ethereum, false): return EthereumMessageSigner.signMessage(privateKey: key, message: message)
       case (.ethereum, true): return EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: message)
@@ -480,10 +585,10 @@ final class WalletStore {
   // MARK: Helpers that never touch stored secrets
 
   /// Addresses for a phrase the caller already has (import preview, tests).
-  static func previewAddresses(words: String, passphrase: String?, coins: [UInt32]) throws -> [[String: Any]] {
+  static func previewAddresses(words: String, passphrase: String?, coins: [UInt32], account: UInt32) throws -> [[String: Any]] {
     guard let hd = HDWallet(mnemonic: words, passphrase: passphrase ?? "") else { throw WalletError.invalid("this secret phrase is not valid") }
     let list = coins.isEmpty ? CoinType.allCases : coins.compactMap { CoinType(rawValue: $0) }
-    return list.map { ["coin": $0.rawValue, "address": hd.getAddressForCoin(coin: $0), "derivationPath": $0.derivationPath()] }
+    return try list.map { ["coin": $0.rawValue, "address": try address(hd, $0, account), "derivationPath": try accountPath($0, account)] }
   }
 
   /// SHA-256 of an envelope's plaintext, for cross-platform test vectors.

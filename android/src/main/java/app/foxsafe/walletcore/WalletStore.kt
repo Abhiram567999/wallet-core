@@ -35,6 +35,8 @@ class WalletStore(context: Context) {
 
     fun coin(v: Int): CoinType = CoinType.createFromValue(v) ?: throw WalletException("INVALID", "unsupported coin $v")
     fun now(): String = Instant.now().toString()
+    fun accountsJson(list: List<Account>) =
+      JSONArray(list.map { JSONObject().put("index", it.index).put("name", it.name) })
     fun hex(b: ByteArray) = b.joinToString("") { "%02x".format(it) }
     fun unhex(s: String): ByteArray? =
       if (s.length % 2 != 0 || !s.all { it in "0123456789abcdef" }) null
@@ -43,9 +45,12 @@ class WalletStore(context: Context) {
 
   // MARK: models
 
+  data class Account(val index: Int, val name: String)
+
   data class Record(
     val id: String, val name: String, val kind: String, val coins: List<Int>, val createdAt: String,
     val words: String? = null, val passphrase: String? = null, val keyHex: String? = null, val keyCoin: Int? = null,
+    val accounts: List<Account> = listOf(Account(0, "Account 1")),
   ) {
     fun json(): JSONObject {
       val secret = if (words != null) {
@@ -55,7 +60,21 @@ class WalletStore(context: Context) {
       }
       return JSONObject().put("id", id).put("name", name).put("kind", kind).put("coins", JSONArray(coins))
         .put("createdAt", createdAt).put("secret", secret)
+        .apply { if (words != null) put("accounts", accountsJson(accounts)) }
     }
+  }
+
+  private fun parseAccounts(arr: JSONArray?, bad: (String) -> Nothing): List<Account>? {
+    if (arr == null) return null
+    if (arr.length() == 0) bad("accounts")
+    val list = (0 until arr.length()).map {
+      val a = arr.getJSONObject(it)
+      val i = a.optLong("index", -1)
+      if (i !in 0..0x7fffffffL || !a.has("name")) bad("account")
+      Account(i.toInt(), a.getString("name"))
+    }
+    if (list.map { it.index }.toSet().size != list.size) bad("duplicate account")
+    return list
   }
 
   private fun encodeVault(records: List<Record>): ByteArray =
@@ -88,7 +107,9 @@ class WalletStore(context: Context) {
         else -> bad("unknown secret type")
       }
       if (kind == "single" && coins.size != 1) bad("a single-chain wallet has exactly one coin")
-      r
+      val accounts = parseAccounts(w.optJSONArray("accounts"), ::bad)
+      if (accounts != null && r.words == null) bad("accounts")
+      if (accounts != null) r.copy(accounts = accounts) else r
     }
   }
 
@@ -190,7 +211,7 @@ class WalletStore(context: Context) {
   }
 
   /** Main copy plus recovery entry for one wallet. Caller holds the lock and checked the passcode. */
-  private fun store(r: Record, passcode: String?, cache: Envelope.KeyCache? = null, writeRecovery: Boolean = true): JSONObject {
+  private fun store(r: Record, passcode: String?, cache: Envelope.KeyCache? = null, writeRecovery: Boolean = true, keep: JSONObject? = null): JSONObject {
     val addresses = deriveAddresses(r)
     val dataKey = Envelope.random(32)
     val envelope: String
@@ -201,17 +222,21 @@ class WalletStore(context: Context) {
     } finally {
       dataKey.fill(0)
     }
-    val info = JSONObject().put("id", r.id).put("name", r.name).put("kind", r.kind)
-      .put("secretType", if (r.words != null) "mnemonic" else "privateKey").put("coins", JSONArray(r.coins))
-      .put("createdAt", r.createdAt).put("backup", JSONObject().put("manual", false).put("cloud", false))
-    val stored = JSONObject().put("info", info).put("addresses", JSONObject(addresses as Map<*, *>))
+    val info = JSONObject().put("id", r.id).put("name", keep?.optString("name") ?: r.name).put("kind", r.kind)
+      .put("secretType", if (r.words != null) "mnemonic" else "privateKey")
+      .put("coins", keep?.optJSONArray("coins") ?: JSONArray(r.coins))
+      .put("createdAt", r.createdAt)
+      .put("backup", keep?.optJSONObject("backup") ?: JSONObject().put("manual", false).put("cloud", false))
+      .put("accounts", accountsJson(r.accounts))
+    val stored = JSONObject().put("info", info)
+      .put("addresses", JSONObject(addresses.mapValues { JSONObject(it.value as Map<*, *>) } as Map<*, *>))
       .put("wrappedKey", Envelope.b64(wrapped)).put("envelope", envelope)
     if (writeRecovery && passcode != null) {
       val m = meta()
       val entry = Envelope.seal(Envelope.Kind.RECOVERY, encodeVault(listOf(r)), Envelope.Source.Passcode(passcode),
         Envelope.unb64(m.getString("salt")), m.getInt("m"), m.getInt("t"), cache)
       recovery.set("w.${r.id}", entry)
-      recovery.set("i.${r.id}", AddressIndex.build(INDEX_COINS.mapNotNull { addresses[it.toString()] }))
+      recovery.set("i.${r.id}", AddressIndex.build(addresses.values.flatMap { byCoin -> INDEX_COINS.mapNotNull { byCoin[it.toString()] } }))
     }
     main.set("w.${r.id}", stored.toString())
     return stored
@@ -219,33 +244,99 @@ class WalletStore(context: Context) {
 
   // MARK: addresses
 
-  private fun deriveAddresses(r: Record): Map<String, String> {
-    val out = LinkedHashMap<String, String>()
+  private fun deriveAddresses(r: Record): Map<String, Map<String, String>> {
+    val out = LinkedHashMap<String, Map<String, String>>()
     if (r.words != null) {
       val hd = HDWallet(r.words, r.passphrase ?: "")
       val list = if (r.kind == "multi") CoinType.values().toList() else r.coins.map(::coin)
-      for (c in list) out[c.value().toString()] = hd.getAddressForCoin(c)
+      for (a in r.accounts) out[a.index.toString()] = list.associate { it.value().toString() to address(hd, it, a.index) }
     } else {
       val c = coin(r.keyCoin!!)
       val key = PrivateKey(unhex(r.keyHex!!))
       val list = if (c.blockchain() == Blockchain.ETHEREUM) CoinType.values().filter { it.blockchain() == Blockchain.ETHEREUM } else listOf(c)
-      for (x in list) out[x.value().toString()] = x.deriveAddress(key)
+      out["0"] = list.associate { it.value().toString() to it.deriveAddress(key) }
     }
     return out
   }
+
+  // MARK: HD accounts (SPEC §2.1, mirrors src/hd.ts)
+
+  private fun blockchainName(c: CoinType) = when (c.blockchain()) {
+    Blockchain.ETHEREUM -> "ethereum"
+    Blockchain.TRON -> "tron"
+    Blockchain.COSMOS -> "cosmos"
+    else -> "other"
+  }
+
+  fun accountPath(c: CoinType, index: Int): String {
+    val base = c.derivationPath()
+    if (index == 0) return base
+    if (index < 0) throw WalletException("INVALID", "bad account index")
+    val parts = base.split("/").toMutableList()
+    if (parts.first() != "m" || parts.size < 4) throw WalletException("CRYPTO", "unexpected path $base")
+    if (blockchainName(c) in setOf("ethereum", "tron", "cosmos") || parts[3] != "0'") {
+      parts[parts.size - 1] = if (parts.last().endsWith("'")) "$index'" else "$index"
+    } else {
+      parts[3] = "$index'"
+    }
+    return parts.joinToString("/")
+  }
+
+  private fun key(hd: HDWallet, c: CoinType, index: Int): PrivateKey =
+    if (index == 0) hd.getKeyForCoin(c) else hd.getKey(c, accountPath(c, index))
+
+  private fun address(hd: HDWallet, c: CoinType, index: Int): String =
+    if (index == 0) hd.getAddressForCoin(c) else c.deriveAddress(key(hd, c, index))
 
   fun list(): JSONArray = synchronized(lock) {
     JSONArray(main.keys("w.").map { info(load(it.removePrefix("w."))) }.sortedBy { it.getString("createdAt") })
   }
 
-  fun addresses(id: String, coins: List<Int>): JSONArray = synchronized(lock) {
+  fun addresses(id: String, coins: List<Int>, account: Int): JSONArray = synchronized(lock) {
     val s = load(id)
-    val addrs = s.getJSONObject("addresses")
+    val addrs = s.getJSONObject("addresses").optJSONObject(account.toString()) ?: throw WalletException("NOT_FOUND", "no account $account")
     val mnemonic = info(s).getString("secretType") == "mnemonic"
     JSONArray(coins.mapNotNull { v ->
       val a = addrs.optString(v.toString()).ifEmpty { null } ?: return@mapNotNull null
-      JSONObject().put("coin", v).put("address", a).put("derivationPath", if (mnemonic) coin(v).derivationPath() else "")
+      JSONObject().put("coin", v).put("address", a).put("derivationPath", if (mnemonic) accountPath(coin(v), account) else "")
     })
+  }
+
+  /** Adds the next HD account: the secret derives its addresses, the passcode updates the recovery copy. */
+  fun addAccount(id: String, name: String?, passcode: String, activity: FragmentActivity?): JSONObject = synchronized(lock) {
+    requirePasscode(passcode)
+    val s = load(id)
+    if (info(s).getString("secretType") != "mnemonic") throw WalletException("INVALID", "a private-key wallet has a single account")
+    withSecret(id, activity, "Add an account") { stored ->
+      val r = withCurrentNames(stored, info(s))
+      val next = (r.accounts.maxOfOrNull { it.index } ?: 0) + 1
+      info(store(r.copy(accounts = r.accounts + Account(next, name ?: "Account ${next + 1}")), passcode, keep = info(s)))
+    }
+  }
+
+  fun removeAccount(id: String, index: Int, passcode: String, activity: FragmentActivity?): JSONObject = synchronized(lock) {
+    requirePasscode(passcode)
+    if (index == 0) throw WalletException("INVALID", "the first account can't be removed")
+    val s = load(id)
+    withSecret(id, activity, "Remove an account") { stored ->
+      val r = withCurrentNames(stored, info(s))
+      if (r.accounts.none { it.index == index }) throw WalletException("NOT_FOUND", "no account $index")
+      info(store(r.copy(accounts = r.accounts.filter { it.index != index }), passcode, keep = info(s)))
+    }
+  }
+
+  /** Account names live in the public info (renames don't need the secret); carry them into the sealed record. */
+  private fun withCurrentNames(r: Record, info: JSONObject): Record {
+    val arr = info.optJSONArray("accounts") ?: return r
+    val names = (0 until arr.length()).associate { arr.getJSONObject(it).getInt("index") to arr.getJSONObject(it).getString("name") }
+    return r.copy(accounts = r.accounts.map { a -> names[a.index]?.let { a.copy(name = it) } ?: a })
+  }
+
+  fun renameAccount(id: String, index: Int, name: String): JSONObject = update(id) { info ->
+    val arr = info.getJSONArray("accounts")
+    val i = (0 until arr.length()).firstOrNull { arr.getJSONObject(it).getInt("index") == index }
+      ?: throw WalletException("NOT_FOUND", "no account $index")
+    arr.getJSONObject(i).put("name", name)
   }
 
   fun update(id: String, change: (JSONObject) -> Unit): JSONObject = synchronized(lock) {
@@ -286,11 +377,13 @@ class WalletStore(context: Context) {
     }
   }
 
-  private fun privateKey(r: Record, c: CoinType): PrivateKey {
+  private fun privateKey(r: Record, c: CoinType, account: Int): PrivateKey {
     if (r.words != null) {
       if (r.kind != "multi" && !r.coins.contains(c.value())) throw WalletException("INVALID", "this wallet is not for that network")
-      return HDWallet(r.words, r.passphrase ?: "").getKeyForCoin(c)
+      if (r.accounts.none { it.index == account }) throw WalletException("NOT_FOUND", "no account $account")
+      return key(HDWallet(r.words, r.passphrase ?: ""), c, account)
     }
+    if (account != 0) throw WalletException("NOT_FOUND", "no account $account")
     val own = coin(r.keyCoin!!)
     if (own != c && !(own.blockchain() == Blockchain.ETHEREUM && c.blockchain() == Blockchain.ETHEREUM)) {
       throw WalletException("INVALID", "this wallet is not for that network")
@@ -299,11 +392,11 @@ class WalletStore(context: Context) {
   }
 
   /** Pre-image hash → sign → compile (SPEC §7). The key never reaches JavaScript. */
-  fun signTransaction(id: String, coinValue: Int, inputB64: String, activity: FragmentActivity?): String = synchronized(lock) {
+  fun signTransaction(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
     val c = coin(coinValue)
     val input = Envelope.unb64(inputB64)
     withSecret(id, activity, "Confirm the transaction") { r ->
-      val key = privateKey(r, c)
+      val key = privateKey(r, c, account)
       val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
       if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
       val sig = key.sign(pre.dataHash.toByteArray(), c.curve()) ?: throw WalletException("CRYPTO", "signing failed")
@@ -314,10 +407,10 @@ class WalletStore(context: Context) {
     }
   }
 
-  fun signMessage(id: String, coinValue: Int, message: String, typed: Boolean, activity: FragmentActivity?): String = synchronized(lock) {
+  fun signMessage(id: String, coinValue: Int, message: String, typed: Boolean, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
     val c = coin(coinValue)
     withSecret(id, activity, "Confirm the signature") { r ->
-      val key = privateKey(r, c)
+      val key = privateKey(r, c, account)
       when {
         c.blockchain() == Blockchain.ETHEREUM && !typed -> EthereumMessageSigner.signMessage(key, message)
         c.blockchain() == Blockchain.ETHEREUM && typed -> EthereumMessageSigner.signTypedMessage(key, message)
@@ -409,11 +502,11 @@ class WalletStore(context: Context) {
 
   // MARK: helpers that never touch stored secrets
 
-  fun previewAddresses(words: String, passphrase: String?, coins: List<Int>): JSONArray {
+  fun previewAddresses(words: String, passphrase: String?, coins: List<Int>, account: Int): JSONArray {
     if (!Mnemonic.isValid(words)) throw WalletException("INVALID", "this secret phrase is not valid")
     val hd = HDWallet(words, passphrase ?: "")
     val list = if (coins.isEmpty()) CoinType.values().toList() else coins.map(::coin)
-    return JSONArray(list.map { JSONObject().put("coin", it.value()).put("address", hd.getAddressForCoin(it)).put("derivationPath", it.derivationPath()) })
+    return JSONArray(list.map { JSONObject().put("coin", it.value()).put("address", address(hd, it, account)).put("derivationPath", accountPath(it, account)) })
   }
 
   fun envelopeDigest(json: String, source: Envelope.Source): String =

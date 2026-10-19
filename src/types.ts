@@ -7,6 +7,12 @@ export type WalletSecret =
   | { type: 'mnemonic'; words: string; passphrase?: string }
   | { type: 'privateKey'; hex: string; coin: CoinType };
 
+/** HD account on a phrase wallet (docs/SPEC.md §2.1). Index 0 is the default path. */
+export interface Account {
+  index: number;
+  name: string;
+}
+
 /** Public description of a wallet. Never contains the secret. */
 export interface WalletInfo {
   id: string;
@@ -16,6 +22,8 @@ export interface WalletInfo {
   coins: CoinType[];
   createdAt: string;
   backup: { manual: boolean; cloud: boolean };
+  /** Phrase wallets: one or more HD accounts. Private-key wallets: just account 0. */
+  accounts: Account[];
 }
 
 /** A wallet with its secret, as stored inside an encrypted envelope. */
@@ -26,6 +34,8 @@ export interface WalletRecord {
   coins: CoinType[];
   createdAt: string;
   secret: WalletSecret;
+  /** Phrase wallets only; missing means [{ index: 0, name: 'Account 1' }]. */
+  accounts?: Account[];
 }
 
 export interface VaultPayload {
