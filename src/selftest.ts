@@ -9,7 +9,12 @@ import { WalletCore } from './native.ts';
 import { decodeVault } from './vault.ts';
 
 export interface Vectors {
-  hd: { words: string; accounts: Record<string, { coin: number; paths: string[]; addresses: string[] }> };
+  hd: {
+    words: string;
+    accounts: Record<string, { coin: number; paths: string[]; addresses: string[] }>;
+    solanaPhantom: { paths: string[]; addresses: string[] };
+    solanaKey: { base58: string; array: string; address: string };
+  };
   derivation: { mnemonic: { words: string; addresses: Record<string, { coin: number; address: string }> }[] };
   envelopes: { wallets: unknown[]; cases: { name: string; secret: Record<string, string>; envelope: { kind: string; [k: string]: unknown } }[] };
   signing: { coin: number; privateKeyHex: string; inputBase64: string; outputBase64: string };
@@ -56,7 +61,7 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
   await check('addresses for every chain match the vectors', async () => {
     let n = 0;
     for (const m of v.derivation.mnemonic) {
-      const got = await WalletCore.previewAddresses(m.words, null, []);
+      const got = await WalletCore.previewAddresses(m.words, null, [], 0, 'trust'); // vectors use the library's default paths
       const byCoin = new Map(got.map((a) => [a.coin, a.address]));
       for (const [name, want] of Object.entries(m.addresses)) {
         expect(byCoin.get(want.coin) === want.address, `${name}: ${byCoin.get(want.coin)} != ${want.address}`);
@@ -69,7 +74,7 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
   await check('HD accounts 2 and 3 match on every chain', async () => {
     let n = 0;
     for (const account of [1, 2]) {
-      const got = await WalletCore.previewAddresses(v.hd.words, null, [], account);
+      const got = await WalletCore.previewAddresses(v.hd.words, null, [], account, 'trust');
       const byCoin = new Map(got.map((a) => [a.coin, a]));
       for (const [name, want] of Object.entries(v.hd.accounts)) {
         const g = byCoin.get(want.coin);
@@ -77,7 +82,12 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
         n++;
       }
     }
-    return `${n} addresses`;
+    const sol = await WalletCore.previewAccounts(v.hd.words, null, [501], 0, 3, 'phantom');
+    sol.forEach((a, i) => {
+      expect(a.account === i && a.addresses[0]!.address === v.hd.solanaPhantom.addresses[i], `Phantom Solana account ${i}: ${a.addresses[0]!.address}`);
+      expect(a.addresses[0]!.derivationPath === v.hd.solanaPhantom.paths[i], `Phantom Solana path ${i}: ${a.addresses[0]!.derivationPath}`);
+    });
+    return `${n + 3} addresses`;
   });
 
   // 2. Envelopes made by the JavaScript reference open natively.
@@ -125,7 +135,7 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
 
   await check('import a phrase', async () => {
     const m = v.derivation.mnemonic[0]!;
-    const w = await WalletCore.importMnemonic({ name: 'Imported', words: `  ${m.words.toUpperCase()} `, kind: 'hd', passcode: PASSCODE });
+    const w = await WalletCore.importMnemonic({ name: 'Imported', words: `  ${m.words.toUpperCase()} `, kind: 'hd', solanaPath: 'trust', passcode: PASSCODE });
     importedId = w.id;
     const got = await WalletCore.getAddresses(w.id, [0, 60, 195, 501]);
     for (const a of got) {
@@ -149,6 +159,35 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await rejects(WalletCore.addAccount(ethKeyIdPlaceholder(), null, PASSCODE), 'NOT_FOUND');
     await rejects(WalletCore.addAccount(multiId, null, PASSCODE), 'INVALID'); // only HD wallets get more accounts
     return 'accounts 2 and 3 work';
+  });
+
+  await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {
+    const w = await WalletCore.importMnemonic({ name: 'Phantom', words: v.hd.words, kind: 'hd', solanaPath: 'phantom', accounts: 3, passcode: PASSCODE });
+    expect(w.accounts.length === 3 && w.accounts[2]!.name === 'Account 3' && w.solanaPath === 'phantom', JSON.stringify(w));
+    for (const i of [0, 1, 2]) {
+      const [sol, eth] = await WalletCore.getAddresses(w.id, [501, 60], i);
+      expect(sol!.address === v.hd.solanaPhantom.addresses[i], `SOL account ${i}: ${sol!.address}`);
+      expect(eth!.address === v.hd.accounts.ethereum!.addresses[i], `ETH account ${i}: ${eth!.address}`);
+    }
+    await rejects(WalletCore.importMnemonic({ name: 'x', words: v.hd.words, kind: 'multi', accounts: 2, passcode: PASSCODE }), 'INVALID');
+    const t = await WalletCore.setSolanaPath(w.id, 'trust', PASSCODE);
+    const [sol2] = await WalletCore.getAddresses(w.id, [501], 2);
+    expect(t.solanaPath === 'trust' && sol2!.address === v.hd.accounts.solana!.addresses[2], `after switch: ${sol2!.address}`);
+    const [eth2] = await WalletCore.getAddresses(w.id, [60], 2);
+    expect(eth2!.address === v.hd.accounts.ethereum!.addresses[2], 'switching the Solana path changed Ethereum');
+    await WalletCore.deleteWallet(w.id, PASSCODE);
+
+    const k = v.hd.solanaKey;
+    for (const privateKey of [k.base58, k.array]) {
+      const kw = await WalletCore.importPrivateKey({ name: 'SOL key', privateKey, coin: 501, passcode: PASSCODE });
+      const [a] = await WalletCore.getAddresses(kw.id, [501]);
+      expect(a!.address === k.address, `Solana key: ${a!.address}`);
+      await WalletCore.deleteWallet(kw.id, PASSCODE);
+    }
+    const broken = JSON.stringify([...JSON.parse(k.array).slice(0, 63), 0]);
+    await rejects(WalletCore.importPrivateKey({ name: 'x', privateKey: broken, coin: 501, passcode: PASSCODE }), 'INVALID');
+    await rejects(WalletCore.importPrivateKey({ name: 'x', privateKey: k.base58, coin: 60, passcode: PASSCODE }), 'INVALID');
+    return '3 accounts, path switch, 2 key formats';
   });
 
   await check('import a private key and sign (EIP-155)', async () => {

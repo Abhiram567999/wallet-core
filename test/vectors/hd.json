@@ -2353,5 +2353,23 @@
         "0xb6716976A3ebe8D39aCEB04372f22Ff8e6802D7A"
       ]
     }
+  },
+  "solanaPhantom": {
+    "coin": 501,
+    "paths": [
+      "m/44'/501'/0'/0'",
+      "m/44'/501'/1'/0'",
+      "m/44'/501'/2'/0'"
+    ],
+    "addresses": [
+      "HAgk14JpMQLgt6rVgv7cBQFJWFto5Dqxi472uT3DKpqk",
+      "Hh8QwFUA6MtVu1qAoq12ucvFHNwCcVTV7hpWjeY1Hztb",
+      "7WktogJEd2wQ9eH2oWusmcoFTgeYi6rS632UviTBJ2jm"
+    ]
+  },
+  "solanaKey": {
+    "base58": "2Ana1pUpv2ZbMVkwF5FXapYeBEjdxDatLn7nvJkhgTSdZd8hbDHTd21as7EAsg7ypityqfsw2pMQKJcVDVcAEsd",
+    "array": "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,121,181,86,46,143,230,84,249,64,120,177,18,232,169,139,167,144,31,133,58,230,149,190,215,224,227,145,11,173,4,150,100]",
+    "address": "9C6hybhQ6Aycep9jaUnP6uL9ZYvDjUp1aSkFWPUFJtpj"
   }
 }

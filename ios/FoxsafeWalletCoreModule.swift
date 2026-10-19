@@ -27,6 +27,8 @@ struct ImportMnemonicOptions: Record {
   @Field var kind: String = "multi"
   @Field var coin: Int? = nil
   @Field var coins: [Int]? = nil
+  @Field var solanaPath: String = "phantom"
+  @Field var accounts: Int = 1
   @Field var passcode: String = ""
 }
 
@@ -117,7 +119,8 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("importMnemonic") { (o: ImportMnemonicOptions) in
       try run {
         try self.store.importMnemonic(name: o.name, words: o.words, passphrase: o.passphrase, kind: o.kind,
-                                      coin: try o.coin.map(u32), coins: try o.coins?.map(u32), passcode: o.passcode)
+                                      coin: try o.coin.map(u32), coins: try o.coins?.map(u32), solanaPath: o.solanaPath,
+                                      accountCount: o.accounts, passcode: o.passcode)
       }
     }
     AsyncFunction("importPrivateKey") { (o: ImportPrivateKeyOptions) in
@@ -129,6 +132,9 @@ public class FoxsafeWalletCoreModule: Module {
     }
     AsyncFunction("setCoins") { (id: String, coins: [Int]) in
       try run { try self.store.setCoins(id: id, coins: try coins.map(u32)) }
+    }
+    AsyncFunction("setSolanaPath") { (id: String, solanaPath: String, passcode: String) in
+      try run { try self.store.setSolanaPath(id: id, solanaPath: solanaPath, passcode: passcode) }
     }
     AsyncFunction("deleteWallet") { (id: String, passcode: String) in try run { try self.store.delete(id: id, passcode: passcode) } }
     AsyncFunction("getAddresses") { (id: String, coins: [Int], account: Int?) in
@@ -187,8 +193,17 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("wipe") { (keepRecovery: Bool) in try run { try self.store.wipe(keepRecovery: keepRecovery) } }
 
     // Helpers that never read stored secrets
-    AsyncFunction("previewAddresses") { (words: String, passphrase: String?, coins: [Int], account: Int?) in
-      try run { try WalletStore.previewAddresses(words: words, passphrase: passphrase, coins: try coins.map(u32), account: try idx(account)) }
+    AsyncFunction("previewAddresses") { (words: String, passphrase: String?, coins: [Int], account: Int?, solanaPath: String?) in
+      try run {
+        try WalletStore.previewAddresses(words: words, passphrase: passphrase, coins: try coins.map(u32), account: try idx(account),
+                                         solanaPath: solanaPath ?? "phantom")
+      }
+    }
+    AsyncFunction("previewAccounts") { (words: String, passphrase: String?, coins: [Int], from: Int, count: Int, solanaPath: String) in
+      try run {
+        try WalletStore.previewAccounts(words: words, passphrase: passphrase, coins: try coins.map(u32), from: try idx(from), count: count,
+                                        solanaPath: solanaPath)
+      }
     }
     AsyncFunction("envelopeDigest") { (json: String, secret: VectorSecret) in
       try run { try WalletStore.envelopeDigest(json, source: try secret.source()) }

@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import org.json.JSONArray
 import org.json.JSONObject
 import wallet.core.jni.AnyAddress
+import wallet.core.jni.Base58
 import wallet.core.jni.Blockchain
 import wallet.core.jni.CoinType
 import wallet.core.jni.DataVector
@@ -32,6 +33,11 @@ class WalletStore(context: Context) {
 
     /** Chains whose addresses go into the recovery address index (SPEC §5). EVM networks share Ethereum's address. */
     val INDEX_COINS = listOf(0, 2, 3, 60, 118, 144, 145, 148, 195, 354, 397, 501, 607, 637, 784, 1815, 20000714)
+    /** Accounts whose addresses go into the recovery address index (it must stay small). */
+    const val INDEX_ACCOUNTS = 5
+    /** Most accounts one import may create at once. */
+    const val MAX_IMPORT_ACCOUNTS = 500
+    val SOLANA_PATHS = setOf("phantom", "trust")
 
     fun coin(v: Int): CoinType = CoinType.createFromValue(v) ?: throw WalletException("INVALID", "unsupported coin $v")
     fun now(): String = Instant.now().toString()
@@ -51,6 +57,8 @@ class WalletStore(context: Context) {
     val id: String, val name: String, val kind: String, val coins: List<Int>, val createdAt: String,
     val words: String? = null, val passphrase: String? = null, val keyHex: String? = null, val keyCoin: Int? = null,
     val accounts: List<Account> = listOf(Account(0, "Account 1")),
+    /** "phantom" or "trust" (SPEC §2.2); records saved before it existed are "trust". */
+    val solanaPath: String = "trust",
   ) {
     fun json(): JSONObject {
       val secret = if (words != null) {
@@ -60,7 +68,7 @@ class WalletStore(context: Context) {
       }
       return JSONObject().put("id", id).put("name", name).put("kind", kind).put("coins", JSONArray(coins))
         .put("createdAt", createdAt).put("secret", secret)
-        .apply { if (words != null) put("accounts", accountsJson(accounts)) }
+        .apply { if (words != null) put("accounts", accountsJson(accounts)).put("solanaPath", solanaPath) }
     }
   }
 
@@ -110,11 +118,20 @@ class WalletStore(context: Context) {
       if (coins.isEmpty()) bad("coins")
       val accounts = parseAccounts(w.optJSONArray("accounts"), ::bad)
       if (accounts != null && r.words == null) bad("accounts")
-      if (accounts != null) r.copy(accounts = accounts) else r
+      val withAccounts = if (accounts != null) r.copy(accounts = accounts) else r
+      if (!w.has("solanaPath")) withAccounts
+      else {
+        val sp = w.opt("solanaPath") as? String
+        if (r.words == null || sp !in SOLANA_PATHS) bad("solanaPath")
+        withAccounts.copy(solanaPath = sp!!)
+      }
     }
   }
 
-  private fun info(s: JSONObject) = s.getJSONObject("info")
+  /** Public info; phrase wallets saved before the Solana path existed report "trust". */
+  private fun info(s: JSONObject): JSONObject = s.getJSONObject("info").apply {
+    if (optString("secretType") == "mnemonic" && !has("solanaPath")) put("solanaPath", "trust")
+  }
 
   private fun load(id: String): JSONObject =
     JSONObject(main.get("w.$id") ?: throw WalletException("NOT_FOUND", "no wallet $id"))
@@ -175,22 +192,37 @@ class WalletStore(context: Context) {
     // Entropy from the OS secure random generator, never the library's own.
     val entropy = Envelope.random(if (wordCount == 12) 16 else 32)
     val words = try { HDWallet(entropy, "").mnemonic() } finally { entropy.fill(0) }
-    return addMnemonic(name, words, null, kind, coin, coins, passcode)
+    return addMnemonic(name, words, null, kind, coin, coins, "phantom", 1, passcode)
   }
 
-  fun importMnemonic(name: String, words: String, passphrase: String?, kind: String, coin: Int?, coins: List<Int>?, passcode: String): JSONObject {
-    val normalized = words.lowercase().trim().split(Regex("\\s+")).joinToString(" ")
+  /** [accountCount] > 1 (hd only) brings back accounts 0 … n-1 at once, e.g. the ones the app found on the networks. */
+  fun importMnemonic(
+    name: String, words: String, passphrase: String?, kind: String, coin: Int?, coins: List<Int>?,
+    solanaPath: String, accountCount: Int, passcode: String,
+  ): JSONObject {
+    val normalized = normalise(words)
     if (!Mnemonic.isValid(normalized)) throw WalletException("INVALID", "this secret phrase is not valid")
-    return addMnemonic(name, normalized, passphrase, kind, coin, coins, passcode)
+    return addMnemonic(name, normalized, passphrase, kind, coin, coins, solanaPath, accountCount, passcode)
   }
 
-  private fun addMnemonic(name: String, words: String, passphrase: String?, kind: String, coin: Int?, coins: List<Int>?, passcode: String): JSONObject {
+  private fun normalise(words: String) = words.lowercase().trim().split(Regex("\\s+")).joinToString(" ")
+
+  private fun addMnemonic(
+    name: String, words: String, passphrase: String?, kind: String, coin: Int?, coins: List<Int>?,
+    solanaPath: String, accountCount: Int, passcode: String,
+  ): JSONObject {
+    if (solanaPath !in SOLANA_PATHS) throw WalletException("INVALID", "solanaPath must be phantom or trust")
+    if (accountCount !in 1..MAX_IMPORT_ACCOUNTS) throw WalletException("INVALID", "bad number of accounts")
+    if (accountCount != 1 && kind != "hd") throw WalletException("INVALID", "only HD wallets have more accounts")
     val walletCoins = when (kind) {
       "multi", "hd" -> (coins ?: DEFAULT_COINS).onEach { coin(it) }
       "single" -> listOf(coin(coin ?: throw WalletException("INVALID", "a single-chain wallet needs a coin")).value())
       else -> throw WalletException("INVALID", "kind must be single, multi or hd")
     }
-    val r = Record(UUID.randomUUID().toString(), name, kind, walletCoins, now(), words = words, passphrase = passphrase)
+    val r = Record(
+      UUID.randomUUID().toString(), name, kind, walletCoins, now(), words = words, passphrase = passphrase,
+      accounts = (0 until accountCount).map { Account(it, "Account ${it + 1}") }, solanaPath = solanaPath,
+    )
     synchronized(lock) {
       requirePasscode(passcode)
       return info(store(r, passcode))
@@ -199,10 +231,12 @@ class WalletStore(context: Context) {
 
   fun importPrivateKey(name: String, privateKey: String, coinValue: Int, passcode: String): JSONObject {
     val c = coin(coinValue)
-    val hexKey = privateKey.trim().lowercase().removePrefix("0x")
-    val data = unhex(hexKey)
-    if (hexKey.length != 64 || data == null || !PrivateKey.isValid(data, c.curve())) {
-      throw WalletException("INVALID", "this private key is not valid for the chosen network")
+    val data = parsePrivateKey(privateKey, c)
+    val hexKey = hex(data)
+    try {
+      if (!PrivateKey.isValid(data, c.curve())) throw WalletException("INVALID", "this private key is not valid for the chosen network")
+    } finally {
+      data.fill(0)
     }
     val r = Record(UUID.randomUUID().toString(), name, "single", listOf(coinValue), now(), keyHex = hexKey, keyCoin = coinValue)
     synchronized(lock) {
@@ -211,9 +245,49 @@ class WalletStore(context: Context) {
     }
   }
 
+  /**
+   * Hex (with or without 0x). For Solana also base58 of the 64-byte secret key
+   * (private + public, as Phantom and Solflare export it) or of the 32-byte key,
+   * and the Solana CLI's JSON array (SPEC §2.2).
+   */
+  private fun parsePrivateKey(input: String, c: CoinType): ByteArray {
+    fun bad(): Nothing = throw WalletException("INVALID", "this private key is not valid for the chosen network")
+    val text = input.trim()
+    val hexKey = text.lowercase().removePrefix("0x")
+    if (hexKey.length == 64) unhex(hexKey)?.let { return it }
+    if (c != CoinType.SOLANA) bad()
+    val raw: ByteArray = if (text.startsWith("[")) {
+      val arr = runCatching { JSONArray(text) }.getOrNull() ?: bad()
+      ByteArray(arr.length()) { i -> arr.optInt(i, -1).takeIf { it in 0..255 }?.toByte() ?: bad() }
+    } else {
+      Base58.decodeNoCheck(text) ?: bad()
+    }
+    try {
+      return when (raw.size) {
+        32 -> raw.copyOf()
+        64 -> {
+          val secret = raw.copyOfRange(0, 32)
+          if (!PrivateKey.isValid(secret, c.curve()) || !PrivateKey(secret).publicKeyEd25519.data().contentEquals(raw.copyOfRange(32, 64))) {
+            secret.fill(0)
+            throw WalletException("INVALID", "this Solana key doesn't match its own public key")
+          }
+          secret
+        }
+        else -> bad()
+      }
+    } finally {
+      raw.fill(0)
+    }
+  }
+
   /** Main copy plus recovery entry for one wallet. Caller holds the lock and checked the passcode. */
-  private fun store(r: Record, passcode: String?, cache: Envelope.KeyCache? = null, writeRecovery: Boolean = true, keep: JSONObject? = null): JSONObject {
-    val addresses = deriveAddresses(r)
+  /** [previous] addresses (same secret and Solana path) are reused, so adding an account only derives that account. */
+  private fun store(
+    r: Record, passcode: String?, cache: Envelope.KeyCache? = null, writeRecovery: Boolean = true, keep: JSONObject? = null,
+    previous: JSONObject? = null,
+  ): JSONObject {
+    val coins = keep?.optJSONArray("coins")?.let { a -> (0 until a.length()).map { a.getInt(it) } } ?: r.coins
+    val addresses = deriveAddresses(r, coins, previous)
     val dataKey = Envelope.random(32)
     val envelope: String
     val wrapped: ByteArray
@@ -229,6 +303,7 @@ class WalletStore(context: Context) {
       .put("createdAt", r.createdAt)
       .put("backup", keep?.optJSONObject("backup") ?: JSONObject().put("manual", false).put("cloud", false))
       .put("accounts", accountsJson(r.accounts))
+      .apply { if (r.words != null) put("solanaPath", r.solanaPath) }
     val stored = JSONObject().put("info", info)
       .put("addresses", JSONObject(addresses.mapValues { JSONObject(it.value as Map<*, *>) } as Map<*, *>))
       .put("wrappedKey", Envelope.b64(wrapped)).put("envelope", envelope)
@@ -237,7 +312,8 @@ class WalletStore(context: Context) {
       val entry = Envelope.seal(Envelope.Kind.RECOVERY, encodeVault(listOf(r)), Envelope.Source.Passcode(passcode),
         Envelope.unb64(m.getString("salt")), m.getInt("m"), m.getInt("t"), cache)
       recovery.set("w.${r.id}", entry)
-      recovery.set("i.${r.id}", AddressIndex.build(addresses.values.flatMap { byCoin -> INDEX_COINS.mapNotNull { byCoin[it.toString()] } }))
+      val indexed = r.accounts.map { it.index }.sorted().take(INDEX_ACCOUNTS)
+      recovery.set("i.${r.id}", AddressIndex.build(indexed.flatMap { i -> INDEX_COINS.mapNotNull { addresses[i.toString()]?.get(it.toString()) } }))
     }
     main.set("w.${r.id}", stored.toString())
     return stored
@@ -245,13 +321,27 @@ class WalletStore(context: Context) {
 
   // MARK: addresses
 
-  private fun deriveAddresses(r: Record): Map<String, Map<String, String>> {
+  /**
+   * Public addresses, derived once while the secret is at hand. Account 0 gets
+   * every chain, so more chains can be switched on without the secret; other
+   * accounts get the wallet's chains and the recovery-index chains (every
+   * chain for 100 accounts would be ~1 MB and seconds of work).
+   */
+  private fun deriveAddresses(r: Record, coins: List<Int>, previous: JSONObject? = null): Map<String, Map<String, String>> {
     val out = LinkedHashMap<String, Map<String, String>>()
     if (r.words != null) {
-      val hd = HDWallet(r.words, r.passphrase ?: "")
-      // Every phrase wallet derives every chain, so more chains can be switched on without the secret.
-      val list = CoinType.values().toList()
-      for (a in r.accounts) out[a.index.toString()] = list.associate { it.value().toString() to address(hd, it, a.index) }
+      val hd by lazy { HDWallet(r.words, r.passphrase ?: "") }
+      val all = CoinType.values().toList()
+      val others = (coins + INDEX_COINS).toSet().mapNotNull { CoinType.createFromValue(it) }
+      for (a in r.accounts) {
+        val byCoin = LinkedHashMap<String, String>()
+        previous?.optJSONObject(a.index.toString())?.let { p -> p.keys().forEach { byCoin[it] = p.getString(it) } }
+        for (c in if (a.index == 0) all else others) {
+          val k = c.value().toString()
+          if (k !in byCoin) byCoin[k] = address(hd, c, a.index, r.solanaPath)
+        }
+        out[a.index.toString()] = byCoin
+      }
     } else {
       val c = coin(r.keyCoin!!)
       val key = PrivateKey(unhex(r.keyHex!!))
@@ -270,8 +360,11 @@ class WalletStore(context: Context) {
     else -> "other"
   }
 
-  fun accountPath(c: CoinType, index: Int): String {
-    val base = c.derivationPath()
+  private fun basePath(c: CoinType, solanaPath: String) =
+    if (c == CoinType.SOLANA && solanaPath == "phantom") "m/44'/501'/0'/0'" else c.derivationPath()
+
+  fun accountPath(c: CoinType, index: Int, solanaPath: String): String {
+    val base = basePath(c, solanaPath)
     if (index == 0) return base
     if (index < 0) throw WalletException("INVALID", "bad account index")
     val parts = base.split("/").toMutableList()
@@ -284,11 +377,14 @@ class WalletStore(context: Context) {
     return parts.joinToString("/")
   }
 
-  private fun key(hd: HDWallet, c: CoinType, index: Int): PrivateKey =
-    if (index == 0) hd.getKeyForCoin(c) else hd.getKey(c, accountPath(c, index))
+  /** True when account 0 is the library's default path, which has a faster call. */
+  private fun isDefault(c: CoinType, index: Int, solanaPath: String) = index == 0 && !(c == CoinType.SOLANA && solanaPath == "phantom")
 
-  private fun address(hd: HDWallet, c: CoinType, index: Int): String =
-    if (index == 0) hd.getAddressForCoin(c) else c.deriveAddress(key(hd, c, index))
+  private fun key(hd: HDWallet, c: CoinType, index: Int, solanaPath: String): PrivateKey =
+    if (isDefault(c, index, solanaPath)) hd.getKeyForCoin(c) else hd.getKey(c, accountPath(c, index, solanaPath))
+
+  private fun address(hd: HDWallet, c: CoinType, index: Int, solanaPath: String): String =
+    if (isDefault(c, index, solanaPath)) hd.getAddressForCoin(c) else c.deriveAddress(key(hd, c, index, solanaPath))
 
   fun list(): JSONArray = synchronized(lock) {
     JSONArray(main.keys("w.").map { info(load(it.removePrefix("w."))) }.sortedBy { it.getString("createdAt") })
@@ -298,9 +394,10 @@ class WalletStore(context: Context) {
     val s = load(id)
     val addrs = s.getJSONObject("addresses").optJSONObject(account.toString()) ?: throw WalletException("NOT_FOUND", "no account $account")
     val mnemonic = info(s).getString("secretType") == "mnemonic"
+    val solanaPath = info(s).optString("solanaPath", "trust")
     JSONArray(coins.mapNotNull { v ->
       val a = addrs.optString(v.toString()).ifEmpty { null } ?: return@mapNotNull null
-      JSONObject().put("coin", v).put("address", a).put("derivationPath", if (mnemonic) accountPath(coin(v), account) else "")
+      JSONObject().put("coin", v).put("address", a).put("derivationPath", if (mnemonic) accountPath(coin(v), account, solanaPath) else "")
     })
   }
 
@@ -312,7 +409,7 @@ class WalletStore(context: Context) {
     withSecret(id, activity, "Add an account") { stored ->
       val r = withCurrentNames(stored, info(s))
       val next = (r.accounts.maxOfOrNull { it.index } ?: 0) + 1
-      info(store(r.copy(accounts = r.accounts + Account(next, name ?: "Account ${next + 1}")), passcode, keep = info(s)))
+      info(store(r.copy(accounts = r.accounts + Account(next, name ?: "Account ${next + 1}")), passcode, keep = info(s), previous = s.getJSONObject("addresses")))
     }
   }
 
@@ -323,7 +420,7 @@ class WalletStore(context: Context) {
     withSecret(id, activity, "Remove an account") { stored ->
       val r = withCurrentNames(stored, info(s))
       if (r.accounts.none { it.index == index }) throw WalletException("NOT_FOUND", "no account $index")
-      info(store(r.copy(accounts = r.accounts.filter { it.index != index }), passcode, keep = info(s)))
+      info(store(r.copy(accounts = r.accounts.filter { it.index != index }), passcode, keep = info(s), previous = s.getJSONObject("addresses")))
     }
   }
 
@@ -348,11 +445,35 @@ class WalletStore(context: Context) {
     info(s)
   }
 
-  fun setCoins(id: String, coins: List<Int>) = update(id) { info ->
+  /** Changes the chains shown. If an account lacks an address for a new chain, it is derived now (needs the secret). */
+  fun setCoins(id: String, coins: List<Int>, activity: FragmentActivity?): JSONObject = synchronized(lock) {
+    val s = load(id)
+    val info = info(s)
     if (info.getString("secretType") != "mnemonic") throw WalletException("INVALID", "a private-key wallet keeps its one network")
     if (coins.isEmpty()) throw WalletException("INVALID", "choose at least one coin")
     coins.forEach { coin(it) }
     info.put("coins", JSONArray(coins))
+    val addrs = s.getJSONObject("addresses")
+    if (addrs.keys().asSequence().any { a -> coins.any { !addrs.getJSONObject(a).has(it.toString()) } }) {
+      val derived = withSecret(id, activity, "Add the network") { deriveAddresses(withCurrentNames(it, info), coins, addrs) }
+      s.put("addresses", JSONObject(derived.mapValues { JSONObject(it.value as Map<*, *>) } as Map<*, *>))
+    }
+    main.set("w.$id", s.toString())
+    info
+  }
+
+  /** Switches how Solana addresses are derived (SPEC §2.2); only the Solana addresses change. */
+  fun setSolanaPath(id: String, solanaPath: String, passcode: String, activity: FragmentActivity?): JSONObject = synchronized(lock) {
+    if (solanaPath !in SOLANA_PATHS) throw WalletException("INVALID", "solanaPath must be phantom or trust")
+    requirePasscode(passcode)
+    val s = load(id)
+    if (info(s).getString("secretType") != "mnemonic") throw WalletException("INVALID", "only phrase wallets have a Solana path")
+    val kept = JSONObject(s.getJSONObject("addresses").toString()).apply {
+      keys().forEach { getJSONObject(it).remove(CoinType.SOLANA.value().toString()) }
+    }
+    withSecret(id, activity, "Change the Solana address") { stored ->
+      info(store(withCurrentNames(stored, info(s)).copy(solanaPath = solanaPath), passcode, keep = info(s), previous = kept))
+    }
   }
 
   fun delete(id: String, passcode: String) = synchronized(lock) {
@@ -382,7 +503,7 @@ class WalletStore(context: Context) {
   private fun privateKey(r: Record, c: CoinType, account: Int): PrivateKey {
     if (r.words != null) {
       if (r.accounts.none { it.index == account }) throw WalletException("NOT_FOUND", "no account $account")
-      return key(HDWallet(r.words, r.passphrase ?: ""), c, account)
+      return key(HDWallet(r.words, r.passphrase ?: ""), c, account, r.solanaPath)
     }
     if (account != 0) throw WalletException("NOT_FOUND", "no account $account")
     val own = coin(r.keyCoin!!)
@@ -506,11 +627,22 @@ class WalletStore(context: Context) {
 
   // MARK: helpers that never touch stored secrets
 
-  fun previewAddresses(words: String, passphrase: String?, coins: List<Int>, account: Int): JSONArray {
-    if (!Mnemonic.isValid(words)) throw WalletException("INVALID", "this secret phrase is not valid")
-    val hd = HDWallet(words, passphrase ?: "")
+  fun previewAddresses(words: String, passphrase: String?, coins: List<Int>, account: Int, solanaPath: String): JSONArray =
+    previewAccounts(words, passphrase, coins, account, 1, solanaPath).getJSONObject(0).getJSONArray("addresses")
+
+  /** Addresses of [count] accounts from [from], for finding used accounts before an import. */
+  fun previewAccounts(words: String, passphrase: String?, coins: List<Int>, from: Int, count: Int, solanaPath: String): JSONArray {
+    if (solanaPath !in SOLANA_PATHS) throw WalletException("INVALID", "solanaPath must be phantom or trust")
+    if (from < 0 || count !in 1..100 || from.toLong() + count > 0x80000000L) throw WalletException("INVALID", "bad account range")
+    val normalized = normalise(words)
+    if (!Mnemonic.isValid(normalized)) throw WalletException("INVALID", "this secret phrase is not valid")
+    val hd = HDWallet(normalized, passphrase ?: "")
     val list = if (coins.isEmpty()) CoinType.values().toList() else coins.map(::coin)
-    return JSONArray(list.map { JSONObject().put("coin", it.value()).put("address", address(hd, it, account)).put("derivationPath", accountPath(it, account)) })
+    return JSONArray((from until from + count).map { account ->
+      JSONObject().put("account", account).put("addresses", JSONArray(list.map {
+        JSONObject().put("coin", it.value()).put("address", address(hd, it, account, solanaPath)).put("derivationPath", accountPath(it, account, solanaPath))
+      }))
+    })
   }
 
   fun envelopeDigest(json: String, source: Envelope.Source): String =

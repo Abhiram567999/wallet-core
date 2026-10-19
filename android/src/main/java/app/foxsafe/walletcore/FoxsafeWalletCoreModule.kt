@@ -26,6 +26,8 @@ class ImportMnemonicOptions : Record {
   @Field val kind: String = "multi"
   @Field val coin: Int? = null
   @Field val coins: List<Int>? = null
+  @Field val solanaPath: String = "phantom"
+  @Field val accounts: Int = 1
   @Field val passcode: String = ""
 }
 
@@ -110,14 +112,17 @@ class FoxsafeWalletCoreModule : Module() {
       call { store.createWallet(o.name, o.kind, o.coin, o.wordCount, o.coins, o.passcode) }
     }
     AsyncFunction("importMnemonic") { o: ImportMnemonicOptions ->
-      call { store.importMnemonic(o.name, o.words, o.passphrase, o.kind, o.coin, o.coins, o.passcode) }
+      call { store.importMnemonic(o.name, o.words, o.passphrase, o.kind, o.coin, o.coins, o.solanaPath, o.accounts, o.passcode) }
     }
     AsyncFunction("importPrivateKey") { o: ImportPrivateKeyOptions ->
       call { store.importPrivateKey(o.name, o.privateKey, o.coin, o.passcode) }
     }
     AsyncFunction("listWallets") { call { store.list() } }
     AsyncFunction("renameWallet") { id: String, name: String -> call { store.update(id) { it.put("name", name) } } }
-    AsyncFunction("setCoins") { id: String, coins: List<Int> -> call { store.setCoins(id, coins) } }
+    AsyncFunction("setCoins") { id: String, coins: List<Int> -> call { store.setCoins(id, coins, activity) } }
+    AsyncFunction("setSolanaPath") { id: String, solanaPath: String, passcode: String ->
+      call { store.setSolanaPath(id, solanaPath, passcode, activity) }
+    }
     AsyncFunction("deleteWallet") { id: String, passcode: String -> call { store.delete(id, passcode) } }
     AsyncFunction("getAddresses") { id: String, coins: List<Int>, account: Int? -> call { store.addresses(id, coins, account ?: 0) } }
     AsyncFunction("addAccount") { id: String, name: String?, passcode: String -> call { store.addAccount(id, name, passcode, activity) } }
@@ -164,8 +169,11 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("wipe") { keepRecovery: Boolean -> call { store.wipe(keepRecovery) } }
 
     // Helpers that never read stored secrets
-    AsyncFunction("previewAddresses") { words: String, passphrase: String?, coins: List<Int>, account: Int? ->
-      call { store.previewAddresses(words, passphrase, coins, account ?: 0) }
+    AsyncFunction("previewAddresses") { words: String, passphrase: String?, coins: List<Int>, account: Int?, solanaPath: String? ->
+      call { store.previewAddresses(words, passphrase, coins, account ?: 0, solanaPath ?: "phantom") }
+    }
+    AsyncFunction("previewAccounts") { words: String, passphrase: String?, coins: List<Int>, from: Int, count: Int, solanaPath: String ->
+      call { store.previewAccounts(words, passphrase, coins, from, count, solanaPath) }
     }
     AsyncFunction("envelopeDigest") { json: String, secret: VectorSecret -> call { store.envelopeDigest(json, secret.source()) } }
   }

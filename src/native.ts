@@ -7,7 +7,7 @@
 // ENVELOPE_AUTH (wrong passcode/password or a changed file), CRYPTO, KEYCHAIN.
 
 import { requireOptionalNativeModule } from 'expo-modules-core';
-import type { AddressInfo, CoinType, WalletInfo } from './types.ts';
+import type { AddressInfo, CoinType, SolanaPath, WalletInfo } from './types.ts';
 
 export interface CreateWalletOptions {
   name: string;
@@ -29,12 +29,16 @@ export interface ImportMnemonicOptions {
   kind: 'single' | 'multi' | 'hd';
   coin?: CoinType;
   coins?: CoinType[];
+  /** How Solana addresses are derived (docs/SPEC.md §2.2). Default 'phantom'. */
+  solanaPath?: SolanaPath;
+  /** hd only: bring back accounts 0 … n-1 at once (default 1, at most 500). */
+  accounts?: number;
   passcode: string;
 }
 
 export interface ImportPrivateKeyOptions {
   name: string;
-  /** Hex, with or without 0x. */
+  /** Hex, with or without 0x. Solana also: base58 (Phantom / Solflare export) or the CLI's JSON array. */
   privateKey: string;
   coin: CoinType;
   passcode: string;
@@ -66,7 +70,10 @@ export interface NativeWalletCore {
   importPrivateKey(options: ImportPrivateKeyOptions): Promise<WalletInfo>;
   listWallets(): Promise<WalletInfo[]>;
   renameWallet(id: string, name: string): Promise<WalletInfo>;
+  /** Chains shown. HD accounts derive addresses for a newly switched-on chain then, which asks for Face ID. */
   setCoins(id: string, coins: CoinType[]): Promise<WalletInfo>;
+  /** Changes how Solana addresses are derived; the Solana address of every account changes. */
+  setSolanaPath(id: string, solanaPath: SolanaPath, passcode: string): Promise<WalletInfo>;
   deleteWallet(id: string, passcode: string): Promise<void>;
   /** `account` is the HD account index (default 0). */
   getAddresses(id: string, coins: CoinType[], account?: number): Promise<AddressInfo[]>;
@@ -98,7 +105,10 @@ export interface NativeWalletCore {
   wipe(keepRecovery: boolean): Promise<void>;
 
   // Helpers that never read stored secrets (import preview, test vectors)
-  previewAddresses(words: string, passphrase: string | null, coins: CoinType[], account?: number): Promise<AddressInfo[]>;
+  /** solanaPath defaults to 'phantom'; pass 'trust' for Trust Wallet Core's default Solana path. */
+  previewAddresses(words: string, passphrase: string | null, coins: CoinType[], account?: number, solanaPath?: SolanaPath): Promise<AddressInfo[]>;
+  /** Addresses of `count` (1-100) accounts from `from`, to find used accounts before an import. */
+  previewAccounts(words: string, passphrase: string | null, coins: CoinType[], from: number, count: number, solanaPath: SolanaPath): Promise<{ account: number; addresses: AddressInfo[] }[]>;
   envelopeDigest(json: string, secret: { passcode?: string; prfHex?: string; keyHex?: string }): Promise<string>;
 }
 

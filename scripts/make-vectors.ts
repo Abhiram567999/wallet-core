@@ -10,7 +10,7 @@ import { buildAddressIndex } from '../src/addressIndex.ts';
 import { sealVault } from '../src/vault.ts';
 import type { WalletRecord } from '../src/types.ts';
 import { makeSigningVector } from './signing-vector.ts';
-import { accountPath } from '../src/hd.ts';
+import { accountPath, SOLANA_PATHS } from '../src/hd.ts';
 
 export const MNEMONICS = [
   'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
@@ -73,7 +73,7 @@ const iv = Uint8Array.from({ length: 12 }, (_, i) => 0xa0 + i);
 /** Accounts 1 and 2 (shown to users as Account 2 and 3) on every chain. */
 export async function deriveAccounts() {
   const core = await initWasm();
-  const { HDWallet, CoinType, CoinTypeExt, Blockchain } = core;
+  const { HDWallet, CoinType, CoinTypeExt, Blockchain, PrivateKey, Base58 } = core;
   const chainName = new Map(
     Object.entries(Blockchain as unknown as Record<string, { value: number }>)
       .filter(([, b]) => typeof b?.value === 'number')
@@ -92,8 +92,21 @@ export async function deriveAccounts() {
     const addresses = paths.map((p) => CoinTypeExt.deriveAddress(coin as never, w.getKey(coin as never, p)));
     accounts[name] = { coin: coin.value, blockchain, paths, addresses };
   }
+  const solPaths = [0, 1, 2].map((i) => accountPath(SOLANA_PATHS.phantom, 'solana', i));
+  const solanaPhantom = { coin: 501, paths: solPaths, addresses: solPaths.map((p) => CoinTypeExt.deriveAddress(CoinType.solana, w.getKey(CoinType.solana, p))) };
   w.delete();
-  return { words, accounts };
+  // A Solana key the way Phantom / Solflare export it: base58(private key ‖ public key).
+  const secret = Uint8Array.from({ length: 32 }, (_, i) => i + 1);
+  const pk = PrivateKey.createWithData(secret);
+  const pub = pk.getPublicKeyEd25519().data();
+  const full = new Uint8Array([...secret, ...pub]);
+  const solanaKey = {
+    base58: Base58.encodeNoCheck(full),
+    array: JSON.stringify([...full]),
+    address: CoinTypeExt.deriveAddress(CoinType.solana, pk),
+  };
+  pk.delete();
+  return { words, accounts, solanaPhantom, solanaKey };
 }
 
 export async function makeEnvelopes() {

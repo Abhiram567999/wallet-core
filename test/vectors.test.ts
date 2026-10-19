@@ -70,6 +70,7 @@ test('HD account paths follow the wallet conventions', async () => {
   assert.equal(accountPath("m/44'/60'/0'/0/0", 'ethereum', 2), "m/44'/60'/0'/0/2");
   assert.equal(accountPath("m/84'/0'/0'/0/0", 'bitcoin', 2), "m/84'/0'/2'/0/0");
   assert.equal(accountPath("m/44'/501'/0'", 'solana', 1), "m/44'/501'/1'");
+  assert.equal(accountPath("m/44'/501'/0'/0'", 'solana', 3), "m/44'/501'/3'/0'");
   assert.equal(accountPath("m/44'/21888'/3'/0'", 'pactus', 4), "m/44'/21888'/3'/4'");
   assert.equal(accountPath("m/44'/118'/0'/0/0", 'cosmos', 0), "m/44'/118'/0'/0/0");
   assert.throws(() => accountPath("m/44'/60'/0'/0/0", 'ethereum', -1));
@@ -79,5 +80,18 @@ test('HD vectors: MetaMask-compatible and stable', async () => {
   const { deriveAccounts } = await import('../scripts/make-vectors.ts');
   const hd = load('hd.json');
   assert.equal(hd.accounts.ethereum.addresses[1], '0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0');
+  assert.equal(hd.solanaPhantom.addresses[0], 'HAgk14JpMQLgt6rVgv7cBQFJWFto5Dqxi472uT3DKpqk');
   assert.deepEqual(JSON.parse(JSON.stringify(await deriveAccounts())), hd);
+});
+
+test('vault records: solanaPath is checked', async () => {
+  const { encodeVault, decodeVault } = await import('../src/vault.ts');
+  const base = { id: 'a', name: 'W', kind: 'hd', coins: [501], createdAt: '2026-10-19T00:00:00Z', secret: { type: 'mnemonic', words: load('hd.json').words } };
+  for (const solanaPath of ['phantom', 'trust', undefined]) {
+    const w = { ...base, ...(solanaPath ? { solanaPath } : {}) };
+    assert.equal(decodeVault(encodeVault([w as never])).wallets[0]!.solanaPath, solanaPath);
+  }
+  assert.throws(() => decodeVault(encodeVault([{ ...base, solanaPath: 'ledger' } as never])), /solanaPath/);
+  const key = { ...base, kind: 'single', secret: { type: 'privateKey', hex: '11'.repeat(32), coin: 501 }, solanaPath: 'phantom' };
+  assert.throws(() => decodeVault(encodeVault([key as never])), /solanaPath/);
 });

@@ -2,4 +2,4 @@ export * from './types.ts';
 export * from './native.ts';
 export { parseEnvelope, EnvelopeError, type Envelope, type EnvelopeKind } from './envelope.ts';
 export { normaliseAddress } from './addressIndex.ts';
-export { accountPath } from './hd.ts';
+export { accountPath, basePath, SOLANA_PATHS } from './hd.ts';

@@ -59,7 +59,7 @@ account 0). Account 0 always uses each chain's default path. For account
 |---|---|---|
 | EVM networks (61), TRON, Cosmos family (32) | last index counts up | `m/44'/60'/0'/0/2` (as MetaMask, TokenPocket) |
 | Chains whose default account level isn't `0'` (Pactus) | last index counts up | `m/44'/21888'/3'/2'` |
-| All others (Bitcoin family, Solana, TON, Aptos, Sui …) | account level counts up | `m/84'/0'/2'/0/0`, `m/44'/501'/2'` |
+| All others (Bitcoin family, Solana, TON, Aptos, Sui …) | account level counts up | `m/84'/0'/2'/0/0`, `m/44'/501'/2'/0'` |
 
 `test/vectors/hd.json` pins accounts 1 and 2 for all 168 chains; for the
 standard test phrase, Ethereum account 1 is
@@ -69,6 +69,33 @@ Account names are public data (stored with the wallet's info, renaming needs
 no secret); adding or removing an account re-seals the wallet and its
 recovery entry with the current names. Account 0 can't be removed.
 Only `hd` wallets can add accounts; private-key wallets have only account 0.
+An import may create several accounts at once (`accounts: n` makes
+indexes 0 … n-1), so an app can bring back every account it found on the
+networks with one Face ID prompt.
+
+### 2.2 Solana path
+
+Wallets disagree on Solana. Phantom, Solflare and Backpack use
+`m/44'/501'/i'/0'`; Trust Wallet uses `m/44'/501'/i'`. The same phrase gives
+different Solana addresses in each. A phrase wallet's record says which one it
+uses:
+
+| `solanaPath` | Account 0 | Account i |
+|---|---|---|
+| `"phantom"` | `m/44'/501'/0'/0'` | `m/44'/501'/i'/0'` |
+| `"trust"` (also when missing) | `m/44'/501'/0'` | `m/44'/501'/i'` |
+
+New wallets are `"phantom"`. Wallets made before this field existed have no
+field and stay `"trust"`, so their addresses never change. On import the app
+checks both paths on the network and picks the one that was used. Every
+other chain is the same for both. `test/vectors/hd.json` pins
+`solanaPhantom` for accounts 0-2: account 0 of the standard test phrase is
+`HAgk14JpMQLgt6rVgv7cBQFJWFto5Dqxi472uT3DKpqk`, as in Phantom.
+
+A Solana private key can also be imported the way Phantom and Solflare
+export it: base58 of the 64-byte secret key (private key + public key, which
+must match) or of the 32-byte private key, or the Solana CLI's JSON array of
+64 numbers.
 
 ## 3. Where secrets live on the phone
 

@@ -47,6 +47,7 @@ function checkRecord(w: unknown, i: number): WalletRecord {
     });
     if (new Set(idx).size !== idx.length) bad('duplicate account');
   }
+  if (r.solanaPath !== undefined && (s.type !== 'mnemonic' || (r.solanaPath !== 'phantom' && r.solanaPath !== 'trust'))) bad('solanaPath');
   return r as unknown as WalletRecord;
 }
 
