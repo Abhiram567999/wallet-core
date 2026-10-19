@@ -6,7 +6,7 @@
 // Errors are thrown with a code prefix: PASSCODE, INVALID, NOT_FOUND,
 // ENVELOPE_AUTH (wrong passcode/password or a changed file), CRYPTO, KEYCHAIN.
 
-import { requireNativeModule } from 'expo-modules-core';
+import { requireOptionalNativeModule } from 'expo-modules-core';
 import type { AddressInfo, CoinType, WalletInfo } from './types.ts';
 
 export interface CreateWalletOptions {
@@ -102,4 +102,19 @@ export interface NativeWalletCore {
   envelopeDigest(json: string, secret: { passcode?: string; prfHex?: string; keyHex?: string }): Promise<string>;
 }
 
-export const WalletCore = requireNativeModule<NativeWalletCore>('FoxsafeWalletCore');
+const native = requireOptionalNativeModule<NativeWalletCore>('FoxsafeWalletCore');
+
+/**
+ * False when the app runs without its native code, e.g. in Expo Go for a
+ * design preview. Wallet features then fail with an UNAVAILABLE error instead
+ * of crashing the app at start-up.
+ */
+export const isWalletCoreAvailable = native != null;
+
+export const WalletCore: NativeWalletCore =
+  native ??
+  new Proxy({} as NativeWalletCore, {
+    get: (_, name) => () => {
+      throw new Error(`UNAVAILABLE: wallet core not in this build (${String(name)}); use the Foxsafe development build`);
+    },
+  });
