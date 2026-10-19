@@ -177,3 +177,27 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
   await WalletCore.wipe(false);
   return results;
 }
+
+/**
+ * Real-uninstall check, in two runs with an actual uninstall + reinstall in
+ * between: `prepareUninstallTest` leaves one wallet and its recovery copy on
+ * the device; `checkUninstallTest` (after reinstalling) looks for it.
+ */
+export async function prepareUninstallTest(): Promise<string> {
+  await WalletCore.wipe(false);
+  await WalletCore.setPasscode(PASSCODE);
+  const w = await WalletCore.createWallet({ name: 'Uninstall test', kind: 'multi', passcode: PASSCODE });
+  const [eth] = await WalletCore.getAddresses(w.id, [60]);
+  const scan = await WalletCore.scanRecovery();
+  return `prepared: 1 wallet ${eth!.address}, recovery entries ${scan.walletCount}`;
+}
+
+export async function checkUninstallTest(): Promise<string> {
+  const wallets = await WalletCore.listWallets();
+  const scan = await WalletCore.scanRecovery();
+  if (!scan.found) return `NOT FOUND after reinstall (main copy wallets: ${wallets.length})`;
+  const restored = await WalletCore.restoreFromRecovery(PASSCODE);
+  const [eth] = await WalletCore.getAddresses(restored[0]!.id, [60]);
+  await WalletCore.wipe(false);
+  return `FOUND after reinstall: ${scan.walletCount} entr${scan.walletCount === 1 ? 'y' : 'ies'}, restored ${restored.length}, ${eth!.address} (main copy before restore: ${wallets.length})`;
+}

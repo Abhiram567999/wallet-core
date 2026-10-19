@@ -1,0 +1,43 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'app.foxsafe'
+version = '0.1.0'
+
+android {
+  namespace "app.foxsafe.walletcore"
+  defaultConfig {
+    versionCode 1
+    versionName '0.1.0'
+    // Android 11+: Keystore keys that need fingerprint/face/PIN for every use.
+    minSdkVersion 30
+  }
+  // BuildConfig.DEBUG: emulator-only relaxations exist in debug builds only (KeyVault).
+  buildFeatures { buildConfig true }
+}
+
+// Trust Wallet Core's Android build is published on GitHub Packages, which
+// needs a GitHub login even for public packages: a classic token with only
+// read:packages, as gpr.user / gpr.key in ~/.gradle/gradle.properties or the
+// GITHUB_USER / GITHUB_TOKEN environment variables (CI, EAS secrets).
+repositories {
+  maven {
+    url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
+    credentials {
+      username = findProperty("gpr.user") ?: System.getenv("GITHUB_USER")
+      password = findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+    }
+    content { includeGroup "com.trustwallet" }
+  }
+}
+
+dependencies {
+  implementation 'com.trustwallet:wallet-core:4.8.4'
+  implementation 'com.google.android.gms:play-services-auth-blockstore:16.4.0'
+  implementation 'androidx.biometric:biometric:1.1.0'
+  // Same BouncyCastle flavour Trust Wallet Core uses, so the app holds one copy.
+  implementation 'org.bouncycastle:bcprov-jdk15to18:1.86'
+  implementation 'org.bouncycastle:bcutil-jdk15to18:1.86'
+}

@@ -72,7 +72,7 @@ only the passcode, not Face ID.
 | Platform | Storage |
 |---|---|
 | iOS | Keychain, service `app.foxsafe.recovery`, `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`: `meta`, `w.<id>` (envelope) and `i.<id>` (address index) per wallet. Keychain items have survived app deletion on every iOS release so far, but Apple does not promise it. "This device only" items are never copied to iCloud or another phone. |
-| Android | Google Block Store with `setShouldBackupToCloud(false)`, same items. Block Store data is kept when the app is uninstalled and reinstalled on the same phone. |
+| Android | Google Block Store with `setShouldBackupToCloud(false)`, same items packed into one JSON map split across up to 16 entries of 4 KB (`foxsafe.recovery.0` … `.15`), room for roughly 30 wallets. **Tested 2026-10-19 (Android 15 emulator, Google Backup off, no Google account): the entry did NOT survive a real uninstall + reinstall.** Google documents survival only when the phone's Google Backup is on. The Android design for surviving an uninstall is therefore open (see README status). |
 
 On the first launch after an install, the app deletes any main copy left in
 the Keychain from an earlier install (iOS keeps Keychain items after an
@@ -173,6 +173,13 @@ envelope holds one or more.
 Normalised address: trimmed; lower-cased if it starts with `0x` or if it is
 entirely upper- or lower-case (bech32 addresses are case-insensitive);
 otherwise unchanged (base58 addresses are case-sensitive).
+
+The index covers the wallet's addresses on these chains (the ones people
+remember addresses for), keeping each entry small enough for Android's
+64 KB Block Store: Bitcoin 0, Litecoin 2, Dogecoin 3, Ethereum 60 (the same
+address on every EVM network), Cosmos 118, XRP 144, Bitcoin Cash 145,
+Stellar 148, TRON 195, Polkadot 354, NEAR 397, Solana 501, TON 607, Aptos 637,
+Sui 784, Cardano 1815, BNB Smart Chain 20000714.
 
 This lets the app confirm "this phone holds that wallet" from an address the
 user remembers. An address can never unlock a wallet: the passcode is still

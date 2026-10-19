@@ -14,6 +14,8 @@ final class WalletStore {
   private static let installedFlag = "app.foxsafe.installed"
   static let minPasscodeLength = 6
   static let defaultCoins: [UInt32] = [0, 60, 195, 501] // Bitcoin, Ethereum, TRON, Solana
+  /// Chains whose addresses go into the recovery address index (SPEC §5). EVM networks share Ethereum's address.
+  static let indexCoins: [UInt32] = [0, 2, 3, 60, 118, 144, 145, 148, 195, 354, 397, 501, 607, 637, 784, 1815, 20000714]
 
   // MARK: Models
 
@@ -248,7 +250,7 @@ final class WalletStore {
       let entry = try Envelope.seal(.recovery, Self.encodeVault([r]), .passcode(passcode),
                                     salt: Data(base64Encoded: meta.salt)!, argon2: (meta.m, meta.t), cache: cache)
       try recovery.set(entry, for: "w.\(r.id)")
-      try recovery.set(AddressIndex.build(Array(addresses.values)), for: "i.\(r.id)")
+      try recovery.set(AddressIndex.build(Self.indexCoins.compactMap { addresses[String($0)] }), for: "i.\(r.id)")
     }
     try save(stored)
     return stored

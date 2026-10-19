@@ -31,7 +31,7 @@ The full design, file formats and parameters are in
 |---|---|
 | `src/` | TypeScript API for the app, plus the reference implementation of the encryption format |
 | `ios/` | Native module for iPhone (Swift) on Trust Wallet Core, plus the vendored Argon2 reference code |
-| `android/` | Native module for Android (Kotlin) — in progress |
+| `android/` | Native module for Android (Kotlin) on Trust Wallet Core; BouncyCastle Argon2id; Block Store recovery copy |
 | `src/selftest.ts` | On-device self-test: vectors plus a full create / sign / recover / backup cycle |
 | `test/vectors/` | Fixed inputs and outputs every platform must reproduce |
 | `docs/SPEC.md` | The specification |
@@ -51,6 +51,15 @@ npm run vectors   # regenerate test vectors (only when the spec changes)
 
 Pre-release. Not audited yet; do not use with real funds until the audit
 report is published in `audits/`.
+
+- On-device self-test (`src/selftest.ts`): 11/11 on the iPhone 18 Pro
+  simulator (iOS 27.0) and on an Android 15 emulator.
+- Open: on Android, Block Store did not keep the recovery copy through a real
+  uninstall with Google Backup off; the Android uninstall-survival design is
+  being decided.
+- Building Android needs a GitHub token with `read:packages` (Trust Wallet
+  Core is published on GitHub Packages): `gpr.user` / `gpr.key` in
+  `~/.gradle/gradle.properties`, or `GITHUB_USER` / `GITHUB_TOKEN`.
 
 ## Security
 
