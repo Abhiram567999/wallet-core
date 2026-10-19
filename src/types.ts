@@ -1,7 +1,8 @@
 /** Trust Wallet Core `CoinType` value (SLIP-44 based), e.g. 0 Bitcoin, 60 Ethereum, 195 TRON, 501 Solana. */
 export type CoinType = number;
 
-export type WalletKind = 'multi' | 'single';
+/** single: starts on one chain (more can be switched on); multi: all chains, one account; hd: all chains, many accounts. */
+export type WalletKind = 'single' | 'multi' | 'hd';
 
 export type WalletSecret =
   | { type: 'mnemonic'; words: string; passphrase?: string }

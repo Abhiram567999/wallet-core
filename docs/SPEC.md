@@ -27,14 +27,19 @@ wallet secrets. Anyone can check the code in this repository against it.
 | `coins` | Enabled chains, as Trust Wallet Core `CoinType` numbers (SLIP-44 based: 0 Bitcoin, 60 Ethereum, 195 TRON, 501 Solana …) |
 | `secret` | `{ type: "mnemonic", words, passphrase? }` or `{ type: "privateKey", hex, coin }` |
 
-- A **multi-chain** wallet always holds a BIP-39 phrase (12 or 24 words).
-  Addresses come from each chain's default derivation path in Trust Wallet
-  Core.
-- A **single-chain** wallet holds either a phrase (only one chain is
-  enabled) or a private key. A private key belongs to one curve, so a
-  private-key wallet is always single-chain. For secp256k1 EVM keys the same
-  address is valid on every EVM network, and the app may show them all.
-- There is no limit on the number of wallets.
+Every new wallet gets its **own** secret phrase. A phrase wallet is one of:
+
+| `kind` | Chains | Accounts |
+|---|---|---|
+| `single` | starts on the one chain picked; more can be switched on later | one (account 0) |
+| `multi` | all supported chains on | one (account 0), so importing the phrase into any other wallet app shows everything |
+| `hd` | all supported chains on | many (section 2.1); other apps may show only account 0 until accounts are added there too |
+
+A private key always makes a `single` wallet with exactly one chain (an EVM
+key's address is shown on every EVM network). Addresses for all 168 chains
+are derived for every phrase wallet, so switching chains on needs no secret.
+There is no limit on the number of wallets. A multi-signature wallet type
+(Safe) is planned as a separate module.
 
 New phrases are made from 16 or 32 bytes taken from the operating system's
 secure random generator (`SecRandomCopyBytes` on iOS, `SecureRandom` on
@@ -63,7 +68,7 @@ standard test phrase, Ethereum account 1 is
 Account names are public data (stored with the wallet's info, renaming needs
 no secret); adding or removing an account re-seals the wallet and its
 recovery entry with the current names. Account 0 can't be removed.
-Private-key wallets have only account 0.
+Only `hd` wallets can add accounts; private-key wallets have only account 0.
 
 ## 3. Where secrets live on the phone
 

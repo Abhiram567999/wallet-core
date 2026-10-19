@@ -125,7 +125,7 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
 
   await check('import a phrase', async () => {
     const m = v.derivation.mnemonic[0]!;
-    const w = await WalletCore.importMnemonic({ name: 'Imported', words: `  ${m.words.toUpperCase()} `, kind: 'multi', passcode: PASSCODE });
+    const w = await WalletCore.importMnemonic({ name: 'Imported', words: `  ${m.words.toUpperCase()} `, kind: 'hd', passcode: PASSCODE });
     importedId = w.id;
     const got = await WalletCore.getAddresses(w.id, [0, 60, 195, 501]);
     for (const a of got) {
@@ -147,6 +147,7 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     expect(w3.accounts.length === 2 && w3.accounts[1]!.name === 'Trading', `after remove: ${JSON.stringify(w3.accounts)}`);
     await rejects(WalletCore.removeAccount(importedId, 0, PASSCODE), 'INVALID');
     await rejects(WalletCore.addAccount(ethKeyIdPlaceholder(), null, PASSCODE), 'NOT_FOUND');
+    await rejects(WalletCore.addAccount(multiId, null, PASSCODE), 'INVALID'); // only HD wallets get more accounts
     return 'accounts 2 and 3 work';
   });
 

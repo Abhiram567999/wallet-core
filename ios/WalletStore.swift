@@ -89,7 +89,7 @@ final class WalletStore {
       func bad(_ what: String) -> WalletError { .invalid("wallet \(i): \(what)") }
       guard let id = w["id"] as? String, !id.isEmpty else { throw bad("id") }
       guard let name = w["name"] as? String else { throw bad("name") }
-      guard let kind = w["kind"] as? String, kind == "multi" || kind == "single" else { throw bad("kind") }
+      guard let kind = w["kind"] as? String, ["multi", "single", "hd"].contains(kind) else { throw bad("kind") }
       guard let coins = (w["coins"] as? [NSNumber])?.map(\.uint32Value) else { throw bad("coins") }
       guard let createdAt = w["createdAt"] as? String else { throw bad("createdAt") }
       guard let s = w["secret"] as? [String: Any] else { throw bad("secret") }
@@ -108,7 +108,8 @@ final class WalletStore {
       default:
         throw bad("unknown secret type")
       }
-      if kind == "single", coins.count != 1 { throw bad("a single-chain wallet has exactly one coin") }
+      if r.keyHex != nil, coins.count != 1 { throw bad("a private-key wallet has exactly one coin") }
+      if coins.isEmpty { throw bad("coins") }
       if let list = w["accounts"] {
         guard r.words != nil, let arr = list as? [[String: Any]], !arr.isEmpty else { throw bad("accounts") }
         r.accounts = try arr.map { a in
@@ -222,11 +223,11 @@ final class WalletStore {
   private func addMnemonic(name: String, words: String, passphrase: String?, kind: String, coin: UInt32?, coins: [UInt32]?, passcode: String) throws -> [String: Any] {
     let walletCoins: [UInt32]
     switch kind {
-    case "multi": walletCoins = coins ?? Self.defaultCoins
+    case "multi", "hd": walletCoins = coins ?? Self.defaultCoins
     case "single":
       guard let coin, CoinType(rawValue: coin) != nil else { throw WalletError.invalid("a single-chain wallet needs a supported coin") }
       walletCoins = [coin]
-    default: throw WalletError.invalid("kind must be multi or single")
+    default: throw WalletError.invalid("kind must be single, multi or hd")
     }
     let record = Record(id: UUID().uuidString.lowercased(), name: name, kind: kind, coins: walletCoins,
                         createdAt: ISO8601DateFormatter().string(from: Date()), words: words, passphrase: passphrase)
@@ -290,7 +291,8 @@ final class WalletStore {
     var out: [String: [String: String]] = [:]
     if let words = r.words {
       guard let hd = HDWallet(mnemonic: words, passphrase: r.passphrase ?? "") else { throw WalletError.invalid("bad phrase") }
-      let coins = r.kind == "multi" ? CoinType.allCases : r.coins.compactMap { CoinType(rawValue: $0) }
+      // Every phrase wallet derives every chain, so more chains can be switched on without the secret.
+      let coins = CoinType.allCases
       for account in r.accounts {
         var byCoin: [String: String] = [:]
         for coin in coins { byCoin[String(coin.rawValue)] = try address(hd, coin, account.index) }
@@ -365,7 +367,7 @@ final class WalletStore {
     lock.lock(); defer { lock.unlock() }
     try requirePasscode(passcode)
     let s = try load(id)
-    guard s.info.secretType == "mnemonic" else { throw WalletError.invalid("a private-key wallet has a single account") }
+    guard s.info.kind == "hd" else { throw WalletError.invalid("only HD wallets have more accounts; create a new wallet instead") }
     return try withSecrets([id], reason: "Add an account") { records in
       var r = Self.withCurrentNames(records[0], s.info)
       let next = (r.accounts.map(\.index).max() ?? 0) + 1
@@ -412,7 +414,7 @@ final class WalletStore {
 
   func setCoins(id: String, coins: [UInt32]) throws -> [String: Any] {
     try update(id: id) { info in
-      guard info.kind == "multi" else { throw WalletError.invalid("a single-chain wallet keeps its one coin") }
+      guard info.secretType == "mnemonic" else { throw WalletError.invalid("a private-key wallet keeps its one network") }
       guard !coins.isEmpty, coins.allSatisfy({ CoinType(rawValue: $0) != nil }) else { throw WalletError.invalid("unsupported coin") }
       info.coins = coins
     }
@@ -449,7 +451,6 @@ final class WalletStore {
 
   private static func privateKey(_ r: Record, coin: CoinType, account: UInt32) throws -> PrivateKey {
     if let words = r.words {
-      guard r.kind == "multi" || r.coins.contains(coin.rawValue) else { throw WalletError.invalid("this wallet is not for that network") }
       guard r.accounts.contains(where: { $0.index == account }) else { throw WalletError.notFound("no account \(account)") }
       guard let hd = HDWallet(mnemonic: words, passphrase: r.passphrase ?? "") else { throw WalletError.crypto("could not derive the key") }
       return try key(hd, coin, account)

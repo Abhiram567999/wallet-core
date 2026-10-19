@@ -21,7 +21,7 @@ function checkRecord(w: unknown, i: number): WalletRecord {
   const r = w as Record<string, unknown>;
   if (typeof r.id !== 'string' || r.id === '') bad('id');
   if (typeof r.name !== 'string') bad('name');
-  if (r.kind !== 'multi' && r.kind !== 'single') bad('kind');
+  if (r.kind !== 'multi' && r.kind !== 'single' && r.kind !== 'hd') bad('kind');
   if (!Array.isArray(r.coins) || !r.coins.every((c) => Number.isInteger(c) && c >= 0)) bad('coins');
   if (typeof r.createdAt !== 'string') bad('createdAt');
   const s = r.secret as Record<string, unknown> | undefined;
@@ -36,7 +36,8 @@ function checkRecord(w: unknown, i: number): WalletRecord {
   } else {
     bad('unknown secret type');
   }
-  if (r.kind === 'single' && (r.coins as unknown[]).length !== 1) bad('a single-chain wallet has exactly one coin');
+  if (s.type === 'privateKey' && (r.coins as unknown[]).length !== 1) bad('a private-key wallet has exactly one coin');
+  if ((r.coins as unknown[]).length === 0) bad('coins');
   if (r.accounts !== undefined) {
     if (s.type !== 'mnemonic' || !Array.isArray(r.accounts) || r.accounts.length === 0) bad('accounts');
     const idx = (r.accounts as unknown[]).map((a) => {

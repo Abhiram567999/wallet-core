@@ -53,7 +53,8 @@ test('vault rejects malformed wallet records', () => {
     { ...ok[0], secret: { type: 'mnemonic', words: 'one two three' } },
     { ...ok[1], kind: 'multi', coins: [195, 60] }, // private key cannot be multi-chain
     { ...ok[1], secret: { ...ok[1].secret, hex: 'zz' } },
-    { ...ok[0], kind: 'single' }, // single-chain with four coins
+    { ...ok[0], coins: [] }, // a wallet needs at least one chain
+    { ...ok[0], kind: 'joint' }, // unknown kind
     { ...ok[0], secret: { type: 'seed', words: 'x' } },
   ];
   for (const w of bad) assert.throws(() => encodeVault([w]), VaultError);

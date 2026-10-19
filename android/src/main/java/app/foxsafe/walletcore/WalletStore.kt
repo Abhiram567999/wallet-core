@@ -88,7 +88,7 @@ class WalletStore(context: Context) {
       val w = wallets.getJSONObject(i)
       fun bad(what: String): Nothing = throw WalletException("INVALID", "wallet $i: $what")
       val id = w.optString("id").ifEmpty { bad("id") }
-      val kind = w.optString("kind").takeIf { it == "multi" || it == "single" } ?: bad("kind")
+      val kind = w.optString("kind").takeIf { it in setOf("multi", "single", "hd") } ?: bad("kind")
       val coinsArr = w.optJSONArray("coins") ?: bad("coins")
       val coins = (0 until coinsArr.length()).map { coinsArr.getInt(it) }
       val s = w.optJSONObject("secret") ?: bad("secret")
@@ -106,7 +106,8 @@ class WalletStore(context: Context) {
         }
         else -> bad("unknown secret type")
       }
-      if (kind == "single" && coins.size != 1) bad("a single-chain wallet has exactly one coin")
+      if (r.keyHex != null && coins.size != 1) bad("a private-key wallet has exactly one coin")
+      if (coins.isEmpty()) bad("coins")
       val accounts = parseAccounts(w.optJSONArray("accounts"), ::bad)
       if (accounts != null && r.words == null) bad("accounts")
       if (accounts != null) r.copy(accounts = accounts) else r
@@ -185,9 +186,9 @@ class WalletStore(context: Context) {
 
   private fun addMnemonic(name: String, words: String, passphrase: String?, kind: String, coin: Int?, coins: List<Int>?, passcode: String): JSONObject {
     val walletCoins = when (kind) {
-      "multi" -> (coins ?: DEFAULT_COINS).onEach { coin(it) }
+      "multi", "hd" -> (coins ?: DEFAULT_COINS).onEach { coin(it) }
       "single" -> listOf(coin(coin ?: throw WalletException("INVALID", "a single-chain wallet needs a coin")).value())
-      else -> throw WalletException("INVALID", "kind must be multi or single")
+      else -> throw WalletException("INVALID", "kind must be single, multi or hd")
     }
     val r = Record(UUID.randomUUID().toString(), name, kind, walletCoins, now(), words = words, passphrase = passphrase)
     synchronized(lock) {
@@ -248,7 +249,8 @@ class WalletStore(context: Context) {
     val out = LinkedHashMap<String, Map<String, String>>()
     if (r.words != null) {
       val hd = HDWallet(r.words, r.passphrase ?: "")
-      val list = if (r.kind == "multi") CoinType.values().toList() else r.coins.map(::coin)
+      // Every phrase wallet derives every chain, so more chains can be switched on without the secret.
+      val list = CoinType.values().toList()
       for (a in r.accounts) out[a.index.toString()] = list.associate { it.value().toString() to address(hd, it, a.index) }
     } else {
       val c = coin(r.keyCoin!!)
@@ -306,7 +308,7 @@ class WalletStore(context: Context) {
   fun addAccount(id: String, name: String?, passcode: String, activity: FragmentActivity?): JSONObject = synchronized(lock) {
     requirePasscode(passcode)
     val s = load(id)
-    if (info(s).getString("secretType") != "mnemonic") throw WalletException("INVALID", "a private-key wallet has a single account")
+    if (info(s).getString("kind") != "hd") throw WalletException("INVALID", "only HD wallets have more accounts; create a new wallet instead")
     withSecret(id, activity, "Add an account") { stored ->
       val r = withCurrentNames(stored, info(s))
       val next = (r.accounts.maxOfOrNull { it.index } ?: 0) + 1
@@ -347,7 +349,7 @@ class WalletStore(context: Context) {
   }
 
   fun setCoins(id: String, coins: List<Int>) = update(id) { info ->
-    if (info.getString("kind") != "multi") throw WalletException("INVALID", "a single-chain wallet keeps its one coin")
+    if (info.getString("secretType") != "mnemonic") throw WalletException("INVALID", "a private-key wallet keeps its one network")
     if (coins.isEmpty()) throw WalletException("INVALID", "choose at least one coin")
     coins.forEach { coin(it) }
     info.put("coins", JSONArray(coins))
@@ -379,7 +381,6 @@ class WalletStore(context: Context) {
 
   private fun privateKey(r: Record, c: CoinType, account: Int): PrivateKey {
     if (r.words != null) {
-      if (r.kind != "multi" && !r.coins.contains(c.value())) throw WalletException("INVALID", "this wallet is not for that network")
       if (r.accounts.none { it.index == account }) throw WalletException("NOT_FOUND", "no account $account")
       return key(HDWallet(r.words, r.passphrase ?: ""), c, account)
     }

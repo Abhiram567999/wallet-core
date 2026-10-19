@@ -11,7 +11,7 @@ import type { AddressInfo, CoinType, WalletInfo } from './types.ts';
 
 export interface CreateWalletOptions {
   name: string;
-  kind: 'multi' | 'single';
+  kind: 'single' | 'multi' | 'hd';
   /** Required when kind is 'single'. */
   coin?: CoinType;
   /** 12 (default) or 24 words. */
@@ -26,7 +26,7 @@ export interface ImportMnemonicOptions {
   name: string;
   words: string;
   passphrase?: string;
-  kind: 'multi' | 'single';
+  kind: 'single' | 'multi' | 'hd';
   coin?: CoinType;
   coins?: CoinType[];
   passcode: string;
