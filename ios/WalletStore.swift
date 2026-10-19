@@ -470,7 +470,10 @@ final class WalletStore {
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
       guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
-      guard let signature = key.sign(digest: pre.dataHash, curve: coin.curve) else { throw WalletError.crypto("signing failed") }
+      // Solana signs the whole message (pre.data); its pre-image output has a different layout,
+      // so the generic dataHash field would hold the signer's key instead (SPEC §7).
+      let digest = coin.blockchain == .solana ? pre.data : pre.dataHash
+      guard let signature = key.sign(digest: digest, curve: coin.curve) else { throw WalletError.crypto("signing failed") }
       let output = TransactionCompiler.compileWithSignatures(
         coinType: coin, txInputData: input,
         signatures: DataVector(data: signature), publicKeys: DataVector(data: key.getPublicKey(coinType: coin).data)

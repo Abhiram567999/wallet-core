@@ -229,8 +229,10 @@ and passes it to the native module, which:
 
 1. asks for Face ID / Touch ID / the device passcode (Secure Enclave),
 2. decrypts the wallet and derives the key for that chain,
-3. gets the pre-image hash with `TransactionCompiler.preImageHashes`,
-4. signs it, and
+3. gets the pre-image with `TransactionCompiler.preImageHashes`,
+4. signs it (the hash; for Solana the whole message, `data`, because
+   ed25519 signs messages and Solana's pre-image output has its own layout),
+   and
 5. returns `TransactionCompiler.compileWithSignatures` output.
 
 The key never reaches JavaScript. `test/vectors/signing.json` (the EIP-155

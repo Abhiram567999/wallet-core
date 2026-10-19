@@ -1,6 +1,5 @@
 import * as $protobuf from "protobufjs";
 import Long = require("long");
-
 /** Namespace TW. */
 export namespace TW {
 
@@ -10,30 +9,37 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a PublicKeySignature.
-             * @deprecated Use TW.BabylonStaking.Proto.PublicKeySignature.$Properties instead.
-             */
-            interface IPublicKeySignature extends TW.BabylonStaking.Proto.PublicKeySignature.$Properties {
+            /** Properties of a PublicKeySignature. */
+            interface IPublicKeySignature {
+
+                /** PublicKeySignature publicKey */
+                publicKey?: (Uint8Array|null);
+
+                /** PublicKeySignature signature */
+                signature?: (Uint8Array|null);
             }
 
             /** Represents a PublicKeySignature. */
-            class PublicKeySignature {
+            class PublicKeySignature implements IPublicKeySignature {
 
                 /**
                  * Constructs a new PublicKeySignature.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BabylonStaking.Proto.PublicKeySignature.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BabylonStaking.Proto.IPublicKeySignature);
 
                 /** PublicKeySignature publicKey. */
-                publicKey: Uint8Array;
+                public publicKey: Uint8Array;
 
                 /** PublicKeySignature signature. */
-                signature: Uint8Array;
+                public signature: Uint8Array;
+
+                /**
+                 * Creates a new PublicKeySignature instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PublicKeySignature instance
+                 */
+                public static create(properties?: TW.BabylonStaking.Proto.IPublicKeySignature): TW.BabylonStaking.Proto.PublicKeySignature;
 
                 /**
                  * Encodes the specified PublicKeySignature message. Does not implicitly {@link TW.BabylonStaking.Proto.PublicKeySignature.verify|verify} messages.
@@ -41,78 +47,75 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BabylonStaking.Proto.PublicKeySignature.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BabylonStaking.Proto.IPublicKeySignature, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PublicKeySignature message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BabylonStaking.Proto.PublicKeySignature & TW.BabylonStaking.Proto.PublicKeySignature.$Shape} PublicKeySignature
+                 * @returns PublicKeySignature
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.PublicKeySignature & TW.BabylonStaking.Proto.PublicKeySignature.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.PublicKeySignature;
 
                 /**
-                 * Gets the type url for PublicKeySignature
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PublicKeySignature
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace PublicKeySignature {
+            /** Properties of a StakingInfo. */
+            interface IStakingInfo {
 
-                /** Properties of a PublicKeySignature. */
-                interface $Properties {
+                /** StakingInfo stakerPublicKey */
+                stakerPublicKey?: (Uint8Array|null);
 
-                    /** PublicKeySignature publicKey */
-                    publicKey?: (Uint8Array|null);
+                /** StakingInfo finalityProviderPublicKey */
+                finalityProviderPublicKey?: (Uint8Array|null);
 
-                    /** PublicKeySignature signature */
-                    signature?: (Uint8Array|null);
+                /** StakingInfo stakingTime */
+                stakingTime?: (number|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** StakingInfo covenantCommitteePublicKeys */
+                covenantCommitteePublicKeys?: (Uint8Array[]|null);
 
-                /** Shape of a PublicKeySignature. */
-                type $Shape = TW.BabylonStaking.Proto.PublicKeySignature.$Properties;
-            }
-
-            /**
-             * Properties of a StakingInfo.
-             * @deprecated Use TW.BabylonStaking.Proto.StakingInfo.$Properties instead.
-             */
-            interface IStakingInfo extends TW.BabylonStaking.Proto.StakingInfo.$Properties {
+                /** StakingInfo covenantQuorum */
+                covenantQuorum?: (number|null);
             }
 
             /** Represents a StakingInfo. */
-            class StakingInfo {
+            class StakingInfo implements IStakingInfo {
 
                 /**
                  * Constructs a new StakingInfo.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BabylonStaking.Proto.StakingInfo.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BabylonStaking.Proto.IStakingInfo);
 
                 /** StakingInfo stakerPublicKey. */
-                stakerPublicKey: Uint8Array;
+                public stakerPublicKey: Uint8Array;
 
                 /** StakingInfo finalityProviderPublicKey. */
-                finalityProviderPublicKey: Uint8Array;
+                public finalityProviderPublicKey: Uint8Array;
 
                 /** StakingInfo stakingTime. */
-                stakingTime: number;
+                public stakingTime: number;
 
                 /** StakingInfo covenantCommitteePublicKeys. */
-                covenantCommitteePublicKeys: Uint8Array[];
+                public covenantCommitteePublicKeys: Uint8Array[];
 
                 /** StakingInfo covenantQuorum. */
-                covenantQuorum: number;
+                public covenantQuorum: number;
+
+                /**
+                 * Creates a new StakingInfo instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns StakingInfo instance
+                 */
+                public static create(properties?: TW.BabylonStaking.Proto.IStakingInfo): TW.BabylonStaking.Proto.StakingInfo;
 
                 /**
                  * Encodes the specified StakingInfo message. Does not implicitly {@link TW.BabylonStaking.Proto.StakingInfo.verify|verify} messages.
@@ -120,72 +123,45 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BabylonStaking.Proto.StakingInfo.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BabylonStaking.Proto.IStakingInfo, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a StakingInfo message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BabylonStaking.Proto.StakingInfo & TW.BabylonStaking.Proto.StakingInfo.$Shape} StakingInfo
+                 * @returns StakingInfo
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.StakingInfo & TW.BabylonStaking.Proto.StakingInfo.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.StakingInfo;
 
                 /**
-                 * Gets the type url for StakingInfo
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for StakingInfo
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace StakingInfo {
-
-                /** Properties of a StakingInfo. */
-                interface $Properties {
-
-                    /** StakingInfo stakerPublicKey */
-                    stakerPublicKey?: (Uint8Array|null);
-
-                    /** StakingInfo finalityProviderPublicKey */
-                    finalityProviderPublicKey?: (Uint8Array|null);
-
-                    /** StakingInfo stakingTime */
-                    stakingTime?: (number|null);
-
-                    /** StakingInfo covenantCommitteePublicKeys */
-                    covenantCommitteePublicKeys?: (Uint8Array[]|null);
-
-                    /** StakingInfo covenantQuorum */
-                    covenantQuorum?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a StakingInfo. */
-                type $Shape = TW.BabylonStaking.Proto.StakingInfo.$Properties;
-            }
-
-            /**
-             * Properties of an InputBuilder.
-             * @deprecated Use TW.BabylonStaking.Proto.InputBuilder.$Properties instead.
-             */
-            interface IInputBuilder extends TW.BabylonStaking.Proto.InputBuilder.$Properties {
+            /** Properties of an InputBuilder. */
+            interface IInputBuilder {
             }
 
             /** Represents an InputBuilder. */
-            class InputBuilder {
+            class InputBuilder implements IInputBuilder {
 
                 /**
                  * Constructs a new InputBuilder.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.$Properties);
+                constructor(properties?: TW.BabylonStaking.Proto.IInputBuilder);
 
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                /**
+                 * Creates a new InputBuilder instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns InputBuilder instance
+                 */
+                public static create(properties?: TW.BabylonStaking.Proto.IInputBuilder): TW.BabylonStaking.Proto.InputBuilder;
 
                 /**
                  * Encodes the specified InputBuilder message. Does not implicitly {@link TW.BabylonStaking.Proto.InputBuilder.verify|verify} messages.
@@ -193,59 +169,53 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BabylonStaking.Proto.InputBuilder.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BabylonStaking.Proto.IInputBuilder, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an InputBuilder message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BabylonStaking.Proto.InputBuilder & TW.BabylonStaking.Proto.InputBuilder.$Shape} InputBuilder
+                 * @returns InputBuilder
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder & TW.BabylonStaking.Proto.InputBuilder.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder;
 
                 /**
-                 * Gets the type url for InputBuilder
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for InputBuilder
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace InputBuilder {
 
-                /** Properties of an InputBuilder. */
-                interface $Properties {
+                /** Properties of a StakingTimelockPath. */
+                interface IStakingTimelockPath {
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an InputBuilder. */
-                type $Shape = TW.BabylonStaking.Proto.InputBuilder.$Properties;
-
-                /**
-                 * Properties of a StakingTimelockPath.
-                 * @deprecated Use TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties instead.
-                 */
-                interface IStakingTimelockPath extends TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties {
+                    /** StakingTimelockPath params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
                 }
 
                 /** Represents a StakingTimelockPath. */
-                class StakingTimelockPath {
+                class StakingTimelockPath implements IStakingTimelockPath {
 
                     /**
                      * Constructs a new StakingTimelockPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.IStakingTimelockPath);
 
                     /** StakingTimelockPath params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
+
+                    /**
+                     * Creates a new StakingTimelockPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns StakingTimelockPath instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.InputBuilder.IStakingTimelockPath): TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath;
 
                     /**
                      * Encodes the specified StakingTimelockPath message. Does not implicitly {@link TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.verify|verify} messages.
@@ -253,66 +223,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.InputBuilder.IStakingTimelockPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a StakingTimelockPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath & TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Shape} StakingTimelockPath
+                     * @returns StakingTimelockPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath & TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath;
 
                     /**
-                     * Gets the type url for StakingTimelockPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for StakingTimelockPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace StakingTimelockPath {
+                /** Properties of a StakingUnbondingPath. */
+                interface IStakingUnbondingPath {
 
-                    /** Properties of a StakingTimelockPath. */
-                    interface $Properties {
+                    /** StakingUnbondingPath params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
 
-                        /** StakingTimelockPath params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a StakingTimelockPath. */
-                    type $Shape = TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties;
-                }
-
-                /**
-                 * Properties of a StakingUnbondingPath.
-                 * @deprecated Use TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties instead.
-                 */
-                interface IStakingUnbondingPath extends TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties {
+                    /** StakingUnbondingPath covenantCommitteeSignatures */
+                    covenantCommitteeSignatures?: (TW.BabylonStaking.Proto.IPublicKeySignature[]|null);
                 }
 
                 /** Represents a StakingUnbondingPath. */
-                class StakingUnbondingPath {
+                class StakingUnbondingPath implements IStakingUnbondingPath {
 
                     /**
                      * Constructs a new StakingUnbondingPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.IStakingUnbondingPath);
 
                     /** StakingUnbondingPath params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
 
                     /** StakingUnbondingPath covenantCommitteeSignatures. */
-                    covenantCommitteeSignatures: TW.BabylonStaking.Proto.PublicKeySignature.$Properties[];
+                    public covenantCommitteeSignatures: TW.BabylonStaking.Proto.IPublicKeySignature[];
+
+                    /**
+                     * Creates a new StakingUnbondingPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns StakingUnbondingPath instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.InputBuilder.IStakingUnbondingPath): TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath;
 
                     /**
                      * Encodes the specified StakingUnbondingPath message. Does not implicitly {@link TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.verify|verify} messages.
@@ -320,69 +281,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.InputBuilder.IStakingUnbondingPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a StakingUnbondingPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath & TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Shape} StakingUnbondingPath
+                     * @returns StakingUnbondingPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath & TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath;
 
                     /**
-                     * Gets the type url for StakingUnbondingPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for StakingUnbondingPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace StakingUnbondingPath {
+                /** Properties of a StakingSlashingPath. */
+                interface IStakingSlashingPath {
 
-                    /** Properties of a StakingUnbondingPath. */
-                    interface $Properties {
+                    /** StakingSlashingPath params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
 
-                        /** StakingUnbondingPath params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
-
-                        /** StakingUnbondingPath covenantCommitteeSignatures */
-                        covenantCommitteeSignatures?: (TW.BabylonStaking.Proto.PublicKeySignature.$Properties[]|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a StakingUnbondingPath. */
-                    type $Shape = TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties;
-                }
-
-                /**
-                 * Properties of a StakingSlashingPath.
-                 * @deprecated Use TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties instead.
-                 */
-                interface IStakingSlashingPath extends TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties {
+                    /** StakingSlashingPath finalityProviderSignature */
+                    finalityProviderSignature?: (TW.BabylonStaking.Proto.IPublicKeySignature|null);
                 }
 
                 /** Represents a StakingSlashingPath. */
-                class StakingSlashingPath {
+                class StakingSlashingPath implements IStakingSlashingPath {
 
                     /**
                      * Constructs a new StakingSlashingPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.IStakingSlashingPath);
 
                     /** StakingSlashingPath params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
 
                     /** StakingSlashingPath finalityProviderSignature. */
-                    finalityProviderSignature?: (TW.BabylonStaking.Proto.PublicKeySignature.$Properties|null);
+                    public finalityProviderSignature?: (TW.BabylonStaking.Proto.IPublicKeySignature|null);
+
+                    /**
+                     * Creates a new StakingSlashingPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns StakingSlashingPath instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.InputBuilder.IStakingSlashingPath): TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath;
 
                     /**
                      * Encodes the specified StakingSlashingPath message. Does not implicitly {@link TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.verify|verify} messages.
@@ -390,66 +339,51 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.InputBuilder.IStakingSlashingPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a StakingSlashingPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath & TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Shape} StakingSlashingPath
+                     * @returns StakingSlashingPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath & TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath;
 
                     /**
-                     * Gets the type url for StakingSlashingPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for StakingSlashingPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace StakingSlashingPath {
+                /** Properties of an UnbondingTimelockPath. */
+                interface IUnbondingTimelockPath {
 
-                    /** Properties of a StakingSlashingPath. */
-                    interface $Properties {
-
-                        /** StakingSlashingPath params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
-
-                        /** StakingSlashingPath finalityProviderSignature */
-                        finalityProviderSignature?: (TW.BabylonStaking.Proto.PublicKeySignature.$Properties|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a StakingSlashingPath. */
-                    type $Shape = TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties;
-                }
-
-                /**
-                 * Properties of an UnbondingTimelockPath.
-                 * @deprecated Use TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties instead.
-                 */
-                interface IUnbondingTimelockPath extends TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties {
+                    /** UnbondingTimelockPath params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
                 }
 
                 /** Represents an UnbondingTimelockPath. */
-                class UnbondingTimelockPath {
+                class UnbondingTimelockPath implements IUnbondingTimelockPath {
 
                     /**
                      * Constructs a new UnbondingTimelockPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.IUnbondingTimelockPath);
 
                     /** UnbondingTimelockPath params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
+
+                    /**
+                     * Creates a new UnbondingTimelockPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns UnbondingTimelockPath instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.InputBuilder.IUnbondingTimelockPath): TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath;
 
                     /**
                      * Encodes the specified UnbondingTimelockPath message. Does not implicitly {@link TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.verify|verify} messages.
@@ -457,66 +391,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.InputBuilder.IUnbondingTimelockPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an UnbondingTimelockPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath & TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Shape} UnbondingTimelockPath
+                     * @returns UnbondingTimelockPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath & TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath;
 
                     /**
-                     * Gets the type url for UnbondingTimelockPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for UnbondingTimelockPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace UnbondingTimelockPath {
+                /** Properties of an UnbondingSlashingPath. */
+                interface IUnbondingSlashingPath {
 
-                    /** Properties of an UnbondingTimelockPath. */
-                    interface $Properties {
+                    /** UnbondingSlashingPath params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
 
-                        /** UnbondingTimelockPath params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an UnbondingTimelockPath. */
-                    type $Shape = TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties;
-                }
-
-                /**
-                 * Properties of an UnbondingSlashingPath.
-                 * @deprecated Use TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties instead.
-                 */
-                interface IUnbondingSlashingPath extends TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties {
+                    /** UnbondingSlashingPath finalityProviderSignature */
+                    finalityProviderSignature?: (TW.BabylonStaking.Proto.IPublicKeySignature|null);
                 }
 
                 /** Represents an UnbondingSlashingPath. */
-                class UnbondingSlashingPath {
+                class UnbondingSlashingPath implements IUnbondingSlashingPath {
 
                     /**
                      * Constructs a new UnbondingSlashingPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.InputBuilder.IUnbondingSlashingPath);
 
                     /** UnbondingSlashingPath params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
 
                     /** UnbondingSlashingPath finalityProviderSignature. */
-                    finalityProviderSignature?: (TW.BabylonStaking.Proto.PublicKeySignature.$Properties|null);
+                    public finalityProviderSignature?: (TW.BabylonStaking.Proto.IPublicKeySignature|null);
+
+                    /**
+                     * Creates a new UnbondingSlashingPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns UnbondingSlashingPath instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.InputBuilder.IUnbondingSlashingPath): TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath;
 
                     /**
                      * Encodes the specified UnbondingSlashingPath message. Does not implicitly {@link TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.verify|verify} messages.
@@ -524,64 +449,46 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.InputBuilder.IUnbondingSlashingPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an UnbondingSlashingPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath & TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Shape} UnbondingSlashingPath
+                     * @returns UnbondingSlashingPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath & TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath;
 
                     /**
-                     * Gets the type url for UnbondingSlashingPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for UnbondingSlashingPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace UnbondingSlashingPath {
-
-                    /** Properties of an UnbondingSlashingPath. */
-                    interface $Properties {
-
-                        /** UnbondingSlashingPath params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
-
-                        /** UnbondingSlashingPath finalityProviderSignature */
-                        finalityProviderSignature?: (TW.BabylonStaking.Proto.PublicKeySignature.$Properties|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an UnbondingSlashingPath. */
-                    type $Shape = TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
-            /**
-             * Properties of an OutputBuilder.
-             * @deprecated Use TW.BabylonStaking.Proto.OutputBuilder.$Properties instead.
-             */
-            interface IOutputBuilder extends TW.BabylonStaking.Proto.OutputBuilder.$Properties {
+            /** Properties of an OutputBuilder. */
+            interface IOutputBuilder {
             }
 
             /** Represents an OutputBuilder. */
-            class OutputBuilder {
+            class OutputBuilder implements IOutputBuilder {
 
                 /**
                  * Constructs a new OutputBuilder.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.$Properties);
+                constructor(properties?: TW.BabylonStaking.Proto.IOutputBuilder);
 
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                /**
+                 * Creates a new OutputBuilder instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutputBuilder instance
+                 */
+                public static create(properties?: TW.BabylonStaking.Proto.IOutputBuilder): TW.BabylonStaking.Proto.OutputBuilder;
 
                 /**
                  * Encodes the specified OutputBuilder message. Does not implicitly {@link TW.BabylonStaking.Proto.OutputBuilder.verify|verify} messages.
@@ -589,59 +496,53 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BabylonStaking.Proto.OutputBuilder.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BabylonStaking.Proto.IOutputBuilder, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an OutputBuilder message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BabylonStaking.Proto.OutputBuilder & TW.BabylonStaking.Proto.OutputBuilder.$Shape} OutputBuilder
+                 * @returns OutputBuilder
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder & TW.BabylonStaking.Proto.OutputBuilder.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder;
 
                 /**
-                 * Gets the type url for OutputBuilder
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for OutputBuilder
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace OutputBuilder {
 
-                /** Properties of an OutputBuilder. */
-                interface $Properties {
+                /** Properties of a StakingOutput. */
+                interface IStakingOutput {
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an OutputBuilder. */
-                type $Shape = TW.BabylonStaking.Proto.OutputBuilder.$Properties;
-
-                /**
-                 * Properties of a StakingOutput.
-                 * @deprecated Use TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties instead.
-                 */
-                interface IStakingOutput extends TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties {
+                    /** StakingOutput params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
                 }
 
                 /** Represents a StakingOutput. */
-                class StakingOutput {
+                class StakingOutput implements IStakingOutput {
 
                     /**
                      * Constructs a new StakingOutput.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.IStakingOutput);
 
                     /** StakingOutput params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
+
+                    /**
+                     * Creates a new StakingOutput instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns StakingOutput instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.OutputBuilder.IStakingOutput): TW.BabylonStaking.Proto.OutputBuilder.StakingOutput;
 
                     /**
                      * Encodes the specified StakingOutput message. Does not implicitly {@link TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.verify|verify} messages.
@@ -649,63 +550,51 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.OutputBuilder.IStakingOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a StakingOutput message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.OutputBuilder.StakingOutput & TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Shape} StakingOutput
+                     * @returns StakingOutput
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder.StakingOutput & TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder.StakingOutput;
 
                     /**
-                     * Gets the type url for StakingOutput
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for StakingOutput
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace StakingOutput {
+                /** Properties of an UnbondingOutput. */
+                interface IUnbondingOutput {
 
-                    /** Properties of a StakingOutput. */
-                    interface $Properties {
-
-                        /** StakingOutput params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a StakingOutput. */
-                    type $Shape = TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties;
-                }
-
-                /**
-                 * Properties of an UnbondingOutput.
-                 * @deprecated Use TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties instead.
-                 */
-                interface IUnbondingOutput extends TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties {
+                    /** UnbondingOutput params */
+                    params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
                 }
 
                 /** Represents an UnbondingOutput. */
-                class UnbondingOutput {
+                class UnbondingOutput implements IUnbondingOutput {
 
                     /**
                      * Constructs a new UnbondingOutput.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.IUnbondingOutput);
 
                     /** UnbondingOutput params. */
-                    params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    public params?: (TW.BabylonStaking.Proto.IStakingInfo|null);
+
+                    /**
+                     * Creates a new UnbondingOutput instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns UnbondingOutput instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.OutputBuilder.IUnbondingOutput): TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput;
 
                     /**
                      * Encodes the specified UnbondingOutput message. Does not implicitly {@link TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.verify|verify} messages.
@@ -713,72 +602,69 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.OutputBuilder.IUnbondingOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an UnbondingOutput message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput & TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Shape} UnbondingOutput
+                     * @returns UnbondingOutput
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput & TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput;
 
                     /**
-                     * Gets the type url for UnbondingOutput
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for UnbondingOutput
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace UnbondingOutput {
+                /** Properties of an OpReturn. */
+                interface IOpReturn {
 
-                    /** Properties of an UnbondingOutput. */
-                    interface $Properties {
+                    /** OpReturn tag */
+                    tag?: (Uint8Array|null);
 
-                        /** UnbondingOutput params */
-                        params?: (TW.BabylonStaking.Proto.StakingInfo.$Properties|null);
+                    /** OpReturn stakerPublicKey */
+                    stakerPublicKey?: (Uint8Array|null);
 
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
+                    /** OpReturn finalityProviderPublicKey */
+                    finalityProviderPublicKey?: (Uint8Array|null);
 
-                    /** Shape of an UnbondingOutput. */
-                    type $Shape = TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties;
-                }
-
-                /**
-                 * Properties of an OpReturn.
-                 * @deprecated Use TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties instead.
-                 */
-                interface IOpReturn extends TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties {
+                    /** OpReturn stakingTime */
+                    stakingTime?: (number|null);
                 }
 
                 /** Represents an OpReturn. */
-                class OpReturn {
+                class OpReturn implements IOpReturn {
 
                     /**
                      * Constructs a new OpReturn.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BabylonStaking.Proto.OutputBuilder.IOpReturn);
 
                     /** OpReturn tag. */
-                    tag: Uint8Array;
+                    public tag: Uint8Array;
 
                     /** OpReturn stakerPublicKey. */
-                    stakerPublicKey: Uint8Array;
+                    public stakerPublicKey: Uint8Array;
 
                     /** OpReturn finalityProviderPublicKey. */
-                    finalityProviderPublicKey: Uint8Array;
+                    public finalityProviderPublicKey: Uint8Array;
 
                     /** OpReturn stakingTime. */
-                    stakingTime: number;
+                    public stakingTime: number;
+
+                    /**
+                     * Creates a new OpReturn instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns OpReturn instance
+                     */
+                    public static create(properties?: TW.BabylonStaking.Proto.OutputBuilder.IOpReturn): TW.BabylonStaking.Proto.OutputBuilder.OpReturn;
 
                     /**
                      * Encodes the specified OpReturn message. Does not implicitly {@link TW.BabylonStaking.Proto.OutputBuilder.OpReturn.verify|verify} messages.
@@ -786,49 +672,24 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BabylonStaking.Proto.OutputBuilder.IOpReturn, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an OpReturn message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BabylonStaking.Proto.OutputBuilder.OpReturn & TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Shape} OpReturn
+                     * @returns OpReturn
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder.OpReturn & TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BabylonStaking.Proto.OutputBuilder.OpReturn;
 
                     /**
-                     * Gets the type url for OpReturn
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for OpReturn
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace OpReturn {
-
-                    /** Properties of an OpReturn. */
-                    interface $Properties {
-
-                        /** OpReturn tag */
-                        tag?: (Uint8Array|null);
-
-                        /** OpReturn stakerPublicKey */
-                        stakerPublicKey?: (Uint8Array|null);
-
-                        /** OpReturn finalityProviderPublicKey */
-                        finalityProviderPublicKey?: (Uint8Array|null);
-
-                        /** OpReturn stakingTime */
-                        stakingTime?: (number|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an OpReturn. */
-                    type $Shape = TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
         }
@@ -840,36 +701,49 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a Transaction.
-             * @deprecated Use TW.Bitcoin.Proto.Transaction.$Properties instead.
-             */
-            interface ITransaction extends TW.Bitcoin.Proto.Transaction.$Properties {
+            /** Properties of a Transaction. */
+            interface ITransaction {
+
+                /** Transaction version */
+                version?: (number|null);
+
+                /** Transaction lockTime */
+                lockTime?: (number|null);
+
+                /** Transaction inputs */
+                inputs?: (TW.Bitcoin.Proto.ITransactionInput[]|null);
+
+                /** Transaction outputs */
+                outputs?: (TW.Bitcoin.Proto.ITransactionOutput[]|null);
             }
 
             /** Represents a Transaction. */
-            class Transaction {
+            class Transaction implements ITransaction {
 
                 /**
                  * Constructs a new Transaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.Transaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.ITransaction);
 
                 /** Transaction version. */
-                version: number;
+                public version: number;
 
                 /** Transaction lockTime. */
-                lockTime: number;
+                public lockTime: number;
 
                 /** Transaction inputs. */
-                inputs: TW.Bitcoin.Proto.TransactionInput.$Properties[];
+                public inputs: TW.Bitcoin.Proto.ITransactionInput[];
 
                 /** Transaction outputs. */
-                outputs: TW.Bitcoin.Proto.TransactionOutput.$Properties[];
+                public outputs: TW.Bitcoin.Proto.ITransactionOutput[];
+
+                /**
+                 * Creates a new Transaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transaction instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.ITransaction): TW.Bitcoin.Proto.Transaction;
 
                 /**
                  * Encodes the specified Transaction message. Does not implicitly {@link TW.Bitcoin.Proto.Transaction.verify|verify} messages.
@@ -877,78 +751,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.Transaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.ITransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.Transaction & TW.Bitcoin.Proto.Transaction.$Shape} Transaction
+                 * @returns Transaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.Transaction & TW.Bitcoin.Proto.Transaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.Transaction;
 
                 /**
-                 * Gets the type url for Transaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Transaction {
+            /** Properties of a TransactionInput. */
+            interface ITransactionInput {
 
-                /** Properties of a Transaction. */
-                interface $Properties {
+                /** TransactionInput previousOutput */
+                previousOutput?: (TW.Bitcoin.Proto.IOutPoint|null);
 
-                    /** Transaction version */
-                    version?: (number|null);
+                /** TransactionInput sequence */
+                sequence?: (number|null);
 
-                    /** Transaction lockTime */
-                    lockTime?: (number|null);
-
-                    /** Transaction inputs */
-                    inputs?: (TW.Bitcoin.Proto.TransactionInput.$Properties[]|null);
-
-                    /** Transaction outputs */
-                    outputs?: (TW.Bitcoin.Proto.TransactionOutput.$Properties[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a Transaction. */
-                type $Shape = TW.Bitcoin.Proto.Transaction.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionInput.
-             * @deprecated Use TW.Bitcoin.Proto.TransactionInput.$Properties instead.
-             */
-            interface ITransactionInput extends TW.Bitcoin.Proto.TransactionInput.$Properties {
+                /** TransactionInput script */
+                script?: (Uint8Array|null);
             }
 
             /** Represents a TransactionInput. */
-            class TransactionInput {
+            class TransactionInput implements ITransactionInput {
 
                 /**
                  * Constructs a new TransactionInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.TransactionInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.ITransactionInput);
 
                 /** TransactionInput previousOutput. */
-                previousOutput?: (TW.Bitcoin.Proto.OutPoint.$Properties|null);
+                public previousOutput?: (TW.Bitcoin.Proto.IOutPoint|null);
 
                 /** TransactionInput sequence. */
-                sequence: number;
+                public sequence: number;
 
                 /** TransactionInput script. */
-                script: Uint8Array;
+                public script: Uint8Array;
+
+                /**
+                 * Creates a new TransactionInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionInput instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.ITransactionInput): TW.Bitcoin.Proto.TransactionInput;
 
                 /**
                  * Encodes the specified TransactionInput message. Does not implicitly {@link TW.Bitcoin.Proto.TransactionInput.verify|verify} messages.
@@ -956,78 +815,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.TransactionInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.ITransactionInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.TransactionInput & TW.Bitcoin.Proto.TransactionInput.$Shape} TransactionInput
+                 * @returns TransactionInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.TransactionInput & TW.Bitcoin.Proto.TransactionInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.TransactionInput;
 
                 /**
-                 * Gets the type url for TransactionInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionInput {
+            /** Properties of an OutPoint. */
+            interface IOutPoint {
 
-                /** Properties of a TransactionInput. */
-                interface $Properties {
+                /** OutPoint hash */
+                hash?: (Uint8Array|null);
 
-                    /** TransactionInput previousOutput */
-                    previousOutput?: (TW.Bitcoin.Proto.OutPoint.$Properties|null);
+                /** OutPoint index */
+                index?: (number|null);
 
-                    /** TransactionInput sequence */
-                    sequence?: (number|null);
+                /** OutPoint sequence */
+                sequence?: (number|null);
 
-                    /** TransactionInput script */
-                    script?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionInput. */
-                type $Shape = TW.Bitcoin.Proto.TransactionInput.$Properties;
-            }
-
-            /**
-             * Properties of an OutPoint.
-             * @deprecated Use TW.Bitcoin.Proto.OutPoint.$Properties instead.
-             */
-            interface IOutPoint extends TW.Bitcoin.Proto.OutPoint.$Properties {
+                /** OutPoint tree */
+                tree?: (number|null);
             }
 
             /** Represents an OutPoint. */
-            class OutPoint {
+            class OutPoint implements IOutPoint {
 
                 /**
                  * Constructs a new OutPoint.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.OutPoint.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.IOutPoint);
 
                 /** OutPoint hash. */
-                hash: Uint8Array;
+                public hash: Uint8Array;
 
                 /** OutPoint index. */
-                index: number;
+                public index: number;
 
                 /** OutPoint sequence. */
-                sequence: number;
+                public sequence: number;
 
                 /** OutPoint tree. */
-                tree: number;
+                public tree: number;
+
+                /**
+                 * Creates a new OutPoint instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutPoint instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.IOutPoint): TW.Bitcoin.Proto.OutPoint;
 
                 /**
                  * Encodes the specified OutPoint message. Does not implicitly {@link TW.Bitcoin.Proto.OutPoint.verify|verify} messages.
@@ -1035,78 +885,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.OutPoint.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.IOutPoint, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an OutPoint message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.OutPoint & TW.Bitcoin.Proto.OutPoint.$Shape} OutPoint
+                 * @returns OutPoint
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.OutPoint & TW.Bitcoin.Proto.OutPoint.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.OutPoint;
 
                 /**
-                 * Gets the type url for OutPoint
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for OutPoint
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace OutPoint {
+            /** Properties of a TransactionOutput. */
+            interface ITransactionOutput {
 
-                /** Properties of an OutPoint. */
-                interface $Properties {
+                /** TransactionOutput value */
+                value?: (number|null);
 
-                    /** OutPoint hash */
-                    hash?: (Uint8Array|null);
+                /** TransactionOutput script */
+                script?: (Uint8Array|null);
 
-                    /** OutPoint index */
-                    index?: (number|null);
-
-                    /** OutPoint sequence */
-                    sequence?: (number|null);
-
-                    /** OutPoint tree */
-                    tree?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an OutPoint. */
-                type $Shape = TW.Bitcoin.Proto.OutPoint.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionOutput.
-             * @deprecated Use TW.Bitcoin.Proto.TransactionOutput.$Properties instead.
-             */
-            interface ITransactionOutput extends TW.Bitcoin.Proto.TransactionOutput.$Properties {
+                /** TransactionOutput spendingScript */
+                spendingScript?: (Uint8Array|null);
             }
 
             /** Represents a TransactionOutput. */
-            class TransactionOutput {
+            class TransactionOutput implements ITransactionOutput {
 
                 /**
                  * Constructs a new TransactionOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.TransactionOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.ITransactionOutput);
 
                 /** TransactionOutput value. */
-                value: number;
+                public value: number;
 
                 /** TransactionOutput script. */
-                script: Uint8Array;
+                public script: Uint8Array;
 
                 /** TransactionOutput spendingScript. */
-                spendingScript: Uint8Array;
+                public spendingScript: Uint8Array;
+
+                /**
+                 * Creates a new TransactionOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionOutput instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.ITransactionOutput): TW.Bitcoin.Proto.TransactionOutput;
 
                 /**
                  * Encodes the specified TransactionOutput message. Does not implicitly {@link TW.Bitcoin.Proto.TransactionOutput.verify|verify} messages.
@@ -1114,81 +949,75 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.TransactionOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.ITransactionOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.TransactionOutput & TW.Bitcoin.Proto.TransactionOutput.$Shape} TransactionOutput
+                 * @returns TransactionOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.TransactionOutput & TW.Bitcoin.Proto.TransactionOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.TransactionOutput;
 
                 /**
-                 * Gets the type url for TransactionOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionOutput {
+            /** Properties of an UnspentTransaction. */
+            interface IUnspentTransaction {
 
-                /** Properties of a TransactionOutput. */
-                interface $Properties {
+                /** UnspentTransaction outPoint */
+                outPoint?: (TW.Bitcoin.Proto.IOutPoint|null);
 
-                    /** TransactionOutput value */
-                    value?: (number|null);
+                /** UnspentTransaction script */
+                script?: (Uint8Array|null);
 
-                    /** TransactionOutput script */
-                    script?: (Uint8Array|null);
+                /** UnspentTransaction amount */
+                amount?: (number|null);
 
-                    /** TransactionOutput spendingScript */
-                    spendingScript?: (Uint8Array|null);
+                /** UnspentTransaction variant */
+                variant?: (TW.Bitcoin.Proto.TransactionVariant|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionOutput. */
-                type $Shape = TW.Bitcoin.Proto.TransactionOutput.$Properties;
-            }
-
-            /**
-             * Properties of an UnspentTransaction.
-             * @deprecated Use TW.Bitcoin.Proto.UnspentTransaction.$Properties instead.
-             */
-            interface IUnspentTransaction extends TW.Bitcoin.Proto.UnspentTransaction.$Properties {
+                /** UnspentTransaction spendingScript */
+                spendingScript?: (Uint8Array|null);
             }
 
             /** Represents an UnspentTransaction. */
-            class UnspentTransaction {
+            class UnspentTransaction implements IUnspentTransaction {
 
                 /**
                  * Constructs a new UnspentTransaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.UnspentTransaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.IUnspentTransaction);
 
                 /** UnspentTransaction outPoint. */
-                outPoint?: (TW.Bitcoin.Proto.OutPoint.$Properties|null);
+                public outPoint?: (TW.Bitcoin.Proto.IOutPoint|null);
 
                 /** UnspentTransaction script. */
-                script: Uint8Array;
+                public script: Uint8Array;
 
                 /** UnspentTransaction amount. */
-                amount: number;
+                public amount: number;
 
                 /** UnspentTransaction variant. */
-                variant: TW.Bitcoin.Proto.TransactionVariant;
+                public variant: TW.Bitcoin.Proto.TransactionVariant;
 
                 /** UnspentTransaction spendingScript. */
-                spendingScript: Uint8Array;
+                public spendingScript: Uint8Array;
+
+                /**
+                 * Creates a new UnspentTransaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UnspentTransaction instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.IUnspentTransaction): TW.Bitcoin.Proto.UnspentTransaction;
 
                 /**
                  * Encodes the specified UnspentTransaction message. Does not implicitly {@link TW.Bitcoin.Proto.UnspentTransaction.verify|verify} messages.
@@ -1196,97 +1025,66 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.UnspentTransaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.IUnspentTransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an UnspentTransaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.UnspentTransaction & TW.Bitcoin.Proto.UnspentTransaction.$Shape} UnspentTransaction
+                 * @returns UnspentTransaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.UnspentTransaction & TW.Bitcoin.Proto.UnspentTransaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.UnspentTransaction;
 
                 /**
-                 * Gets the type url for UnspentTransaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UnspentTransaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace UnspentTransaction {
-
-                /** Properties of an UnspentTransaction. */
-                interface $Properties {
-
-                    /** UnspentTransaction outPoint */
-                    outPoint?: (TW.Bitcoin.Proto.OutPoint.$Properties|null);
-
-                    /** UnspentTransaction script */
-                    script?: (Uint8Array|null);
-
-                    /** UnspentTransaction amount */
-                    amount?: (number|null);
-
-                    /** UnspentTransaction variant */
-                    variant?: (TW.Bitcoin.Proto.TransactionVariant|null);
-
-                    /** UnspentTransaction spendingScript */
-                    spendingScript?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an UnspentTransaction. */
-                type $Shape = TW.Bitcoin.Proto.UnspentTransaction.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** TransactionVariant enum. */
             enum TransactionVariant {
-
-                /** P2PKH value */
                 P2PKH = 0,
-
-                /** P2WPKH value */
                 P2WPKH = 1,
-
-                /** P2TRKEYPATH value */
                 P2TRKEYPATH = 2,
-
-                /** BRC20TRANSFER value */
                 BRC20TRANSFER = 3,
-
-                /** NFTINSCRIPTION value */
                 NFTINSCRIPTION = 4
             }
 
-            /**
-             * Properties of an OutputAddress.
-             * @deprecated Use TW.Bitcoin.Proto.OutputAddress.$Properties instead.
-             */
-            interface IOutputAddress extends TW.Bitcoin.Proto.OutputAddress.$Properties {
+            /** Properties of an OutputAddress. */
+            interface IOutputAddress {
+
+                /** OutputAddress toAddress */
+                toAddress?: (string|null);
+
+                /** OutputAddress amount */
+                amount?: (number|null);
             }
 
             /** Represents an OutputAddress. */
-            class OutputAddress {
+            class OutputAddress implements IOutputAddress {
 
                 /**
                  * Constructs a new OutputAddress.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.OutputAddress.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.IOutputAddress);
 
                 /** OutputAddress toAddress. */
-                toAddress: string;
+                public toAddress: string;
 
                 /** OutputAddress amount. */
-                amount: number;
+                public amount: number;
+
+                /**
+                 * Creates a new OutputAddress instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutputAddress instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.IOutputAddress): TW.Bitcoin.Proto.OutputAddress;
 
                 /**
                  * Encodes the specified OutputAddress message. Does not implicitly {@link TW.Bitcoin.Proto.OutputAddress.verify|verify} messages.
@@ -1294,66 +1092,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.OutputAddress.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.IOutputAddress, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an OutputAddress message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.OutputAddress & TW.Bitcoin.Proto.OutputAddress.$Shape} OutputAddress
+                 * @returns OutputAddress
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.OutputAddress & TW.Bitcoin.Proto.OutputAddress.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.OutputAddress;
 
                 /**
-                 * Gets the type url for OutputAddress
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for OutputAddress
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace OutputAddress {
+            /** Properties of an OutputIndex. */
+            interface IOutputIndex {
 
-                /** Properties of an OutputAddress. */
-                interface $Properties {
-
-                    /** OutputAddress toAddress */
-                    toAddress?: (string|null);
-
-                    /** OutputAddress amount */
-                    amount?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an OutputAddress. */
-                type $Shape = TW.Bitcoin.Proto.OutputAddress.$Properties;
-            }
-
-            /**
-             * Properties of an OutputIndex.
-             * @deprecated Use TW.Bitcoin.Proto.OutputIndex.$Properties instead.
-             */
-            interface IOutputIndex extends TW.Bitcoin.Proto.OutputIndex.$Properties {
+                /** OutputIndex index */
+                index?: (number|null);
             }
 
             /** Represents an OutputIndex. */
-            class OutputIndex {
+            class OutputIndex implements IOutputIndex {
 
                 /**
                  * Constructs a new OutputIndex.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.OutputIndex.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.IOutputIndex);
 
                 /** OutputIndex index. */
-                index: number;
+                public index: number;
+
+                /**
+                 * Creates a new OutputIndex instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutputIndex instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.IOutputIndex): TW.Bitcoin.Proto.OutputIndex;
 
                 /**
                  * Encodes the specified OutputIndex message. Does not implicitly {@link TW.Bitcoin.Proto.OutputIndex.verify|verify} messages.
@@ -1361,126 +1144,174 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.OutputIndex.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.IOutputIndex, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an OutputIndex message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.OutputIndex & TW.Bitcoin.Proto.OutputIndex.$Shape} OutputIndex
+                 * @returns OutputIndex
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.OutputIndex & TW.Bitcoin.Proto.OutputIndex.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.OutputIndex;
 
                 /**
-                 * Gets the type url for OutputIndex
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for OutputIndex
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace OutputIndex {
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
 
-                /** Properties of an OutputIndex. */
-                interface $Properties {
+                /** SigningInput hashType */
+                hashType?: (number|null);
 
-                    /** OutputIndex index */
-                    index?: (number|null);
+                /** SigningInput amount */
+                amount?: (number|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** SigningInput byteFee */
+                byteFee?: (number|null);
 
-                /** Shape of an OutputIndex. */
-                type $Shape = TW.Bitcoin.Proto.OutputIndex.$Properties;
-            }
+                /** SigningInput toAddress */
+                toAddress?: (string|null);
 
-            /**
-             * Properties of a SigningInput.
-             * @deprecated Use TW.Bitcoin.Proto.SigningInput.$Properties instead.
-             */
-            interface ISigningInput extends TW.Bitcoin.Proto.SigningInput.$Properties {
+                /** SigningInput changeAddress */
+                changeAddress?: (string|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array[]|null);
+
+                /** SigningInput scripts */
+                scripts?: ({ [k: string]: Uint8Array }|null);
+
+                /** SigningInput utxo */
+                utxo?: (TW.Bitcoin.Proto.IUnspentTransaction[]|null);
+
+                /** SigningInput useMaxAmount */
+                useMaxAmount?: (boolean|null);
+
+                /** SigningInput coinType */
+                coinType?: (number|null);
+
+                /** SigningInput plan */
+                plan?: (TW.Bitcoin.Proto.ITransactionPlan|null);
+
+                /** SigningInput lockTime */
+                lockTime?: (number|null);
+
+                /** SigningInput outputOpReturn */
+                outputOpReturn?: (Uint8Array|null);
+
+                /** SigningInput outputOpReturnIndex */
+                outputOpReturnIndex?: (TW.Bitcoin.Proto.IOutputIndex|null);
+
+                /** SigningInput extraOutputs */
+                extraOutputs?: (TW.Bitcoin.Proto.IOutputAddress[]|null);
+
+                /** SigningInput useMaxUtxo */
+                useMaxUtxo?: (boolean|null);
+
+                /** SigningInput disableDustFilter */
+                disableDustFilter?: (boolean|null);
+
+                /** SigningInput time */
+                time?: (number|null);
+
+                /** SigningInput zip_0317 */
+                zip_0317?: (boolean|null);
+
+                /** SigningInput signingV2 */
+                signingV2?: (TW.BitcoinV2.Proto.ISigningInput|null);
+
+                /** SigningInput fixedDustThreshold */
+                fixedDustThreshold?: (number|null);
             }
 
             /** Represents a SigningInput. */
-            class SigningInput {
+            class SigningInput implements ISigningInput {
 
                 /**
                  * Constructs a new SigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.SigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.ISigningInput);
 
                 /** SigningInput hashType. */
-                hashType: number;
+                public hashType: number;
 
                 /** SigningInput amount. */
-                amount: number;
+                public amount: number;
 
                 /** SigningInput byteFee. */
-                byteFee: number;
+                public byteFee: number;
 
                 /** SigningInput toAddress. */
-                toAddress: string;
+                public toAddress: string;
 
                 /** SigningInput changeAddress. */
-                changeAddress: string;
+                public changeAddress: string;
 
                 /** SigningInput privateKey. */
-                privateKey: Uint8Array[];
+                public privateKey: Uint8Array[];
 
                 /** SigningInput scripts. */
-                scripts: { [k: string]: Uint8Array };
+                public scripts: { [k: string]: Uint8Array };
 
                 /** SigningInput utxo. */
-                utxo: TW.Bitcoin.Proto.UnspentTransaction.$Properties[];
+                public utxo: TW.Bitcoin.Proto.IUnspentTransaction[];
 
                 /** SigningInput useMaxAmount. */
-                useMaxAmount: boolean;
+                public useMaxAmount: boolean;
 
                 /** SigningInput coinType. */
-                coinType: number;
+                public coinType: number;
 
                 /** SigningInput plan. */
-                plan?: (TW.Bitcoin.Proto.TransactionPlan.$Properties|null);
+                public plan?: (TW.Bitcoin.Proto.ITransactionPlan|null);
 
                 /** SigningInput lockTime. */
-                lockTime: number;
+                public lockTime: number;
 
                 /** SigningInput outputOpReturn. */
-                outputOpReturn: Uint8Array;
+                public outputOpReturn: Uint8Array;
 
                 /** SigningInput outputOpReturnIndex. */
-                outputOpReturnIndex?: (TW.Bitcoin.Proto.OutputIndex.$Properties|null);
+                public outputOpReturnIndex?: (TW.Bitcoin.Proto.IOutputIndex|null);
 
                 /** SigningInput extraOutputs. */
-                extraOutputs: TW.Bitcoin.Proto.OutputAddress.$Properties[];
+                public extraOutputs: TW.Bitcoin.Proto.IOutputAddress[];
 
                 /** SigningInput useMaxUtxo. */
-                useMaxUtxo: boolean;
+                public useMaxUtxo: boolean;
 
                 /** SigningInput disableDustFilter. */
-                disableDustFilter: boolean;
+                public disableDustFilter: boolean;
 
                 /** SigningInput time. */
-                time: number;
+                public time: number;
 
                 /** SigningInput zip_0317. */
-                zip_0317: boolean;
+                public zip_0317: boolean;
 
                 /** SigningInput signingV2. */
-                signingV2?: (TW.BitcoinV2.Proto.SigningInput.$Properties|null);
+                public signingV2?: (TW.BitcoinV2.Proto.ISigningInput|null);
 
                 /** SigningInput fixedDustThreshold. */
-                fixedDustThreshold?: (number|null);
+                public fixedDustThreshold?: (number|null);
 
                 /** SigningInput dustPolicy. */
-                dustPolicy?: "fixedDustThreshold";
+                public dustPolicy?: "fixedDustThreshold";
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.ISigningInput): TW.Bitcoin.Proto.SigningInput;
 
                 /**
                  * Encodes the specified SigningInput message. Does not implicitly {@link TW.Bitcoin.Proto.SigningInput.verify|verify} messages.
@@ -1488,184 +1319,117 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.SigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.SigningInput & TW.Bitcoin.Proto.SigningInput.$Shape} SigningInput
+                 * @returns SigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.SigningInput & TW.Bitcoin.Proto.SigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.SigningInput;
 
                 /**
-                 * Gets the type url for SigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningInput {
+            /** Properties of a TransactionPlan. */
+            interface ITransactionPlan {
 
-                /** Properties of a SigningInput. */
-                interface $Properties {
+                /** TransactionPlan amount */
+                amount?: (number|null);
 
-                    /** SigningInput hashType */
-                    hashType?: (number|null);
+                /** TransactionPlan availableAmount */
+                availableAmount?: (number|null);
 
-                    /** SigningInput amount */
-                    amount?: (number|null);
+                /** TransactionPlan fee */
+                fee?: (number|null);
 
-                    /** SigningInput byteFee */
-                    byteFee?: (number|null);
+                /** TransactionPlan change */
+                change?: (number|null);
 
-                    /** SigningInput toAddress */
-                    toAddress?: (string|null);
+                /** TransactionPlan utxos */
+                utxos?: (TW.Bitcoin.Proto.IUnspentTransaction[]|null);
 
-                    /** SigningInput changeAddress */
-                    changeAddress?: (string|null);
+                /** TransactionPlan branchId */
+                branchId?: (Uint8Array|null);
 
-                    /** SigningInput privateKey */
-                    privateKey?: (Uint8Array[]|null);
+                /** TransactionPlan error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** SigningInput scripts */
-                    scripts?: ({ [k: string]: Uint8Array }|null);
+                /** TransactionPlan outputOpReturn */
+                outputOpReturn?: (Uint8Array|null);
 
-                    /** SigningInput utxo */
-                    utxo?: (TW.Bitcoin.Proto.UnspentTransaction.$Properties[]|null);
+                /** TransactionPlan outputOpReturnIndex */
+                outputOpReturnIndex?: (TW.Bitcoin.Proto.IOutputIndex|null);
 
-                    /** SigningInput useMaxAmount */
-                    useMaxAmount?: (boolean|null);
+                /** TransactionPlan preblockhash */
+                preblockhash?: (Uint8Array|null);
 
-                    /** SigningInput coinType */
-                    coinType?: (number|null);
+                /** TransactionPlan preblockheight */
+                preblockheight?: (number|null);
 
-                    /** SigningInput plan */
-                    plan?: (TW.Bitcoin.Proto.TransactionPlan.$Properties|null);
-
-                    /** SigningInput lockTime */
-                    lockTime?: (number|null);
-
-                    /** SigningInput outputOpReturn */
-                    outputOpReturn?: (Uint8Array|null);
-
-                    /** SigningInput outputOpReturnIndex */
-                    outputOpReturnIndex?: (TW.Bitcoin.Proto.OutputIndex.$Properties|null);
-
-                    /** SigningInput extraOutputs */
-                    extraOutputs?: (TW.Bitcoin.Proto.OutputAddress.$Properties[]|null);
-
-                    /** SigningInput useMaxUtxo */
-                    useMaxUtxo?: (boolean|null);
-
-                    /** SigningInput disableDustFilter */
-                    disableDustFilter?: (boolean|null);
-
-                    /** SigningInput time */
-                    time?: (number|null);
-
-                    /** SigningInput zip_0317 */
-                    zip_0317?: (boolean|null);
-
-                    /** SigningInput signingV2 */
-                    signingV2?: (TW.BitcoinV2.Proto.SigningInput.$Properties|null);
-
-                    /** SigningInput fixedDustThreshold */
-                    fixedDustThreshold?: (number|null);
-
-                    /** SigningInput dustPolicy */
-                    dustPolicy?: "fixedDustThreshold";
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a SigningInput. */
-                type $Shape = {
-                  hashType?: number|null;
-                  amount?: number|null;
-                  byteFee?: number|null;
-                  toAddress?: string|null;
-                  changeAddress?: string|null;
-                  privateKey?: Uint8Array[]|null;
-                  scripts?: { [k: string]: Uint8Array }|null;
-                  utxo?: TW.Bitcoin.Proto.UnspentTransaction.$Shape[]|null;
-                  useMaxAmount?: boolean|null;
-                  coinType?: number|null;
-                  plan?: TW.Bitcoin.Proto.TransactionPlan.$Shape|null;
-                  lockTime?: number|null;
-                  outputOpReturn?: Uint8Array|null;
-                  outputOpReturnIndex?: TW.Bitcoin.Proto.OutputIndex.$Shape|null;
-                  extraOutputs?: TW.Bitcoin.Proto.OutputAddress.$Shape[]|null;
-                  useMaxUtxo?: boolean|null;
-                  disableDustFilter?: boolean|null;
-                  time?: number|null;
-                  zip_0317?: boolean|null;
-                  signingV2?: TW.BitcoinV2.Proto.SigningInput.$Shape|null;
-                  fixedDustThreshold?: number|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ dustPolicy?: undefined; fixedDustThreshold?: null }|{ dustPolicy?: "fixedDustThreshold"; fixedDustThreshold: number })
-                );
-            }
-
-            /**
-             * Properties of a TransactionPlan.
-             * @deprecated Use TW.Bitcoin.Proto.TransactionPlan.$Properties instead.
-             */
-            interface ITransactionPlan extends TW.Bitcoin.Proto.TransactionPlan.$Properties {
+                /** TransactionPlan planningResultV2 */
+                planningResultV2?: (TW.BitcoinV2.Proto.ITransactionPlan|null);
             }
 
             /** Represents a TransactionPlan. */
-            class TransactionPlan {
+            class TransactionPlan implements ITransactionPlan {
 
                 /**
                  * Constructs a new TransactionPlan.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.TransactionPlan.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.ITransactionPlan);
 
                 /** TransactionPlan amount. */
-                amount: number;
+                public amount: number;
 
                 /** TransactionPlan availableAmount. */
-                availableAmount: number;
+                public availableAmount: number;
 
                 /** TransactionPlan fee. */
-                fee: number;
+                public fee: number;
 
                 /** TransactionPlan change. */
-                change: number;
+                public change: number;
 
                 /** TransactionPlan utxos. */
-                utxos: TW.Bitcoin.Proto.UnspentTransaction.$Properties[];
+                public utxos: TW.Bitcoin.Proto.IUnspentTransaction[];
 
                 /** TransactionPlan branchId. */
-                branchId: Uint8Array;
+                public branchId: Uint8Array;
 
                 /** TransactionPlan error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** TransactionPlan outputOpReturn. */
-                outputOpReturn: Uint8Array;
+                public outputOpReturn: Uint8Array;
 
                 /** TransactionPlan outputOpReturnIndex. */
-                outputOpReturnIndex?: (TW.Bitcoin.Proto.OutputIndex.$Properties|null);
+                public outputOpReturnIndex?: (TW.Bitcoin.Proto.IOutputIndex|null);
 
                 /** TransactionPlan preblockhash. */
-                preblockhash: Uint8Array;
+                public preblockhash: Uint8Array;
 
                 /** TransactionPlan preblockheight. */
-                preblockheight: number;
+                public preblockheight: number;
 
                 /** TransactionPlan planningResultV2. */
-                planningResultV2?: (TW.BitcoinV2.Proto.TransactionPlan.$Properties|null);
+                public planningResultV2?: (TW.BitcoinV2.Proto.ITransactionPlan|null);
+
+                /**
+                 * Creates a new TransactionPlan instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionPlan instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.ITransactionPlan): TW.Bitcoin.Proto.TransactionPlan;
 
                 /**
                  * Encodes the specified TransactionPlan message. Does not implicitly {@link TW.Bitcoin.Proto.TransactionPlan.verify|verify} messages.
@@ -1673,125 +1437,81 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.TransactionPlan.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.ITransactionPlan, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionPlan message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.TransactionPlan & TW.Bitcoin.Proto.TransactionPlan.$Shape} TransactionPlan
+                 * @returns TransactionPlan
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.TransactionPlan & TW.Bitcoin.Proto.TransactionPlan.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.TransactionPlan;
 
                 /**
-                 * Gets the type url for TransactionPlan
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionPlan
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionPlan {
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
 
-                /** Properties of a TransactionPlan. */
-                interface $Properties {
+                /** SigningOutput transaction */
+                transaction?: (TW.Bitcoin.Proto.ITransaction|null);
 
-                    /** TransactionPlan amount */
-                    amount?: (number|null);
+                /** SigningOutput encoded */
+                encoded?: (Uint8Array|null);
 
-                    /** TransactionPlan availableAmount */
-                    availableAmount?: (number|null);
+                /** SigningOutput transactionId */
+                transactionId?: (string|null);
 
-                    /** TransactionPlan fee */
-                    fee?: (number|null);
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** TransactionPlan change */
-                    change?: (number|null);
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
 
-                    /** TransactionPlan utxos */
-                    utxos?: (TW.Bitcoin.Proto.UnspentTransaction.$Properties[]|null);
-
-                    /** TransactionPlan branchId */
-                    branchId?: (Uint8Array|null);
-
-                    /** TransactionPlan error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** TransactionPlan outputOpReturn */
-                    outputOpReturn?: (Uint8Array|null);
-
-                    /** TransactionPlan outputOpReturnIndex */
-                    outputOpReturnIndex?: (TW.Bitcoin.Proto.OutputIndex.$Properties|null);
-
-                    /** TransactionPlan preblockhash */
-                    preblockhash?: (Uint8Array|null);
-
-                    /** TransactionPlan preblockheight */
-                    preblockheight?: (number|null);
-
-                    /** TransactionPlan planningResultV2 */
-                    planningResultV2?: (TW.BitcoinV2.Proto.TransactionPlan.$Properties|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionPlan. */
-                type $Shape = {
-                  amount?: number|null;
-                  availableAmount?: number|null;
-                  fee?: number|null;
-                  change?: number|null;
-                  utxos?: TW.Bitcoin.Proto.UnspentTransaction.$Shape[]|null;
-                  branchId?: Uint8Array|null;
-                  error?: TW.Common.Proto.SigningError|null;
-                  outputOpReturn?: Uint8Array|null;
-                  outputOpReturnIndex?: TW.Bitcoin.Proto.OutputIndex.$Shape|null;
-                  preblockhash?: Uint8Array|null;
-                  preblockheight?: number|null;
-                  planningResultV2?: TW.BitcoinV2.Proto.TransactionPlan.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                };
-            }
-
-            /**
-             * Properties of a SigningOutput.
-             * @deprecated Use TW.Bitcoin.Proto.SigningOutput.$Properties instead.
-             */
-            interface ISigningOutput extends TW.Bitcoin.Proto.SigningOutput.$Properties {
+                /** SigningOutput signingResultV2 */
+                signingResultV2?: (TW.BitcoinV2.Proto.ISigningOutput|null);
             }
 
             /** Represents a SigningOutput. */
-            class SigningOutput {
+            class SigningOutput implements ISigningOutput {
 
                 /**
                  * Constructs a new SigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.SigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.ISigningOutput);
 
                 /** SigningOutput transaction. */
-                transaction?: (TW.Bitcoin.Proto.Transaction.$Properties|null);
+                public transaction?: (TW.Bitcoin.Proto.ITransaction|null);
 
                 /** SigningOutput encoded. */
-                encoded: Uint8Array;
+                public encoded: Uint8Array;
 
                 /** SigningOutput transactionId. */
-                transactionId: string;
+                public transactionId: string;
 
                 /** SigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** SigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** SigningOutput signingResultV2. */
-                signingResultV2?: (TW.BitcoinV2.Proto.SigningOutput.$Properties|null);
+                public signingResultV2?: (TW.BitcoinV2.Proto.ISigningOutput|null);
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.ISigningOutput): TW.Bitcoin.Proto.SigningOutput;
 
                 /**
                  * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Bitcoin.Proto.SigningOutput.verify|verify} messages.
@@ -1799,89 +1519,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.SigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.SigningOutput & TW.Bitcoin.Proto.SigningOutput.$Shape} SigningOutput
+                 * @returns SigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.SigningOutput & TW.Bitcoin.Proto.SigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.SigningOutput;
 
                 /**
-                 * Gets the type url for SigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningOutput {
+            /** Properties of a HashPublicKey. */
+            interface IHashPublicKey {
 
-                /** Properties of a SigningOutput. */
-                interface $Properties {
+                /** Pre-image data hash that will be used for signing */
+                dataHash?: (Uint8Array|null);
 
-                    /** SigningOutput transaction */
-                    transaction?: (TW.Bitcoin.Proto.Transaction.$Properties|null);
-
-                    /** SigningOutput encoded */
-                    encoded?: (Uint8Array|null);
-
-                    /** SigningOutput transactionId */
-                    transactionId?: (string|null);
-
-                    /** SigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** SigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** SigningOutput signingResultV2 */
-                    signingResultV2?: (TW.BitcoinV2.Proto.SigningOutput.$Properties|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a SigningOutput. */
-                type $Shape = {
-                  transaction?: TW.Bitcoin.Proto.Transaction.$Shape|null;
-                  encoded?: Uint8Array|null;
-                  transactionId?: string|null;
-                  error?: TW.Common.Proto.SigningError|null;
-                  errorMessage?: string|null;
-                  signingResultV2?: TW.BitcoinV2.Proto.SigningOutput.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                };
-            }
-
-            /**
-             * Properties of a HashPublicKey.
-             * @deprecated Use TW.Bitcoin.Proto.HashPublicKey.$Properties instead.
-             */
-            interface IHashPublicKey extends TW.Bitcoin.Proto.HashPublicKey.$Properties {
+                /** public key hash used for signing */
+                publicKeyHash?: (Uint8Array|null);
             }
 
             /** Pre-image hash to be used for signing */
-            class HashPublicKey {
+            class HashPublicKey implements IHashPublicKey {
 
                 /**
                  * Constructs a new HashPublicKey.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.HashPublicKey.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.IHashPublicKey);
 
                 /** Pre-image data hash that will be used for signing */
-                dataHash: Uint8Array;
+                public dataHash: Uint8Array;
 
                 /** public key hash used for signing */
-                publicKeyHash: Uint8Array;
+                public publicKeyHash: Uint8Array;
+
+                /**
+                 * Creates a new HashPublicKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns HashPublicKey instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.IHashPublicKey): TW.Bitcoin.Proto.HashPublicKey;
 
                 /**
                  * Encodes the specified HashPublicKey message. Does not implicitly {@link TW.Bitcoin.Proto.HashPublicKey.verify|verify} messages.
@@ -1889,75 +1577,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.HashPublicKey.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.IHashPublicKey, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a HashPublicKey message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.HashPublicKey & TW.Bitcoin.Proto.HashPublicKey.$Shape} HashPublicKey
+                 * @returns HashPublicKey
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.HashPublicKey & TW.Bitcoin.Proto.HashPublicKey.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.HashPublicKey;
 
                 /**
-                 * Gets the type url for HashPublicKey
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for HashPublicKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace HashPublicKey {
+            /** Properties of a PreSigningOutput. */
+            interface IPreSigningOutput {
 
-                /** Properties of a HashPublicKey. */
-                interface $Properties {
+                /** hash, public key list */
+                hashPublicKeys?: (TW.Bitcoin.Proto.IHashPublicKey[]|null);
 
-                    /** Pre-image data hash that will be used for signing */
-                    dataHash?: (Uint8Array|null);
+                /** error code, 0 is ok, other codes will be treated as errors */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** public key hash used for signing */
-                    publicKeyHash?: (Uint8Array|null);
+                /** error description */
+                errorMessage?: (string|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a HashPublicKey. */
-                type $Shape = TW.Bitcoin.Proto.HashPublicKey.$Properties;
-            }
-
-            /**
-             * Properties of a PreSigningOutput.
-             * @deprecated Use TW.Bitcoin.Proto.PreSigningOutput.$Properties instead.
-             */
-            interface IPreSigningOutput extends TW.Bitcoin.Proto.PreSigningOutput.$Properties {
+                /** PreSigningOutput preSigningResultV2 */
+                preSigningResultV2?: (TW.BitcoinV2.Proto.IPreSigningOutput|null);
             }
 
             /** Transaction pre-signing output */
-            class PreSigningOutput {
+            class PreSigningOutput implements IPreSigningOutput {
 
                 /**
                  * Constructs a new PreSigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Bitcoin.Proto.PreSigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Bitcoin.Proto.IPreSigningOutput);
 
                 /** hash, public key list */
-                hashPublicKeys: TW.Bitcoin.Proto.HashPublicKey.$Properties[];
+                public hashPublicKeys: TW.Bitcoin.Proto.IHashPublicKey[];
 
                 /** error code, 0 is ok, other codes will be treated as errors */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** error description */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** PreSigningOutput preSigningResultV2. */
-                preSigningResultV2?: (TW.BitcoinV2.Proto.PreSigningOutput.$Properties|null);
+                public preSigningResultV2?: (TW.BitcoinV2.Proto.IPreSigningOutput|null);
+
+                /**
+                 * Creates a new PreSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PreSigningOutput instance
+                 */
+                public static create(properties?: TW.Bitcoin.Proto.IPreSigningOutput): TW.Bitcoin.Proto.PreSigningOutput;
 
                 /**
                  * Encodes the specified PreSigningOutput message. Does not implicitly {@link TW.Bitcoin.Proto.PreSigningOutput.verify|verify} messages.
@@ -1965,49 +1647,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Bitcoin.Proto.PreSigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Bitcoin.Proto.IPreSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PreSigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Bitcoin.Proto.PreSigningOutput & TW.Bitcoin.Proto.PreSigningOutput.$Shape} PreSigningOutput
+                 * @returns PreSigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.PreSigningOutput & TW.Bitcoin.Proto.PreSigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Bitcoin.Proto.PreSigningOutput;
 
                 /**
-                 * Gets the type url for PreSigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PreSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace PreSigningOutput {
-
-                /** Properties of a PreSigningOutput. */
-                interface $Properties {
-
-                    /** hash, public key list */
-                    hashPublicKeys?: (TW.Bitcoin.Proto.HashPublicKey.$Properties[]|null);
-
-                    /** error code, 0 is ok, other codes will be treated as errors */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** error description */
-                    errorMessage?: (string|null);
-
-                    /** PreSigningOutput preSigningResultV2 */
-                    preSigningResultV2?: (TW.BitcoinV2.Proto.PreSigningOutput.$Properties|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a PreSigningOutput. */
-                type $Shape = TW.Bitcoin.Proto.PreSigningOutput.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -2020,47 +1677,46 @@ export namespace TW {
 
             /** InputSelector enum. */
             enum InputSelector {
-
-                /** SelectAscending value */
                 SelectAscending = 0,
-
-                /** SelectInOrder value */
                 SelectInOrder = 1,
-
-                /** SelectDescending value */
                 SelectDescending = 2,
-
-                /** UseAll value */
                 UseAll = 10
             }
 
-            /**
-             * Properties of a PublicKeyOrHash.
-             * @deprecated Use TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties instead.
-             */
-            interface IPublicKeyOrHash extends TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties {
+            /** Properties of a PublicKeyOrHash. */
+            interface IPublicKeyOrHash {
+
+                /** PublicKeyOrHash pubkey */
+                pubkey?: (Uint8Array|null);
+
+                /** PublicKeyOrHash hash */
+                hash?: (Uint8Array|null);
             }
 
             /** Represents a PublicKeyOrHash. */
-            class PublicKeyOrHash {
+            class PublicKeyOrHash implements IPublicKeyOrHash {
 
                 /**
                  * Constructs a new PublicKeyOrHash.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IPublicKeyOrHash);
 
                 /** PublicKeyOrHash pubkey. */
-                pubkey?: (Uint8Array|null);
+                public pubkey?: (Uint8Array|null);
 
                 /** PublicKeyOrHash hash. */
-                hash?: (Uint8Array|null);
+                public hash?: (Uint8Array|null);
 
                 /** PublicKeyOrHash variant. */
-                variant?: ("pubkey"|"hash");
+                public variant?: ("pubkey"|"hash");
+
+                /**
+                 * Creates a new PublicKeyOrHash instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PublicKeyOrHash instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IPublicKeyOrHash): TW.BitcoinV2.Proto.PublicKeyOrHash;
 
                 /**
                  * Encodes the specified PublicKeyOrHash message. Does not implicitly {@link TW.BitcoinV2.Proto.PublicKeyOrHash.verify|verify} messages.
@@ -2068,78 +1724,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IPublicKeyOrHash, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PublicKeyOrHash message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.PublicKeyOrHash & TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape} PublicKeyOrHash
+                 * @returns PublicKeyOrHash
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PublicKeyOrHash & TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PublicKeyOrHash;
 
                 /**
-                 * Gets the type url for PublicKeyOrHash
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PublicKeyOrHash
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace PublicKeyOrHash {
+            /** Properties of a PublicKeySignature. */
+            interface IPublicKeySignature {
 
-                /** Properties of a PublicKeyOrHash. */
-                interface $Properties {
+                /** PublicKeySignature publicKey */
+                publicKey?: (Uint8Array|null);
 
-                    /** PublicKeyOrHash pubkey */
-                    pubkey?: (Uint8Array|null);
-
-                    /** PublicKeyOrHash hash */
-                    hash?: (Uint8Array|null);
-
-                    /** PublicKeyOrHash variant */
-                    variant?: ("pubkey"|"hash");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a PublicKeyOrHash. */
-                type $Shape = {
-                  pubkey?: Uint8Array|null;
-                  hash?: Uint8Array|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ variant?: undefined; pubkey?: null; hash?: null }|{ variant?: "pubkey"; pubkey: Uint8Array; hash?: null }|{ variant?: "hash"; pubkey?: null; hash: Uint8Array })
-                );
-            }
-
-            /**
-             * Properties of a PublicKeySignature.
-             * @deprecated Use TW.BitcoinV2.Proto.PublicKeySignature.$Properties instead.
-             */
-            interface IPublicKeySignature extends TW.BitcoinV2.Proto.PublicKeySignature.$Properties {
+                /** PublicKeySignature signature */
+                signature?: (Uint8Array|null);
             }
 
             /** Represents a PublicKeySignature. */
-            class PublicKeySignature {
+            class PublicKeySignature implements IPublicKeySignature {
 
                 /**
                  * Constructs a new PublicKeySignature.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.PublicKeySignature.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IPublicKeySignature);
 
                 /** PublicKeySignature publicKey. */
-                publicKey: Uint8Array;
+                public publicKey: Uint8Array;
 
                 /** PublicKeySignature signature. */
-                signature: Uint8Array;
+                public signature: Uint8Array;
+
+                /**
+                 * Creates a new PublicKeySignature instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PublicKeySignature instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IPublicKeySignature): TW.BitcoinV2.Proto.PublicKeySignature;
 
                 /**
                  * Encodes the specified PublicKeySignature message. Does not implicitly {@link TW.BitcoinV2.Proto.PublicKeySignature.verify|verify} messages.
@@ -2147,87 +1782,90 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.PublicKeySignature.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IPublicKeySignature, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PublicKeySignature message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.PublicKeySignature & TW.BitcoinV2.Proto.PublicKeySignature.$Shape} PublicKeySignature
+                 * @returns PublicKeySignature
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PublicKeySignature & TW.BitcoinV2.Proto.PublicKeySignature.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PublicKeySignature;
 
                 /**
-                 * Gets the type url for PublicKeySignature
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PublicKeySignature
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace PublicKeySignature {
+            /** Properties of an Input. */
+            interface IInput {
 
-                /** Properties of a PublicKeySignature. */
-                interface $Properties {
+                /** Input outPoint */
+                outPoint?: (TW.Utxo.Proto.IOutPoint|null);
 
-                    /** PublicKeySignature publicKey */
-                    publicKey?: (Uint8Array|null);
+                /** Input value */
+                value?: (number|null);
 
-                    /** PublicKeySignature signature */
-                    signature?: (Uint8Array|null);
+                /** Input sighashType */
+                sighashType?: (number|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** Input sequence */
+                sequence?: (TW.BitcoinV2.Proto.Input.ISequence|null);
 
-                /** Shape of a PublicKeySignature. */
-                type $Shape = TW.BitcoinV2.Proto.PublicKeySignature.$Properties;
-            }
+                /** Input scriptBuilder */
+                scriptBuilder?: (TW.BitcoinV2.Proto.Input.IInputBuilder|null);
 
-            /**
-             * Properties of an Input.
-             * @deprecated Use TW.BitcoinV2.Proto.Input.$Properties instead.
-             */
-            interface IInput extends TW.BitcoinV2.Proto.Input.$Properties {
+                /** Input scriptData */
+                scriptData?: (Uint8Array|null);
+
+                /** Input receiverAddress */
+                receiverAddress?: (string|null);
             }
 
             /** Represents an Input. */
-            class Input {
+            class Input implements IInput {
 
                 /**
                  * Constructs a new Input.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.Input.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IInput);
 
                 /** Input outPoint. */
-                outPoint?: (TW.Utxo.Proto.OutPoint.$Properties|null);
+                public outPoint?: (TW.Utxo.Proto.IOutPoint|null);
 
                 /** Input value. */
-                value: number;
+                public value: number;
 
                 /** Input sighashType. */
-                sighashType: number;
+                public sighashType: number;
 
                 /** Input sequence. */
-                sequence?: (TW.BitcoinV2.Proto.Input.Sequence.$Properties|null);
+                public sequence?: (TW.BitcoinV2.Proto.Input.ISequence|null);
 
                 /** Input scriptBuilder. */
-                scriptBuilder?: (TW.BitcoinV2.Proto.Input.InputBuilder.$Properties|null);
+                public scriptBuilder?: (TW.BitcoinV2.Proto.Input.IInputBuilder|null);
 
                 /** Input scriptData. */
-                scriptData?: (Uint8Array|null);
+                public scriptData?: (Uint8Array|null);
 
                 /** Input receiverAddress. */
-                receiverAddress?: (string|null);
+                public receiverAddress?: (string|null);
 
                 /** Input claimingScript. */
-                claimingScript?: ("scriptBuilder"|"scriptData"|"receiverAddress");
+                public claimingScript?: ("scriptBuilder"|"scriptData"|"receiverAddress");
+
+                /**
+                 * Creates a new Input instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Input instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IInput): TW.BitcoinV2.Proto.Input;
 
                 /**
                  * Encodes the specified Input message. Does not implicitly {@link TW.BitcoinV2.Proto.Input.verify|verify} messages.
@@ -2235,94 +1873,53 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.Input.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an Input message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.Input & TW.BitcoinV2.Proto.Input.$Shape} Input
+                 * @returns Input
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input & TW.BitcoinV2.Proto.Input.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input;
 
                 /**
-                 * Gets the type url for Input
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Input
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace Input {
 
-                /** Properties of an Input. */
-                interface $Properties {
+                /** Properties of a Sequence. */
+                interface ISequence {
 
-                    /** Input outPoint */
-                    outPoint?: (TW.Utxo.Proto.OutPoint.$Properties|null);
-
-                    /** Input value */
-                    value?: (number|null);
-
-                    /** Input sighashType */
-                    sighashType?: (number|null);
-
-                    /** Input sequence */
-                    sequence?: (TW.BitcoinV2.Proto.Input.Sequence.$Properties|null);
-
-                    /** Input scriptBuilder */
-                    scriptBuilder?: (TW.BitcoinV2.Proto.Input.InputBuilder.$Properties|null);
-
-                    /** Input scriptData */
-                    scriptData?: (Uint8Array|null);
-
-                    /** Input receiverAddress */
-                    receiverAddress?: (string|null);
-
-                    /** Input claimingScript */
-                    claimingScript?: ("scriptBuilder"|"scriptData"|"receiverAddress");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of an Input. */
-                type $Shape = {
-                  outPoint?: TW.Utxo.Proto.OutPoint.$Shape|null;
-                  value?: number|null;
-                  sighashType?: number|null;
-                  sequence?: TW.BitcoinV2.Proto.Input.Sequence.$Shape|null;
-                  scriptBuilder?: TW.BitcoinV2.Proto.Input.InputBuilder.$Shape|null;
-                  scriptData?: Uint8Array|null;
-                  receiverAddress?: string|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ claimingScript?: undefined; scriptBuilder?: null; scriptData?: null; receiverAddress?: null }|{ claimingScript?: "scriptBuilder"; scriptBuilder: TW.BitcoinV2.Proto.Input.InputBuilder.$Shape; scriptData?: null; receiverAddress?: null }|{ claimingScript?: "scriptData"; scriptBuilder?: null; scriptData: Uint8Array; receiverAddress?: null }|{ claimingScript?: "receiverAddress"; scriptBuilder?: null; scriptData?: null; receiverAddress: string })
-                );
-
-                /**
-                 * Properties of a Sequence.
-                 * @deprecated Use TW.BitcoinV2.Proto.Input.Sequence.$Properties instead.
-                 */
-                interface ISequence extends TW.BitcoinV2.Proto.Input.Sequence.$Properties {
+                    /** Sequence sequence */
+                    sequence?: (number|null);
                 }
 
                 /** Represents a Sequence. */
-                class Sequence {
+                class Sequence implements ISequence {
 
                     /**
                      * Constructs a new Sequence.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Input.Sequence.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Input.ISequence);
 
                     /** Sequence sequence. */
-                    sequence: number;
+                    public sequence: number;
+
+                    /**
+                     * Creates a new Sequence instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Sequence instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Input.ISequence): TW.BitcoinV2.Proto.Input.Sequence;
 
                     /**
                      * Encodes the specified Sequence message. Does not implicitly {@link TW.BitcoinV2.Proto.Input.Sequence.verify|verify} messages.
@@ -2330,93 +1927,108 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Input.Sequence.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Input.ISequence, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a Sequence message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Input.Sequence & TW.BitcoinV2.Proto.Input.Sequence.$Shape} Sequence
+                     * @returns Sequence
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.Sequence & TW.BitcoinV2.Proto.Input.Sequence.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.Sequence;
 
                     /**
-                     * Gets the type url for Sequence
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for Sequence
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace Sequence {
+                /** Properties of an InputBuilder. */
+                interface IInputBuilder {
 
-                    /** Properties of a Sequence. */
-                    interface $Properties {
+                    /** InputBuilder p2pk */
+                    p2pk?: (Uint8Array|null);
 
-                        /** Sequence sequence */
-                        sequence?: (number|null);
+                    /** InputBuilder p2pkh */
+                    p2pkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
+                    /** InputBuilder p2wpkh */
+                    p2wpkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
-                    /** Shape of a Sequence. */
-                    type $Shape = TW.BitcoinV2.Proto.Input.Sequence.$Properties;
-                }
+                    /** InputBuilder p2trKeyPath */
+                    p2trKeyPath?: (Uint8Array|null);
 
-                /**
-                 * Properties of an InputBuilder.
-                 * @deprecated Use TW.BitcoinV2.Proto.Input.InputBuilder.$Properties instead.
-                 */
-                interface IInputBuilder extends TW.BitcoinV2.Proto.Input.InputBuilder.$Properties {
+                    /** InputBuilder brc20Inscribe */
+                    brc20Inscribe?: (TW.BitcoinV2.Proto.Input.IInputBrc20Inscription|null);
+
+                    /** InputBuilder babylonStakingTimelockPath */
+                    babylonStakingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.IStakingTimelockPath|null);
+
+                    /** InputBuilder babylonStakingUnbondingPath */
+                    babylonStakingUnbondingPath?: (TW.BabylonStaking.Proto.InputBuilder.IStakingUnbondingPath|null);
+
+                    /** InputBuilder babylonStakingSlashingPath */
+                    babylonStakingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.IStakingSlashingPath|null);
+
+                    /** InputBuilder babylonUnbondingTimelockPath */
+                    babylonUnbondingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.IUnbondingTimelockPath|null);
+
+                    /** InputBuilder babylonUnbondingSlashingPath */
+                    babylonUnbondingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.IUnbondingSlashingPath|null);
                 }
 
                 /** Represents an InputBuilder. */
-                class InputBuilder {
+                class InputBuilder implements IInputBuilder {
 
                     /**
                      * Constructs a new InputBuilder.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Input.InputBuilder.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Input.IInputBuilder);
 
                     /** InputBuilder p2pk. */
-                    p2pk?: (Uint8Array|null);
+                    public p2pk?: (Uint8Array|null);
 
                     /** InputBuilder p2pkh. */
-                    p2pkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
+                    public p2pkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
                     /** InputBuilder p2wpkh. */
-                    p2wpkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
+                    public p2wpkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
                     /** InputBuilder p2trKeyPath. */
-                    p2trKeyPath?: (Uint8Array|null);
+                    public p2trKeyPath?: (Uint8Array|null);
 
                     /** InputBuilder brc20Inscribe. */
-                    brc20Inscribe?: (TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties|null);
+                    public brc20Inscribe?: (TW.BitcoinV2.Proto.Input.IInputBrc20Inscription|null);
 
                     /** InputBuilder babylonStakingTimelockPath. */
-                    babylonStakingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties|null);
+                    public babylonStakingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.IStakingTimelockPath|null);
 
                     /** InputBuilder babylonStakingUnbondingPath. */
-                    babylonStakingUnbondingPath?: (TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties|null);
+                    public babylonStakingUnbondingPath?: (TW.BabylonStaking.Proto.InputBuilder.IStakingUnbondingPath|null);
 
                     /** InputBuilder babylonStakingSlashingPath. */
-                    babylonStakingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties|null);
+                    public babylonStakingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.IStakingSlashingPath|null);
 
                     /** InputBuilder babylonUnbondingTimelockPath. */
-                    babylonUnbondingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties|null);
+                    public babylonUnbondingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.IUnbondingTimelockPath|null);
 
                     /** InputBuilder babylonUnbondingSlashingPath. */
-                    babylonUnbondingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties|null);
+                    public babylonUnbondingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.IUnbondingSlashingPath|null);
 
                     /** InputBuilder variant. */
-                    variant?: ("p2pk"|"p2pkh"|"p2wpkh"|"p2trKeyPath"|"brc20Inscribe"|"babylonStakingTimelockPath"|"babylonStakingUnbondingPath"|"babylonStakingSlashingPath"|"babylonUnbondingTimelockPath"|"babylonUnbondingSlashingPath");
+                    public variant?: ("p2pk"|"p2pkh"|"p2wpkh"|"p2trKeyPath"|"brc20Inscribe"|"babylonStakingTimelockPath"|"babylonStakingUnbondingPath"|"babylonStakingSlashingPath"|"babylonUnbondingTimelockPath"|"babylonUnbondingSlashingPath");
+
+                    /**
+                     * Creates a new InputBuilder instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns InputBuilder instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Input.IInputBuilder): TW.BitcoinV2.Proto.Input.InputBuilder;
 
                     /**
                      * Encodes the specified InputBuilder message. Does not implicitly {@link TW.BitcoinV2.Proto.Input.InputBuilder.verify|verify} messages.
@@ -2424,110 +2036,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Input.InputBuilder.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Input.IInputBuilder, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an InputBuilder message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Input.InputBuilder & TW.BitcoinV2.Proto.Input.InputBuilder.$Shape} InputBuilder
+                     * @returns InputBuilder
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.InputBuilder & TW.BitcoinV2.Proto.Input.InputBuilder.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.InputBuilder;
 
                     /**
-                     * Gets the type url for InputBuilder
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for InputBuilder
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace InputBuilder {
+                /** Properties of an InputTaprootScriptPath. */
+                interface IInputTaprootScriptPath {
 
-                    /** Properties of an InputBuilder. */
-                    interface $Properties {
+                    /** InputTaprootScriptPath payload */
+                    payload?: (Uint8Array|null);
 
-                        /** InputBuilder p2pk */
-                        p2pk?: (Uint8Array|null);
-
-                        /** InputBuilder p2pkh */
-                        p2pkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
-
-                        /** InputBuilder p2wpkh */
-                        p2wpkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
-
-                        /** InputBuilder p2trKeyPath */
-                        p2trKeyPath?: (Uint8Array|null);
-
-                        /** InputBuilder brc20Inscribe */
-                        brc20Inscribe?: (TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties|null);
-
-                        /** InputBuilder babylonStakingTimelockPath */
-                        babylonStakingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Properties|null);
-
-                        /** InputBuilder babylonStakingUnbondingPath */
-                        babylonStakingUnbondingPath?: (TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Properties|null);
-
-                        /** InputBuilder babylonStakingSlashingPath */
-                        babylonStakingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Properties|null);
-
-                        /** InputBuilder babylonUnbondingTimelockPath */
-                        babylonUnbondingTimelockPath?: (TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Properties|null);
-
-                        /** InputBuilder babylonUnbondingSlashingPath */
-                        babylonUnbondingSlashingPath?: (TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Properties|null);
-
-                        /** InputBuilder variant */
-                        variant?: ("p2pk"|"p2pkh"|"p2wpkh"|"p2trKeyPath"|"brc20Inscribe"|"babylonStakingTimelockPath"|"babylonStakingUnbondingPath"|"babylonStakingSlashingPath"|"babylonUnbondingTimelockPath"|"babylonUnbondingSlashingPath");
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Narrowed shape of an InputBuilder. */
-                    type $Shape = {
-                      p2pk?: Uint8Array|null;
-                      p2pkh?: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape|null;
-                      p2wpkh?: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape|null;
-                      p2trKeyPath?: Uint8Array|null;
-                      brc20Inscribe?: TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Shape|null;
-                      babylonStakingTimelockPath?: TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Shape|null;
-                      babylonStakingUnbondingPath?: TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Shape|null;
-                      babylonStakingSlashingPath?: TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Shape|null;
-                      babylonUnbondingTimelockPath?: TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Shape|null;
-                      babylonUnbondingSlashingPath?: TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Shape|null;
-                      $unknowns?: Uint8Array[];
-                    } & (
-                      ({ variant?: undefined; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "p2pk"; p2pk: Uint8Array; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "p2pkh"; p2pk?: null; p2pkh: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "p2wpkh"; p2pk?: null; p2pkh?: null; p2wpkh: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "p2trKeyPath"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath: Uint8Array; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "brc20Inscribe"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe: TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Shape; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "babylonStakingTimelockPath"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath: TW.BabylonStaking.Proto.InputBuilder.StakingTimelockPath.$Shape; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "babylonStakingUnbondingPath"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath: TW.BabylonStaking.Proto.InputBuilder.StakingUnbondingPath.$Shape; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "babylonStakingSlashingPath"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath: TW.BabylonStaking.Proto.InputBuilder.StakingSlashingPath.$Shape; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath?: null }|{ variant?: "babylonUnbondingTimelockPath"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath: TW.BabylonStaking.Proto.InputBuilder.UnbondingTimelockPath.$Shape; babylonUnbondingSlashingPath?: null }|{ variant?: "babylonUnbondingSlashingPath"; p2pk?: null; p2pkh?: null; p2wpkh?: null; p2trKeyPath?: null; brc20Inscribe?: null; babylonStakingTimelockPath?: null; babylonStakingUnbondingPath?: null; babylonStakingSlashingPath?: null; babylonUnbondingTimelockPath?: null; babylonUnbondingSlashingPath: TW.BabylonStaking.Proto.InputBuilder.UnbondingSlashingPath.$Shape })
-                    );
-                }
-
-                /**
-                 * Properties of an InputTaprootScriptPath.
-                 * @deprecated Use TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Properties instead.
-                 */
-                interface IInputTaprootScriptPath extends TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Properties {
+                    /** InputTaprootScriptPath controlBlock */
+                    controlBlock?: (Uint8Array|null);
                 }
 
                 /** Represents an InputTaprootScriptPath. */
-                class InputTaprootScriptPath {
+                class InputTaprootScriptPath implements IInputTaprootScriptPath {
 
                     /**
                      * Constructs a new InputTaprootScriptPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Input.IInputTaprootScriptPath);
 
                     /** InputTaprootScriptPath payload. */
-                    payload: Uint8Array;
+                    public payload: Uint8Array;
 
                     /** InputTaprootScriptPath controlBlock. */
-                    controlBlock: Uint8Array;
+                    public controlBlock: Uint8Array;
+
+                    /**
+                     * Creates a new InputTaprootScriptPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns InputTaprootScriptPath instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Input.IInputTaprootScriptPath): TW.BitcoinV2.Proto.Input.InputTaprootScriptPath;
 
                     /**
                      * Encodes the specified InputTaprootScriptPath message. Does not implicitly {@link TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.verify|verify} messages.
@@ -2535,72 +2094,63 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Input.IInputTaprootScriptPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an InputTaprootScriptPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Input.InputTaprootScriptPath & TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Shape} InputTaprootScriptPath
+                     * @returns InputTaprootScriptPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.InputTaprootScriptPath & TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.InputTaprootScriptPath;
 
                     /**
-                     * Gets the type url for InputTaprootScriptPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for InputTaprootScriptPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace InputTaprootScriptPath {
+                /** Properties of an InputBrc20Inscription. */
+                interface IInputBrc20Inscription {
 
-                    /** Properties of an InputTaprootScriptPath. */
-                    interface $Properties {
+                    /** InputBrc20Inscription inscribeTo */
+                    inscribeTo?: (Uint8Array|null);
 
-                        /** InputTaprootScriptPath payload */
-                        payload?: (Uint8Array|null);
+                    /** InputBrc20Inscription ticker */
+                    ticker?: (string|null);
 
-                        /** InputTaprootScriptPath controlBlock */
-                        controlBlock?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an InputTaprootScriptPath. */
-                    type $Shape = TW.BitcoinV2.Proto.Input.InputTaprootScriptPath.$Properties;
-                }
-
-                /**
-                 * Properties of an InputBrc20Inscription.
-                 * @deprecated Use TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties instead.
-                 */
-                interface IInputBrc20Inscription extends TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties {
+                    /** InputBrc20Inscription transferAmount */
+                    transferAmount?: (string|null);
                 }
 
                 /** Represents an InputBrc20Inscription. */
-                class InputBrc20Inscription {
+                class InputBrc20Inscription implements IInputBrc20Inscription {
 
                     /**
                      * Constructs a new InputBrc20Inscription.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Input.IInputBrc20Inscription);
 
                     /** InputBrc20Inscription inscribeTo. */
-                    inscribeTo: Uint8Array;
+                    public inscribeTo: Uint8Array;
 
                     /** InputBrc20Inscription ticker. */
-                    ticker: string;
+                    public ticker: string;
 
                     /** InputBrc20Inscription transferAmount. */
-                    transferAmount: string;
+                    public transferAmount: string;
+
+                    /**
+                     * Creates a new InputBrc20Inscription instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns InputBrc20Inscription instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Input.IInputBrc20Inscription): TW.BitcoinV2.Proto.Input.InputBrc20Inscription;
 
                     /**
                      * Encodes the specified InputBrc20Inscription message. Does not implicitly {@link TW.BitcoinV2.Proto.Input.InputBrc20Inscription.verify|verify} messages.
@@ -2608,82 +2158,73 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Input.IInputBrc20Inscription, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an InputBrc20Inscription message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Input.InputBrc20Inscription & TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Shape} InputBrc20Inscription
+                     * @returns InputBrc20Inscription
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.InputBrc20Inscription & TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Input.InputBrc20Inscription;
 
                     /**
-                     * Gets the type url for InputBrc20Inscription
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for InputBrc20Inscription
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace InputBrc20Inscription {
-
-                    /** Properties of an InputBrc20Inscription. */
-                    interface $Properties {
-
-                        /** InputBrc20Inscription inscribeTo */
-                        inscribeTo?: (Uint8Array|null);
-
-                        /** InputBrc20Inscription ticker */
-                        ticker?: (string|null);
-
-                        /** InputBrc20Inscription transferAmount */
-                        transferAmount?: (string|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an InputBrc20Inscription. */
-                    type $Shape = TW.BitcoinV2.Proto.Input.InputBrc20Inscription.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
-            /**
-             * Properties of an Output.
-             * @deprecated Use TW.BitcoinV2.Proto.Output.$Properties instead.
-             */
-            interface IOutput extends TW.BitcoinV2.Proto.Output.$Properties {
+            /** Properties of an Output. */
+            interface IOutput {
+
+                /** Output value */
+                value?: (number|null);
+
+                /** Output builder */
+                builder?: (TW.BitcoinV2.Proto.Output.IOutputBuilder|null);
+
+                /** Output customScriptPubkey */
+                customScriptPubkey?: (Uint8Array|null);
+
+                /** Output toAddress */
+                toAddress?: (string|null);
             }
 
             /** Represents an Output. */
-            class Output {
+            class Output implements IOutput {
 
                 /**
                  * Constructs a new Output.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.Output.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IOutput);
 
                 /** Output value. */
-                value: number;
+                public value: number;
 
                 /** Output builder. */
-                builder?: (TW.BitcoinV2.Proto.Output.OutputBuilder.$Properties|null);
+                public builder?: (TW.BitcoinV2.Proto.Output.IOutputBuilder|null);
 
                 /** Output customScriptPubkey. */
-                customScriptPubkey?: (Uint8Array|null);
+                public customScriptPubkey?: (Uint8Array|null);
 
                 /** Output toAddress. */
-                toAddress?: (string|null);
+                public toAddress?: (string|null);
 
                 /** Output toRecipient. */
-                toRecipient?: ("builder"|"customScriptPubkey"|"toAddress");
+                public toRecipient?: ("builder"|"customScriptPubkey"|"toAddress");
+
+                /**
+                 * Creates a new Output instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Output instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IOutput): TW.BitcoinV2.Proto.Output;
 
                 /**
                  * Encodes the specified Output message. Does not implicitly {@link TW.BitcoinV2.Proto.Output.verify|verify} messages.
@@ -2691,121 +2232,128 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.Output.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an Output message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.Output & TW.BitcoinV2.Proto.Output.$Shape} Output
+                 * @returns Output
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output & TW.BitcoinV2.Proto.Output.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output;
 
                 /**
-                 * Gets the type url for Output
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Output
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace Output {
 
-                /** Properties of an Output. */
-                interface $Properties {
+                /** Properties of an OutputBuilder. */
+                interface IOutputBuilder {
 
-                    /** Output value */
-                    value?: (number|null);
+                    /** OutputBuilder p2sh */
+                    p2sh?: (TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash|null);
 
-                    /** Output builder */
-                    builder?: (TW.BitcoinV2.Proto.Output.OutputBuilder.$Properties|null);
+                    /** OutputBuilder p2pk */
+                    p2pk?: (Uint8Array|null);
 
-                    /** Output customScriptPubkey */
-                    customScriptPubkey?: (Uint8Array|null);
+                    /** OutputBuilder p2pkh */
+                    p2pkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
-                    /** Output toAddress */
-                    toAddress?: (string|null);
+                    /** OutputBuilder p2wsh */
+                    p2wsh?: (TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash|null);
 
-                    /** Output toRecipient */
-                    toRecipient?: ("builder"|"customScriptPubkey"|"toAddress");
+                    /** OutputBuilder p2wpkh */
+                    p2wpkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                    /** OutputBuilder p2trKeyPath */
+                    p2trKeyPath?: (Uint8Array|null);
 
-                /** Narrowed shape of an Output. */
-                type $Shape = {
-                  value?: number|null;
-                  builder?: TW.BitcoinV2.Proto.Output.OutputBuilder.$Shape|null;
-                  customScriptPubkey?: Uint8Array|null;
-                  toAddress?: string|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ toRecipient?: undefined; builder?: null; customScriptPubkey?: null; toAddress?: null }|{ toRecipient?: "builder"; builder: TW.BitcoinV2.Proto.Output.OutputBuilder.$Shape; customScriptPubkey?: null; toAddress?: null }|{ toRecipient?: "customScriptPubkey"; builder?: null; customScriptPubkey: Uint8Array; toAddress?: null }|{ toRecipient?: "toAddress"; builder?: null; customScriptPubkey?: null; toAddress: string })
-                );
+                    /** OutputBuilder p2trScriptPath */
+                    p2trScriptPath?: (TW.BitcoinV2.Proto.Output.IOutputTaprootScriptPath|null);
 
-                /**
-                 * Properties of an OutputBuilder.
-                 * @deprecated Use TW.BitcoinV2.Proto.Output.OutputBuilder.$Properties instead.
-                 */
-                interface IOutputBuilder extends TW.BitcoinV2.Proto.Output.OutputBuilder.$Properties {
+                    /** OutputBuilder p2trDangerousAssumeTweaked */
+                    p2trDangerousAssumeTweaked?: (Uint8Array|null);
+
+                    /** OutputBuilder brc20Inscribe */
+                    brc20Inscribe?: (TW.BitcoinV2.Proto.Output.IOutputBrc20Inscription|null);
+
+                    /** OutputBuilder opReturn */
+                    opReturn?: (Uint8Array|null);
+
+                    /** OutputBuilder babylonStaking */
+                    babylonStaking?: (TW.BabylonStaking.Proto.OutputBuilder.IStakingOutput|null);
+
+                    /** OutputBuilder babylonUnbonding */
+                    babylonUnbonding?: (TW.BabylonStaking.Proto.OutputBuilder.IUnbondingOutput|null);
+
+                    /** OutputBuilder babylonStakingOpReturn */
+                    babylonStakingOpReturn?: (TW.BabylonStaking.Proto.OutputBuilder.IOpReturn|null);
                 }
 
                 /** Represents an OutputBuilder. */
-                class OutputBuilder {
+                class OutputBuilder implements IOutputBuilder {
 
                     /**
                      * Constructs a new OutputBuilder.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Output.OutputBuilder.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Output.IOutputBuilder);
 
                     /** OutputBuilder p2sh. */
-                    p2sh?: (TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties|null);
+                    public p2sh?: (TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash|null);
 
                     /** OutputBuilder p2pk. */
-                    p2pk?: (Uint8Array|null);
+                    public p2pk?: (Uint8Array|null);
 
                     /** OutputBuilder p2pkh. */
-                    p2pkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
+                    public p2pkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
                     /** OutputBuilder p2wsh. */
-                    p2wsh?: (TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties|null);
+                    public p2wsh?: (TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash|null);
 
                     /** OutputBuilder p2wpkh. */
-                    p2wpkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
+                    public p2wpkh?: (TW.BitcoinV2.Proto.IPublicKeyOrHash|null);
 
                     /** OutputBuilder p2trKeyPath. */
-                    p2trKeyPath?: (Uint8Array|null);
+                    public p2trKeyPath?: (Uint8Array|null);
 
                     /** OutputBuilder p2trScriptPath. */
-                    p2trScriptPath?: (TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties|null);
+                    public p2trScriptPath?: (TW.BitcoinV2.Proto.Output.IOutputTaprootScriptPath|null);
 
                     /** OutputBuilder p2trDangerousAssumeTweaked. */
-                    p2trDangerousAssumeTweaked?: (Uint8Array|null);
+                    public p2trDangerousAssumeTweaked?: (Uint8Array|null);
 
                     /** OutputBuilder brc20Inscribe. */
-                    brc20Inscribe?: (TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties|null);
+                    public brc20Inscribe?: (TW.BitcoinV2.Proto.Output.IOutputBrc20Inscription|null);
 
                     /** OutputBuilder opReturn. */
-                    opReturn?: (Uint8Array|null);
+                    public opReturn?: (Uint8Array|null);
 
                     /** OutputBuilder babylonStaking. */
-                    babylonStaking?: (TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties|null);
+                    public babylonStaking?: (TW.BabylonStaking.Proto.OutputBuilder.IStakingOutput|null);
 
                     /** OutputBuilder babylonUnbonding. */
-                    babylonUnbonding?: (TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties|null);
+                    public babylonUnbonding?: (TW.BabylonStaking.Proto.OutputBuilder.IUnbondingOutput|null);
 
                     /** OutputBuilder babylonStakingOpReturn. */
-                    babylonStakingOpReturn?: (TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties|null);
+                    public babylonStakingOpReturn?: (TW.BabylonStaking.Proto.OutputBuilder.IOpReturn|null);
 
                     /** OutputBuilder variant. */
-                    variant?: ("p2sh"|"p2pk"|"p2pkh"|"p2wsh"|"p2wpkh"|"p2trKeyPath"|"p2trScriptPath"|"p2trDangerousAssumeTweaked"|"brc20Inscribe"|"opReturn"|"babylonStaking"|"babylonUnbonding"|"babylonStakingOpReturn");
+                    public variant?: ("p2sh"|"p2pk"|"p2pkh"|"p2wsh"|"p2wpkh"|"p2trKeyPath"|"p2trScriptPath"|"p2trDangerousAssumeTweaked"|"brc20Inscribe"|"opReturn"|"babylonStaking"|"babylonUnbonding"|"babylonStakingOpReturn");
+
+                    /**
+                     * Creates a new OutputBuilder instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns OutputBuilder instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Output.IOutputBuilder): TW.BitcoinV2.Proto.Output.OutputBuilder;
 
                     /**
                      * Encodes the specified OutputBuilder message. Does not implicitly {@link TW.BitcoinV2.Proto.Output.OutputBuilder.verify|verify} messages.
@@ -2813,125 +2361,60 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Output.OutputBuilder.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Output.IOutputBuilder, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an OutputBuilder message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Output.OutputBuilder & TW.BitcoinV2.Proto.Output.OutputBuilder.$Shape} OutputBuilder
+                     * @returns OutputBuilder
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.OutputBuilder & TW.BitcoinV2.Proto.Output.OutputBuilder.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.OutputBuilder;
 
                     /**
-                     * Gets the type url for OutputBuilder
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for OutputBuilder
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace OutputBuilder {
+                /** Properties of a RedeemScriptOrHash. */
+                interface IRedeemScriptOrHash {
 
-                    /** Properties of an OutputBuilder. */
-                    interface $Properties {
+                    /** RedeemScriptOrHash redeemScript */
+                    redeemScript?: (Uint8Array|null);
 
-                        /** OutputBuilder p2sh */
-                        p2sh?: (TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties|null);
-
-                        /** OutputBuilder p2pk */
-                        p2pk?: (Uint8Array|null);
-
-                        /** OutputBuilder p2pkh */
-                        p2pkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
-
-                        /** OutputBuilder p2wsh */
-                        p2wsh?: (TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties|null);
-
-                        /** OutputBuilder p2wpkh */
-                        p2wpkh?: (TW.BitcoinV2.Proto.PublicKeyOrHash.$Properties|null);
-
-                        /** OutputBuilder p2trKeyPath */
-                        p2trKeyPath?: (Uint8Array|null);
-
-                        /** OutputBuilder p2trScriptPath */
-                        p2trScriptPath?: (TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties|null);
-
-                        /** OutputBuilder p2trDangerousAssumeTweaked */
-                        p2trDangerousAssumeTweaked?: (Uint8Array|null);
-
-                        /** OutputBuilder brc20Inscribe */
-                        brc20Inscribe?: (TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties|null);
-
-                        /** OutputBuilder opReturn */
-                        opReturn?: (Uint8Array|null);
-
-                        /** OutputBuilder babylonStaking */
-                        babylonStaking?: (TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Properties|null);
-
-                        /** OutputBuilder babylonUnbonding */
-                        babylonUnbonding?: (TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Properties|null);
-
-                        /** OutputBuilder babylonStakingOpReturn */
-                        babylonStakingOpReturn?: (TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Properties|null);
-
-                        /** OutputBuilder variant */
-                        variant?: ("p2sh"|"p2pk"|"p2pkh"|"p2wsh"|"p2wpkh"|"p2trKeyPath"|"p2trScriptPath"|"p2trDangerousAssumeTweaked"|"brc20Inscribe"|"opReturn"|"babylonStaking"|"babylonUnbonding"|"babylonStakingOpReturn");
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Narrowed shape of an OutputBuilder. */
-                    type $Shape = {
-                      p2sh?: TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Shape|null;
-                      p2pk?: Uint8Array|null;
-                      p2pkh?: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape|null;
-                      p2wsh?: TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Shape|null;
-                      p2wpkh?: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape|null;
-                      p2trKeyPath?: Uint8Array|null;
-                      p2trScriptPath?: TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Shape|null;
-                      p2trDangerousAssumeTweaked?: Uint8Array|null;
-                      brc20Inscribe?: TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Shape|null;
-                      opReturn?: Uint8Array|null;
-                      babylonStaking?: TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Shape|null;
-                      babylonUnbonding?: TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Shape|null;
-                      babylonStakingOpReturn?: TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Shape|null;
-                      $unknowns?: Uint8Array[];
-                    } & (
-                      ({ variant?: undefined; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2sh"; p2sh: TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Shape; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2pk"; p2sh?: null; p2pk: Uint8Array; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2pkh"; p2sh?: null; p2pk?: null; p2pkh: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2wsh"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh: TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Shape; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2wpkh"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh: TW.BitcoinV2.Proto.PublicKeyOrHash.$Shape; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2trKeyPath"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath: Uint8Array; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2trScriptPath"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath: TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Shape; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "p2trDangerousAssumeTweaked"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked: Uint8Array; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "brc20Inscribe"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe: TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Shape; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "opReturn"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn: Uint8Array; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "babylonStaking"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking: TW.BabylonStaking.Proto.OutputBuilder.StakingOutput.$Shape; babylonUnbonding?: null; babylonStakingOpReturn?: null }|{ variant?: "babylonUnbonding"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding: TW.BabylonStaking.Proto.OutputBuilder.UnbondingOutput.$Shape; babylonStakingOpReturn?: null }|{ variant?: "babylonStakingOpReturn"; p2sh?: null; p2pk?: null; p2pkh?: null; p2wsh?: null; p2wpkh?: null; p2trKeyPath?: null; p2trScriptPath?: null; p2trDangerousAssumeTweaked?: null; brc20Inscribe?: null; opReturn?: null; babylonStaking?: null; babylonUnbonding?: null; babylonStakingOpReturn: TW.BabylonStaking.Proto.OutputBuilder.OpReturn.$Shape })
-                    );
-                }
-
-                /**
-                 * Properties of a RedeemScriptOrHash.
-                 * @deprecated Use TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties instead.
-                 */
-                interface IRedeemScriptOrHash extends TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties {
+                    /** RedeemScriptOrHash hash */
+                    hash?: (Uint8Array|null);
                 }
 
                 /** Represents a RedeemScriptOrHash. */
-                class RedeemScriptOrHash {
+                class RedeemScriptOrHash implements IRedeemScriptOrHash {
 
                     /**
                      * Constructs a new RedeemScriptOrHash.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash);
 
                     /** RedeemScriptOrHash redeemScript. */
-                    redeemScript?: (Uint8Array|null);
+                    public redeemScript?: (Uint8Array|null);
 
                     /** RedeemScriptOrHash hash. */
-                    hash?: (Uint8Array|null);
+                    public hash?: (Uint8Array|null);
 
                     /** RedeemScriptOrHash variant. */
-                    variant?: ("redeemScript"|"hash");
+                    public variant?: ("redeemScript"|"hash");
+
+                    /**
+                     * Creates a new RedeemScriptOrHash instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns RedeemScriptOrHash instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash): TW.BitcoinV2.Proto.Output.RedeemScriptOrHash;
 
                     /**
                      * Encodes the specified RedeemScriptOrHash message. Does not implicitly {@link TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.verify|verify} messages.
@@ -2939,78 +2422,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Output.IRedeemScriptOrHash, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a RedeemScriptOrHash message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Output.RedeemScriptOrHash & TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Shape} RedeemScriptOrHash
+                     * @returns RedeemScriptOrHash
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.RedeemScriptOrHash & TW.BitcoinV2.Proto.Output.RedeemScriptOrHash.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.RedeemScriptOrHash;
 
                     /**
-                     * Gets the type url for RedeemScriptOrHash
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for RedeemScriptOrHash
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace RedeemScriptOrHash {
+                /** Properties of an OutputTaprootScriptPath. */
+                interface IOutputTaprootScriptPath {
 
-                    /** Properties of a RedeemScriptOrHash. */
-                    interface $Properties {
+                    /** OutputTaprootScriptPath internalKey */
+                    internalKey?: (Uint8Array|null);
 
-                        /** RedeemScriptOrHash redeemScript */
-                        redeemScript?: (Uint8Array|null);
-
-                        /** RedeemScriptOrHash hash */
-                        hash?: (Uint8Array|null);
-
-                        /** RedeemScriptOrHash variant */
-                        variant?: ("redeemScript"|"hash");
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Narrowed shape of a RedeemScriptOrHash. */
-                    type $Shape = {
-                      redeemScript?: Uint8Array|null;
-                      hash?: Uint8Array|null;
-                      $unknowns?: Uint8Array[];
-                    } & (
-                      ({ variant?: undefined; redeemScript?: null; hash?: null }|{ variant?: "redeemScript"; redeemScript: Uint8Array; hash?: null }|{ variant?: "hash"; redeemScript?: null; hash: Uint8Array })
-                    );
-                }
-
-                /**
-                 * Properties of an OutputTaprootScriptPath.
-                 * @deprecated Use TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties instead.
-                 */
-                interface IOutputTaprootScriptPath extends TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties {
+                    /** OutputTaprootScriptPath merkleRoot */
+                    merkleRoot?: (Uint8Array|null);
                 }
 
                 /** Represents an OutputTaprootScriptPath. */
-                class OutputTaprootScriptPath {
+                class OutputTaprootScriptPath implements IOutputTaprootScriptPath {
 
                     /**
                      * Constructs a new OutputTaprootScriptPath.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Output.IOutputTaprootScriptPath);
 
                     /** OutputTaprootScriptPath internalKey. */
-                    internalKey: Uint8Array;
+                    public internalKey: Uint8Array;
 
                     /** OutputTaprootScriptPath merkleRoot. */
-                    merkleRoot: Uint8Array;
+                    public merkleRoot: Uint8Array;
+
+                    /**
+                     * Creates a new OutputTaprootScriptPath instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns OutputTaprootScriptPath instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Output.IOutputTaprootScriptPath): TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath;
 
                     /**
                      * Encodes the specified OutputTaprootScriptPath message. Does not implicitly {@link TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.verify|verify} messages.
@@ -3018,72 +2480,63 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Output.IOutputTaprootScriptPath, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an OutputTaprootScriptPath message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath & TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Shape} OutputTaprootScriptPath
+                     * @returns OutputTaprootScriptPath
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath & TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath;
 
                     /**
-                     * Gets the type url for OutputTaprootScriptPath
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for OutputTaprootScriptPath
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace OutputTaprootScriptPath {
+                /** Properties of an OutputBrc20Inscription. */
+                interface IOutputBrc20Inscription {
 
-                    /** Properties of an OutputTaprootScriptPath. */
-                    interface $Properties {
+                    /** OutputBrc20Inscription inscribeTo */
+                    inscribeTo?: (Uint8Array|null);
 
-                        /** OutputTaprootScriptPath internalKey */
-                        internalKey?: (Uint8Array|null);
+                    /** OutputBrc20Inscription ticker */
+                    ticker?: (string|null);
 
-                        /** OutputTaprootScriptPath merkleRoot */
-                        merkleRoot?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an OutputTaprootScriptPath. */
-                    type $Shape = TW.BitcoinV2.Proto.Output.OutputTaprootScriptPath.$Properties;
-                }
-
-                /**
-                 * Properties of an OutputBrc20Inscription.
-                 * @deprecated Use TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties instead.
-                 */
-                interface IOutputBrc20Inscription extends TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties {
+                    /** OutputBrc20Inscription transferAmount */
+                    transferAmount?: (string|null);
                 }
 
                 /** Represents an OutputBrc20Inscription. */
-                class OutputBrc20Inscription {
+                class OutputBrc20Inscription implements IOutputBrc20Inscription {
 
                     /**
                      * Constructs a new OutputBrc20Inscription.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.Output.IOutputBrc20Inscription);
 
                     /** OutputBrc20Inscription inscribeTo. */
-                    inscribeTo: Uint8Array;
+                    public inscribeTo: Uint8Array;
 
                     /** OutputBrc20Inscription ticker. */
-                    ticker: string;
+                    public ticker: string;
 
                     /** OutputBrc20Inscription transferAmount. */
-                    transferAmount: string;
+                    public transferAmount: string;
+
+                    /**
+                     * Creates a new OutputBrc20Inscription instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns OutputBrc20Inscription instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.Output.IOutputBrc20Inscription): TW.BitcoinV2.Proto.Output.OutputBrc20Inscription;
 
                     /**
                      * Encodes the specified OutputBrc20Inscription message. Does not implicitly {@link TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.verify|verify} messages.
@@ -3091,76 +2544,64 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.Output.IOutputBrc20Inscription, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an OutputBrc20Inscription message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.Output.OutputBrc20Inscription & TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Shape} OutputBrc20Inscription
+                     * @returns OutputBrc20Inscription
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.OutputBrc20Inscription & TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Output.OutputBrc20Inscription;
 
                     /**
-                     * Gets the type url for OutputBrc20Inscription
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for OutputBrc20Inscription
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace OutputBrc20Inscription {
-
-                    /** Properties of an OutputBrc20Inscription. */
-                    interface $Properties {
-
-                        /** OutputBrc20Inscription inscribeTo */
-                        inscribeTo?: (Uint8Array|null);
-
-                        /** OutputBrc20Inscription ticker */
-                        ticker?: (string|null);
-
-                        /** OutputBrc20Inscription transferAmount */
-                        transferAmount?: (string|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an OutputBrc20Inscription. */
-                    type $Shape = TW.BitcoinV2.Proto.Output.OutputBrc20Inscription.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
-            /**
-             * Properties of a ChainInfo.
-             * @deprecated Use TW.BitcoinV2.Proto.ChainInfo.$Properties instead.
-             */
-            interface IChainInfo extends TW.BitcoinV2.Proto.ChainInfo.$Properties {
+            /** Properties of a ChainInfo. */
+            interface IChainInfo {
+
+                /** ChainInfo p2pkhPrefix */
+                p2pkhPrefix?: (number|null);
+
+                /** ChainInfo p2shPrefix */
+                p2shPrefix?: (number|null);
+
+                /** ChainInfo hrp */
+                hrp?: (string|null);
             }
 
             /** Represents a ChainInfo. */
-            class ChainInfo {
+            class ChainInfo implements IChainInfo {
 
                 /**
                  * Constructs a new ChainInfo.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.ChainInfo.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IChainInfo);
 
                 /** ChainInfo p2pkhPrefix. */
-                p2pkhPrefix: number;
+                public p2pkhPrefix: number;
 
                 /** ChainInfo p2shPrefix. */
-                p2shPrefix: number;
+                public p2shPrefix: number;
 
                 /** ChainInfo hrp. */
-                hrp: string;
+                public hrp: string;
+
+                /**
+                 * Creates a new ChainInfo instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ChainInfo instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IChainInfo): TW.BitcoinV2.Proto.ChainInfo;
 
                 /**
                  * Encodes the specified ChainInfo message. Does not implicitly {@link TW.BitcoinV2.Proto.ChainInfo.verify|verify} messages.
@@ -3168,118 +2609,124 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.ChainInfo.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IChainInfo, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a ChainInfo message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.ChainInfo & TW.BitcoinV2.Proto.ChainInfo.$Shape} ChainInfo
+                 * @returns ChainInfo
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.ChainInfo & TW.BitcoinV2.Proto.ChainInfo.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.ChainInfo;
 
                 /**
-                 * Gets the type url for ChainInfo
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for ChainInfo
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace ChainInfo {
-
-                /** Properties of a ChainInfo. */
-                interface $Properties {
-
-                    /** ChainInfo p2pkhPrefix */
-                    p2pkhPrefix?: (number|null);
-
-                    /** ChainInfo p2shPrefix */
-                    p2shPrefix?: (number|null);
-
-                    /** ChainInfo hrp */
-                    hrp?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a ChainInfo. */
-                type $Shape = TW.BitcoinV2.Proto.ChainInfo.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** TransactionVersion enum. */
             enum TransactionVersion {
-
-                /** UseDefault value */
                 UseDefault = 0,
-
-                /** V1 value */
                 V1 = 1,
-
-                /** V2 value */
                 V2 = 2
             }
 
-            /**
-             * Properties of a TransactionBuilder.
-             * @deprecated Use TW.BitcoinV2.Proto.TransactionBuilder.$Properties instead.
-             */
-            interface ITransactionBuilder extends TW.BitcoinV2.Proto.TransactionBuilder.$Properties {
+            /** Properties of a TransactionBuilder. */
+            interface ITransactionBuilder {
+
+                /** TransactionBuilder version */
+                version?: (TW.BitcoinV2.Proto.TransactionVersion|null);
+
+                /** TransactionBuilder lockTime */
+                lockTime?: (number|null);
+
+                /** TransactionBuilder inputs */
+                inputs?: (TW.BitcoinV2.Proto.IInput[]|null);
+
+                /** TransactionBuilder outputs */
+                outputs?: (TW.BitcoinV2.Proto.IOutput[]|null);
+
+                /** TransactionBuilder inputSelector */
+                inputSelector?: (TW.BitcoinV2.Proto.InputSelector|null);
+
+                /** TransactionBuilder feePerVb */
+                feePerVb?: (number|null);
+
+                /** TransactionBuilder changeOutput */
+                changeOutput?: (TW.BitcoinV2.Proto.IOutput|null);
+
+                /** TransactionBuilder maxAmountOutput */
+                maxAmountOutput?: (TW.BitcoinV2.Proto.IOutput|null);
+
+                /** TransactionBuilder fixedDustThreshold */
+                fixedDustThreshold?: (number|null);
+
+                /** TransactionBuilder zcashExtraData */
+                zcashExtraData?: (TW.Zcash.Proto.ITransactionBuilderExtraData|null);
+
+                /** TransactionBuilder decredExtraData */
+                decredExtraData?: (TW.DecredV2.Proto.ITransactionBuilderExtraData|null);
             }
 
             /** Represents a TransactionBuilder. */
-            class TransactionBuilder {
+            class TransactionBuilder implements ITransactionBuilder {
 
                 /**
                  * Constructs a new TransactionBuilder.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.TransactionBuilder.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.ITransactionBuilder);
 
                 /** TransactionBuilder version. */
-                version: TW.BitcoinV2.Proto.TransactionVersion;
+                public version: TW.BitcoinV2.Proto.TransactionVersion;
 
                 /** TransactionBuilder lockTime. */
-                lockTime: number;
+                public lockTime: number;
 
                 /** TransactionBuilder inputs. */
-                inputs: TW.BitcoinV2.Proto.Input.$Properties[];
+                public inputs: TW.BitcoinV2.Proto.IInput[];
 
                 /** TransactionBuilder outputs. */
-                outputs: TW.BitcoinV2.Proto.Output.$Properties[];
+                public outputs: TW.BitcoinV2.Proto.IOutput[];
 
                 /** TransactionBuilder inputSelector. */
-                inputSelector: TW.BitcoinV2.Proto.InputSelector;
+                public inputSelector: TW.BitcoinV2.Proto.InputSelector;
 
                 /** TransactionBuilder feePerVb. */
-                feePerVb: number;
+                public feePerVb: number;
 
                 /** TransactionBuilder changeOutput. */
-                changeOutput?: (TW.BitcoinV2.Proto.Output.$Properties|null);
+                public changeOutput?: (TW.BitcoinV2.Proto.IOutput|null);
 
                 /** TransactionBuilder maxAmountOutput. */
-                maxAmountOutput?: (TW.BitcoinV2.Proto.Output.$Properties|null);
+                public maxAmountOutput?: (TW.BitcoinV2.Proto.IOutput|null);
 
                 /** TransactionBuilder fixedDustThreshold. */
-                fixedDustThreshold?: (number|null);
+                public fixedDustThreshold?: (number|null);
 
                 /** TransactionBuilder zcashExtraData. */
-                zcashExtraData?: (TW.Zcash.Proto.TransactionBuilderExtraData.$Properties|null);
+                public zcashExtraData?: (TW.Zcash.Proto.ITransactionBuilderExtraData|null);
 
                 /** TransactionBuilder decredExtraData. */
-                decredExtraData?: (TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties|null);
+                public decredExtraData?: (TW.DecredV2.Proto.ITransactionBuilderExtraData|null);
 
                 /** TransactionBuilder dustPolicy. */
-                dustPolicy?: "fixedDustThreshold";
+                public dustPolicy?: "fixedDustThreshold";
 
                 /** TransactionBuilder chainSpecific. */
-                chainSpecific?: ("zcashExtraData"|"decredExtraData");
+                public chainSpecific?: ("zcashExtraData"|"decredExtraData");
+
+                /**
+                 * Creates a new TransactionBuilder instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionBuilder instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.ITransactionBuilder): TW.BitcoinV2.Proto.TransactionBuilder;
 
                 /**
                  * Encodes the specified TransactionBuilder message. Does not implicitly {@link TW.BitcoinV2.Proto.TransactionBuilder.verify|verify} messages.
@@ -3287,116 +2734,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.TransactionBuilder.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.ITransactionBuilder, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionBuilder message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.TransactionBuilder & TW.BitcoinV2.Proto.TransactionBuilder.$Shape} TransactionBuilder
+                 * @returns TransactionBuilder
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.TransactionBuilder & TW.BitcoinV2.Proto.TransactionBuilder.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.TransactionBuilder;
 
                 /**
-                 * Gets the type url for TransactionBuilder
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionBuilder
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionBuilder {
+            /** Properties of a Psbt. */
+            interface IPsbt {
 
-                /** Properties of a TransactionBuilder. */
-                interface $Properties {
-
-                    /** TransactionBuilder version */
-                    version?: (TW.BitcoinV2.Proto.TransactionVersion|null);
-
-                    /** TransactionBuilder lockTime */
-                    lockTime?: (number|null);
-
-                    /** TransactionBuilder inputs */
-                    inputs?: (TW.BitcoinV2.Proto.Input.$Properties[]|null);
-
-                    /** TransactionBuilder outputs */
-                    outputs?: (TW.BitcoinV2.Proto.Output.$Properties[]|null);
-
-                    /** TransactionBuilder inputSelector */
-                    inputSelector?: (TW.BitcoinV2.Proto.InputSelector|null);
-
-                    /** TransactionBuilder feePerVb */
-                    feePerVb?: (number|null);
-
-                    /** TransactionBuilder changeOutput */
-                    changeOutput?: (TW.BitcoinV2.Proto.Output.$Properties|null);
-
-                    /** TransactionBuilder maxAmountOutput */
-                    maxAmountOutput?: (TW.BitcoinV2.Proto.Output.$Properties|null);
-
-                    /** TransactionBuilder fixedDustThreshold */
-                    fixedDustThreshold?: (number|null);
-
-                    /** TransactionBuilder zcashExtraData */
-                    zcashExtraData?: (TW.Zcash.Proto.TransactionBuilderExtraData.$Properties|null);
-
-                    /** TransactionBuilder decredExtraData */
-                    decredExtraData?: (TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties|null);
-
-                    /** TransactionBuilder dustPolicy */
-                    dustPolicy?: "fixedDustThreshold";
-
-                    /** TransactionBuilder chainSpecific */
-                    chainSpecific?: ("zcashExtraData"|"decredExtraData");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a TransactionBuilder. */
-                type $Shape = {
-                  version?: TW.BitcoinV2.Proto.TransactionVersion|null;
-                  lockTime?: number|null;
-                  inputs?: TW.BitcoinV2.Proto.Input.$Shape[]|null;
-                  outputs?: TW.BitcoinV2.Proto.Output.$Shape[]|null;
-                  inputSelector?: TW.BitcoinV2.Proto.InputSelector|null;
-                  feePerVb?: number|null;
-                  changeOutput?: TW.BitcoinV2.Proto.Output.$Shape|null;
-                  maxAmountOutput?: TW.BitcoinV2.Proto.Output.$Shape|null;
-                  fixedDustThreshold?: number|null;
-                  zcashExtraData?: TW.Zcash.Proto.TransactionBuilderExtraData.$Shape|null;
-                  decredExtraData?: TW.DecredV2.Proto.TransactionBuilderExtraData.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ dustPolicy?: undefined; fixedDustThreshold?: null }|{ dustPolicy?: "fixedDustThreshold"; fixedDustThreshold: number })
-                ) & (
-                  ({ chainSpecific?: undefined; zcashExtraData?: null; decredExtraData?: null }|{ chainSpecific?: "zcashExtraData"; zcashExtraData: TW.Zcash.Proto.TransactionBuilderExtraData.$Shape; decredExtraData?: null }|{ chainSpecific?: "decredExtraData"; zcashExtraData?: null; decredExtraData: TW.DecredV2.Proto.TransactionBuilderExtraData.$Shape })
-                );
-            }
-
-            /**
-             * Properties of a Psbt.
-             * @deprecated Use TW.BitcoinV2.Proto.Psbt.$Properties instead.
-             */
-            interface IPsbt extends TW.BitcoinV2.Proto.Psbt.$Properties {
+                /** Psbt psbt */
+                psbt?: (Uint8Array|null);
             }
 
             /** Represents a Psbt. */
-            class Psbt {
+            class Psbt implements IPsbt {
 
                 /**
                  * Constructs a new Psbt.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.Psbt.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IPsbt);
 
                 /** Psbt psbt. */
-                psbt: Uint8Array;
+                public psbt: Uint8Array;
+
+                /**
+                 * Creates a new Psbt instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Psbt instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IPsbt): TW.BitcoinV2.Proto.Psbt;
 
                 /**
                  * Encodes the specified Psbt message. Does not implicitly {@link TW.BitcoinV2.Proto.Psbt.verify|verify} messages.
@@ -3404,81 +2786,84 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.Psbt.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IPsbt, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Psbt message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.Psbt & TW.BitcoinV2.Proto.Psbt.$Shape} Psbt
+                 * @returns Psbt
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Psbt & TW.BitcoinV2.Proto.Psbt.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.Psbt;
 
                 /**
-                 * Gets the type url for Psbt
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Psbt
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Psbt {
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
 
-                /** Properties of a Psbt. */
-                interface $Properties {
+                /** SigningInput privateKeys */
+                privateKeys?: (Uint8Array[]|null);
 
-                    /** Psbt psbt */
-                    psbt?: (Uint8Array|null);
+                /** SigningInput publicKeys */
+                publicKeys?: (Uint8Array[]|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** SigningInput chainInfo */
+                chainInfo?: (TW.BitcoinV2.Proto.IChainInfo|null);
 
-                /** Shape of a Psbt. */
-                type $Shape = TW.BitcoinV2.Proto.Psbt.$Properties;
-            }
+                /** SigningInput dangerousUseFixedSchnorrRng */
+                dangerousUseFixedSchnorrRng?: (boolean|null);
 
-            /**
-             * Properties of a SigningInput.
-             * @deprecated Use TW.BitcoinV2.Proto.SigningInput.$Properties instead.
-             */
-            interface ISigningInput extends TW.BitcoinV2.Proto.SigningInput.$Properties {
+                /** SigningInput builder */
+                builder?: (TW.BitcoinV2.Proto.ITransactionBuilder|null);
+
+                /** SigningInput psbt */
+                psbt?: (TW.BitcoinV2.Proto.IPsbt|null);
             }
 
             /** Represents a SigningInput. */
-            class SigningInput {
+            class SigningInput implements ISigningInput {
 
                 /**
                  * Constructs a new SigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.SigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.ISigningInput);
 
                 /** SigningInput privateKeys. */
-                privateKeys: Uint8Array[];
+                public privateKeys: Uint8Array[];
 
                 /** SigningInput publicKeys. */
-                publicKeys: Uint8Array[];
+                public publicKeys: Uint8Array[];
 
                 /** SigningInput chainInfo. */
-                chainInfo?: (TW.BitcoinV2.Proto.ChainInfo.$Properties|null);
+                public chainInfo?: (TW.BitcoinV2.Proto.IChainInfo|null);
 
                 /** SigningInput dangerousUseFixedSchnorrRng. */
-                dangerousUseFixedSchnorrRng: boolean;
+                public dangerousUseFixedSchnorrRng: boolean;
 
                 /** SigningInput builder. */
-                builder?: (TW.BitcoinV2.Proto.TransactionBuilder.$Properties|null);
+                public builder?: (TW.BitcoinV2.Proto.ITransactionBuilder|null);
 
                 /** SigningInput psbt. */
-                psbt?: (TW.BitcoinV2.Proto.Psbt.$Properties|null);
+                public psbt?: (TW.BitcoinV2.Proto.IPsbt|null);
 
                 /** SigningInput transaction. */
-                transaction?: ("builder"|"psbt");
+                public transaction?: ("builder"|"psbt");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.ISigningInput): TW.BitcoinV2.Proto.SigningInput;
 
                 /**
                  * Encodes the specified SigningInput message. Does not implicitly {@link TW.BitcoinV2.Proto.SigningInput.verify|verify} messages.
@@ -3486,115 +2871,99 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.SigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.SigningInput & TW.BitcoinV2.Proto.SigningInput.$Shape} SigningInput
+                 * @returns SigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.SigningInput & TW.BitcoinV2.Proto.SigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.SigningInput;
 
                 /**
-                 * Gets the type url for SigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningInput {
+            /** Properties of a TransactionPlan. */
+            interface ITransactionPlan {
 
-                /** Properties of a SigningInput. */
-                interface $Properties {
+                /** TransactionPlan error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** SigningInput privateKeys */
-                    privateKeys?: (Uint8Array[]|null);
+                /** TransactionPlan errorMessage */
+                errorMessage?: (string|null);
 
-                    /** SigningInput publicKeys */
-                    publicKeys?: (Uint8Array[]|null);
+                /** TransactionPlan inputs */
+                inputs?: (TW.BitcoinV2.Proto.IInput[]|null);
 
-                    /** SigningInput chainInfo */
-                    chainInfo?: (TW.BitcoinV2.Proto.ChainInfo.$Properties|null);
+                /** TransactionPlan outputs */
+                outputs?: (TW.BitcoinV2.Proto.IOutput[]|null);
 
-                    /** SigningInput dangerousUseFixedSchnorrRng */
-                    dangerousUseFixedSchnorrRng?: (boolean|null);
+                /** TransactionPlan availableAmount */
+                availableAmount?: (number|null);
 
-                    /** SigningInput builder */
-                    builder?: (TW.BitcoinV2.Proto.TransactionBuilder.$Properties|null);
+                /** TransactionPlan sendAmount */
+                sendAmount?: (number|null);
 
-                    /** SigningInput psbt */
-                    psbt?: (TW.BitcoinV2.Proto.Psbt.$Properties|null);
+                /** TransactionPlan vsizeEstimate */
+                vsizeEstimate?: (number|null);
 
-                    /** SigningInput transaction */
-                    transaction?: ("builder"|"psbt");
+                /** TransactionPlan feeEstimate */
+                feeEstimate?: (number|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a SigningInput. */
-                type $Shape = {
-                  privateKeys?: Uint8Array[]|null;
-                  publicKeys?: Uint8Array[]|null;
-                  chainInfo?: TW.BitcoinV2.Proto.ChainInfo.$Shape|null;
-                  dangerousUseFixedSchnorrRng?: boolean|null;
-                  builder?: TW.BitcoinV2.Proto.TransactionBuilder.$Shape|null;
-                  psbt?: TW.BitcoinV2.Proto.Psbt.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ transaction?: undefined; builder?: null; psbt?: null }|{ transaction?: "builder"; builder: TW.BitcoinV2.Proto.TransactionBuilder.$Shape; psbt?: null }|{ transaction?: "psbt"; builder?: null; psbt: TW.BitcoinV2.Proto.Psbt.$Shape })
-                );
-            }
-
-            /**
-             * Properties of a TransactionPlan.
-             * @deprecated Use TW.BitcoinV2.Proto.TransactionPlan.$Properties instead.
-             */
-            interface ITransactionPlan extends TW.BitcoinV2.Proto.TransactionPlan.$Properties {
+                /** TransactionPlan change */
+                change?: (number|null);
             }
 
             /** Represents a TransactionPlan. */
-            class TransactionPlan {
+            class TransactionPlan implements ITransactionPlan {
 
                 /**
                  * Constructs a new TransactionPlan.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.TransactionPlan.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.ITransactionPlan);
 
                 /** TransactionPlan error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** TransactionPlan errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** TransactionPlan inputs. */
-                inputs: TW.BitcoinV2.Proto.Input.$Properties[];
+                public inputs: TW.BitcoinV2.Proto.IInput[];
 
                 /** TransactionPlan outputs. */
-                outputs: TW.BitcoinV2.Proto.Output.$Properties[];
+                public outputs: TW.BitcoinV2.Proto.IOutput[];
 
                 /** TransactionPlan availableAmount. */
-                availableAmount: number;
+                public availableAmount: number;
 
                 /** TransactionPlan sendAmount. */
-                sendAmount: number;
+                public sendAmount: number;
 
                 /** TransactionPlan vsizeEstimate. */
-                vsizeEstimate: number;
+                public vsizeEstimate: number;
 
                 /** TransactionPlan feeEstimate. */
-                feeEstimate: number;
+                public feeEstimate: number;
 
                 /** TransactionPlan change. */
-                change: number;
+                public change: number;
+
+                /**
+                 * Creates a new TransactionPlan instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionPlan instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.ITransactionPlan): TW.BitcoinV2.Proto.TransactionPlan;
 
                 /**
                  * Encodes the specified TransactionPlan message. Does not implicitly {@link TW.BitcoinV2.Proto.TransactionPlan.verify|verify} messages.
@@ -3602,104 +2971,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.TransactionPlan.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.ITransactionPlan, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionPlan message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.TransactionPlan & TW.BitcoinV2.Proto.TransactionPlan.$Shape} TransactionPlan
+                 * @returns TransactionPlan
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.TransactionPlan & TW.BitcoinV2.Proto.TransactionPlan.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.TransactionPlan;
 
                 /**
-                 * Gets the type url for TransactionPlan
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionPlan
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionPlan {
+            /** Properties of a PreSigningOutput. */
+            interface IPreSigningOutput {
 
-                /** Properties of a TransactionPlan. */
-                interface $Properties {
+                /** PreSigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** TransactionPlan error */
-                    error?: (TW.Common.Proto.SigningError|null);
+                /** PreSigningOutput errorMessage */
+                errorMessage?: (string|null);
 
-                    /** TransactionPlan errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** TransactionPlan inputs */
-                    inputs?: (TW.BitcoinV2.Proto.Input.$Properties[]|null);
-
-                    /** TransactionPlan outputs */
-                    outputs?: (TW.BitcoinV2.Proto.Output.$Properties[]|null);
-
-                    /** TransactionPlan availableAmount */
-                    availableAmount?: (number|null);
-
-                    /** TransactionPlan sendAmount */
-                    sendAmount?: (number|null);
-
-                    /** TransactionPlan vsizeEstimate */
-                    vsizeEstimate?: (number|null);
-
-                    /** TransactionPlan feeEstimate */
-                    feeEstimate?: (number|null);
-
-                    /** TransactionPlan change */
-                    change?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionPlan. */
-                type $Shape = {
-                  error?: TW.Common.Proto.SigningError|null;
-                  errorMessage?: string|null;
-                  inputs?: TW.BitcoinV2.Proto.Input.$Shape[]|null;
-                  outputs?: TW.BitcoinV2.Proto.Output.$Shape[]|null;
-                  availableAmount?: number|null;
-                  sendAmount?: number|null;
-                  vsizeEstimate?: number|null;
-                  feeEstimate?: number|null;
-                  change?: number|null;
-                  $unknowns?: Uint8Array[];
-                };
-            }
-
-            /**
-             * Properties of a PreSigningOutput.
-             * @deprecated Use TW.BitcoinV2.Proto.PreSigningOutput.$Properties instead.
-             */
-            interface IPreSigningOutput extends TW.BitcoinV2.Proto.PreSigningOutput.$Properties {
+                /** PreSigningOutput sighashes */
+                sighashes?: (TW.BitcoinV2.Proto.PreSigningOutput.ISighash[]|null);
             }
 
             /** Represents a PreSigningOutput. */
-            class PreSigningOutput {
+            class PreSigningOutput implements IPreSigningOutput {
 
                 /**
                  * Constructs a new PreSigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.PreSigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.IPreSigningOutput);
 
                 /** PreSigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** PreSigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** PreSigningOutput sighashes. */
-                sighashes: TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties[];
+                public sighashes: TW.BitcoinV2.Proto.PreSigningOutput.ISighash[];
+
+                /**
+                 * Creates a new PreSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PreSigningOutput instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.IPreSigningOutput): TW.BitcoinV2.Proto.PreSigningOutput;
 
                 /**
                  * Encodes the specified PreSigningOutput message. Does not implicitly {@link TW.BitcoinV2.Proto.PreSigningOutput.verify|verify} messages.
@@ -3707,90 +3035,78 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.PreSigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.IPreSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PreSigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.PreSigningOutput & TW.BitcoinV2.Proto.PreSigningOutput.$Shape} PreSigningOutput
+                 * @returns PreSigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PreSigningOutput & TW.BitcoinV2.Proto.PreSigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PreSigningOutput;
 
                 /**
-                 * Gets the type url for PreSigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PreSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace PreSigningOutput {
 
-                /** Properties of a PreSigningOutput. */
-                interface $Properties {
-
-                    /** PreSigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** PreSigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** PreSigningOutput sighashes */
-                    sighashes?: (TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a PreSigningOutput. */
-                type $Shape = TW.BitcoinV2.Proto.PreSigningOutput.$Properties;
-
                 /** SigningMethod enum. */
                 enum SigningMethod {
-
-                    /** Legacy value */
                     Legacy = 0,
-
-                    /** Segwit value */
                     Segwit = 1,
-
-                    /** Taproot value */
                     Taproot = 2
                 }
 
-                /**
-                 * Properties of a Sighash.
-                 * @deprecated Use TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties instead.
-                 */
-                interface ISighash extends TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties {
+                /** Properties of a Sighash. */
+                interface ISighash {
+
+                    /** Sighash publicKey */
+                    publicKey?: (Uint8Array|null);
+
+                    /** Sighash sighash */
+                    sighash?: (Uint8Array|null);
+
+                    /** Sighash signingMethod */
+                    signingMethod?: (TW.BitcoinV2.Proto.PreSigningOutput.SigningMethod|null);
+
+                    /** Sighash tweak */
+                    tweak?: (TW.BitcoinV2.Proto.PreSigningOutput.ITaprootTweak|null);
                 }
 
                 /** Represents a Sighash. */
-                class Sighash {
+                class Sighash implements ISighash {
 
                     /**
                      * Constructs a new Sighash.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.PreSigningOutput.ISighash);
 
                     /** Sighash publicKey. */
-                    publicKey: Uint8Array;
+                    public publicKey: Uint8Array;
 
                     /** Sighash sighash. */
-                    sighash: Uint8Array;
+                    public sighash: Uint8Array;
 
                     /** Sighash signingMethod. */
-                    signingMethod: TW.BitcoinV2.Proto.PreSigningOutput.SigningMethod;
+                    public signingMethod: TW.BitcoinV2.Proto.PreSigningOutput.SigningMethod;
 
                     /** Sighash tweak. */
-                    tweak?: (TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties|null);
+                    public tweak?: (TW.BitcoinV2.Proto.PreSigningOutput.ITaprootTweak|null);
+
+                    /**
+                     * Creates a new Sighash instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Sighash instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.PreSigningOutput.ISighash): TW.BitcoinV2.Proto.PreSigningOutput.Sighash;
 
                     /**
                      * Encodes the specified Sighash message. Does not implicitly {@link TW.BitcoinV2.Proto.PreSigningOutput.Sighash.verify|verify} messages.
@@ -3798,72 +3114,51 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.PreSigningOutput.ISighash, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a Sighash message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.PreSigningOutput.Sighash & TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Shape} Sighash
+                     * @returns Sighash
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PreSigningOutput.Sighash & TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PreSigningOutput.Sighash;
 
                     /**
-                     * Gets the type url for Sighash
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for Sighash
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace Sighash {
+                /** Properties of a TaprootTweak. */
+                interface ITaprootTweak {
 
-                    /** Properties of a Sighash. */
-                    interface $Properties {
-
-                        /** Sighash publicKey */
-                        publicKey?: (Uint8Array|null);
-
-                        /** Sighash sighash */
-                        sighash?: (Uint8Array|null);
-
-                        /** Sighash signingMethod */
-                        signingMethod?: (TW.BitcoinV2.Proto.PreSigningOutput.SigningMethod|null);
-
-                        /** Sighash tweak */
-                        tweak?: (TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a Sighash. */
-                    type $Shape = TW.BitcoinV2.Proto.PreSigningOutput.Sighash.$Properties;
-                }
-
-                /**
-                 * Properties of a TaprootTweak.
-                 * @deprecated Use TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties instead.
-                 */
-                interface ITaprootTweak extends TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties {
+                    /** TaprootTweak merkleRoot */
+                    merkleRoot?: (Uint8Array|null);
                 }
 
                 /** Represents a TaprootTweak. */
-                class TaprootTweak {
+                class TaprootTweak implements ITaprootTweak {
 
                     /**
                      * Constructs a new TaprootTweak.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.BitcoinV2.Proto.PreSigningOutput.ITaprootTweak);
 
                     /** TaprootTweak merkleRoot. */
-                    merkleRoot: Uint8Array;
+                    public merkleRoot: Uint8Array;
+
+                    /**
+                     * Creates a new TaprootTweak instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns TaprootTweak instance
+                     */
+                    public static create(properties?: TW.BitcoinV2.Proto.PreSigningOutput.ITaprootTweak): TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak;
 
                     /**
                      * Encodes the specified TaprootTweak message. Does not implicitly {@link TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.verify|verify} messages.
@@ -3871,97 +3166,115 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.BitcoinV2.Proto.PreSigningOutput.ITaprootTweak, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a TaprootTweak message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak & TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Shape} TaprootTweak
+                     * @returns TaprootTweak
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak & TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak;
 
                     /**
-                     * Gets the type url for TaprootTweak
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for TaprootTweak
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace TaprootTweak {
-
-                    /** Properties of a TaprootTweak. */
-                    interface $Properties {
-
-                        /** TaprootTweak merkleRoot */
-                        merkleRoot?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a TaprootTweak. */
-                    type $Shape = TW.BitcoinV2.Proto.PreSigningOutput.TaprootTweak.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
-            /**
-             * Properties of a SigningOutput.
-             * @deprecated Use TW.BitcoinV2.Proto.SigningOutput.$Properties instead.
-             */
-            interface ISigningOutput extends TW.BitcoinV2.Proto.SigningOutput.$Properties {
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+
+                /** SigningOutput encoded */
+                encoded?: (Uint8Array|null);
+
+                /** SigningOutput txid */
+                txid?: (Uint8Array|null);
+
+                /** SigningOutput vsize */
+                vsize?: (number|null);
+
+                /** SigningOutput weight */
+                weight?: (number|null);
+
+                /** SigningOutput fee */
+                fee?: (number|null);
+
+                /** SigningOutput psbt */
+                psbt?: (TW.BitcoinV2.Proto.IPsbt|null);
+
+                /** SigningOutput bitcoin */
+                bitcoin?: (TW.Utxo.Proto.ITransaction|null);
+
+                /** SigningOutput zcash */
+                zcash?: (TW.Zcash.Proto.ITransaction|null);
+
+                /** SigningOutput decred */
+                decred?: (TW.DecredV2.Proto.ITransaction|null);
             }
 
             /** Represents a SigningOutput. */
-            class SigningOutput {
+            class SigningOutput implements ISigningOutput {
 
                 /**
                  * Constructs a new SigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.BitcoinV2.Proto.SigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.BitcoinV2.Proto.ISigningOutput);
 
                 /** SigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** SigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** SigningOutput encoded. */
-                encoded: Uint8Array;
+                public encoded: Uint8Array;
 
                 /** SigningOutput txid. */
-                txid: Uint8Array;
+                public txid: Uint8Array;
 
                 /** SigningOutput vsize. */
-                vsize: number;
+                public vsize: number;
 
                 /** SigningOutput weight. */
-                weight: number;
+                public weight: number;
 
                 /** SigningOutput fee. */
-                fee: number;
+                public fee: number;
 
                 /** SigningOutput psbt. */
-                psbt?: (TW.BitcoinV2.Proto.Psbt.$Properties|null);
+                public psbt?: (TW.BitcoinV2.Proto.IPsbt|null);
 
                 /** SigningOutput bitcoin. */
-                bitcoin?: (TW.Utxo.Proto.Transaction.$Properties|null);
+                public bitcoin?: (TW.Utxo.Proto.ITransaction|null);
 
                 /** SigningOutput zcash. */
-                zcash?: (TW.Zcash.Proto.Transaction.$Properties|null);
+                public zcash?: (TW.Zcash.Proto.ITransaction|null);
 
                 /** SigningOutput decred. */
-                decred?: (TW.DecredV2.Proto.Transaction.$Properties|null);
+                public decred?: (TW.DecredV2.Proto.ITransaction|null);
 
                 /** SigningOutput transaction. */
-                transaction?: ("bitcoin"|"zcash"|"decred");
+                public transaction?: ("bitcoin"|"zcash"|"decred");
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.BitcoinV2.Proto.ISigningOutput): TW.BitcoinV2.Proto.SigningOutput;
 
                 /**
                  * Encodes the specified SigningOutput message. Does not implicitly {@link TW.BitcoinV2.Proto.SigningOutput.verify|verify} messages.
@@ -3969,88 +3282,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.BitcoinV2.Proto.SigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.BitcoinV2.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.BitcoinV2.Proto.SigningOutput & TW.BitcoinV2.Proto.SigningOutput.$Shape} SigningOutput
+                 * @returns SigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.SigningOutput & TW.BitcoinV2.Proto.SigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.BitcoinV2.Proto.SigningOutput;
 
                 /**
-                 * Gets the type url for SigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace SigningOutput {
-
-                /** Properties of a SigningOutput. */
-                interface $Properties {
-
-                    /** SigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** SigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** SigningOutput encoded */
-                    encoded?: (Uint8Array|null);
-
-                    /** SigningOutput txid */
-                    txid?: (Uint8Array|null);
-
-                    /** SigningOutput vsize */
-                    vsize?: (number|null);
-
-                    /** SigningOutput weight */
-                    weight?: (number|null);
-
-                    /** SigningOutput fee */
-                    fee?: (number|null);
-
-                    /** SigningOutput psbt */
-                    psbt?: (TW.BitcoinV2.Proto.Psbt.$Properties|null);
-
-                    /** SigningOutput bitcoin */
-                    bitcoin?: (TW.Utxo.Proto.Transaction.$Properties|null);
-
-                    /** SigningOutput zcash */
-                    zcash?: (TW.Zcash.Proto.Transaction.$Properties|null);
-
-                    /** SigningOutput decred */
-                    decred?: (TW.DecredV2.Proto.Transaction.$Properties|null);
-
-                    /** SigningOutput transaction */
-                    transaction?: ("bitcoin"|"zcash"|"decred");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a SigningOutput. */
-                type $Shape = {
-                  error?: TW.Common.Proto.SigningError|null;
-                  errorMessage?: string|null;
-                  encoded?: Uint8Array|null;
-                  txid?: Uint8Array|null;
-                  vsize?: number|null;
-                  weight?: number|null;
-                  fee?: number|null;
-                  psbt?: TW.BitcoinV2.Proto.Psbt.$Shape|null;
-                  bitcoin?: TW.Utxo.Proto.Transaction.$Shape|null;
-                  zcash?: TW.Zcash.Proto.Transaction.$Shape|null;
-                  decred?: TW.DecredV2.Proto.Transaction.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ transaction?: undefined; bitcoin?: null; zcash?: null; decred?: null }|{ transaction?: "bitcoin"; bitcoin: TW.Utxo.Proto.Transaction.$Shape; zcash?: null; decred?: null }|{ transaction?: "zcash"; bitcoin?: null; zcash: TW.Zcash.Proto.Transaction.$Shape; decred?: null }|{ transaction?: "decred"; bitcoin?: null; zcash?: null; decred: TW.DecredV2.Proto.Transaction.$Shape })
-                );
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -4063,86 +3312,32 @@ export namespace TW {
 
             /** SigningError enum. */
             enum SigningError {
-
-                /** OK value */
                 OK = 0,
-
-                /** Error_general value */
                 Error_general = 1,
-
-                /** Error_internal value */
                 Error_internal = 2,
-
-                /** Error_low_balance value */
                 Error_low_balance = 3,
-
-                /** Error_zero_amount_requested value */
                 Error_zero_amount_requested = 4,
-
-                /** Error_missing_private_key value */
                 Error_missing_private_key = 5,
-
-                /** Error_invalid_private_key value */
                 Error_invalid_private_key = 15,
-
-                /** Error_invalid_address value */
                 Error_invalid_address = 16,
-
-                /** Error_invalid_utxo value */
                 Error_invalid_utxo = 17,
-
-                /** Error_invalid_utxo_amount value */
                 Error_invalid_utxo_amount = 18,
-
-                /** Error_wrong_fee value */
                 Error_wrong_fee = 6,
-
-                /** Error_signing value */
                 Error_signing = 7,
-
-                /** Error_tx_too_big value */
                 Error_tx_too_big = 8,
-
-                /** Error_missing_input_utxos value */
                 Error_missing_input_utxos = 9,
-
-                /** Error_not_enough_utxos value */
                 Error_not_enough_utxos = 10,
-
-                /** Error_script_redeem value */
                 Error_script_redeem = 11,
-
-                /** Error_script_output value */
                 Error_script_output = 12,
-
-                /** Error_script_witness_program value */
                 Error_script_witness_program = 13,
-
-                /** Error_invalid_memo value */
                 Error_invalid_memo = 14,
-
-                /** Error_input_parse value */
                 Error_input_parse = 19,
-
-                /** Error_no_support_n2n value */
                 Error_no_support_n2n = 20,
-
-                /** Error_signatures_count value */
                 Error_signatures_count = 21,
-
-                /** Error_invalid_params value */
                 Error_invalid_params = 22,
-
-                /** Error_invalid_requested_token_amount value */
                 Error_invalid_requested_token_amount = 23,
-
-                /** Error_not_supported value */
                 Error_not_supported = 24,
-
-                /** Error_dust_amount_requested value */
                 Error_dust_amount_requested = 25,
-
-                /** Error_tx_hash_mismatch value */
                 Error_tx_hash_mismatch = 26
             }
         }
@@ -4154,33 +3349,43 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of an OutPoint.
-             * @deprecated Use TW.DecredV2.Proto.OutPoint.$Properties instead.
-             */
-            interface IOutPoint extends TW.DecredV2.Proto.OutPoint.$Properties {
+            /** Properties of an OutPoint. */
+            interface IOutPoint {
+
+                /** OutPoint hash */
+                hash?: (Uint8Array|null);
+
+                /** OutPoint vout */
+                vout?: (number|null);
+
+                /** OutPoint tree */
+                tree?: (number|null);
             }
 
             /** Represents an OutPoint. */
-            class OutPoint {
+            class OutPoint implements IOutPoint {
 
                 /**
                  * Constructs a new OutPoint.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.DecredV2.Proto.OutPoint.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.DecredV2.Proto.IOutPoint);
 
                 /** OutPoint hash. */
-                hash: Uint8Array;
+                public hash: Uint8Array;
 
                 /** OutPoint vout. */
-                vout: number;
+                public vout: number;
 
                 /** OutPoint tree. */
-                tree: number;
+                public tree: number;
+
+                /**
+                 * Creates a new OutPoint instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutPoint instance
+                 */
+                public static create(properties?: TW.DecredV2.Proto.IOutPoint): TW.DecredV2.Proto.OutPoint;
 
                 /**
                  * Encodes the specified OutPoint message. Does not implicitly {@link TW.DecredV2.Proto.OutPoint.verify|verify} messages.
@@ -4188,84 +3393,81 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.DecredV2.Proto.OutPoint.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.DecredV2.Proto.IOutPoint, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an OutPoint message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.DecredV2.Proto.OutPoint & TW.DecredV2.Proto.OutPoint.$Shape} OutPoint
+                 * @returns OutPoint
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.OutPoint & TW.DecredV2.Proto.OutPoint.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.OutPoint;
 
                 /**
-                 * Gets the type url for OutPoint
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for OutPoint
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace OutPoint {
+            /** Properties of a Transaction. */
+            interface ITransaction {
 
-                /** Properties of an OutPoint. */
-                interface $Properties {
+                /** Transaction serializeType */
+                serializeType?: (number|null);
 
-                    /** OutPoint hash */
-                    hash?: (Uint8Array|null);
+                /** Transaction version */
+                version?: (number|null);
 
-                    /** OutPoint vout */
-                    vout?: (number|null);
+                /** Transaction inputs */
+                inputs?: (TW.DecredV2.Proto.ITransactionInput[]|null);
 
-                    /** OutPoint tree */
-                    tree?: (number|null);
+                /** Transaction outputs */
+                outputs?: (TW.DecredV2.Proto.ITransactionOutput[]|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** Transaction lockTime */
+                lockTime?: (number|null);
 
-                /** Shape of an OutPoint. */
-                type $Shape = TW.DecredV2.Proto.OutPoint.$Properties;
-            }
-
-            /**
-             * Properties of a Transaction.
-             * @deprecated Use TW.DecredV2.Proto.Transaction.$Properties instead.
-             */
-            interface ITransaction extends TW.DecredV2.Proto.Transaction.$Properties {
+                /** Transaction expiry */
+                expiry?: (number|null);
             }
 
             /** Represents a Transaction. */
-            class Transaction {
+            class Transaction implements ITransaction {
 
                 /**
                  * Constructs a new Transaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.DecredV2.Proto.Transaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.DecredV2.Proto.ITransaction);
 
                 /** Transaction serializeType. */
-                serializeType: number;
+                public serializeType: number;
 
                 /** Transaction version. */
-                version: number;
+                public version: number;
 
                 /** Transaction inputs. */
-                inputs: TW.DecredV2.Proto.TransactionInput.$Properties[];
+                public inputs: TW.DecredV2.Proto.ITransactionInput[];
 
                 /** Transaction outputs. */
-                outputs: TW.DecredV2.Proto.TransactionOutput.$Properties[];
+                public outputs: TW.DecredV2.Proto.ITransactionOutput[];
 
                 /** Transaction lockTime. */
-                lockTime: number;
+                public lockTime: number;
 
                 /** Transaction expiry. */
-                expiry: number;
+                public expiry: number;
+
+                /**
+                 * Creates a new Transaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transaction instance
+                 */
+                public static create(properties?: TW.DecredV2.Proto.ITransaction): TW.DecredV2.Proto.Transaction;
 
                 /**
                  * Encodes the specified Transaction message. Does not implicitly {@link TW.DecredV2.Proto.Transaction.verify|verify} messages.
@@ -4273,93 +3475,81 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.DecredV2.Proto.Transaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.DecredV2.Proto.ITransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.DecredV2.Proto.Transaction & TW.DecredV2.Proto.Transaction.$Shape} Transaction
+                 * @returns Transaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.Transaction & TW.DecredV2.Proto.Transaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.Transaction;
 
                 /**
-                 * Gets the type url for Transaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Transaction {
+            /** Properties of a TransactionInput. */
+            interface ITransactionInput {
 
-                /** Properties of a Transaction. */
-                interface $Properties {
+                /** TransactionInput outPoint */
+                outPoint?: (TW.DecredV2.Proto.IOutPoint|null);
 
-                    /** Transaction serializeType */
-                    serializeType?: (number|null);
+                /** TransactionInput sequence */
+                sequence?: (number|null);
 
-                    /** Transaction version */
-                    version?: (number|null);
+                /** TransactionInput value */
+                value?: (number|null);
 
-                    /** Transaction inputs */
-                    inputs?: (TW.DecredV2.Proto.TransactionInput.$Properties[]|null);
+                /** TransactionInput blockHeight */
+                blockHeight?: (number|null);
 
-                    /** Transaction outputs */
-                    outputs?: (TW.DecredV2.Proto.TransactionOutput.$Properties[]|null);
+                /** TransactionInput blockIndex */
+                blockIndex?: (number|null);
 
-                    /** Transaction lockTime */
-                    lockTime?: (number|null);
-
-                    /** Transaction expiry */
-                    expiry?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a Transaction. */
-                type $Shape = TW.DecredV2.Proto.Transaction.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionInput.
-             * @deprecated Use TW.DecredV2.Proto.TransactionInput.$Properties instead.
-             */
-            interface ITransactionInput extends TW.DecredV2.Proto.TransactionInput.$Properties {
+                /** TransactionInput scriptSig */
+                scriptSig?: (Uint8Array|null);
             }
 
             /** Represents a TransactionInput. */
-            class TransactionInput {
+            class TransactionInput implements ITransactionInput {
 
                 /**
                  * Constructs a new TransactionInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.DecredV2.Proto.TransactionInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.DecredV2.Proto.ITransactionInput);
 
                 /** TransactionInput outPoint. */
-                outPoint?: (TW.DecredV2.Proto.OutPoint.$Properties|null);
+                public outPoint?: (TW.DecredV2.Proto.IOutPoint|null);
 
                 /** TransactionInput sequence. */
-                sequence: number;
+                public sequence: number;
 
                 /** TransactionInput value. */
-                value: number;
+                public value: number;
 
                 /** TransactionInput blockHeight. */
-                blockHeight: number;
+                public blockHeight: number;
 
                 /** TransactionInput blockIndex. */
-                blockIndex: number;
+                public blockIndex: number;
 
                 /** TransactionInput scriptSig. */
-                scriptSig: Uint8Array;
+                public scriptSig: Uint8Array;
+
+                /**
+                 * Creates a new TransactionInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionInput instance
+                 */
+                public static create(properties?: TW.DecredV2.Proto.ITransactionInput): TW.DecredV2.Proto.TransactionInput;
 
                 /**
                  * Encodes the specified TransactionInput message. Does not implicitly {@link TW.DecredV2.Proto.TransactionInput.verify|verify} messages.
@@ -4367,84 +3557,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.DecredV2.Proto.TransactionInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.DecredV2.Proto.ITransactionInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.DecredV2.Proto.TransactionInput & TW.DecredV2.Proto.TransactionInput.$Shape} TransactionInput
+                 * @returns TransactionInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.TransactionInput & TW.DecredV2.Proto.TransactionInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.TransactionInput;
 
                 /**
-                 * Gets the type url for TransactionInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionInput {
+            /** Properties of a TransactionOutput. */
+            interface ITransactionOutput {
 
-                /** Properties of a TransactionInput. */
-                interface $Properties {
+                /** TransactionOutput value */
+                value?: (number|null);
 
-                    /** TransactionInput outPoint */
-                    outPoint?: (TW.DecredV2.Proto.OutPoint.$Properties|null);
+                /** TransactionOutput version */
+                version?: (number|null);
 
-                    /** TransactionInput sequence */
-                    sequence?: (number|null);
-
-                    /** TransactionInput value */
-                    value?: (number|null);
-
-                    /** TransactionInput blockHeight */
-                    blockHeight?: (number|null);
-
-                    /** TransactionInput blockIndex */
-                    blockIndex?: (number|null);
-
-                    /** TransactionInput scriptSig */
-                    scriptSig?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionInput. */
-                type $Shape = TW.DecredV2.Proto.TransactionInput.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionOutput.
-             * @deprecated Use TW.DecredV2.Proto.TransactionOutput.$Properties instead.
-             */
-            interface ITransactionOutput extends TW.DecredV2.Proto.TransactionOutput.$Properties {
+                /** TransactionOutput script */
+                script?: (Uint8Array|null);
             }
 
             /** Represents a TransactionOutput. */
-            class TransactionOutput {
+            class TransactionOutput implements ITransactionOutput {
 
                 /**
                  * Constructs a new TransactionOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.DecredV2.Proto.TransactionOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.DecredV2.Proto.ITransactionOutput);
 
                 /** TransactionOutput value. */
-                value: number;
+                public value: number;
 
                 /** TransactionOutput version. */
-                version: number;
+                public version: number;
 
                 /** TransactionOutput script. */
-                script: Uint8Array;
+                public script: Uint8Array;
+
+                /**
+                 * Creates a new TransactionOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionOutput instance
+                 */
+                public static create(properties?: TW.DecredV2.Proto.ITransactionOutput): TW.DecredV2.Proto.TransactionOutput;
 
                 /**
                  * Encodes the specified TransactionOutput message. Does not implicitly {@link TW.DecredV2.Proto.TransactionOutput.verify|verify} messages.
@@ -4452,69 +3621,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.DecredV2.Proto.TransactionOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.DecredV2.Proto.ITransactionOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.DecredV2.Proto.TransactionOutput & TW.DecredV2.Proto.TransactionOutput.$Shape} TransactionOutput
+                 * @returns TransactionOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.TransactionOutput & TW.DecredV2.Proto.TransactionOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.TransactionOutput;
 
                 /**
-                 * Gets the type url for TransactionOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionOutput {
+            /** Properties of a TransactionBuilderExtraData. */
+            interface ITransactionBuilderExtraData {
 
-                /** Properties of a TransactionOutput. */
-                interface $Properties {
-
-                    /** TransactionOutput value */
-                    value?: (number|null);
-
-                    /** TransactionOutput version */
-                    version?: (number|null);
-
-                    /** TransactionOutput script */
-                    script?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionOutput. */
-                type $Shape = TW.DecredV2.Proto.TransactionOutput.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionBuilderExtraData.
-             * @deprecated Use TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties instead.
-             */
-            interface ITransactionBuilderExtraData extends TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties {
+                /** TransactionBuilderExtraData expiryHeight */
+                expiryHeight?: (number|null);
             }
 
             /** Represents a TransactionBuilderExtraData. */
-            class TransactionBuilderExtraData {
+            class TransactionBuilderExtraData implements ITransactionBuilderExtraData {
 
                 /**
                  * Constructs a new TransactionBuilderExtraData.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.DecredV2.Proto.ITransactionBuilderExtraData);
 
                 /** TransactionBuilderExtraData expiryHeight. */
-                expiryHeight: number;
+                public expiryHeight: number;
+
+                /**
+                 * Creates a new TransactionBuilderExtraData instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionBuilderExtraData instance
+                 */
+                public static create(properties?: TW.DecredV2.Proto.ITransactionBuilderExtraData): TW.DecredV2.Proto.TransactionBuilderExtraData;
 
                 /**
                  * Encodes the specified TransactionBuilderExtraData message. Does not implicitly {@link TW.DecredV2.Proto.TransactionBuilderExtraData.verify|verify} messages.
@@ -4522,40 +3673,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.DecredV2.Proto.ITransactionBuilderExtraData, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionBuilderExtraData message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.DecredV2.Proto.TransactionBuilderExtraData & TW.DecredV2.Proto.TransactionBuilderExtraData.$Shape} TransactionBuilderExtraData
+                 * @returns TransactionBuilderExtraData
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.TransactionBuilderExtraData & TW.DecredV2.Proto.TransactionBuilderExtraData.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.DecredV2.Proto.TransactionBuilderExtraData;
 
                 /**
-                 * Gets the type url for TransactionBuilderExtraData
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionBuilderExtraData
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace TransactionBuilderExtraData {
-
-                /** Properties of a TransactionBuilderExtraData. */
-                interface $Properties {
-
-                    /** TransactionBuilderExtraData expiryHeight */
-                    expiryHeight?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionBuilderExtraData. */
-                type $Shape = TW.DecredV2.Proto.TransactionBuilderExtraData.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -4566,30 +3701,37 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of an OutPoint.
-             * @deprecated Use TW.Utxo.Proto.OutPoint.$Properties instead.
-             */
-            interface IOutPoint extends TW.Utxo.Proto.OutPoint.$Properties {
+            /** Properties of an OutPoint. */
+            interface IOutPoint {
+
+                /** OutPoint hash */
+                hash?: (Uint8Array|null);
+
+                /** OutPoint vout */
+                vout?: (number|null);
             }
 
             /** Represents an OutPoint. */
-            class OutPoint {
+            class OutPoint implements IOutPoint {
 
                 /**
                  * Constructs a new OutPoint.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Utxo.Proto.OutPoint.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Utxo.Proto.IOutPoint);
 
                 /** OutPoint hash. */
-                hash: Uint8Array;
+                public hash: Uint8Array;
 
                 /** OutPoint vout. */
-                vout: number;
+                public vout: number;
+
+                /**
+                 * Creates a new OutPoint instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutPoint instance
+                 */
+                public static create(properties?: TW.Utxo.Proto.IOutPoint): TW.Utxo.Proto.OutPoint;
 
                 /**
                  * Encodes the specified OutPoint message. Does not implicitly {@link TW.Utxo.Proto.OutPoint.verify|verify} messages.
@@ -4597,75 +3739,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Utxo.Proto.OutPoint.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Utxo.Proto.IOutPoint, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an OutPoint message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Utxo.Proto.OutPoint & TW.Utxo.Proto.OutPoint.$Shape} OutPoint
+                 * @returns OutPoint
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.OutPoint & TW.Utxo.Proto.OutPoint.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.OutPoint;
 
                 /**
-                 * Gets the type url for OutPoint
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for OutPoint
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace OutPoint {
+            /** Properties of a TransactionInput. */
+            interface ITransactionInput {
 
-                /** Properties of an OutPoint. */
-                interface $Properties {
+                /** TransactionInput outPoint */
+                outPoint?: (TW.Utxo.Proto.IOutPoint|null);
 
-                    /** OutPoint hash */
-                    hash?: (Uint8Array|null);
+                /** TransactionInput sequence */
+                sequence?: (number|null);
 
-                    /** OutPoint vout */
-                    vout?: (number|null);
+                /** TransactionInput scriptSig */
+                scriptSig?: (Uint8Array|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an OutPoint. */
-                type $Shape = TW.Utxo.Proto.OutPoint.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionInput.
-             * @deprecated Use TW.Utxo.Proto.TransactionInput.$Properties instead.
-             */
-            interface ITransactionInput extends TW.Utxo.Proto.TransactionInput.$Properties {
+                /** TransactionInput witnessItems */
+                witnessItems?: (Uint8Array[]|null);
             }
 
             /** Represents a TransactionInput. */
-            class TransactionInput {
+            class TransactionInput implements ITransactionInput {
 
                 /**
                  * Constructs a new TransactionInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Utxo.Proto.TransactionInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Utxo.Proto.ITransactionInput);
 
                 /** TransactionInput outPoint. */
-                outPoint?: (TW.Utxo.Proto.OutPoint.$Properties|null);
+                public outPoint?: (TW.Utxo.Proto.IOutPoint|null);
 
                 /** TransactionInput sequence. */
-                sequence: number;
+                public sequence: number;
 
                 /** TransactionInput scriptSig. */
-                scriptSig: Uint8Array;
+                public scriptSig: Uint8Array;
 
                 /** TransactionInput witnessItems. */
-                witnessItems: Uint8Array[];
+                public witnessItems: Uint8Array[];
+
+                /**
+                 * Creates a new TransactionInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionInput instance
+                 */
+                public static create(properties?: TW.Utxo.Proto.ITransactionInput): TW.Utxo.Proto.TransactionInput;
 
                 /**
                  * Encodes the specified TransactionInput message. Does not implicitly {@link TW.Utxo.Proto.TransactionInput.verify|verify} messages.
@@ -4673,75 +3809,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Utxo.Proto.TransactionInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Utxo.Proto.ITransactionInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Utxo.Proto.TransactionInput & TW.Utxo.Proto.TransactionInput.$Shape} TransactionInput
+                 * @returns TransactionInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.TransactionInput & TW.Utxo.Proto.TransactionInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.TransactionInput;
 
                 /**
-                 * Gets the type url for TransactionInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionInput {
+            /** Properties of a TransactionOutput. */
+            interface ITransactionOutput {
 
-                /** Properties of a TransactionInput. */
-                interface $Properties {
+                /** TransactionOutput scriptPubkey */
+                scriptPubkey?: (Uint8Array|null);
 
-                    /** TransactionInput outPoint */
-                    outPoint?: (TW.Utxo.Proto.OutPoint.$Properties|null);
-
-                    /** TransactionInput sequence */
-                    sequence?: (number|null);
-
-                    /** TransactionInput scriptSig */
-                    scriptSig?: (Uint8Array|null);
-
-                    /** TransactionInput witnessItems */
-                    witnessItems?: (Uint8Array[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionInput. */
-                type $Shape = TW.Utxo.Proto.TransactionInput.$Properties;
-            }
-
-            /**
-             * Properties of a TransactionOutput.
-             * @deprecated Use TW.Utxo.Proto.TransactionOutput.$Properties instead.
-             */
-            interface ITransactionOutput extends TW.Utxo.Proto.TransactionOutput.$Properties {
+                /** TransactionOutput value */
+                value?: (number|null);
             }
 
             /** Represents a TransactionOutput. */
-            class TransactionOutput {
+            class TransactionOutput implements ITransactionOutput {
 
                 /**
                  * Constructs a new TransactionOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Utxo.Proto.TransactionOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Utxo.Proto.ITransactionOutput);
 
                 /** TransactionOutput scriptPubkey. */
-                scriptPubkey: Uint8Array;
+                public scriptPubkey: Uint8Array;
 
                 /** TransactionOutput value. */
-                value: number;
+                public value: number;
+
+                /**
+                 * Creates a new TransactionOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionOutput instance
+                 */
+                public static create(properties?: TW.Utxo.Proto.ITransactionOutput): TW.Utxo.Proto.TransactionOutput;
 
                 /**
                  * Encodes the specified TransactionOutput message. Does not implicitly {@link TW.Utxo.Proto.TransactionOutput.verify|verify} messages.
@@ -4749,75 +3867,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Utxo.Proto.TransactionOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Utxo.Proto.ITransactionOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Utxo.Proto.TransactionOutput & TW.Utxo.Proto.TransactionOutput.$Shape} TransactionOutput
+                 * @returns TransactionOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.TransactionOutput & TW.Utxo.Proto.TransactionOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.TransactionOutput;
 
                 /**
-                 * Gets the type url for TransactionOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionOutput {
+            /** Properties of a Transaction. */
+            interface ITransaction {
 
-                /** Properties of a TransactionOutput. */
-                interface $Properties {
+                /** Transaction version */
+                version?: (number|null);
 
-                    /** TransactionOutput scriptPubkey */
-                    scriptPubkey?: (Uint8Array|null);
+                /** Transaction lockTime */
+                lockTime?: (number|null);
 
-                    /** TransactionOutput value */
-                    value?: (number|null);
+                /** Transaction inputs */
+                inputs?: (TW.Utxo.Proto.ITransactionInput[]|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransactionOutput. */
-                type $Shape = TW.Utxo.Proto.TransactionOutput.$Properties;
-            }
-
-            /**
-             * Properties of a Transaction.
-             * @deprecated Use TW.Utxo.Proto.Transaction.$Properties instead.
-             */
-            interface ITransaction extends TW.Utxo.Proto.Transaction.$Properties {
+                /** Transaction outputs */
+                outputs?: (TW.Utxo.Proto.ITransactionOutput[]|null);
             }
 
             /** Represents a Transaction. */
-            class Transaction {
+            class Transaction implements ITransaction {
 
                 /**
                  * Constructs a new Transaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Utxo.Proto.Transaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Utxo.Proto.ITransaction);
 
                 /** Transaction version. */
-                version: number;
+                public version: number;
 
                 /** Transaction lockTime. */
-                lockTime: number;
+                public lockTime: number;
 
                 /** Transaction inputs. */
-                inputs: TW.Utxo.Proto.TransactionInput.$Properties[];
+                public inputs: TW.Utxo.Proto.ITransactionInput[];
 
                 /** Transaction outputs. */
-                outputs: TW.Utxo.Proto.TransactionOutput.$Properties[];
+                public outputs: TW.Utxo.Proto.ITransactionOutput[];
+
+                /**
+                 * Creates a new Transaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transaction instance
+                 */
+                public static create(properties?: TW.Utxo.Proto.ITransaction): TW.Utxo.Proto.Transaction;
 
                 /**
                  * Encodes the specified Transaction message. Does not implicitly {@link TW.Utxo.Proto.Transaction.verify|verify} messages.
@@ -4825,49 +3937,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Utxo.Proto.Transaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Utxo.Proto.ITransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Utxo.Proto.Transaction & TW.Utxo.Proto.Transaction.$Shape} Transaction
+                 * @returns Transaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.Transaction & TW.Utxo.Proto.Transaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Utxo.Proto.Transaction;
 
                 /**
-                 * Gets the type url for Transaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace Transaction {
-
-                /** Properties of a Transaction. */
-                interface $Properties {
-
-                    /** Transaction version */
-                    version?: (number|null);
-
-                    /** Transaction lockTime */
-                    lockTime?: (number|null);
-
-                    /** Transaction inputs */
-                    inputs?: (TW.Utxo.Proto.TransactionInput.$Properties[]|null);
-
-                    /** Transaction outputs */
-                    outputs?: (TW.Utxo.Proto.TransactionOutput.$Properties[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a Transaction. */
-                type $Shape = TW.Utxo.Proto.Transaction.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -4878,33 +3965,43 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a TransactionBuilderExtraData.
-             * @deprecated Use TW.Zcash.Proto.TransactionBuilderExtraData.$Properties instead.
-             */
-            interface ITransactionBuilderExtraData extends TW.Zcash.Proto.TransactionBuilderExtraData.$Properties {
+            /** Properties of a TransactionBuilderExtraData. */
+            interface ITransactionBuilderExtraData {
+
+                /** TransactionBuilderExtraData branchId */
+                branchId?: (Uint8Array|null);
+
+                /** TransactionBuilderExtraData expiryHeight */
+                expiryHeight?: (number|null);
+
+                /** TransactionBuilderExtraData zip_0317 */
+                zip_0317?: (boolean|null);
             }
 
             /** Represents a TransactionBuilderExtraData. */
-            class TransactionBuilderExtraData {
+            class TransactionBuilderExtraData implements ITransactionBuilderExtraData {
 
                 /**
                  * Constructs a new TransactionBuilderExtraData.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Zcash.Proto.TransactionBuilderExtraData.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Zcash.Proto.ITransactionBuilderExtraData);
 
                 /** TransactionBuilderExtraData branchId. */
-                branchId: Uint8Array;
+                public branchId: Uint8Array;
 
                 /** TransactionBuilderExtraData expiryHeight. */
-                expiryHeight: number;
+                public expiryHeight: number;
 
                 /** TransactionBuilderExtraData zip_0317. */
-                zip_0317: boolean;
+                public zip_0317: boolean;
+
+                /**
+                 * Creates a new TransactionBuilderExtraData instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionBuilderExtraData instance
+                 */
+                public static create(properties?: TW.Zcash.Proto.ITransactionBuilderExtraData): TW.Zcash.Proto.TransactionBuilderExtraData;
 
                 /**
                  * Encodes the specified TransactionBuilderExtraData message. Does not implicitly {@link TW.Zcash.Proto.TransactionBuilderExtraData.verify|verify} messages.
@@ -4912,90 +4009,93 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Zcash.Proto.TransactionBuilderExtraData.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Zcash.Proto.ITransactionBuilderExtraData, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransactionBuilderExtraData message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Zcash.Proto.TransactionBuilderExtraData & TW.Zcash.Proto.TransactionBuilderExtraData.$Shape} TransactionBuilderExtraData
+                 * @returns TransactionBuilderExtraData
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Zcash.Proto.TransactionBuilderExtraData & TW.Zcash.Proto.TransactionBuilderExtraData.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Zcash.Proto.TransactionBuilderExtraData;
 
                 /**
-                 * Gets the type url for TransactionBuilderExtraData
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransactionBuilderExtraData
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransactionBuilderExtraData {
+            /** Properties of a Transaction. */
+            interface ITransaction {
 
-                /** Properties of a TransactionBuilderExtraData. */
-                interface $Properties {
+                /** Currently, version 4 (0x80000004) is supported only. */
+                version?: (number|null);
 
-                    /** TransactionBuilderExtraData branchId */
-                    branchId?: (Uint8Array|null);
+                /** Transaction versionGroupId */
+                versionGroupId?: (number|null);
 
-                    /** TransactionBuilderExtraData expiryHeight */
-                    expiryHeight?: (number|null);
+                /** Transaction inputs */
+                inputs?: (TW.Utxo.Proto.ITransactionInput[]|null);
 
-                    /** TransactionBuilderExtraData zip_0317 */
-                    zip_0317?: (boolean|null);
+                /** Transaction outputs */
+                outputs?: (TW.Utxo.Proto.ITransactionOutput[]|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** Transaction lockTime */
+                lockTime?: (number|null);
 
-                /** Shape of a TransactionBuilderExtraData. */
-                type $Shape = TW.Zcash.Proto.TransactionBuilderExtraData.$Properties;
-            }
+                /** Transaction expiryHeight */
+                expiryHeight?: (number|null);
 
-            /**
-             * Properties of a Transaction.
-             * @deprecated Use TW.Zcash.Proto.Transaction.$Properties instead.
-             */
-            interface ITransaction extends TW.Zcash.Proto.Transaction.$Properties {
+                /** Transaction saplingValueBalance */
+                saplingValueBalance?: (number|null);
+
+                /** Transaction branchId */
+                branchId?: (Uint8Array|null);
             }
 
             /** Represents a Transaction. */
-            class Transaction {
+            class Transaction implements ITransaction {
 
                 /**
                  * Constructs a new Transaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Zcash.Proto.Transaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Zcash.Proto.ITransaction);
 
                 /** Currently, version 4 (0x80000004) is supported only. */
-                version: number;
+                public version: number;
 
                 /** Transaction versionGroupId. */
-                versionGroupId: number;
+                public versionGroupId: number;
 
                 /** Transaction inputs. */
-                inputs: TW.Utxo.Proto.TransactionInput.$Properties[];
+                public inputs: TW.Utxo.Proto.ITransactionInput[];
 
                 /** Transaction outputs. */
-                outputs: TW.Utxo.Proto.TransactionOutput.$Properties[];
+                public outputs: TW.Utxo.Proto.ITransactionOutput[];
 
                 /** Transaction lockTime. */
-                lockTime: number;
+                public lockTime: number;
 
                 /** Transaction expiryHeight. */
-                expiryHeight: number;
+                public expiryHeight: number;
 
                 /** Transaction saplingValueBalance. */
-                saplingValueBalance: number;
+                public saplingValueBalance: number;
 
                 /** Transaction branchId. */
-                branchId: Uint8Array;
+                public branchId: Uint8Array;
+
+                /**
+                 * Creates a new Transaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transaction instance
+                 */
+                public static create(properties?: TW.Zcash.Proto.ITransaction): TW.Zcash.Proto.Transaction;
 
                 /**
                  * Encodes the specified Transaction message. Does not implicitly {@link TW.Zcash.Proto.Transaction.verify|verify} messages.
@@ -5003,61 +4103,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Zcash.Proto.Transaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Zcash.Proto.ITransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Zcash.Proto.Transaction & TW.Zcash.Proto.Transaction.$Shape} Transaction
+                 * @returns Transaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Zcash.Proto.Transaction & TW.Zcash.Proto.Transaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Zcash.Proto.Transaction;
 
                 /**
-                 * Gets the type url for Transaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace Transaction {
-
-                /** Properties of a Transaction. */
-                interface $Properties {
-
-                    /** Currently, version 4 (0x80000004) is supported only. */
-                    version?: (number|null);
-
-                    /** Transaction versionGroupId */
-                    versionGroupId?: (number|null);
-
-                    /** Transaction inputs */
-                    inputs?: (TW.Utxo.Proto.TransactionInput.$Properties[]|null);
-
-                    /** Transaction outputs */
-                    outputs?: (TW.Utxo.Proto.TransactionOutput.$Properties[]|null);
-
-                    /** Transaction lockTime */
-                    lockTime?: (number|null);
-
-                    /** Transaction expiryHeight */
-                    expiryHeight?: (number|null);
-
-                    /** Transaction saplingValueBalance */
-                    saplingValueBalance?: (number|null);
-
-                    /** Transaction branchId */
-                    branchId?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a Transaction. */
-                type $Shape = TW.Zcash.Proto.Transaction.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -5068,51 +4131,76 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a Transaction.
-             * @deprecated Use TW.Ethereum.Proto.Transaction.$Properties instead.
-             */
-            interface ITransaction extends TW.Ethereum.Proto.Transaction.$Properties {
+            /** Properties of a Transaction. */
+            interface ITransaction {
+
+                /** Transaction transfer */
+                transfer?: (TW.Ethereum.Proto.Transaction.ITransfer|null);
+
+                /** Transaction erc20Transfer */
+                erc20Transfer?: (TW.Ethereum.Proto.Transaction.IERC20Transfer|null);
+
+                /** Transaction erc20Approve */
+                erc20Approve?: (TW.Ethereum.Proto.Transaction.IERC20Approve|null);
+
+                /** Transaction erc721Transfer */
+                erc721Transfer?: (TW.Ethereum.Proto.Transaction.IERC721Transfer|null);
+
+                /** Transaction erc1155Transfer */
+                erc1155Transfer?: (TW.Ethereum.Proto.Transaction.IERC1155Transfer|null);
+
+                /** Transaction contractGeneric */
+                contractGeneric?: (TW.Ethereum.Proto.Transaction.IContractGeneric|null);
+
+                /** Transaction scwBatch */
+                scwBatch?: (TW.Ethereum.Proto.Transaction.ISCWalletBatch|null);
+
+                /** Transaction scwExecute */
+                scwExecute?: (TW.Ethereum.Proto.Transaction.ISCWalletExecute|null);
             }
 
             /** Represents a Transaction. */
-            class Transaction {
+            class Transaction implements ITransaction {
 
                 /**
                  * Constructs a new Transaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.Transaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.ITransaction);
 
                 /** Transaction transfer. */
-                transfer?: (TW.Ethereum.Proto.Transaction.Transfer.$Properties|null);
+                public transfer?: (TW.Ethereum.Proto.Transaction.ITransfer|null);
 
                 /** Transaction erc20Transfer. */
-                erc20Transfer?: (TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties|null);
+                public erc20Transfer?: (TW.Ethereum.Proto.Transaction.IERC20Transfer|null);
 
                 /** Transaction erc20Approve. */
-                erc20Approve?: (TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties|null);
+                public erc20Approve?: (TW.Ethereum.Proto.Transaction.IERC20Approve|null);
 
                 /** Transaction erc721Transfer. */
-                erc721Transfer?: (TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties|null);
+                public erc721Transfer?: (TW.Ethereum.Proto.Transaction.IERC721Transfer|null);
 
                 /** Transaction erc1155Transfer. */
-                erc1155Transfer?: (TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties|null);
+                public erc1155Transfer?: (TW.Ethereum.Proto.Transaction.IERC1155Transfer|null);
 
                 /** Transaction contractGeneric. */
-                contractGeneric?: (TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties|null);
+                public contractGeneric?: (TW.Ethereum.Proto.Transaction.IContractGeneric|null);
 
                 /** Transaction scwBatch. */
-                scwBatch?: (TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties|null);
+                public scwBatch?: (TW.Ethereum.Proto.Transaction.ISCWalletBatch|null);
 
                 /** Transaction scwExecute. */
-                scwExecute?: (TW.Ethereum.Proto.Transaction.SCWalletExecute.$Properties|null);
+                public scwExecute?: (TW.Ethereum.Proto.Transaction.ISCWalletExecute|null);
 
                 /** Transaction transactionOneof. */
-                transactionOneof?: ("transfer"|"erc20Transfer"|"erc20Approve"|"erc721Transfer"|"erc1155Transfer"|"contractGeneric"|"scwBatch"|"scwExecute");
+                public transactionOneof?: ("transfer"|"erc20Transfer"|"erc20Approve"|"erc721Transfer"|"erc1155Transfer"|"contractGeneric"|"scwBatch"|"scwExecute");
+
+                /**
+                 * Creates a new Transaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transaction instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.ITransaction): TW.Ethereum.Proto.Transaction;
 
                 /**
                  * Encodes the specified Transaction message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.verify|verify} messages.
@@ -5120,101 +4208,59 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.Transaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.ITransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.Transaction & TW.Ethereum.Proto.Transaction.$Shape} Transaction
+                 * @returns Transaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction & TW.Ethereum.Proto.Transaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction;
 
                 /**
-                 * Gets the type url for Transaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace Transaction {
 
-                /** Properties of a Transaction. */
-                interface $Properties {
+                /** Properties of a Transfer. */
+                interface ITransfer {
 
-                    /** Transaction transfer */
-                    transfer?: (TW.Ethereum.Proto.Transaction.Transfer.$Properties|null);
+                    /** Transfer amount */
+                    amount?: (Uint8Array|null);
 
-                    /** Transaction erc20Transfer */
-                    erc20Transfer?: (TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties|null);
-
-                    /** Transaction erc20Approve */
-                    erc20Approve?: (TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties|null);
-
-                    /** Transaction erc721Transfer */
-                    erc721Transfer?: (TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties|null);
-
-                    /** Transaction erc1155Transfer */
-                    erc1155Transfer?: (TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties|null);
-
-                    /** Transaction contractGeneric */
-                    contractGeneric?: (TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties|null);
-
-                    /** Transaction scwBatch */
-                    scwBatch?: (TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties|null);
-
-                    /** Transaction scwExecute */
-                    scwExecute?: (TW.Ethereum.Proto.Transaction.SCWalletExecute.$Properties|null);
-
-                    /** Transaction transactionOneof */
-                    transactionOneof?: ("transfer"|"erc20Transfer"|"erc20Approve"|"erc721Transfer"|"erc1155Transfer"|"contractGeneric"|"scwBatch"|"scwExecute");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a Transaction. */
-                type $Shape = {
-                  transfer?: TW.Ethereum.Proto.Transaction.Transfer.$Shape|null;
-                  erc20Transfer?: TW.Ethereum.Proto.Transaction.ERC20Transfer.$Shape|null;
-                  erc20Approve?: TW.Ethereum.Proto.Transaction.ERC20Approve.$Shape|null;
-                  erc721Transfer?: TW.Ethereum.Proto.Transaction.ERC721Transfer.$Shape|null;
-                  erc1155Transfer?: TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Shape|null;
-                  contractGeneric?: TW.Ethereum.Proto.Transaction.ContractGeneric.$Shape|null;
-                  scwBatch?: TW.Ethereum.Proto.Transaction.SCWalletBatch.$Shape|null;
-                  scwExecute?: TW.Ethereum.Proto.Transaction.SCWalletExecute.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ transactionOneof?: undefined; transfer?: null; erc20Transfer?: null; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric?: null; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "transfer"; transfer: TW.Ethereum.Proto.Transaction.Transfer.$Shape; erc20Transfer?: null; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric?: null; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "erc20Transfer"; transfer?: null; erc20Transfer: TW.Ethereum.Proto.Transaction.ERC20Transfer.$Shape; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric?: null; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "erc20Approve"; transfer?: null; erc20Transfer?: null; erc20Approve: TW.Ethereum.Proto.Transaction.ERC20Approve.$Shape; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric?: null; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "erc721Transfer"; transfer?: null; erc20Transfer?: null; erc20Approve?: null; erc721Transfer: TW.Ethereum.Proto.Transaction.ERC721Transfer.$Shape; erc1155Transfer?: null; contractGeneric?: null; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "erc1155Transfer"; transfer?: null; erc20Transfer?: null; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer: TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Shape; contractGeneric?: null; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "contractGeneric"; transfer?: null; erc20Transfer?: null; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric: TW.Ethereum.Proto.Transaction.ContractGeneric.$Shape; scwBatch?: null; scwExecute?: null }|{ transactionOneof?: "scwBatch"; transfer?: null; erc20Transfer?: null; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric?: null; scwBatch: TW.Ethereum.Proto.Transaction.SCWalletBatch.$Shape; scwExecute?: null }|{ transactionOneof?: "scwExecute"; transfer?: null; erc20Transfer?: null; erc20Approve?: null; erc721Transfer?: null; erc1155Transfer?: null; contractGeneric?: null; scwBatch?: null; scwExecute: TW.Ethereum.Proto.Transaction.SCWalletExecute.$Shape })
-                );
-
-                /**
-                 * Properties of a Transfer.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.Transfer.$Properties instead.
-                 */
-                interface ITransfer extends TW.Ethereum.Proto.Transaction.Transfer.$Properties {
+                    /** Transfer data */
+                    data?: (Uint8Array|null);
                 }
 
                 /** Represents a Transfer. */
-                class Transfer {
+                class Transfer implements ITransfer {
 
                     /**
                      * Constructs a new Transfer.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.Transfer.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.ITransfer);
 
                     /** Transfer amount. */
-                    amount: Uint8Array;
+                    public amount: Uint8Array;
 
                     /** Transfer data. */
-                    data: Uint8Array;
+                    public data: Uint8Array;
+
+                    /**
+                     * Creates a new Transfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Transfer instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.ITransfer): TW.Ethereum.Proto.Transaction.Transfer;
 
                     /**
                      * Encodes the specified Transfer message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.Transfer.verify|verify} messages.
@@ -5222,69 +4268,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.Transfer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a Transfer message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.Transfer & TW.Ethereum.Proto.Transaction.Transfer.$Shape} Transfer
+                     * @returns Transfer
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.Transfer & TW.Ethereum.Proto.Transaction.Transfer.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.Transfer;
 
                     /**
-                     * Gets the type url for Transfer
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for Transfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace Transfer {
+                /** Properties of a ERC20Transfer. */
+                interface IERC20Transfer {
 
-                    /** Properties of a Transfer. */
-                    interface $Properties {
+                    /** ERC20Transfer to */
+                    to?: (string|null);
 
-                        /** Transfer amount */
-                        amount?: (Uint8Array|null);
-
-                        /** Transfer data */
-                        data?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a Transfer. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.Transfer.$Properties;
-                }
-
-                /**
-                 * Properties of a ERC20Transfer.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties instead.
-                 */
-                interface IERC20Transfer extends TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties {
+                    /** ERC20Transfer amount */
+                    amount?: (Uint8Array|null);
                 }
 
                 /** Represents a ERC20Transfer. */
-                class ERC20Transfer {
+                class ERC20Transfer implements IERC20Transfer {
 
                     /**
                      * Constructs a new ERC20Transfer.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.IERC20Transfer);
 
                     /** ERC20Transfer to. */
-                    to: string;
+                    public to: string;
 
                     /** ERC20Transfer amount. */
-                    amount: Uint8Array;
+                    public amount: Uint8Array;
+
+                    /**
+                     * Creates a new ERC20Transfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns ERC20Transfer instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.IERC20Transfer): TW.Ethereum.Proto.Transaction.ERC20Transfer;
 
                     /**
                      * Encodes the specified ERC20Transfer message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.ERC20Transfer.verify|verify} messages.
@@ -5292,69 +4326,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.IERC20Transfer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a ERC20Transfer message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.ERC20Transfer & TW.Ethereum.Proto.Transaction.ERC20Transfer.$Shape} ERC20Transfer
+                     * @returns ERC20Transfer
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC20Transfer & TW.Ethereum.Proto.Transaction.ERC20Transfer.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC20Transfer;
 
                     /**
-                     * Gets the type url for ERC20Transfer
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for ERC20Transfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace ERC20Transfer {
+                /** Properties of a ERC20Approve. */
+                interface IERC20Approve {
 
-                    /** Properties of a ERC20Transfer. */
-                    interface $Properties {
+                    /** ERC20Approve spender */
+                    spender?: (string|null);
 
-                        /** ERC20Transfer to */
-                        to?: (string|null);
-
-                        /** ERC20Transfer amount */
-                        amount?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a ERC20Transfer. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.ERC20Transfer.$Properties;
-                }
-
-                /**
-                 * Properties of a ERC20Approve.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties instead.
-                 */
-                interface IERC20Approve extends TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties {
+                    /** ERC20Approve amount */
+                    amount?: (Uint8Array|null);
                 }
 
                 /** Represents a ERC20Approve. */
-                class ERC20Approve {
+                class ERC20Approve implements IERC20Approve {
 
                     /**
                      * Constructs a new ERC20Approve.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.IERC20Approve);
 
                     /** ERC20Approve spender. */
-                    spender: string;
+                    public spender: string;
 
                     /** ERC20Approve amount. */
-                    amount: Uint8Array;
+                    public amount: Uint8Array;
+
+                    /**
+                     * Creates a new ERC20Approve instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns ERC20Approve instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.IERC20Approve): TW.Ethereum.Proto.Transaction.ERC20Approve;
 
                     /**
                      * Encodes the specified ERC20Approve message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.ERC20Approve.verify|verify} messages.
@@ -5362,72 +4384,63 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.IERC20Approve, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a ERC20Approve message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.ERC20Approve & TW.Ethereum.Proto.Transaction.ERC20Approve.$Shape} ERC20Approve
+                     * @returns ERC20Approve
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC20Approve & TW.Ethereum.Proto.Transaction.ERC20Approve.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC20Approve;
 
                     /**
-                     * Gets the type url for ERC20Approve
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for ERC20Approve
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace ERC20Approve {
+                /** Properties of a ERC721Transfer. */
+                interface IERC721Transfer {
 
-                    /** Properties of a ERC20Approve. */
-                    interface $Properties {
+                    /** ERC721Transfer from */
+                    from?: (string|null);
 
-                        /** ERC20Approve spender */
-                        spender?: (string|null);
+                    /** ERC721Transfer to */
+                    to?: (string|null);
 
-                        /** ERC20Approve amount */
-                        amount?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a ERC20Approve. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.ERC20Approve.$Properties;
-                }
-
-                /**
-                 * Properties of a ERC721Transfer.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties instead.
-                 */
-                interface IERC721Transfer extends TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties {
+                    /** ERC721Transfer tokenId */
+                    tokenId?: (Uint8Array|null);
                 }
 
                 /** Represents a ERC721Transfer. */
-                class ERC721Transfer {
+                class ERC721Transfer implements IERC721Transfer {
 
                     /**
                      * Constructs a new ERC721Transfer.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.IERC721Transfer);
 
                     /** ERC721Transfer from. */
-                    from: string;
+                    public from: string;
 
                     /** ERC721Transfer to. */
-                    to: string;
+                    public to: string;
 
                     /** ERC721Transfer tokenId. */
-                    tokenId: Uint8Array;
+                    public tokenId: Uint8Array;
+
+                    /**
+                     * Creates a new ERC721Transfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns ERC721Transfer instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.IERC721Transfer): TW.Ethereum.Proto.Transaction.ERC721Transfer;
 
                     /**
                      * Encodes the specified ERC721Transfer message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.ERC721Transfer.verify|verify} messages.
@@ -5435,81 +4448,75 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.IERC721Transfer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a ERC721Transfer message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.ERC721Transfer & TW.Ethereum.Proto.Transaction.ERC721Transfer.$Shape} ERC721Transfer
+                     * @returns ERC721Transfer
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC721Transfer & TW.Ethereum.Proto.Transaction.ERC721Transfer.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC721Transfer;
 
                     /**
-                     * Gets the type url for ERC721Transfer
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for ERC721Transfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace ERC721Transfer {
+                /** Properties of a ERC1155Transfer. */
+                interface IERC1155Transfer {
 
-                    /** Properties of a ERC721Transfer. */
-                    interface $Properties {
+                    /** ERC1155Transfer from */
+                    from?: (string|null);
 
-                        /** ERC721Transfer from */
-                        from?: (string|null);
+                    /** ERC1155Transfer to */
+                    to?: (string|null);
 
-                        /** ERC721Transfer to */
-                        to?: (string|null);
+                    /** ERC1155Transfer tokenId */
+                    tokenId?: (Uint8Array|null);
 
-                        /** ERC721Transfer tokenId */
-                        tokenId?: (Uint8Array|null);
+                    /** ERC1155Transfer value */
+                    value?: (Uint8Array|null);
 
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a ERC721Transfer. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.ERC721Transfer.$Properties;
-                }
-
-                /**
-                 * Properties of a ERC1155Transfer.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties instead.
-                 */
-                interface IERC1155Transfer extends TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties {
+                    /** ERC1155Transfer data */
+                    data?: (Uint8Array|null);
                 }
 
                 /** Represents a ERC1155Transfer. */
-                class ERC1155Transfer {
+                class ERC1155Transfer implements IERC1155Transfer {
 
                     /**
                      * Constructs a new ERC1155Transfer.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.IERC1155Transfer);
 
                     /** ERC1155Transfer from. */
-                    from: string;
+                    public from: string;
 
                     /** ERC1155Transfer to. */
-                    to: string;
+                    public to: string;
 
                     /** ERC1155Transfer tokenId. */
-                    tokenId: Uint8Array;
+                    public tokenId: Uint8Array;
 
                     /** ERC1155Transfer value. */
-                    value: Uint8Array;
+                    public value: Uint8Array;
 
                     /** ERC1155Transfer data. */
-                    data: Uint8Array;
+                    public data: Uint8Array;
+
+                    /**
+                     * Creates a new ERC1155Transfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns ERC1155Transfer instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.IERC1155Transfer): TW.Ethereum.Proto.Transaction.ERC1155Transfer;
 
                     /**
                      * Encodes the specified ERC1155Transfer message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.ERC1155Transfer.verify|verify} messages.
@@ -5517,78 +4524,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.IERC1155Transfer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a ERC1155Transfer message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.ERC1155Transfer & TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Shape} ERC1155Transfer
+                     * @returns ERC1155Transfer
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC1155Transfer & TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ERC1155Transfer;
 
                     /**
-                     * Gets the type url for ERC1155Transfer
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for ERC1155Transfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace ERC1155Transfer {
+                /** Properties of a ContractGeneric. */
+                interface IContractGeneric {
 
-                    /** Properties of a ERC1155Transfer. */
-                    interface $Properties {
+                    /** ContractGeneric amount */
+                    amount?: (Uint8Array|null);
 
-                        /** ERC1155Transfer from */
-                        from?: (string|null);
-
-                        /** ERC1155Transfer to */
-                        to?: (string|null);
-
-                        /** ERC1155Transfer tokenId */
-                        tokenId?: (Uint8Array|null);
-
-                        /** ERC1155Transfer value */
-                        value?: (Uint8Array|null);
-
-                        /** ERC1155Transfer data */
-                        data?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a ERC1155Transfer. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.ERC1155Transfer.$Properties;
-                }
-
-                /**
-                 * Properties of a ContractGeneric.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties instead.
-                 */
-                interface IContractGeneric extends TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties {
+                    /** ContractGeneric data */
+                    data?: (Uint8Array|null);
                 }
 
                 /** Represents a ContractGeneric. */
-                class ContractGeneric {
+                class ContractGeneric implements IContractGeneric {
 
                     /**
                      * Constructs a new ContractGeneric.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.IContractGeneric);
 
                     /** ContractGeneric amount. */
-                    amount: Uint8Array;
+                    public amount: Uint8Array;
 
                     /** ContractGeneric data. */
-                    data: Uint8Array;
+                    public data: Uint8Array;
+
+                    /**
+                     * Creates a new ContractGeneric instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns ContractGeneric instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.IContractGeneric): TW.Ethereum.Proto.Transaction.ContractGeneric;
 
                     /**
                      * Encodes the specified ContractGeneric message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.ContractGeneric.verify|verify} messages.
@@ -5596,69 +4582,57 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.IContractGeneric, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a ContractGeneric message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.ContractGeneric & TW.Ethereum.Proto.Transaction.ContractGeneric.$Shape} ContractGeneric
+                     * @returns ContractGeneric
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ContractGeneric & TW.Ethereum.Proto.Transaction.ContractGeneric.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.ContractGeneric;
 
                     /**
-                     * Gets the type url for ContractGeneric
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for ContractGeneric
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace ContractGeneric {
+                /** Properties of a SCWalletBatch. */
+                interface ISCWalletBatch {
 
-                    /** Properties of a ContractGeneric. */
-                    interface $Properties {
+                    /** SCWalletBatch calls */
+                    calls?: (TW.Ethereum.Proto.Transaction.SCWalletBatch.IBatchedCall[]|null);
 
-                        /** ContractGeneric amount */
-                        amount?: (Uint8Array|null);
-
-                        /** ContractGeneric data */
-                        data?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a ContractGeneric. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.ContractGeneric.$Properties;
-                }
-
-                /**
-                 * Properties of a SCWalletBatch.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties instead.
-                 */
-                interface ISCWalletBatch extends TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties {
+                    /** SCWalletBatch walletType */
+                    walletType?: (TW.Ethereum.Proto.SCWalletType|null);
                 }
 
                 /** Represents a SCWalletBatch. */
-                class SCWalletBatch {
+                class SCWalletBatch implements ISCWalletBatch {
 
                     /**
                      * Constructs a new SCWalletBatch.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.ISCWalletBatch);
 
                     /** SCWalletBatch calls. */
-                    calls: TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties[];
+                    public calls: TW.Ethereum.Proto.Transaction.SCWalletBatch.IBatchedCall[];
 
                     /** SCWalletBatch walletType. */
-                    walletType: TW.Ethereum.Proto.SCWalletType;
+                    public walletType: TW.Ethereum.Proto.SCWalletType;
+
+                    /**
+                     * Creates a new SCWalletBatch instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns SCWalletBatch instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.ISCWalletBatch): TW.Ethereum.Proto.Transaction.SCWalletBatch;
 
                     /**
                      * Encodes the specified SCWalletBatch message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.SCWalletBatch.verify|verify} messages.
@@ -5666,71 +4640,65 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.ISCWalletBatch, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a SCWalletBatch message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.SCWalletBatch & TW.Ethereum.Proto.Transaction.SCWalletBatch.$Shape} SCWalletBatch
+                     * @returns SCWalletBatch
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.SCWalletBatch & TW.Ethereum.Proto.Transaction.SCWalletBatch.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.SCWalletBatch;
 
                     /**
-                     * Gets the type url for SCWalletBatch
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for SCWalletBatch
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
                 namespace SCWalletBatch {
 
-                    /** Properties of a SCWalletBatch. */
-                    interface $Properties {
+                    /** Properties of a BatchedCall. */
+                    interface IBatchedCall {
 
-                        /** SCWalletBatch calls */
-                        calls?: (TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties[]|null);
+                        /** BatchedCall address */
+                        address?: (string|null);
 
-                        /** SCWalletBatch walletType */
-                        walletType?: (TW.Ethereum.Proto.SCWalletType|null);
+                        /** BatchedCall amount */
+                        amount?: (Uint8Array|null);
 
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a SCWalletBatch. */
-                    type $Shape = TW.Ethereum.Proto.Transaction.SCWalletBatch.$Properties;
-
-                    /**
-                     * Properties of a BatchedCall.
-                     * @deprecated Use TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties instead.
-                     */
-                    interface IBatchedCall extends TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties {
+                        /** BatchedCall payload */
+                        payload?: (Uint8Array|null);
                     }
 
                     /** Represents a BatchedCall. */
-                    class BatchedCall {
+                    class BatchedCall implements IBatchedCall {
 
                         /**
                          * Constructs a new BatchedCall.
                          * @param [properties] Properties to set
                          */
-                        constructor(properties?: TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
+                        constructor(properties?: TW.Ethereum.Proto.Transaction.SCWalletBatch.IBatchedCall);
 
                         /** BatchedCall address. */
-                        address: string;
+                        public address: string;
 
                         /** BatchedCall amount. */
-                        amount: Uint8Array;
+                        public amount: Uint8Array;
 
                         /** BatchedCall payload. */
-                        payload: Uint8Array;
+                        public payload: Uint8Array;
+
+                        /**
+                         * Creates a new BatchedCall instance using the specified properties.
+                         * @param [properties] Properties to set
+                         * @returns BatchedCall instance
+                         */
+                        public static create(properties?: TW.Ethereum.Proto.Transaction.SCWalletBatch.IBatchedCall): TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall;
 
                         /**
                          * Encodes the specified BatchedCall message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.verify|verify} messages.
@@ -5738,73 +4706,58 @@ export namespace TW {
                          * @param [writer] Writer to encode to
                          * @returns Writer
                          */
-                        static encode(message: TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                        public static encode(message: TW.Ethereum.Proto.Transaction.SCWalletBatch.IBatchedCall, writer?: $protobuf.Writer): $protobuf.Writer;
 
                         /**
                          * Decodes a BatchedCall message from the specified reader or buffer.
                          * @param reader Reader or buffer to decode from
                          * @param [length] Message length if known beforehand
-                         * @returns {TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall & TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Shape} BatchedCall
+                         * @returns BatchedCall
                          * @throws {Error} If the payload is not a reader or valid buffer
                          * @throws {$protobuf.util.ProtocolError} If required fields are missing
                          */
-                        static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall & TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Shape;
+                        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall;
 
                         /**
-                         * Gets the type url for BatchedCall
-                         * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                         * @returns The type url
+                         * Gets the default type url for BatchedCall
+                         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns The default type url
                          */
-                        static getTypeUrl(prefix?: string): string;
-                    }
-
-                    namespace BatchedCall {
-
-                        /** Properties of a BatchedCall. */
-                        interface $Properties {
-
-                            /** BatchedCall address */
-                            address?: (string|null);
-
-                            /** BatchedCall amount */
-                            amount?: (Uint8Array|null);
-
-                            /** BatchedCall payload */
-                            payload?: (Uint8Array|null);
-
-                            /** Unknown fields preserved while decoding when enabled */
-                            $unknowns?: Uint8Array[];
-                        }
-
-                        /** Shape of a BatchedCall. */
-                        type $Shape = TW.Ethereum.Proto.Transaction.SCWalletBatch.BatchedCall.$Properties;
+                        public static getTypeUrl(typeUrlPrefix?: string): string;
                     }
                 }
 
-                /**
-                 * Properties of a SCWalletExecute.
-                 * @deprecated Use TW.Ethereum.Proto.Transaction.SCWalletExecute.$Properties instead.
-                 */
-                interface ISCWalletExecute extends TW.Ethereum.Proto.Transaction.SCWalletExecute.$Properties {
+                /** Properties of a SCWalletExecute. */
+                interface ISCWalletExecute {
+
+                    /** SCWalletExecute transaction */
+                    transaction?: (TW.Ethereum.Proto.ITransaction|null);
+
+                    /** SCWalletExecute walletType */
+                    walletType?: (TW.Ethereum.Proto.SCWalletType|null);
                 }
 
                 /** Represents a SCWalletExecute. */
-                class SCWalletExecute {
+                class SCWalletExecute implements ISCWalletExecute {
 
                     /**
                      * Constructs a new SCWalletExecute.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Ethereum.Proto.Transaction.SCWalletExecute.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Ethereum.Proto.Transaction.ISCWalletExecute);
 
                     /** SCWalletExecute transaction. */
-                    transaction?: (TW.Ethereum.Proto.Transaction.$Properties|null);
+                    public transaction?: (TW.Ethereum.Proto.ITransaction|null);
 
                     /** SCWalletExecute walletType. */
-                    walletType: TW.Ethereum.Proto.SCWalletType;
+                    public walletType: TW.Ethereum.Proto.SCWalletType;
+
+                    /**
+                     * Creates a new SCWalletExecute instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns SCWalletExecute instance
+                     */
+                    public static create(properties?: TW.Ethereum.Proto.Transaction.ISCWalletExecute): TW.Ethereum.Proto.Transaction.SCWalletExecute;
 
                     /**
                      * Encodes the specified SCWalletExecute message. Does not implicitly {@link TW.Ethereum.Proto.Transaction.SCWalletExecute.verify|verify} messages.
@@ -5812,102 +4765,90 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Ethereum.Proto.Transaction.SCWalletExecute.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Ethereum.Proto.Transaction.ISCWalletExecute, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a SCWalletExecute message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Ethereum.Proto.Transaction.SCWalletExecute & TW.Ethereum.Proto.Transaction.SCWalletExecute.$Shape} SCWalletExecute
+                     * @returns SCWalletExecute
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.SCWalletExecute & TW.Ethereum.Proto.Transaction.SCWalletExecute.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Transaction.SCWalletExecute;
 
                     /**
-                     * Gets the type url for SCWalletExecute
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for SCWalletExecute
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace SCWalletExecute {
-
-                    /** Properties of a SCWalletExecute. */
-                    interface $Properties {
-
-                        /** SCWalletExecute transaction */
-                        transaction?: (TW.Ethereum.Proto.Transaction.$Properties|null);
-
-                        /** SCWalletExecute walletType */
-                        walletType?: (TW.Ethereum.Proto.SCWalletType|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a SCWalletExecute. */
-                    type $Shape = {
-                      transaction?: TW.Ethereum.Proto.Transaction.$Shape|null;
-                      walletType?: TW.Ethereum.Proto.SCWalletType|null;
-                      $unknowns?: Uint8Array[];
-                    };
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
             /** TransactionMode enum. */
             enum TransactionMode {
-
-                /** Legacy value */
                 Legacy = 0,
-
-                /** Enveloped value */
                 Enveloped = 1,
-
-                /** UserOp value */
                 UserOp = 2,
-
-                /** SetCode value */
                 SetCode = 4
             }
 
-            /**
-             * Properties of a UserOperation.
-             * @deprecated Use TW.Ethereum.Proto.UserOperation.$Properties instead.
-             */
-            interface IUserOperation extends TW.Ethereum.Proto.UserOperation.$Properties {
+            /** Properties of a UserOperation. */
+            interface IUserOperation {
+
+                /** UserOperation entryPoint */
+                entryPoint?: (string|null);
+
+                /** UserOperation initCode */
+                initCode?: (Uint8Array|null);
+
+                /** UserOperation sender */
+                sender?: (string|null);
+
+                /** UserOperation preVerificationGas */
+                preVerificationGas?: (Uint8Array|null);
+
+                /** UserOperation verificationGasLimit */
+                verificationGasLimit?: (Uint8Array|null);
+
+                /** UserOperation paymasterAndData */
+                paymasterAndData?: (Uint8Array|null);
             }
 
             /** Represents a UserOperation. */
-            class UserOperation {
+            class UserOperation implements IUserOperation {
 
                 /**
                  * Constructs a new UserOperation.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.UserOperation.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IUserOperation);
 
                 /** UserOperation entryPoint. */
-                entryPoint: string;
+                public entryPoint: string;
 
                 /** UserOperation initCode. */
-                initCode: Uint8Array;
+                public initCode: Uint8Array;
 
                 /** UserOperation sender. */
-                sender: string;
+                public sender: string;
 
                 /** UserOperation preVerificationGas. */
-                preVerificationGas: Uint8Array;
+                public preVerificationGas: Uint8Array;
 
                 /** UserOperation verificationGasLimit. */
-                verificationGasLimit: Uint8Array;
+                public verificationGasLimit: Uint8Array;
 
                 /** UserOperation paymasterAndData. */
-                paymasterAndData: Uint8Array;
+                public paymasterAndData: Uint8Array;
+
+                /**
+                 * Creates a new UserOperation instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UserOperation instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IUserOperation): TW.Ethereum.Proto.UserOperation;
 
                 /**
                  * Encodes the specified UserOperation message. Does not implicitly {@link TW.Ethereum.Proto.UserOperation.verify|verify} messages.
@@ -5915,105 +4856,105 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.UserOperation.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IUserOperation, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a UserOperation message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.UserOperation & TW.Ethereum.Proto.UserOperation.$Shape} UserOperation
+                 * @returns UserOperation
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.UserOperation & TW.Ethereum.Proto.UserOperation.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.UserOperation;
 
                 /**
-                 * Gets the type url for UserOperation
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UserOperation
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace UserOperation {
+            /** Properties of a UserOperationV0_7. */
+            interface IUserOperationV0_7 {
 
-                /** Properties of a UserOperation. */
-                interface $Properties {
+                /** UserOperationV0_7 entryPoint */
+                entryPoint?: (string|null);
 
-                    /** UserOperation entryPoint */
-                    entryPoint?: (string|null);
+                /** UserOperationV0_7 factory */
+                factory?: (string|null);
 
-                    /** UserOperation initCode */
-                    initCode?: (Uint8Array|null);
+                /** UserOperationV0_7 factoryData */
+                factoryData?: (Uint8Array|null);
 
-                    /** UserOperation sender */
-                    sender?: (string|null);
+                /** UserOperationV0_7 sender */
+                sender?: (string|null);
 
-                    /** UserOperation preVerificationGas */
-                    preVerificationGas?: (Uint8Array|null);
+                /** UserOperationV0_7 preVerificationGas */
+                preVerificationGas?: (Uint8Array|null);
 
-                    /** UserOperation verificationGasLimit */
-                    verificationGasLimit?: (Uint8Array|null);
+                /** UserOperationV0_7 verificationGasLimit */
+                verificationGasLimit?: (Uint8Array|null);
 
-                    /** UserOperation paymasterAndData */
-                    paymasterAndData?: (Uint8Array|null);
+                /** UserOperationV0_7 paymaster */
+                paymaster?: (string|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** UserOperationV0_7 paymasterVerificationGasLimit */
+                paymasterVerificationGasLimit?: (Uint8Array|null);
 
-                /** Shape of a UserOperation. */
-                type $Shape = TW.Ethereum.Proto.UserOperation.$Properties;
-            }
+                /** UserOperationV0_7 paymasterPostOpGasLimit */
+                paymasterPostOpGasLimit?: (Uint8Array|null);
 
-            /**
-             * Properties of a UserOperationV0_7.
-             * @deprecated Use TW.Ethereum.Proto.UserOperationV0_7.$Properties instead.
-             */
-            interface IUserOperationV0_7 extends TW.Ethereum.Proto.UserOperationV0_7.$Properties {
+                /** UserOperationV0_7 paymasterData */
+                paymasterData?: (Uint8Array|null);
             }
 
             /** Represents a UserOperationV0_7. */
-            class UserOperationV0_7 {
+            class UserOperationV0_7 implements IUserOperationV0_7 {
 
                 /**
                  * Constructs a new UserOperationV0_7.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.UserOperationV0_7.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IUserOperationV0_7);
 
                 /** UserOperationV0_7 entryPoint. */
-                entryPoint: string;
+                public entryPoint: string;
 
                 /** UserOperationV0_7 factory. */
-                factory: string;
+                public factory: string;
 
                 /** UserOperationV0_7 factoryData. */
-                factoryData: Uint8Array;
+                public factoryData: Uint8Array;
 
                 /** UserOperationV0_7 sender. */
-                sender: string;
+                public sender: string;
 
                 /** UserOperationV0_7 preVerificationGas. */
-                preVerificationGas: Uint8Array;
+                public preVerificationGas: Uint8Array;
 
                 /** UserOperationV0_7 verificationGasLimit. */
-                verificationGasLimit: Uint8Array;
+                public verificationGasLimit: Uint8Array;
 
                 /** UserOperationV0_7 paymaster. */
-                paymaster: string;
+                public paymaster: string;
 
                 /** UserOperationV0_7 paymasterVerificationGasLimit. */
-                paymasterVerificationGasLimit: Uint8Array;
+                public paymasterVerificationGasLimit: Uint8Array;
 
                 /** UserOperationV0_7 paymasterPostOpGasLimit. */
-                paymasterPostOpGasLimit: Uint8Array;
+                public paymasterPostOpGasLimit: Uint8Array;
 
                 /** UserOperationV0_7 paymasterData. */
-                paymasterData: Uint8Array;
+                public paymasterData: Uint8Array;
+
+                /**
+                 * Creates a new UserOperationV0_7 instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UserOperationV0_7 instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IUserOperationV0_7): TW.Ethereum.Proto.UserOperationV0_7;
 
                 /**
                  * Encodes the specified UserOperationV0_7 message. Does not implicitly {@link TW.Ethereum.Proto.UserOperationV0_7.verify|verify} messages.
@@ -6021,93 +4962,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.UserOperationV0_7.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IUserOperationV0_7, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a UserOperationV0_7 message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.UserOperationV0_7 & TW.Ethereum.Proto.UserOperationV0_7.$Shape} UserOperationV0_7
+                 * @returns UserOperationV0_7
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.UserOperationV0_7 & TW.Ethereum.Proto.UserOperationV0_7.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.UserOperationV0_7;
 
                 /**
-                 * Gets the type url for UserOperationV0_7
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UserOperationV0_7
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace UserOperationV0_7 {
+            /** Properties of an Access. */
+            interface IAccess {
 
-                /** Properties of a UserOperationV0_7. */
-                interface $Properties {
+                /** Access address */
+                address?: (string|null);
 
-                    /** UserOperationV0_7 entryPoint */
-                    entryPoint?: (string|null);
-
-                    /** UserOperationV0_7 factory */
-                    factory?: (string|null);
-
-                    /** UserOperationV0_7 factoryData */
-                    factoryData?: (Uint8Array|null);
-
-                    /** UserOperationV0_7 sender */
-                    sender?: (string|null);
-
-                    /** UserOperationV0_7 preVerificationGas */
-                    preVerificationGas?: (Uint8Array|null);
-
-                    /** UserOperationV0_7 verificationGasLimit */
-                    verificationGasLimit?: (Uint8Array|null);
-
-                    /** UserOperationV0_7 paymaster */
-                    paymaster?: (string|null);
-
-                    /** UserOperationV0_7 paymasterVerificationGasLimit */
-                    paymasterVerificationGasLimit?: (Uint8Array|null);
-
-                    /** UserOperationV0_7 paymasterPostOpGasLimit */
-                    paymasterPostOpGasLimit?: (Uint8Array|null);
-
-                    /** UserOperationV0_7 paymasterData */
-                    paymasterData?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a UserOperationV0_7. */
-                type $Shape = TW.Ethereum.Proto.UserOperationV0_7.$Properties;
-            }
-
-            /**
-             * Properties of an Access.
-             * @deprecated Use TW.Ethereum.Proto.Access.$Properties instead.
-             */
-            interface IAccess extends TW.Ethereum.Proto.Access.$Properties {
+                /** Access storedKeys */
+                storedKeys?: (Uint8Array[]|null);
             }
 
             /** Represents an Access. */
-            class Access {
+            class Access implements IAccess {
 
                 /**
                  * Constructs a new Access.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.Access.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IAccess);
 
                 /** Access address. */
-                address: string;
+                public address: string;
 
                 /** Access storedKeys. */
-                storedKeys: Uint8Array[];
+                public storedKeys: Uint8Array[];
+
+                /**
+                 * Creates a new Access instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Access instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IAccess): TW.Ethereum.Proto.Access;
 
                 /**
                  * Encodes the specified Access message. Does not implicitly {@link TW.Ethereum.Proto.Access.verify|verify} messages.
@@ -6115,69 +5020,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.Access.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IAccess, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an Access message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.Access & TW.Ethereum.Proto.Access.$Shape} Access
+                 * @returns Access
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Access & TW.Ethereum.Proto.Access.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Access;
 
                 /**
-                 * Gets the type url for Access
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Access
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Access {
+            /** Properties of an Authorization. */
+            interface IAuthorization {
 
-                /** Properties of an Access. */
-                interface $Properties {
+                /** Authorization address */
+                address?: (string|null);
 
-                    /** Access address */
-                    address?: (string|null);
-
-                    /** Access storedKeys */
-                    storedKeys?: (Uint8Array[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an Access. */
-                type $Shape = TW.Ethereum.Proto.Access.$Properties;
-            }
-
-            /**
-             * Properties of an Authorization.
-             * @deprecated Use TW.Ethereum.Proto.Authorization.$Properties instead.
-             */
-            interface IAuthorization extends TW.Ethereum.Proto.Authorization.$Properties {
+                /** Authorization customSignature */
+                customSignature?: (TW.Ethereum.Proto.IAuthorizationCustomSignature|null);
             }
 
             /** Represents an Authorization. */
-            class Authorization {
+            class Authorization implements IAuthorization {
 
                 /**
                  * Constructs a new Authorization.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.Authorization.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IAuthorization);
 
                 /** Authorization address. */
-                address: string;
+                public address: string;
 
                 /** Authorization customSignature. */
-                customSignature?: (TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties|null);
+                public customSignature?: (TW.Ethereum.Proto.IAuthorizationCustomSignature|null);
+
+                /**
+                 * Creates a new Authorization instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Authorization instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IAuthorization): TW.Ethereum.Proto.Authorization;
 
                 /**
                  * Encodes the specified Authorization message. Does not implicitly {@link TW.Ethereum.Proto.Authorization.verify|verify} messages.
@@ -6185,72 +5078,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.Authorization.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IAuthorization, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an Authorization message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.Authorization & TW.Ethereum.Proto.Authorization.$Shape} Authorization
+                 * @returns Authorization
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Authorization & TW.Ethereum.Proto.Authorization.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.Authorization;
 
                 /**
-                 * Gets the type url for Authorization
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Authorization
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Authorization {
+            /** Properties of an AuthorizationCustomSignature. */
+            interface IAuthorizationCustomSignature {
 
-                /** Properties of an Authorization. */
-                interface $Properties {
+                /** AuthorizationCustomSignature chainId */
+                chainId?: (Uint8Array|null);
 
-                    /** Authorization address */
-                    address?: (string|null);
+                /** AuthorizationCustomSignature nonce */
+                nonce?: (Uint8Array|null);
 
-                    /** Authorization customSignature */
-                    customSignature?: (TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an Authorization. */
-                type $Shape = TW.Ethereum.Proto.Authorization.$Properties;
-            }
-
-            /**
-             * Properties of an AuthorizationCustomSignature.
-             * @deprecated Use TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties instead.
-             */
-            interface IAuthorizationCustomSignature extends TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties {
+                /** AuthorizationCustomSignature signature */
+                signature?: (string|null);
             }
 
             /** Represents an AuthorizationCustomSignature. */
-            class AuthorizationCustomSignature {
+            class AuthorizationCustomSignature implements IAuthorizationCustomSignature {
 
                 /**
                  * Constructs a new AuthorizationCustomSignature.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IAuthorizationCustomSignature);
 
                 /** AuthorizationCustomSignature chainId. */
-                chainId: Uint8Array;
+                public chainId: Uint8Array;
 
                 /** AuthorizationCustomSignature nonce. */
-                nonce: Uint8Array;
+                public nonce: Uint8Array;
 
                 /** AuthorizationCustomSignature signature. */
-                signature: string;
+                public signature: string;
+
+                /**
+                 * Creates a new AuthorizationCustomSignature instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns AuthorizationCustomSignature instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IAuthorizationCustomSignature): TW.Ethereum.Proto.AuthorizationCustomSignature;
 
                 /**
                  * Encodes the specified AuthorizationCustomSignature message. Does not implicitly {@link TW.Ethereum.Proto.AuthorizationCustomSignature.verify|verify} messages.
@@ -6258,124 +5142,139 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IAuthorizationCustomSignature, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an AuthorizationCustomSignature message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.AuthorizationCustomSignature & TW.Ethereum.Proto.AuthorizationCustomSignature.$Shape} AuthorizationCustomSignature
+                 * @returns AuthorizationCustomSignature
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.AuthorizationCustomSignature & TW.Ethereum.Proto.AuthorizationCustomSignature.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.AuthorizationCustomSignature;
 
                 /**
-                 * Gets the type url for AuthorizationCustomSignature
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for AuthorizationCustomSignature
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace AuthorizationCustomSignature {
-
-                /** Properties of an AuthorizationCustomSignature. */
-                interface $Properties {
-
-                    /** AuthorizationCustomSignature chainId */
-                    chainId?: (Uint8Array|null);
-
-                    /** AuthorizationCustomSignature nonce */
-                    nonce?: (Uint8Array|null);
-
-                    /** AuthorizationCustomSignature signature */
-                    signature?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an AuthorizationCustomSignature. */
-                type $Shape = TW.Ethereum.Proto.AuthorizationCustomSignature.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** SCWalletType enum. */
             enum SCWalletType {
-
-                /** SimpleAccount value */
                 SimpleAccount = 0,
-
-                /** Biz4337 value */
                 Biz4337 = 1,
-
-                /** Biz value */
                 Biz = 2
             }
 
-            /**
-             * Properties of a SigningInput.
-             * @deprecated Use TW.Ethereum.Proto.SigningInput.$Properties instead.
-             */
-            interface ISigningInput extends TW.Ethereum.Proto.SigningInput.$Properties {
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput chainId */
+                chainId?: (Uint8Array|null);
+
+                /** SigningInput nonce */
+                nonce?: (Uint8Array|null);
+
+                /** SigningInput txMode */
+                txMode?: (TW.Ethereum.Proto.TransactionMode|null);
+
+                /** SigningInput gasPrice */
+                gasPrice?: (Uint8Array|null);
+
+                /** SigningInput gasLimit */
+                gasLimit?: (Uint8Array|null);
+
+                /** SigningInput maxInclusionFeePerGas */
+                maxInclusionFeePerGas?: (Uint8Array|null);
+
+                /** SigningInput maxFeePerGas */
+                maxFeePerGas?: (Uint8Array|null);
+
+                /** SigningInput toAddress */
+                toAddress?: (string|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput transaction */
+                transaction?: (TW.Ethereum.Proto.ITransaction|null);
+
+                /** SigningInput userOperation */
+                userOperation?: (TW.Ethereum.Proto.IUserOperation|null);
+
+                /** SigningInput userOperationV0_7 */
+                userOperationV0_7?: (TW.Ethereum.Proto.IUserOperationV0_7|null);
+
+                /** SigningInput accessList */
+                accessList?: (TW.Ethereum.Proto.IAccess[]|null);
+
+                /** SigningInput eip7702Authorization */
+                eip7702Authorization?: (TW.Ethereum.Proto.IAuthorization|null);
             }
 
             /** Represents a SigningInput. */
-            class SigningInput {
+            class SigningInput implements ISigningInput {
 
                 /**
                  * Constructs a new SigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.SigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.ISigningInput);
 
                 /** SigningInput chainId. */
-                chainId: Uint8Array;
+                public chainId: Uint8Array;
 
                 /** SigningInput nonce. */
-                nonce: Uint8Array;
+                public nonce: Uint8Array;
 
                 /** SigningInput txMode. */
-                txMode: TW.Ethereum.Proto.TransactionMode;
+                public txMode: TW.Ethereum.Proto.TransactionMode;
 
                 /** SigningInput gasPrice. */
-                gasPrice: Uint8Array;
+                public gasPrice: Uint8Array;
 
                 /** SigningInput gasLimit. */
-                gasLimit: Uint8Array;
+                public gasLimit: Uint8Array;
 
                 /** SigningInput maxInclusionFeePerGas. */
-                maxInclusionFeePerGas: Uint8Array;
+                public maxInclusionFeePerGas: Uint8Array;
 
                 /** SigningInput maxFeePerGas. */
-                maxFeePerGas: Uint8Array;
+                public maxFeePerGas: Uint8Array;
 
                 /** SigningInput toAddress. */
-                toAddress: string;
+                public toAddress: string;
 
                 /** SigningInput privateKey. */
-                privateKey: Uint8Array;
+                public privateKey: Uint8Array;
 
                 /** SigningInput transaction. */
-                transaction?: (TW.Ethereum.Proto.Transaction.$Properties|null);
+                public transaction?: (TW.Ethereum.Proto.ITransaction|null);
 
                 /** SigningInput userOperation. */
-                userOperation?: (TW.Ethereum.Proto.UserOperation.$Properties|null);
+                public userOperation?: (TW.Ethereum.Proto.IUserOperation|null);
 
                 /** SigningInput userOperationV0_7. */
-                userOperationV0_7?: (TW.Ethereum.Proto.UserOperationV0_7.$Properties|null);
+                public userOperationV0_7?: (TW.Ethereum.Proto.IUserOperationV0_7|null);
 
                 /** SigningInput accessList. */
-                accessList: TW.Ethereum.Proto.Access.$Properties[];
+                public accessList: TW.Ethereum.Proto.IAccess[];
 
                 /** SigningInput eip7702Authorization. */
-                eip7702Authorization?: (TW.Ethereum.Proto.Authorization.$Properties|null);
+                public eip7702Authorization?: (TW.Ethereum.Proto.IAuthorization|null);
 
                 /** SigningInput userOperationOneof. */
-                userOperationOneof?: ("userOperation"|"userOperationV0_7");
+                public userOperationOneof?: ("userOperation"|"userOperationV0_7");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.ISigningInput): TW.Ethereum.Proto.SigningInput;
 
                 /**
                  * Encodes the specified SigningInput message. Does not implicitly {@link TW.Ethereum.Proto.SigningInput.verify|verify} messages.
@@ -6383,144 +5282,93 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.SigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.SigningInput & TW.Ethereum.Proto.SigningInput.$Shape} SigningInput
+                 * @returns SigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.SigningInput & TW.Ethereum.Proto.SigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.SigningInput;
 
                 /**
-                 * Gets the type url for SigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningInput {
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
 
-                /** Properties of a SigningInput. */
-                interface $Properties {
+                /** SigningOutput encoded */
+                encoded?: (Uint8Array|null);
 
-                    /** SigningInput chainId */
-                    chainId?: (Uint8Array|null);
+                /** SigningOutput v */
+                v?: (Uint8Array|null);
 
-                    /** SigningInput nonce */
-                    nonce?: (Uint8Array|null);
+                /** SigningOutput r */
+                r?: (Uint8Array|null);
 
-                    /** SigningInput txMode */
-                    txMode?: (TW.Ethereum.Proto.TransactionMode|null);
+                /** SigningOutput s */
+                s?: (Uint8Array|null);
 
-                    /** SigningInput gasPrice */
-                    gasPrice?: (Uint8Array|null);
+                /** SigningOutput data */
+                data?: (Uint8Array|null);
 
-                    /** SigningInput gasLimit */
-                    gasLimit?: (Uint8Array|null);
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** SigningInput maxInclusionFeePerGas */
-                    maxInclusionFeePerGas?: (Uint8Array|null);
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
 
-                    /** SigningInput maxFeePerGas */
-                    maxFeePerGas?: (Uint8Array|null);
-
-                    /** SigningInput toAddress */
-                    toAddress?: (string|null);
-
-                    /** SigningInput privateKey */
-                    privateKey?: (Uint8Array|null);
-
-                    /** SigningInput transaction */
-                    transaction?: (TW.Ethereum.Proto.Transaction.$Properties|null);
-
-                    /** SigningInput userOperation */
-                    userOperation?: (TW.Ethereum.Proto.UserOperation.$Properties|null);
-
-                    /** SigningInput userOperationV0_7 */
-                    userOperationV0_7?: (TW.Ethereum.Proto.UserOperationV0_7.$Properties|null);
-
-                    /** SigningInput accessList */
-                    accessList?: (TW.Ethereum.Proto.Access.$Properties[]|null);
-
-                    /** SigningInput eip7702Authorization */
-                    eip7702Authorization?: (TW.Ethereum.Proto.Authorization.$Properties|null);
-
-                    /** SigningInput userOperationOneof */
-                    userOperationOneof?: ("userOperation"|"userOperationV0_7");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a SigningInput. */
-                type $Shape = {
-                  chainId?: Uint8Array|null;
-                  nonce?: Uint8Array|null;
-                  txMode?: TW.Ethereum.Proto.TransactionMode|null;
-                  gasPrice?: Uint8Array|null;
-                  gasLimit?: Uint8Array|null;
-                  maxInclusionFeePerGas?: Uint8Array|null;
-                  maxFeePerGas?: Uint8Array|null;
-                  toAddress?: string|null;
-                  privateKey?: Uint8Array|null;
-                  transaction?: TW.Ethereum.Proto.Transaction.$Shape|null;
-                  userOperation?: TW.Ethereum.Proto.UserOperation.$Shape|null;
-                  userOperationV0_7?: TW.Ethereum.Proto.UserOperationV0_7.$Shape|null;
-                  accessList?: TW.Ethereum.Proto.Access.$Shape[]|null;
-                  eip7702Authorization?: TW.Ethereum.Proto.Authorization.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ userOperationOneof?: undefined; userOperation?: null; userOperationV0_7?: null }|{ userOperationOneof?: "userOperation"; userOperation: TW.Ethereum.Proto.UserOperation.$Shape; userOperationV0_7?: null }|{ userOperationOneof?: "userOperationV0_7"; userOperation?: null; userOperationV0_7: TW.Ethereum.Proto.UserOperationV0_7.$Shape })
-                );
-            }
-
-            /**
-             * Properties of a SigningOutput.
-             * @deprecated Use TW.Ethereum.Proto.SigningOutput.$Properties instead.
-             */
-            interface ISigningOutput extends TW.Ethereum.Proto.SigningOutput.$Properties {
+                /** SigningOutput preHash */
+                preHash?: (Uint8Array|null);
             }
 
             /** Represents a SigningOutput. */
-            class SigningOutput {
+            class SigningOutput implements ISigningOutput {
 
                 /**
                  * Constructs a new SigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.SigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.ISigningOutput);
 
                 /** SigningOutput encoded. */
-                encoded: Uint8Array;
+                public encoded: Uint8Array;
 
                 /** SigningOutput v. */
-                v: Uint8Array;
+                public v: Uint8Array;
 
                 /** SigningOutput r. */
-                r: Uint8Array;
+                public r: Uint8Array;
 
                 /** SigningOutput s. */
-                s: Uint8Array;
+                public s: Uint8Array;
 
                 /** SigningOutput data. */
-                data: Uint8Array;
+                public data: Uint8Array;
 
                 /** SigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** SigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** SigningOutput preHash. */
-                preHash: Uint8Array;
+                public preHash: Uint8Array;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.ISigningOutput): TW.Ethereum.Proto.SigningOutput;
 
                 /**
                  * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Ethereum.Proto.SigningOutput.verify|verify} messages.
@@ -6528,106 +5376,61 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.SigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.SigningOutput & TW.Ethereum.Proto.SigningOutput.$Shape} SigningOutput
+                 * @returns SigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.SigningOutput & TW.Ethereum.Proto.SigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.SigningOutput;
 
                 /**
-                 * Gets the type url for SigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace SigningOutput {
-
-                /** Properties of a SigningOutput. */
-                interface $Properties {
-
-                    /** SigningOutput encoded */
-                    encoded?: (Uint8Array|null);
-
-                    /** SigningOutput v */
-                    v?: (Uint8Array|null);
-
-                    /** SigningOutput r */
-                    r?: (Uint8Array|null);
-
-                    /** SigningOutput s */
-                    s?: (Uint8Array|null);
-
-                    /** SigningOutput data */
-                    data?: (Uint8Array|null);
-
-                    /** SigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** SigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** SigningOutput preHash */
-                    preHash?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a SigningOutput. */
-                type $Shape = TW.Ethereum.Proto.SigningOutput.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** MessageType enum. */
             enum MessageType {
-
-                /** MessageType_legacy value */
                 MessageType_legacy = 0,
-
-                /** MessageType_eip155 value */
                 MessageType_eip155 = 1,
-
-                /** MessageType_typed value */
                 MessageType_typed = 2,
-
-                /** MessageType_typed_eip155 value */
                 MessageType_typed_eip155 = 3,
-
-                /** MessageType_immutable_x value */
                 MessageType_immutable_x = 4,
-
-                /** MessageType_eip7702_authorization value */
                 MessageType_eip7702_authorization = 5
             }
 
-            /**
-             * Properties of a MaybeChainId.
-             * @deprecated Use TW.Ethereum.Proto.MaybeChainId.$Properties instead.
-             */
-            interface IMaybeChainId extends TW.Ethereum.Proto.MaybeChainId.$Properties {
+            /** Properties of a MaybeChainId. */
+            interface IMaybeChainId {
+
+                /** MaybeChainId chainId */
+                chainId?: (number|null);
             }
 
             /** Represents a MaybeChainId. */
-            class MaybeChainId {
+            class MaybeChainId implements IMaybeChainId {
 
                 /**
                  * Constructs a new MaybeChainId.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.MaybeChainId.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IMaybeChainId);
 
                 /** MaybeChainId chainId. */
-                chainId: number;
+                public chainId: number;
+
+                /**
+                 * Creates a new MaybeChainId instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MaybeChainId instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IMaybeChainId): TW.Ethereum.Proto.MaybeChainId;
 
                 /**
                  * Encodes the specified MaybeChainId message. Does not implicitly {@link TW.Ethereum.Proto.MaybeChainId.verify|verify} messages.
@@ -6635,72 +5438,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.MaybeChainId.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IMaybeChainId, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MaybeChainId message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.MaybeChainId & TW.Ethereum.Proto.MaybeChainId.$Shape} MaybeChainId
+                 * @returns MaybeChainId
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MaybeChainId & TW.Ethereum.Proto.MaybeChainId.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MaybeChainId;
 
                 /**
-                 * Gets the type url for MaybeChainId
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MaybeChainId
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace MaybeChainId {
+            /** Properties of a MessageSigningInput. */
+            interface IMessageSigningInput {
 
-                /** Properties of a MaybeChainId. */
-                interface $Properties {
+                /** MessageSigningInput privateKey */
+                privateKey?: (Uint8Array|null);
 
-                    /** MaybeChainId chainId */
-                    chainId?: (number|null);
+                /** MessageSigningInput message */
+                message?: (string|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** MessageSigningInput chainId */
+                chainId?: (TW.Ethereum.Proto.IMaybeChainId|null);
 
-                /** Shape of a MaybeChainId. */
-                type $Shape = TW.Ethereum.Proto.MaybeChainId.$Properties;
-            }
-
-            /**
-             * Properties of a MessageSigningInput.
-             * @deprecated Use TW.Ethereum.Proto.MessageSigningInput.$Properties instead.
-             */
-            interface IMessageSigningInput extends TW.Ethereum.Proto.MessageSigningInput.$Properties {
+                /** MessageSigningInput messageType */
+                messageType?: (TW.Ethereum.Proto.MessageType|null);
             }
 
             /** Represents a MessageSigningInput. */
-            class MessageSigningInput {
+            class MessageSigningInput implements IMessageSigningInput {
 
                 /**
                  * Constructs a new MessageSigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.MessageSigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IMessageSigningInput);
 
                 /** MessageSigningInput privateKey. */
-                privateKey: Uint8Array;
+                public privateKey: Uint8Array;
 
                 /** MessageSigningInput message. */
-                message: string;
+                public message: string;
 
                 /** MessageSigningInput chainId. */
-                chainId?: (TW.Ethereum.Proto.MaybeChainId.$Properties|null);
+                public chainId?: (TW.Ethereum.Proto.IMaybeChainId|null);
 
                 /** MessageSigningInput messageType. */
-                messageType: TW.Ethereum.Proto.MessageType;
+                public messageType: TW.Ethereum.Proto.MessageType;
+
+                /**
+                 * Creates a new MessageSigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageSigningInput instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IMessageSigningInput): TW.Ethereum.Proto.MessageSigningInput;
 
                 /**
                  * Encodes the specified MessageSigningInput message. Does not implicitly {@link TW.Ethereum.Proto.MessageSigningInput.verify|verify} messages.
@@ -6708,78 +5508,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.MessageSigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IMessageSigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MessageSigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.MessageSigningInput & TW.Ethereum.Proto.MessageSigningInput.$Shape} MessageSigningInput
+                 * @returns MessageSigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MessageSigningInput & TW.Ethereum.Proto.MessageSigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MessageSigningInput;
 
                 /**
-                 * Gets the type url for MessageSigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MessageSigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace MessageSigningInput {
+            /** Properties of a MessageSigningOutput. */
+            interface IMessageSigningOutput {
 
-                /** Properties of a MessageSigningInput. */
-                interface $Properties {
+                /** MessageSigningOutput signature */
+                signature?: (string|null);
 
-                    /** MessageSigningInput privateKey */
-                    privateKey?: (Uint8Array|null);
+                /** MessageSigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** MessageSigningInput message */
-                    message?: (string|null);
-
-                    /** MessageSigningInput chainId */
-                    chainId?: (TW.Ethereum.Proto.MaybeChainId.$Properties|null);
-
-                    /** MessageSigningInput messageType */
-                    messageType?: (TW.Ethereum.Proto.MessageType|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a MessageSigningInput. */
-                type $Shape = TW.Ethereum.Proto.MessageSigningInput.$Properties;
-            }
-
-            /**
-             * Properties of a MessageSigningOutput.
-             * @deprecated Use TW.Ethereum.Proto.MessageSigningOutput.$Properties instead.
-             */
-            interface IMessageSigningOutput extends TW.Ethereum.Proto.MessageSigningOutput.$Properties {
+                /** MessageSigningOutput errorMessage */
+                errorMessage?: (string|null);
             }
 
             /** Represents a MessageSigningOutput. */
-            class MessageSigningOutput {
+            class MessageSigningOutput implements IMessageSigningOutput {
 
                 /**
                  * Constructs a new MessageSigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.MessageSigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IMessageSigningOutput);
 
                 /** MessageSigningOutput signature. */
-                signature: string;
+                public signature: string;
 
                 /** MessageSigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** MessageSigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
+
+                /**
+                 * Creates a new MessageSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageSigningOutput instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IMessageSigningOutput): TW.Ethereum.Proto.MessageSigningOutput;
 
                 /**
                  * Encodes the specified MessageSigningOutput message. Does not implicitly {@link TW.Ethereum.Proto.MessageSigningOutput.verify|verify} messages.
@@ -6787,75 +5572,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.MessageSigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IMessageSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MessageSigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.MessageSigningOutput & TW.Ethereum.Proto.MessageSigningOutput.$Shape} MessageSigningOutput
+                 * @returns MessageSigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MessageSigningOutput & TW.Ethereum.Proto.MessageSigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MessageSigningOutput;
 
                 /**
-                 * Gets the type url for MessageSigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MessageSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace MessageSigningOutput {
+            /** Properties of a MessageVerifyingInput. */
+            interface IMessageVerifyingInput {
 
-                /** Properties of a MessageSigningOutput. */
-                interface $Properties {
+                /** MessageVerifyingInput message */
+                message?: (string|null);
 
-                    /** MessageSigningOutput signature */
-                    signature?: (string|null);
+                /** MessageVerifyingInput publicKey */
+                publicKey?: (Uint8Array|null);
 
-                    /** MessageSigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** MessageSigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a MessageSigningOutput. */
-                type $Shape = TW.Ethereum.Proto.MessageSigningOutput.$Properties;
-            }
-
-            /**
-             * Properties of a MessageVerifyingInput.
-             * @deprecated Use TW.Ethereum.Proto.MessageVerifyingInput.$Properties instead.
-             */
-            interface IMessageVerifyingInput extends TW.Ethereum.Proto.MessageVerifyingInput.$Properties {
+                /** MessageVerifyingInput signature */
+                signature?: (string|null);
             }
 
             /** Represents a MessageVerifyingInput. */
-            class MessageVerifyingInput {
+            class MessageVerifyingInput implements IMessageVerifyingInput {
 
                 /**
                  * Constructs a new MessageVerifyingInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Ethereum.Proto.MessageVerifyingInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Ethereum.Proto.IMessageVerifyingInput);
 
                 /** MessageVerifyingInput message. */
-                message: string;
+                public message: string;
 
                 /** MessageVerifyingInput publicKey. */
-                publicKey: Uint8Array;
+                public publicKey: Uint8Array;
 
                 /** MessageVerifyingInput signature. */
-                signature: string;
+                public signature: string;
+
+                /**
+                 * Creates a new MessageVerifyingInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageVerifyingInput instance
+                 */
+                public static create(properties?: TW.Ethereum.Proto.IMessageVerifyingInput): TW.Ethereum.Proto.MessageVerifyingInput;
 
                 /**
                  * Encodes the specified MessageVerifyingInput message. Does not implicitly {@link TW.Ethereum.Proto.MessageVerifyingInput.verify|verify} messages.
@@ -6863,46 +5636,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Ethereum.Proto.MessageVerifyingInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Ethereum.Proto.IMessageVerifyingInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MessageVerifyingInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Ethereum.Proto.MessageVerifyingInput & TW.Ethereum.Proto.MessageVerifyingInput.$Shape} MessageVerifyingInput
+                 * @returns MessageVerifyingInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MessageVerifyingInput & TW.Ethereum.Proto.MessageVerifyingInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ethereum.Proto.MessageVerifyingInput;
 
                 /**
-                 * Gets the type url for MessageVerifyingInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MessageVerifyingInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace MessageVerifyingInput {
-
-                /** Properties of a MessageVerifyingInput. */
-                interface $Properties {
-
-                    /** MessageVerifyingInput message */
-                    message?: (string|null);
-
-                    /** MessageVerifyingInput publicKey */
-                    publicKey?: (Uint8Array|null);
-
-                    /** MessageVerifyingInput signature */
-                    signature?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a MessageVerifyingInput. */
-                type $Shape = TW.Ethereum.Proto.MessageVerifyingInput.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -6913,36 +5664,49 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a Transfer.
-             * @deprecated Use TW.Solana.Proto.Transfer.$Properties instead.
-             */
-            interface ITransfer extends TW.Solana.Proto.Transfer.$Properties {
+            /** Properties of a Transfer. */
+            interface ITransfer {
+
+                /** Transfer recipient */
+                recipient?: (string|null);
+
+                /** Transfer value */
+                value?: (number|null);
+
+                /** Transfer memo */
+                memo?: (string|null);
+
+                /** Transfer references */
+                references?: (string[]|null);
             }
 
             /** Represents a Transfer. */
-            class Transfer {
+            class Transfer implements ITransfer {
 
                 /**
                  * Constructs a new Transfer.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.Transfer.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ITransfer);
 
                 /** Transfer recipient. */
-                recipient: string;
+                public recipient: string;
 
                 /** Transfer value. */
-                value: number;
+                public value: number;
 
                 /** Transfer memo. */
-                memo: string;
+                public memo: string;
 
                 /** Transfer references. */
-                references: string[];
+                public references: string[];
+
+                /**
+                 * Creates a new Transfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transfer instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ITransfer): TW.Solana.Proto.Transfer;
 
                 /**
                  * Encodes the specified Transfer message. Does not implicitly {@link TW.Solana.Proto.Transfer.verify|verify} messages.
@@ -6950,78 +5714,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.Transfer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transfer message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.Transfer & TW.Solana.Proto.Transfer.$Shape} Transfer
+                 * @returns Transfer
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.Transfer & TW.Solana.Proto.Transfer.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.Transfer;
 
                 /**
-                 * Gets the type url for Transfer
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Transfer {
+            /** Properties of a DelegateStake. */
+            interface IDelegateStake {
 
-                /** Properties of a Transfer. */
-                interface $Properties {
+                /** DelegateStake validatorPubkey */
+                validatorPubkey?: (string|null);
 
-                    /** Transfer recipient */
-                    recipient?: (string|null);
+                /** DelegateStake value */
+                value?: (number|null);
 
-                    /** Transfer value */
-                    value?: (number|null);
-
-                    /** Transfer memo */
-                    memo?: (string|null);
-
-                    /** Transfer references */
-                    references?: (string[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a Transfer. */
-                type $Shape = TW.Solana.Proto.Transfer.$Properties;
-            }
-
-            /**
-             * Properties of a DelegateStake.
-             * @deprecated Use TW.Solana.Proto.DelegateStake.$Properties instead.
-             */
-            interface IDelegateStake extends TW.Solana.Proto.DelegateStake.$Properties {
+                /** DelegateStake stakeAccount */
+                stakeAccount?: (string|null);
             }
 
             /** Represents a DelegateStake. */
-            class DelegateStake {
+            class DelegateStake implements IDelegateStake {
 
                 /**
                  * Constructs a new DelegateStake.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.DelegateStake.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IDelegateStake);
 
                 /** DelegateStake validatorPubkey. */
-                validatorPubkey: string;
+                public validatorPubkey: string;
 
                 /** DelegateStake value. */
-                value: number;
+                public value: number;
 
                 /** DelegateStake stakeAccount. */
-                stakeAccount: string;
+                public stakeAccount: string;
+
+                /**
+                 * Creates a new DelegateStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DelegateStake instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IDelegateStake): TW.Solana.Proto.DelegateStake;
 
                 /**
                  * Encodes the specified DelegateStake message. Does not implicitly {@link TW.Solana.Proto.DelegateStake.verify|verify} messages.
@@ -7029,69 +5778,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.DelegateStake.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IDelegateStake, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a DelegateStake message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.DelegateStake & TW.Solana.Proto.DelegateStake.$Shape} DelegateStake
+                 * @returns DelegateStake
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DelegateStake & TW.Solana.Proto.DelegateStake.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DelegateStake;
 
                 /**
-                 * Gets the type url for DelegateStake
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for DelegateStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace DelegateStake {
+            /** Properties of a DeactivateStake. */
+            interface IDeactivateStake {
 
-                /** Properties of a DelegateStake. */
-                interface $Properties {
-
-                    /** DelegateStake validatorPubkey */
-                    validatorPubkey?: (string|null);
-
-                    /** DelegateStake value */
-                    value?: (number|null);
-
-                    /** DelegateStake stakeAccount */
-                    stakeAccount?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a DelegateStake. */
-                type $Shape = TW.Solana.Proto.DelegateStake.$Properties;
-            }
-
-            /**
-             * Properties of a DeactivateStake.
-             * @deprecated Use TW.Solana.Proto.DeactivateStake.$Properties instead.
-             */
-            interface IDeactivateStake extends TW.Solana.Proto.DeactivateStake.$Properties {
+                /** DeactivateStake stakeAccount */
+                stakeAccount?: (string|null);
             }
 
             /** Represents a DeactivateStake. */
-            class DeactivateStake {
+            class DeactivateStake implements IDeactivateStake {
 
                 /**
                  * Constructs a new DeactivateStake.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.DeactivateStake.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IDeactivateStake);
 
                 /** DeactivateStake stakeAccount. */
-                stakeAccount: string;
+                public stakeAccount: string;
+
+                /**
+                 * Creates a new DeactivateStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeactivateStake instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IDeactivateStake): TW.Solana.Proto.DeactivateStake;
 
                 /**
                  * Encodes the specified DeactivateStake message. Does not implicitly {@link TW.Solana.Proto.DeactivateStake.verify|verify} messages.
@@ -7099,63 +5830,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.DeactivateStake.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IDeactivateStake, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a DeactivateStake message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.DeactivateStake & TW.Solana.Proto.DeactivateStake.$Shape} DeactivateStake
+                 * @returns DeactivateStake
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DeactivateStake & TW.Solana.Proto.DeactivateStake.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DeactivateStake;
 
                 /**
-                 * Gets the type url for DeactivateStake
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for DeactivateStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace DeactivateStake {
+            /** Properties of a DeactivateAllStake. */
+            interface IDeactivateAllStake {
 
-                /** Properties of a DeactivateStake. */
-                interface $Properties {
-
-                    /** DeactivateStake stakeAccount */
-                    stakeAccount?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a DeactivateStake. */
-                type $Shape = TW.Solana.Proto.DeactivateStake.$Properties;
-            }
-
-            /**
-             * Properties of a DeactivateAllStake.
-             * @deprecated Use TW.Solana.Proto.DeactivateAllStake.$Properties instead.
-             */
-            interface IDeactivateAllStake extends TW.Solana.Proto.DeactivateAllStake.$Properties {
+                /** DeactivateAllStake stakeAccounts */
+                stakeAccounts?: (string[]|null);
             }
 
             /** Represents a DeactivateAllStake. */
-            class DeactivateAllStake {
+            class DeactivateAllStake implements IDeactivateAllStake {
 
                 /**
                  * Constructs a new DeactivateAllStake.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.DeactivateAllStake.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IDeactivateAllStake);
 
                 /** DeactivateAllStake stakeAccounts. */
-                stakeAccounts: string[];
+                public stakeAccounts: string[];
+
+                /**
+                 * Creates a new DeactivateAllStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeactivateAllStake instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IDeactivateAllStake): TW.Solana.Proto.DeactivateAllStake;
 
                 /**
                  * Encodes the specified DeactivateAllStake message. Does not implicitly {@link TW.Solana.Proto.DeactivateAllStake.verify|verify} messages.
@@ -7163,66 +5882,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.DeactivateAllStake.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IDeactivateAllStake, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a DeactivateAllStake message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.DeactivateAllStake & TW.Solana.Proto.DeactivateAllStake.$Shape} DeactivateAllStake
+                 * @returns DeactivateAllStake
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DeactivateAllStake & TW.Solana.Proto.DeactivateAllStake.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DeactivateAllStake;
 
                 /**
-                 * Gets the type url for DeactivateAllStake
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for DeactivateAllStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace DeactivateAllStake {
+            /** Properties of a WithdrawStake. */
+            interface IWithdrawStake {
 
-                /** Properties of a DeactivateAllStake. */
-                interface $Properties {
+                /** WithdrawStake stakeAccount */
+                stakeAccount?: (string|null);
 
-                    /** DeactivateAllStake stakeAccounts */
-                    stakeAccounts?: (string[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a DeactivateAllStake. */
-                type $Shape = TW.Solana.Proto.DeactivateAllStake.$Properties;
-            }
-
-            /**
-             * Properties of a WithdrawStake.
-             * @deprecated Use TW.Solana.Proto.WithdrawStake.$Properties instead.
-             */
-            interface IWithdrawStake extends TW.Solana.Proto.WithdrawStake.$Properties {
+                /** WithdrawStake value */
+                value?: (number|null);
             }
 
             /** Represents a WithdrawStake. */
-            class WithdrawStake {
+            class WithdrawStake implements IWithdrawStake {
 
                 /**
                  * Constructs a new WithdrawStake.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.WithdrawStake.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IWithdrawStake);
 
                 /** WithdrawStake stakeAccount. */
-                stakeAccount: string;
+                public stakeAccount: string;
 
                 /** WithdrawStake value. */
-                value: number;
+                public value: number;
+
+                /**
+                 * Creates a new WithdrawStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WithdrawStake instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IWithdrawStake): TW.Solana.Proto.WithdrawStake;
 
                 /**
                  * Encodes the specified WithdrawStake message. Does not implicitly {@link TW.Solana.Proto.WithdrawStake.verify|verify} messages.
@@ -7230,69 +5940,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.WithdrawStake.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IWithdrawStake, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a WithdrawStake message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.WithdrawStake & TW.Solana.Proto.WithdrawStake.$Shape} WithdrawStake
+                 * @returns WithdrawStake
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.WithdrawStake & TW.Solana.Proto.WithdrawStake.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.WithdrawStake;
 
                 /**
-                 * Gets the type url for WithdrawStake
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for WithdrawStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace WithdrawStake {
+            /** Properties of a StakeAccountValue. */
+            interface IStakeAccountValue {
 
-                /** Properties of a WithdrawStake. */
-                interface $Properties {
+                /** StakeAccountValue stakeAccount */
+                stakeAccount?: (string|null);
 
-                    /** WithdrawStake stakeAccount */
-                    stakeAccount?: (string|null);
-
-                    /** WithdrawStake value */
-                    value?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a WithdrawStake. */
-                type $Shape = TW.Solana.Proto.WithdrawStake.$Properties;
-            }
-
-            /**
-             * Properties of a StakeAccountValue.
-             * @deprecated Use TW.Solana.Proto.StakeAccountValue.$Properties instead.
-             */
-            interface IStakeAccountValue extends TW.Solana.Proto.StakeAccountValue.$Properties {
+                /** StakeAccountValue value */
+                value?: (number|null);
             }
 
             /** Represents a StakeAccountValue. */
-            class StakeAccountValue {
+            class StakeAccountValue implements IStakeAccountValue {
 
                 /**
                  * Constructs a new StakeAccountValue.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.StakeAccountValue.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IStakeAccountValue);
 
                 /** StakeAccountValue stakeAccount. */
-                stakeAccount: string;
+                public stakeAccount: string;
 
                 /** StakeAccountValue value. */
-                value: number;
+                public value: number;
+
+                /**
+                 * Creates a new StakeAccountValue instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns StakeAccountValue instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IStakeAccountValue): TW.Solana.Proto.StakeAccountValue;
 
                 /**
                  * Encodes the specified StakeAccountValue message. Does not implicitly {@link TW.Solana.Proto.StakeAccountValue.verify|verify} messages.
@@ -7300,66 +5998,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.StakeAccountValue.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IStakeAccountValue, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a StakeAccountValue message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.StakeAccountValue & TW.Solana.Proto.StakeAccountValue.$Shape} StakeAccountValue
+                 * @returns StakeAccountValue
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.StakeAccountValue & TW.Solana.Proto.StakeAccountValue.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.StakeAccountValue;
 
                 /**
-                 * Gets the type url for StakeAccountValue
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for StakeAccountValue
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace StakeAccountValue {
+            /** Properties of a WithdrawAllStake. */
+            interface IWithdrawAllStake {
 
-                /** Properties of a StakeAccountValue. */
-                interface $Properties {
-
-                    /** StakeAccountValue stakeAccount */
-                    stakeAccount?: (string|null);
-
-                    /** StakeAccountValue value */
-                    value?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a StakeAccountValue. */
-                type $Shape = TW.Solana.Proto.StakeAccountValue.$Properties;
-            }
-
-            /**
-             * Properties of a WithdrawAllStake.
-             * @deprecated Use TW.Solana.Proto.WithdrawAllStake.$Properties instead.
-             */
-            interface IWithdrawAllStake extends TW.Solana.Proto.WithdrawAllStake.$Properties {
+                /** WithdrawAllStake stakeAccounts */
+                stakeAccounts?: (TW.Solana.Proto.IStakeAccountValue[]|null);
             }
 
             /** Represents a WithdrawAllStake. */
-            class WithdrawAllStake {
+            class WithdrawAllStake implements IWithdrawAllStake {
 
                 /**
                  * Constructs a new WithdrawAllStake.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.WithdrawAllStake.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IWithdrawAllStake);
 
                 /** WithdrawAllStake stakeAccounts. */
-                stakeAccounts: TW.Solana.Proto.StakeAccountValue.$Properties[];
+                public stakeAccounts: TW.Solana.Proto.IStakeAccountValue[];
+
+                /**
+                 * Creates a new WithdrawAllStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WithdrawAllStake instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IWithdrawAllStake): TW.Solana.Proto.WithdrawAllStake;
 
                 /**
                  * Encodes the specified WithdrawAllStake message. Does not implicitly {@link TW.Solana.Proto.WithdrawAllStake.verify|verify} messages.
@@ -7367,82 +6050,75 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.WithdrawAllStake.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IWithdrawAllStake, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a WithdrawAllStake message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.WithdrawAllStake & TW.Solana.Proto.WithdrawAllStake.$Shape} WithdrawAllStake
+                 * @returns WithdrawAllStake
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.WithdrawAllStake & TW.Solana.Proto.WithdrawAllStake.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.WithdrawAllStake;
 
                 /**
-                 * Gets the type url for WithdrawAllStake
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for WithdrawAllStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace WithdrawAllStake {
-
-                /** Properties of a WithdrawAllStake. */
-                interface $Properties {
-
-                    /** WithdrawAllStake stakeAccounts */
-                    stakeAccounts?: (TW.Solana.Proto.StakeAccountValue.$Properties[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a WithdrawAllStake. */
-                type $Shape = TW.Solana.Proto.WithdrawAllStake.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** TokenProgramId enum. */
             enum TokenProgramId {
-
-                /** TokenProgram value */
                 TokenProgram = 0,
-
-                /** Token2022Program value */
                 Token2022Program = 1
             }
 
-            /**
-             * Properties of a CreateTokenAccount.
-             * @deprecated Use TW.Solana.Proto.CreateTokenAccount.$Properties instead.
-             */
-            interface ICreateTokenAccount extends TW.Solana.Proto.CreateTokenAccount.$Properties {
+            /** Properties of a CreateTokenAccount. */
+            interface ICreateTokenAccount {
+
+                /** CreateTokenAccount mainAddress */
+                mainAddress?: (string|null);
+
+                /** CreateTokenAccount tokenMintAddress */
+                tokenMintAddress?: (string|null);
+
+                /** CreateTokenAccount tokenAddress */
+                tokenAddress?: (string|null);
+
+                /** CreateTokenAccount tokenProgramId */
+                tokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
             }
 
             /** Represents a CreateTokenAccount. */
-            class CreateTokenAccount {
+            class CreateTokenAccount implements ICreateTokenAccount {
 
                 /**
                  * Constructs a new CreateTokenAccount.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.CreateTokenAccount.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ICreateTokenAccount);
 
                 /** CreateTokenAccount mainAddress. */
-                mainAddress: string;
+                public mainAddress: string;
 
                 /** CreateTokenAccount tokenMintAddress. */
-                tokenMintAddress: string;
+                public tokenMintAddress: string;
 
                 /** CreateTokenAccount tokenAddress. */
-                tokenAddress: string;
+                public tokenAddress: string;
 
                 /** CreateTokenAccount tokenProgramId. */
-                tokenProgramId: TW.Solana.Proto.TokenProgramId;
+                public tokenProgramId: TW.Solana.Proto.TokenProgramId;
+
+                /**
+                 * Creates a new CreateTokenAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateTokenAccount instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ICreateTokenAccount): TW.Solana.Proto.CreateTokenAccount;
 
                 /**
                  * Encodes the specified CreateTokenAccount message. Does not implicitly {@link TW.Solana.Proto.CreateTokenAccount.verify|verify} messages.
@@ -7450,93 +6126,93 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.CreateTokenAccount.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ICreateTokenAccount, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a CreateTokenAccount message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.CreateTokenAccount & TW.Solana.Proto.CreateTokenAccount.$Shape} CreateTokenAccount
+                 * @returns CreateTokenAccount
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.CreateTokenAccount & TW.Solana.Proto.CreateTokenAccount.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.CreateTokenAccount;
 
                 /**
-                 * Gets the type url for CreateTokenAccount
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for CreateTokenAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace CreateTokenAccount {
+            /** Properties of a TokenTransfer. */
+            interface ITokenTransfer {
 
-                /** Properties of a CreateTokenAccount. */
-                interface $Properties {
+                /** TokenTransfer tokenMintAddress */
+                tokenMintAddress?: (string|null);
 
-                    /** CreateTokenAccount mainAddress */
-                    mainAddress?: (string|null);
+                /** TokenTransfer senderTokenAddress */
+                senderTokenAddress?: (string|null);
 
-                    /** CreateTokenAccount tokenMintAddress */
-                    tokenMintAddress?: (string|null);
+                /** TokenTransfer recipientTokenAddress */
+                recipientTokenAddress?: (string|null);
 
-                    /** CreateTokenAccount tokenAddress */
-                    tokenAddress?: (string|null);
+                /** TokenTransfer amount */
+                amount?: (number|null);
 
-                    /** CreateTokenAccount tokenProgramId */
-                    tokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
+                /** TokenTransfer decimals */
+                decimals?: (number|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** TokenTransfer memo */
+                memo?: (string|null);
 
-                /** Shape of a CreateTokenAccount. */
-                type $Shape = TW.Solana.Proto.CreateTokenAccount.$Properties;
-            }
+                /** TokenTransfer references */
+                references?: (string[]|null);
 
-            /**
-             * Properties of a TokenTransfer.
-             * @deprecated Use TW.Solana.Proto.TokenTransfer.$Properties instead.
-             */
-            interface ITokenTransfer extends TW.Solana.Proto.TokenTransfer.$Properties {
+                /** TokenTransfer tokenProgramId */
+                tokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
             }
 
             /** Represents a TokenTransfer. */
-            class TokenTransfer {
+            class TokenTransfer implements ITokenTransfer {
 
                 /**
                  * Constructs a new TokenTransfer.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.TokenTransfer.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ITokenTransfer);
 
                 /** TokenTransfer tokenMintAddress. */
-                tokenMintAddress: string;
+                public tokenMintAddress: string;
 
                 /** TokenTransfer senderTokenAddress. */
-                senderTokenAddress: string;
+                public senderTokenAddress: string;
 
                 /** TokenTransfer recipientTokenAddress. */
-                recipientTokenAddress: string;
+                public recipientTokenAddress: string;
 
                 /** TokenTransfer amount. */
-                amount: number;
+                public amount: number;
 
                 /** TokenTransfer decimals. */
-                decimals: number;
+                public decimals: number;
 
                 /** TokenTransfer memo. */
-                memo: string;
+                public memo: string;
 
                 /** TokenTransfer references. */
-                references: string[];
+                public references: string[];
 
                 /** TokenTransfer tokenProgramId. */
-                tokenProgramId: TW.Solana.Proto.TokenProgramId;
+                public tokenProgramId: TW.Solana.Proto.TokenProgramId;
+
+                /**
+                 * Creates a new TokenTransfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenTransfer instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ITokenTransfer): TW.Solana.Proto.TokenTransfer;
 
                 /**
                  * Encodes the specified TokenTransfer message. Does not implicitly {@link TW.Solana.Proto.TokenTransfer.verify|verify} messages.
@@ -7544,108 +6220,99 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.TokenTransfer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ITokenTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TokenTransfer message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.TokenTransfer & TW.Solana.Proto.TokenTransfer.$Shape} TokenTransfer
+                 * @returns TokenTransfer
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.TokenTransfer & TW.Solana.Proto.TokenTransfer.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.TokenTransfer;
 
                 /**
-                 * Gets the type url for TokenTransfer
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TokenTransfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TokenTransfer {
+            /** Properties of a CreateAndTransferToken. */
+            interface ICreateAndTransferToken {
 
-                /** Properties of a TokenTransfer. */
-                interface $Properties {
+                /** CreateAndTransferToken recipientMainAddress */
+                recipientMainAddress?: (string|null);
 
-                    /** TokenTransfer tokenMintAddress */
-                    tokenMintAddress?: (string|null);
+                /** CreateAndTransferToken tokenMintAddress */
+                tokenMintAddress?: (string|null);
 
-                    /** TokenTransfer senderTokenAddress */
-                    senderTokenAddress?: (string|null);
+                /** CreateAndTransferToken recipientTokenAddress */
+                recipientTokenAddress?: (string|null);
 
-                    /** TokenTransfer recipientTokenAddress */
-                    recipientTokenAddress?: (string|null);
+                /** CreateAndTransferToken senderTokenAddress */
+                senderTokenAddress?: (string|null);
 
-                    /** TokenTransfer amount */
-                    amount?: (number|null);
+                /** CreateAndTransferToken amount */
+                amount?: (number|null);
 
-                    /** TokenTransfer decimals */
-                    decimals?: (number|null);
+                /** CreateAndTransferToken decimals */
+                decimals?: (number|null);
 
-                    /** TokenTransfer memo */
-                    memo?: (string|null);
+                /** CreateAndTransferToken memo */
+                memo?: (string|null);
 
-                    /** TokenTransfer references */
-                    references?: (string[]|null);
+                /** CreateAndTransferToken references */
+                references?: (string[]|null);
 
-                    /** TokenTransfer tokenProgramId */
-                    tokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TokenTransfer. */
-                type $Shape = TW.Solana.Proto.TokenTransfer.$Properties;
-            }
-
-            /**
-             * Properties of a CreateAndTransferToken.
-             * @deprecated Use TW.Solana.Proto.CreateAndTransferToken.$Properties instead.
-             */
-            interface ICreateAndTransferToken extends TW.Solana.Proto.CreateAndTransferToken.$Properties {
+                /** CreateAndTransferToken tokenProgramId */
+                tokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
             }
 
             /** Represents a CreateAndTransferToken. */
-            class CreateAndTransferToken {
+            class CreateAndTransferToken implements ICreateAndTransferToken {
 
                 /**
                  * Constructs a new CreateAndTransferToken.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.CreateAndTransferToken.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ICreateAndTransferToken);
 
                 /** CreateAndTransferToken recipientMainAddress. */
-                recipientMainAddress: string;
+                public recipientMainAddress: string;
 
                 /** CreateAndTransferToken tokenMintAddress. */
-                tokenMintAddress: string;
+                public tokenMintAddress: string;
 
                 /** CreateAndTransferToken recipientTokenAddress. */
-                recipientTokenAddress: string;
+                public recipientTokenAddress: string;
 
                 /** CreateAndTransferToken senderTokenAddress. */
-                senderTokenAddress: string;
+                public senderTokenAddress: string;
 
                 /** CreateAndTransferToken amount. */
-                amount: number;
+                public amount: number;
 
                 /** CreateAndTransferToken decimals. */
-                decimals: number;
+                public decimals: number;
 
                 /** CreateAndTransferToken memo. */
-                memo: string;
+                public memo: string;
 
                 /** CreateAndTransferToken references. */
-                references: string[];
+                public references: string[];
 
                 /** CreateAndTransferToken tokenProgramId. */
-                tokenProgramId: TW.Solana.Proto.TokenProgramId;
+                public tokenProgramId: TW.Solana.Proto.TokenProgramId;
+
+                /**
+                 * Creates a new CreateAndTransferToken instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateAndTransferToken instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ICreateAndTransferToken): TW.Solana.Proto.CreateAndTransferToken;
 
                 /**
                  * Encodes the specified CreateAndTransferToken message. Does not implicitly {@link TW.Solana.Proto.CreateAndTransferToken.verify|verify} messages.
@@ -7653,102 +6320,81 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.CreateAndTransferToken.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ICreateAndTransferToken, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a CreateAndTransferToken message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.CreateAndTransferToken & TW.Solana.Proto.CreateAndTransferToken.$Shape} CreateAndTransferToken
+                 * @returns CreateAndTransferToken
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.CreateAndTransferToken & TW.Solana.Proto.CreateAndTransferToken.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.CreateAndTransferToken;
 
                 /**
-                 * Gets the type url for CreateAndTransferToken
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for CreateAndTransferToken
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace CreateAndTransferToken {
+            /** Properties of a TokenTransferToFeePayer. */
+            interface ITokenTransferToFeePayer {
 
-                /** Properties of a CreateAndTransferToken. */
-                interface $Properties {
+                /** TokenTransferToFeePayer feeTokenMintAddress */
+                feeTokenMintAddress?: (string|null);
 
-                    /** CreateAndTransferToken recipientMainAddress */
-                    recipientMainAddress?: (string|null);
+                /** TokenTransferToFeePayer feeRecipientTokenAddress */
+                feeRecipientTokenAddress?: (string|null);
 
-                    /** CreateAndTransferToken tokenMintAddress */
-                    tokenMintAddress?: (string|null);
+                /** TokenTransferToFeePayer feeAmount */
+                feeAmount?: (number|null);
 
-                    /** CreateAndTransferToken recipientTokenAddress */
-                    recipientTokenAddress?: (string|null);
+                /** TokenTransferToFeePayer feeSenderTokenAddress */
+                feeSenderTokenAddress?: (string|null);
 
-                    /** CreateAndTransferToken senderTokenAddress */
-                    senderTokenAddress?: (string|null);
+                /** TokenTransferToFeePayer feeDecimals */
+                feeDecimals?: (number|null);
 
-                    /** CreateAndTransferToken amount */
-                    amount?: (number|null);
-
-                    /** CreateAndTransferToken decimals */
-                    decimals?: (number|null);
-
-                    /** CreateAndTransferToken memo */
-                    memo?: (string|null);
-
-                    /** CreateAndTransferToken references */
-                    references?: (string[]|null);
-
-                    /** CreateAndTransferToken tokenProgramId */
-                    tokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a CreateAndTransferToken. */
-                type $Shape = TW.Solana.Proto.CreateAndTransferToken.$Properties;
-            }
-
-            /**
-             * Properties of a TokenTransferToFeePayer.
-             * @deprecated Use TW.Solana.Proto.TokenTransferToFeePayer.$Properties instead.
-             */
-            interface ITokenTransferToFeePayer extends TW.Solana.Proto.TokenTransferToFeePayer.$Properties {
+                /** TokenTransferToFeePayer feeTokenProgramId */
+                feeTokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
             }
 
             /** Represents a TokenTransferToFeePayer. */
-            class TokenTransferToFeePayer {
+            class TokenTransferToFeePayer implements ITokenTransferToFeePayer {
 
                 /**
                  * Constructs a new TokenTransferToFeePayer.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.TokenTransferToFeePayer.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ITokenTransferToFeePayer);
 
                 /** TokenTransferToFeePayer feeTokenMintAddress. */
-                feeTokenMintAddress: string;
+                public feeTokenMintAddress: string;
 
                 /** TokenTransferToFeePayer feeRecipientTokenAddress. */
-                feeRecipientTokenAddress: string;
+                public feeRecipientTokenAddress: string;
 
                 /** TokenTransferToFeePayer feeAmount. */
-                feeAmount: number;
+                public feeAmount: number;
 
                 /** TokenTransferToFeePayer feeSenderTokenAddress. */
-                feeSenderTokenAddress: string;
+                public feeSenderTokenAddress: string;
 
                 /** TokenTransferToFeePayer feeDecimals. */
-                feeDecimals: number;
+                public feeDecimals: number;
 
                 /** TokenTransferToFeePayer feeTokenProgramId. */
-                feeTokenProgramId: TW.Solana.Proto.TokenProgramId;
+                public feeTokenProgramId: TW.Solana.Proto.TokenProgramId;
+
+                /**
+                 * Creates a new TokenTransferToFeePayer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenTransferToFeePayer instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ITokenTransferToFeePayer): TW.Solana.Proto.TokenTransferToFeePayer;
 
                 /**
                  * Encodes the specified TokenTransferToFeePayer message. Does not implicitly {@link TW.Solana.Proto.TokenTransferToFeePayer.verify|verify} messages.
@@ -7756,84 +6402,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.TokenTransferToFeePayer.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ITokenTransferToFeePayer, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TokenTransferToFeePayer message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.TokenTransferToFeePayer & TW.Solana.Proto.TokenTransferToFeePayer.$Shape} TokenTransferToFeePayer
+                 * @returns TokenTransferToFeePayer
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.TokenTransferToFeePayer & TW.Solana.Proto.TokenTransferToFeePayer.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.TokenTransferToFeePayer;
 
                 /**
-                 * Gets the type url for TokenTransferToFeePayer
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TokenTransferToFeePayer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TokenTransferToFeePayer {
+            /** Properties of a CreateNonceAccount. */
+            interface ICreateNonceAccount {
 
-                /** Properties of a TokenTransferToFeePayer. */
-                interface $Properties {
+                /** CreateNonceAccount nonceAccount */
+                nonceAccount?: (string|null);
 
-                    /** TokenTransferToFeePayer feeTokenMintAddress */
-                    feeTokenMintAddress?: (string|null);
+                /** CreateNonceAccount rent */
+                rent?: (number|null);
 
-                    /** TokenTransferToFeePayer feeRecipientTokenAddress */
-                    feeRecipientTokenAddress?: (string|null);
-
-                    /** TokenTransferToFeePayer feeAmount */
-                    feeAmount?: (number|null);
-
-                    /** TokenTransferToFeePayer feeSenderTokenAddress */
-                    feeSenderTokenAddress?: (string|null);
-
-                    /** TokenTransferToFeePayer feeDecimals */
-                    feeDecimals?: (number|null);
-
-                    /** TokenTransferToFeePayer feeTokenProgramId */
-                    feeTokenProgramId?: (TW.Solana.Proto.TokenProgramId|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TokenTransferToFeePayer. */
-                type $Shape = TW.Solana.Proto.TokenTransferToFeePayer.$Properties;
-            }
-
-            /**
-             * Properties of a CreateNonceAccount.
-             * @deprecated Use TW.Solana.Proto.CreateNonceAccount.$Properties instead.
-             */
-            interface ICreateNonceAccount extends TW.Solana.Proto.CreateNonceAccount.$Properties {
+                /** CreateNonceAccount nonceAccountPrivateKey */
+                nonceAccountPrivateKey?: (Uint8Array|null);
             }
 
             /** Represents a CreateNonceAccount. */
-            class CreateNonceAccount {
+            class CreateNonceAccount implements ICreateNonceAccount {
 
                 /**
                  * Constructs a new CreateNonceAccount.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.CreateNonceAccount.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ICreateNonceAccount);
 
                 /** CreateNonceAccount nonceAccount. */
-                nonceAccount: string;
+                public nonceAccount: string;
 
                 /** CreateNonceAccount rent. */
-                rent: number;
+                public rent: number;
 
                 /** CreateNonceAccount nonceAccountPrivateKey. */
-                nonceAccountPrivateKey: Uint8Array;
+                public nonceAccountPrivateKey: Uint8Array;
+
+                /**
+                 * Creates a new CreateNonceAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateNonceAccount instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ICreateNonceAccount): TW.Solana.Proto.CreateNonceAccount;
 
                 /**
                  * Encodes the specified CreateNonceAccount message. Does not implicitly {@link TW.Solana.Proto.CreateNonceAccount.verify|verify} messages.
@@ -7841,75 +6466,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.CreateNonceAccount.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ICreateNonceAccount, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a CreateNonceAccount message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.CreateNonceAccount & TW.Solana.Proto.CreateNonceAccount.$Shape} CreateNonceAccount
+                 * @returns CreateNonceAccount
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.CreateNonceAccount & TW.Solana.Proto.CreateNonceAccount.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.CreateNonceAccount;
 
                 /**
-                 * Gets the type url for CreateNonceAccount
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for CreateNonceAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace CreateNonceAccount {
+            /** Properties of a WithdrawNonceAccount. */
+            interface IWithdrawNonceAccount {
 
-                /** Properties of a CreateNonceAccount. */
-                interface $Properties {
+                /** WithdrawNonceAccount nonceAccount */
+                nonceAccount?: (string|null);
 
-                    /** CreateNonceAccount nonceAccount */
-                    nonceAccount?: (string|null);
+                /** WithdrawNonceAccount recipient */
+                recipient?: (string|null);
 
-                    /** CreateNonceAccount rent */
-                    rent?: (number|null);
-
-                    /** CreateNonceAccount nonceAccountPrivateKey */
-                    nonceAccountPrivateKey?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a CreateNonceAccount. */
-                type $Shape = TW.Solana.Proto.CreateNonceAccount.$Properties;
-            }
-
-            /**
-             * Properties of a WithdrawNonceAccount.
-             * @deprecated Use TW.Solana.Proto.WithdrawNonceAccount.$Properties instead.
-             */
-            interface IWithdrawNonceAccount extends TW.Solana.Proto.WithdrawNonceAccount.$Properties {
+                /** WithdrawNonceAccount value */
+                value?: (number|null);
             }
 
             /** Represents a WithdrawNonceAccount. */
-            class WithdrawNonceAccount {
+            class WithdrawNonceAccount implements IWithdrawNonceAccount {
 
                 /**
                  * Constructs a new WithdrawNonceAccount.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.WithdrawNonceAccount.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IWithdrawNonceAccount);
 
                 /** WithdrawNonceAccount nonceAccount. */
-                nonceAccount: string;
+                public nonceAccount: string;
 
                 /** WithdrawNonceAccount recipient. */
-                recipient: string;
+                public recipient: string;
 
                 /** WithdrawNonceAccount value. */
-                value: number;
+                public value: number;
+
+                /**
+                 * Creates a new WithdrawNonceAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WithdrawNonceAccount instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IWithdrawNonceAccount): TW.Solana.Proto.WithdrawNonceAccount;
 
                 /**
                  * Encodes the specified WithdrawNonceAccount message. Does not implicitly {@link TW.Solana.Proto.WithdrawNonceAccount.verify|verify} messages.
@@ -7917,69 +6530,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.WithdrawNonceAccount.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IWithdrawNonceAccount, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a WithdrawNonceAccount message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.WithdrawNonceAccount & TW.Solana.Proto.WithdrawNonceAccount.$Shape} WithdrawNonceAccount
+                 * @returns WithdrawNonceAccount
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.WithdrawNonceAccount & TW.Solana.Proto.WithdrawNonceAccount.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.WithdrawNonceAccount;
 
                 /**
-                 * Gets the type url for WithdrawNonceAccount
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for WithdrawNonceAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace WithdrawNonceAccount {
+            /** Properties of an AdvanceNonceAccount. */
+            interface IAdvanceNonceAccount {
 
-                /** Properties of a WithdrawNonceAccount. */
-                interface $Properties {
-
-                    /** WithdrawNonceAccount nonceAccount */
-                    nonceAccount?: (string|null);
-
-                    /** WithdrawNonceAccount recipient */
-                    recipient?: (string|null);
-
-                    /** WithdrawNonceAccount value */
-                    value?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a WithdrawNonceAccount. */
-                type $Shape = TW.Solana.Proto.WithdrawNonceAccount.$Properties;
-            }
-
-            /**
-             * Properties of an AdvanceNonceAccount.
-             * @deprecated Use TW.Solana.Proto.AdvanceNonceAccount.$Properties instead.
-             */
-            interface IAdvanceNonceAccount extends TW.Solana.Proto.AdvanceNonceAccount.$Properties {
+                /** AdvanceNonceAccount nonceAccount */
+                nonceAccount?: (string|null);
             }
 
             /** Represents an AdvanceNonceAccount. */
-            class AdvanceNonceAccount {
+            class AdvanceNonceAccount implements IAdvanceNonceAccount {
 
                 /**
                  * Constructs a new AdvanceNonceAccount.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.AdvanceNonceAccount.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IAdvanceNonceAccount);
 
                 /** AdvanceNonceAccount nonceAccount. */
-                nonceAccount: string;
+                public nonceAccount: string;
+
+                /**
+                 * Creates a new AdvanceNonceAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns AdvanceNonceAccount instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IAdvanceNonceAccount): TW.Solana.Proto.AdvanceNonceAccount;
 
                 /**
                  * Encodes the specified AdvanceNonceAccount message. Does not implicitly {@link TW.Solana.Proto.AdvanceNonceAccount.verify|verify} messages.
@@ -7987,66 +6582,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.AdvanceNonceAccount.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IAdvanceNonceAccount, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an AdvanceNonceAccount message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.AdvanceNonceAccount & TW.Solana.Proto.AdvanceNonceAccount.$Shape} AdvanceNonceAccount
+                 * @returns AdvanceNonceAccount
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.AdvanceNonceAccount & TW.Solana.Proto.AdvanceNonceAccount.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.AdvanceNonceAccount;
 
                 /**
-                 * Gets the type url for AdvanceNonceAccount
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for AdvanceNonceAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace AdvanceNonceAccount {
+            /** Properties of a PubkeySignature. */
+            interface IPubkeySignature {
 
-                /** Properties of an AdvanceNonceAccount. */
-                interface $Properties {
+                /** PubkeySignature pubkey */
+                pubkey?: (string|null);
 
-                    /** AdvanceNonceAccount nonceAccount */
-                    nonceAccount?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an AdvanceNonceAccount. */
-                type $Shape = TW.Solana.Proto.AdvanceNonceAccount.$Properties;
-            }
-
-            /**
-             * Properties of a PubkeySignature.
-             * @deprecated Use TW.Solana.Proto.PubkeySignature.$Properties instead.
-             */
-            interface IPubkeySignature extends TW.Solana.Proto.PubkeySignature.$Properties {
+                /** PubkeySignature signature */
+                signature?: (string|null);
             }
 
             /** Represents a PubkeySignature. */
-            class PubkeySignature {
+            class PubkeySignature implements IPubkeySignature {
 
                 /**
                  * Constructs a new PubkeySignature.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.PubkeySignature.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IPubkeySignature);
 
                 /** PubkeySignature pubkey. */
-                pubkey: string;
+                public pubkey: string;
 
                 /** PubkeySignature signature. */
-                signature: string;
+                public signature: string;
+
+                /**
+                 * Creates a new PubkeySignature instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PubkeySignature instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IPubkeySignature): TW.Solana.Proto.PubkeySignature;
 
                 /**
                  * Encodes the specified PubkeySignature message. Does not implicitly {@link TW.Solana.Proto.PubkeySignature.verify|verify} messages.
@@ -8054,75 +6640,66 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.PubkeySignature.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IPubkeySignature, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PubkeySignature message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.PubkeySignature & TW.Solana.Proto.PubkeySignature.$Shape} PubkeySignature
+                 * @returns PubkeySignature
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PubkeySignature & TW.Solana.Proto.PubkeySignature.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PubkeySignature;
 
                 /**
-                 * Gets the type url for PubkeySignature
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PubkeySignature
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace PubkeySignature {
+            /** Properties of a RawMessage. */
+            interface IRawMessage {
 
-                /** Properties of a PubkeySignature. */
-                interface $Properties {
+                /** RawMessage signatures */
+                signatures?: (TW.Solana.Proto.IPubkeySignature[]|null);
 
-                    /** PubkeySignature pubkey */
-                    pubkey?: (string|null);
+                /** RawMessage legacy */
+                legacy?: (TW.Solana.Proto.RawMessage.IMessageLegacy|null);
 
-                    /** PubkeySignature signature */
-                    signature?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a PubkeySignature. */
-                type $Shape = TW.Solana.Proto.PubkeySignature.$Properties;
-            }
-
-            /**
-             * Properties of a RawMessage.
-             * @deprecated Use TW.Solana.Proto.RawMessage.$Properties instead.
-             */
-            interface IRawMessage extends TW.Solana.Proto.RawMessage.$Properties {
+                /** RawMessage v0 */
+                v0?: (TW.Solana.Proto.RawMessage.IMessageV0|null);
             }
 
             /** Represents a RawMessage. */
-            class RawMessage {
+            class RawMessage implements IRawMessage {
 
                 /**
                  * Constructs a new RawMessage.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.RawMessage.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IRawMessage);
 
                 /** RawMessage signatures. */
-                signatures: TW.Solana.Proto.PubkeySignature.$Properties[];
+                public signatures: TW.Solana.Proto.IPubkeySignature[];
 
                 /** RawMessage legacy. */
-                legacy?: (TW.Solana.Proto.RawMessage.MessageLegacy.$Properties|null);
+                public legacy?: (TW.Solana.Proto.RawMessage.IMessageLegacy|null);
 
                 /** RawMessage v0. */
-                v0?: (TW.Solana.Proto.RawMessage.MessageV0.$Properties|null);
+                public v0?: (TW.Solana.Proto.RawMessage.IMessageV0|null);
 
                 /** RawMessage message. */
-                message?: ("legacy"|"v0");
+                public message?: ("legacy"|"v0");
+
+                /**
+                 * Creates a new RawMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns RawMessage instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IRawMessage): TW.Solana.Proto.RawMessage;
 
                 /**
                  * Encodes the specified RawMessage message. Does not implicitly {@link TW.Solana.Proto.RawMessage.verify|verify} messages.
@@ -8130,84 +6707,65 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.RawMessage.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IRawMessage, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a RawMessage message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.RawMessage & TW.Solana.Proto.RawMessage.$Shape} RawMessage
+                 * @returns RawMessage
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage & TW.Solana.Proto.RawMessage.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage;
 
                 /**
-                 * Gets the type url for RawMessage
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for RawMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace RawMessage {
 
-                /** Properties of a RawMessage. */
-                interface $Properties {
+                /** Properties of a MessageHeader. */
+                interface IMessageHeader {
 
-                    /** RawMessage signatures */
-                    signatures?: (TW.Solana.Proto.PubkeySignature.$Properties[]|null);
+                    /** MessageHeader numRequiredSignatures */
+                    numRequiredSignatures?: (number|null);
 
-                    /** RawMessage legacy */
-                    legacy?: (TW.Solana.Proto.RawMessage.MessageLegacy.$Properties|null);
+                    /** MessageHeader numReadonlySignedAccounts */
+                    numReadonlySignedAccounts?: (number|null);
 
-                    /** RawMessage v0 */
-                    v0?: (TW.Solana.Proto.RawMessage.MessageV0.$Properties|null);
-
-                    /** RawMessage message */
-                    message?: ("legacy"|"v0");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a RawMessage. */
-                type $Shape = {
-                  signatures?: TW.Solana.Proto.PubkeySignature.$Shape[]|null;
-                  legacy?: TW.Solana.Proto.RawMessage.MessageLegacy.$Shape|null;
-                  v0?: TW.Solana.Proto.RawMessage.MessageV0.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ message?: undefined; legacy?: null; v0?: null }|{ message?: "legacy"; legacy: TW.Solana.Proto.RawMessage.MessageLegacy.$Shape; v0?: null }|{ message?: "v0"; legacy?: null; v0: TW.Solana.Proto.RawMessage.MessageV0.$Shape })
-                );
-
-                /**
-                 * Properties of a MessageHeader.
-                 * @deprecated Use TW.Solana.Proto.RawMessage.MessageHeader.$Properties instead.
-                 */
-                interface IMessageHeader extends TW.Solana.Proto.RawMessage.MessageHeader.$Properties {
+                    /** MessageHeader numReadonlyUnsignedAccounts */
+                    numReadonlyUnsignedAccounts?: (number|null);
                 }
 
                 /** Represents a MessageHeader. */
-                class MessageHeader {
+                class MessageHeader implements IMessageHeader {
 
                     /**
                      * Constructs a new MessageHeader.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Solana.Proto.RawMessage.MessageHeader.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Solana.Proto.RawMessage.IMessageHeader);
 
                     /** MessageHeader numRequiredSignatures. */
-                    numRequiredSignatures: number;
+                    public numRequiredSignatures: number;
 
                     /** MessageHeader numReadonlySignedAccounts. */
-                    numReadonlySignedAccounts: number;
+                    public numReadonlySignedAccounts: number;
 
                     /** MessageHeader numReadonlyUnsignedAccounts. */
-                    numReadonlyUnsignedAccounts: number;
+                    public numReadonlyUnsignedAccounts: number;
+
+                    /**
+                     * Creates a new MessageHeader instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MessageHeader instance
+                     */
+                    public static create(properties?: TW.Solana.Proto.RawMessage.IMessageHeader): TW.Solana.Proto.RawMessage.MessageHeader;
 
                     /**
                      * Encodes the specified MessageHeader message. Does not implicitly {@link TW.Solana.Proto.RawMessage.MessageHeader.verify|verify} messages.
@@ -8215,75 +6773,63 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Solana.Proto.RawMessage.MessageHeader.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Solana.Proto.RawMessage.IMessageHeader, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a MessageHeader message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Solana.Proto.RawMessage.MessageHeader & TW.Solana.Proto.RawMessage.MessageHeader.$Shape} MessageHeader
+                     * @returns MessageHeader
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageHeader & TW.Solana.Proto.RawMessage.MessageHeader.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageHeader;
 
                     /**
-                     * Gets the type url for MessageHeader
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for MessageHeader
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace MessageHeader {
+                /** Properties of an Instruction. */
+                interface IInstruction {
 
-                    /** Properties of a MessageHeader. */
-                    interface $Properties {
+                    /** Instruction programId */
+                    programId?: (number|null);
 
-                        /** MessageHeader numRequiredSignatures */
-                        numRequiredSignatures?: (number|null);
+                    /** Instruction accounts */
+                    accounts?: (number[]|null);
 
-                        /** MessageHeader numReadonlySignedAccounts */
-                        numReadonlySignedAccounts?: (number|null);
-
-                        /** MessageHeader numReadonlyUnsignedAccounts */
-                        numReadonlyUnsignedAccounts?: (number|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a MessageHeader. */
-                    type $Shape = TW.Solana.Proto.RawMessage.MessageHeader.$Properties;
-                }
-
-                /**
-                 * Properties of an Instruction.
-                 * @deprecated Use TW.Solana.Proto.RawMessage.Instruction.$Properties instead.
-                 */
-                interface IInstruction extends TW.Solana.Proto.RawMessage.Instruction.$Properties {
+                    /** Instruction programData */
+                    programData?: (Uint8Array|null);
                 }
 
                 /** Represents an Instruction. */
-                class Instruction {
+                class Instruction implements IInstruction {
 
                     /**
                      * Constructs a new Instruction.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Solana.Proto.RawMessage.Instruction.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Solana.Proto.RawMessage.IInstruction);
 
                     /** Instruction programId. */
-                    programId: number;
+                    public programId: number;
 
                     /** Instruction accounts. */
-                    accounts: number[];
+                    public accounts: number[];
 
                     /** Instruction programData. */
-                    programData: Uint8Array;
+                    public programData: Uint8Array;
+
+                    /**
+                     * Creates a new Instruction instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Instruction instance
+                     */
+                    public static create(properties?: TW.Solana.Proto.RawMessage.IInstruction): TW.Solana.Proto.RawMessage.Instruction;
 
                     /**
                      * Encodes the specified Instruction message. Does not implicitly {@link TW.Solana.Proto.RawMessage.Instruction.verify|verify} messages.
@@ -8291,75 +6837,63 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Solana.Proto.RawMessage.Instruction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Solana.Proto.RawMessage.IInstruction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes an Instruction message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Solana.Proto.RawMessage.Instruction & TW.Solana.Proto.RawMessage.Instruction.$Shape} Instruction
+                     * @returns Instruction
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.Instruction & TW.Solana.Proto.RawMessage.Instruction.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.Instruction;
 
                     /**
-                     * Gets the type url for Instruction
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for Instruction
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace Instruction {
+                /** Properties of a MessageAddressTableLookup. */
+                interface IMessageAddressTableLookup {
 
-                    /** Properties of an Instruction. */
-                    interface $Properties {
+                    /** MessageAddressTableLookup accountKey */
+                    accountKey?: (string|null);
 
-                        /** Instruction programId */
-                        programId?: (number|null);
+                    /** MessageAddressTableLookup writableIndexes */
+                    writableIndexes?: (number[]|null);
 
-                        /** Instruction accounts */
-                        accounts?: (number[]|null);
-
-                        /** Instruction programData */
-                        programData?: (Uint8Array|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of an Instruction. */
-                    type $Shape = TW.Solana.Proto.RawMessage.Instruction.$Properties;
-                }
-
-                /**
-                 * Properties of a MessageAddressTableLookup.
-                 * @deprecated Use TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties instead.
-                 */
-                interface IMessageAddressTableLookup extends TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties {
+                    /** MessageAddressTableLookup readonlyIndexes */
+                    readonlyIndexes?: (number[]|null);
                 }
 
                 /** Represents a MessageAddressTableLookup. */
-                class MessageAddressTableLookup {
+                class MessageAddressTableLookup implements IMessageAddressTableLookup {
 
                     /**
                      * Constructs a new MessageAddressTableLookup.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Solana.Proto.RawMessage.IMessageAddressTableLookup);
 
                     /** MessageAddressTableLookup accountKey. */
-                    accountKey: string;
+                    public accountKey: string;
 
                     /** MessageAddressTableLookup writableIndexes. */
-                    writableIndexes: number[];
+                    public writableIndexes: number[];
 
                     /** MessageAddressTableLookup readonlyIndexes. */
-                    readonlyIndexes: number[];
+                    public readonlyIndexes: number[];
+
+                    /**
+                     * Creates a new MessageAddressTableLookup instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MessageAddressTableLookup instance
+                     */
+                    public static create(properties?: TW.Solana.Proto.RawMessage.IMessageAddressTableLookup): TW.Solana.Proto.RawMessage.MessageAddressTableLookup;
 
                     /**
                      * Encodes the specified MessageAddressTableLookup message. Does not implicitly {@link TW.Solana.Proto.RawMessage.MessageAddressTableLookup.verify|verify} messages.
@@ -8367,78 +6901,69 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Solana.Proto.RawMessage.IMessageAddressTableLookup, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a MessageAddressTableLookup message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Solana.Proto.RawMessage.MessageAddressTableLookup & TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Shape} MessageAddressTableLookup
+                     * @returns MessageAddressTableLookup
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageAddressTableLookup & TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageAddressTableLookup;
 
                     /**
-                     * Gets the type url for MessageAddressTableLookup
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for MessageAddressTableLookup
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace MessageAddressTableLookup {
+                /** Properties of a MessageLegacy. */
+                interface IMessageLegacy {
 
-                    /** Properties of a MessageAddressTableLookup. */
-                    interface $Properties {
+                    /** MessageLegacy header */
+                    header?: (TW.Solana.Proto.RawMessage.IMessageHeader|null);
 
-                        /** MessageAddressTableLookup accountKey */
-                        accountKey?: (string|null);
+                    /** MessageLegacy accountKeys */
+                    accountKeys?: (string[]|null);
 
-                        /** MessageAddressTableLookup writableIndexes */
-                        writableIndexes?: (number[]|null);
+                    /** MessageLegacy recentBlockhash */
+                    recentBlockhash?: (string|null);
 
-                        /** MessageAddressTableLookup readonlyIndexes */
-                        readonlyIndexes?: (number[]|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a MessageAddressTableLookup. */
-                    type $Shape = TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties;
-                }
-
-                /**
-                 * Properties of a MessageLegacy.
-                 * @deprecated Use TW.Solana.Proto.RawMessage.MessageLegacy.$Properties instead.
-                 */
-                interface IMessageLegacy extends TW.Solana.Proto.RawMessage.MessageLegacy.$Properties {
+                    /** MessageLegacy instructions */
+                    instructions?: (TW.Solana.Proto.RawMessage.IInstruction[]|null);
                 }
 
                 /** Represents a MessageLegacy. */
-                class MessageLegacy {
+                class MessageLegacy implements IMessageLegacy {
 
                     /**
                      * Constructs a new MessageLegacy.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Solana.Proto.RawMessage.MessageLegacy.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Solana.Proto.RawMessage.IMessageLegacy);
 
                     /** MessageLegacy header. */
-                    header?: (TW.Solana.Proto.RawMessage.MessageHeader.$Properties|null);
+                    public header?: (TW.Solana.Proto.RawMessage.IMessageHeader|null);
 
                     /** MessageLegacy accountKeys. */
-                    accountKeys: string[];
+                    public accountKeys: string[];
 
                     /** MessageLegacy recentBlockhash. */
-                    recentBlockhash: string;
+                    public recentBlockhash: string;
 
                     /** MessageLegacy instructions. */
-                    instructions: TW.Solana.Proto.RawMessage.Instruction.$Properties[];
+                    public instructions: TW.Solana.Proto.RawMessage.IInstruction[];
+
+                    /**
+                     * Creates a new MessageLegacy instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MessageLegacy instance
+                     */
+                    public static create(properties?: TW.Solana.Proto.RawMessage.IMessageLegacy): TW.Solana.Proto.RawMessage.MessageLegacy;
 
                     /**
                      * Encodes the specified MessageLegacy message. Does not implicitly {@link TW.Solana.Proto.RawMessage.MessageLegacy.verify|verify} messages.
@@ -8446,84 +6971,75 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Solana.Proto.RawMessage.MessageLegacy.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Solana.Proto.RawMessage.IMessageLegacy, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a MessageLegacy message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Solana.Proto.RawMessage.MessageLegacy & TW.Solana.Proto.RawMessage.MessageLegacy.$Shape} MessageLegacy
+                     * @returns MessageLegacy
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageLegacy & TW.Solana.Proto.RawMessage.MessageLegacy.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageLegacy;
 
                     /**
-                     * Gets the type url for MessageLegacy
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for MessageLegacy
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
 
-                namespace MessageLegacy {
+                /** Properties of a MessageV0. */
+                interface IMessageV0 {
 
-                    /** Properties of a MessageLegacy. */
-                    interface $Properties {
+                    /** MessageV0 header */
+                    header?: (TW.Solana.Proto.RawMessage.IMessageHeader|null);
 
-                        /** MessageLegacy header */
-                        header?: (TW.Solana.Proto.RawMessage.MessageHeader.$Properties|null);
+                    /** MessageV0 accountKeys */
+                    accountKeys?: (string[]|null);
 
-                        /** MessageLegacy accountKeys */
-                        accountKeys?: (string[]|null);
+                    /** MessageV0 recentBlockhash */
+                    recentBlockhash?: (string|null);
 
-                        /** MessageLegacy recentBlockhash */
-                        recentBlockhash?: (string|null);
+                    /** MessageV0 instructions */
+                    instructions?: (TW.Solana.Proto.RawMessage.IInstruction[]|null);
 
-                        /** MessageLegacy instructions */
-                        instructions?: (TW.Solana.Proto.RawMessage.Instruction.$Properties[]|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a MessageLegacy. */
-                    type $Shape = TW.Solana.Proto.RawMessage.MessageLegacy.$Properties;
-                }
-
-                /**
-                 * Properties of a MessageV0.
-                 * @deprecated Use TW.Solana.Proto.RawMessage.MessageV0.$Properties instead.
-                 */
-                interface IMessageV0 extends TW.Solana.Proto.RawMessage.MessageV0.$Properties {
+                    /** MessageV0 addressTableLookups */
+                    addressTableLookups?: (TW.Solana.Proto.RawMessage.IMessageAddressTableLookup[]|null);
                 }
 
                 /** Represents a MessageV0. */
-                class MessageV0 {
+                class MessageV0 implements IMessageV0 {
 
                     /**
                      * Constructs a new MessageV0.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Solana.Proto.RawMessage.MessageV0.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Solana.Proto.RawMessage.IMessageV0);
 
                     /** MessageV0 header. */
-                    header?: (TW.Solana.Proto.RawMessage.MessageHeader.$Properties|null);
+                    public header?: (TW.Solana.Proto.RawMessage.IMessageHeader|null);
 
                     /** MessageV0 accountKeys. */
-                    accountKeys: string[];
+                    public accountKeys: string[];
 
                     /** MessageV0 recentBlockhash. */
-                    recentBlockhash: string;
+                    public recentBlockhash: string;
 
                     /** MessageV0 instructions. */
-                    instructions: TW.Solana.Proto.RawMessage.Instruction.$Properties[];
+                    public instructions: TW.Solana.Proto.RawMessage.IInstruction[];
 
                     /** MessageV0 addressTableLookups. */
-                    addressTableLookups: TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties[];
+                    public addressTableLookups: TW.Solana.Proto.RawMessage.IMessageAddressTableLookup[];
+
+                    /**
+                     * Creates a new MessageV0 instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MessageV0 instance
+                     */
+                    public static create(properties?: TW.Solana.Proto.RawMessage.IMessageV0): TW.Solana.Proto.RawMessage.MessageV0;
 
                     /**
                      * Encodes the specified MessageV0 message. Does not implicitly {@link TW.Solana.Proto.RawMessage.MessageV0.verify|verify} messages.
@@ -8531,82 +7047,64 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Solana.Proto.RawMessage.MessageV0.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Solana.Proto.RawMessage.IMessageV0, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a MessageV0 message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Solana.Proto.RawMessage.MessageV0 & TW.Solana.Proto.RawMessage.MessageV0.$Shape} MessageV0
+                     * @returns MessageV0
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageV0 & TW.Solana.Proto.RawMessage.MessageV0.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.RawMessage.MessageV0;
 
                     /**
-                     * Gets the type url for MessageV0
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for MessageV0
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace MessageV0 {
-
-                    /** Properties of a MessageV0. */
-                    interface $Properties {
-
-                        /** MessageV0 header */
-                        header?: (TW.Solana.Proto.RawMessage.MessageHeader.$Properties|null);
-
-                        /** MessageV0 accountKeys */
-                        accountKeys?: (string[]|null);
-
-                        /** MessageV0 recentBlockhash */
-                        recentBlockhash?: (string|null);
-
-                        /** MessageV0 instructions */
-                        instructions?: (TW.Solana.Proto.RawMessage.Instruction.$Properties[]|null);
-
-                        /** MessageV0 addressTableLookups */
-                        addressTableLookups?: (TW.Solana.Proto.RawMessage.MessageAddressTableLookup.$Properties[]|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a MessageV0. */
-                    type $Shape = TW.Solana.Proto.RawMessage.MessageV0.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
-            /**
-             * Properties of a DecodingTransactionOutput.
-             * @deprecated Use TW.Solana.Proto.DecodingTransactionOutput.$Properties instead.
-             */
-            interface IDecodingTransactionOutput extends TW.Solana.Proto.DecodingTransactionOutput.$Properties {
+            /** Properties of a DecodingTransactionOutput. */
+            interface IDecodingTransactionOutput {
+
+                /** DecodingTransactionOutput transaction */
+                transaction?: (TW.Solana.Proto.IRawMessage|null);
+
+                /** DecodingTransactionOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** DecodingTransactionOutput errorMessage */
+                errorMessage?: (string|null);
             }
 
             /** Represents a DecodingTransactionOutput. */
-            class DecodingTransactionOutput {
+            class DecodingTransactionOutput implements IDecodingTransactionOutput {
 
                 /**
                  * Constructs a new DecodingTransactionOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.DecodingTransactionOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IDecodingTransactionOutput);
 
                 /** DecodingTransactionOutput transaction. */
-                transaction?: (TW.Solana.Proto.RawMessage.$Properties|null);
+                public transaction?: (TW.Solana.Proto.IRawMessage|null);
 
                 /** DecodingTransactionOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** DecodingTransactionOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
+
+                /**
+                 * Creates a new DecodingTransactionOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DecodingTransactionOutput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IDecodingTransactionOutput): TW.Solana.Proto.DecodingTransactionOutput;
 
                 /**
                  * Encodes the specified DecodingTransactionOutput message. Does not implicitly {@link TW.Solana.Proto.DecodingTransactionOutput.verify|verify} messages.
@@ -8614,84 +7112,57 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.DecodingTransactionOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IDecodingTransactionOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a DecodingTransactionOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.DecodingTransactionOutput & TW.Solana.Proto.DecodingTransactionOutput.$Shape} DecodingTransactionOutput
+                 * @returns DecodingTransactionOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DecodingTransactionOutput & TW.Solana.Proto.DecodingTransactionOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.DecodingTransactionOutput;
 
                 /**
-                 * Gets the type url for DecodingTransactionOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for DecodingTransactionOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace DecodingTransactionOutput {
-
-                /** Properties of a DecodingTransactionOutput. */
-                interface $Properties {
-
-                    /** DecodingTransactionOutput transaction */
-                    transaction?: (TW.Solana.Proto.RawMessage.$Properties|null);
-
-                    /** DecodingTransactionOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** DecodingTransactionOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a DecodingTransactionOutput. */
-                type $Shape = {
-                  transaction?: TW.Solana.Proto.RawMessage.$Shape|null;
-                  error?: TW.Common.Proto.SigningError|null;
-                  errorMessage?: string|null;
-                  $unknowns?: Uint8Array[];
-                };
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** Encoding enum. */
             enum Encoding {
-
-                /** Base58 value */
                 Base58 = 0,
-
-                /** Base64 value */
                 Base64 = 1
             }
 
-            /**
-             * Properties of a PriorityFeePrice.
-             * @deprecated Use TW.Solana.Proto.PriorityFeePrice.$Properties instead.
-             */
-            interface IPriorityFeePrice extends TW.Solana.Proto.PriorityFeePrice.$Properties {
+            /** Properties of a PriorityFeePrice. */
+            interface IPriorityFeePrice {
+
+                /** PriorityFeePrice price */
+                price?: (number|null);
             }
 
             /** Represents a PriorityFeePrice. */
-            class PriorityFeePrice {
+            class PriorityFeePrice implements IPriorityFeePrice {
 
                 /**
                  * Constructs a new PriorityFeePrice.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.PriorityFeePrice.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IPriorityFeePrice);
 
                 /** PriorityFeePrice price. */
-                price: number;
+                public price: number;
+
+                /**
+                 * Creates a new PriorityFeePrice instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PriorityFeePrice instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IPriorityFeePrice): TW.Solana.Proto.PriorityFeePrice;
 
                 /**
                  * Encodes the specified PriorityFeePrice message. Does not implicitly {@link TW.Solana.Proto.PriorityFeePrice.verify|verify} messages.
@@ -8699,63 +7170,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.PriorityFeePrice.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IPriorityFeePrice, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PriorityFeePrice message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.PriorityFeePrice & TW.Solana.Proto.PriorityFeePrice.$Shape} PriorityFeePrice
+                 * @returns PriorityFeePrice
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PriorityFeePrice & TW.Solana.Proto.PriorityFeePrice.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PriorityFeePrice;
 
                 /**
-                 * Gets the type url for PriorityFeePrice
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PriorityFeePrice
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace PriorityFeePrice {
+            /** Properties of a PriorityFeeLimit. */
+            interface IPriorityFeeLimit {
 
-                /** Properties of a PriorityFeePrice. */
-                interface $Properties {
-
-                    /** PriorityFeePrice price */
-                    price?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a PriorityFeePrice. */
-                type $Shape = TW.Solana.Proto.PriorityFeePrice.$Properties;
-            }
-
-            /**
-             * Properties of a PriorityFeeLimit.
-             * @deprecated Use TW.Solana.Proto.PriorityFeeLimit.$Properties instead.
-             */
-            interface IPriorityFeeLimit extends TW.Solana.Proto.PriorityFeeLimit.$Properties {
+                /** PriorityFeeLimit limit */
+                limit?: (number|null);
             }
 
             /** Represents a PriorityFeeLimit. */
-            class PriorityFeeLimit {
+            class PriorityFeeLimit implements IPriorityFeeLimit {
 
                 /**
                  * Constructs a new PriorityFeeLimit.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.PriorityFeeLimit.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IPriorityFeeLimit);
 
                 /** PriorityFeeLimit limit. */
-                limit: number;
+                public limit: number;
+
+                /**
+                 * Creates a new PriorityFeeLimit instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PriorityFeeLimit instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IPriorityFeeLimit): TW.Solana.Proto.PriorityFeeLimit;
 
                 /**
                  * Encodes the specified PriorityFeeLimit message. Does not implicitly {@link TW.Solana.Proto.PriorityFeeLimit.verify|verify} messages.
@@ -8763,138 +7222,198 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.PriorityFeeLimit.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IPriorityFeeLimit, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PriorityFeeLimit message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.PriorityFeeLimit & TW.Solana.Proto.PriorityFeeLimit.$Shape} PriorityFeeLimit
+                 * @returns PriorityFeeLimit
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PriorityFeeLimit & TW.Solana.Proto.PriorityFeeLimit.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PriorityFeeLimit;
 
                 /**
-                 * Gets the type url for PriorityFeeLimit
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PriorityFeeLimit
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace PriorityFeeLimit {
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
 
-                /** Properties of a PriorityFeeLimit. */
-                interface $Properties {
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
 
-                    /** PriorityFeeLimit limit */
-                    limit?: (number|null);
+                /** SigningInput recentBlockhash */
+                recentBlockhash?: (string|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** SigningInput v0Msg */
+                v0Msg?: (boolean|null);
 
-                /** Shape of a PriorityFeeLimit. */
-                type $Shape = TW.Solana.Proto.PriorityFeeLimit.$Properties;
-            }
+                /** SigningInput transferTransaction */
+                transferTransaction?: (TW.Solana.Proto.ITransfer|null);
 
-            /**
-             * Properties of a SigningInput.
-             * @deprecated Use TW.Solana.Proto.SigningInput.$Properties instead.
-             */
-            interface ISigningInput extends TW.Solana.Proto.SigningInput.$Properties {
+                /** SigningInput delegateStakeTransaction */
+                delegateStakeTransaction?: (TW.Solana.Proto.IDelegateStake|null);
+
+                /** SigningInput deactivateStakeTransaction */
+                deactivateStakeTransaction?: (TW.Solana.Proto.IDeactivateStake|null);
+
+                /** SigningInput deactivateAllStakeTransaction */
+                deactivateAllStakeTransaction?: (TW.Solana.Proto.IDeactivateAllStake|null);
+
+                /** SigningInput withdrawTransaction */
+                withdrawTransaction?: (TW.Solana.Proto.IWithdrawStake|null);
+
+                /** SigningInput withdrawAllTransaction */
+                withdrawAllTransaction?: (TW.Solana.Proto.IWithdrawAllStake|null);
+
+                /** SigningInput createTokenAccountTransaction */
+                createTokenAccountTransaction?: (TW.Solana.Proto.ICreateTokenAccount|null);
+
+                /** SigningInput tokenTransferTransaction */
+                tokenTransferTransaction?: (TW.Solana.Proto.ITokenTransfer|null);
+
+                /** SigningInput createAndTransferTokenTransaction */
+                createAndTransferTokenTransaction?: (TW.Solana.Proto.ICreateAndTransferToken|null);
+
+                /** SigningInput createNonceAccount */
+                createNonceAccount?: (TW.Solana.Proto.ICreateNonceAccount|null);
+
+                /** SigningInput withdrawNonceAccount */
+                withdrawNonceAccount?: (TW.Solana.Proto.IWithdrawNonceAccount|null);
+
+                /** SigningInput advanceNonceAccount */
+                advanceNonceAccount?: (TW.Solana.Proto.IAdvanceNonceAccount|null);
+
+                /** SigningInput sender */
+                sender?: (string|null);
+
+                /** SigningInput nonceAccount */
+                nonceAccount?: (string|null);
+
+                /** SigningInput feePayerPrivateKey */
+                feePayerPrivateKey?: (Uint8Array|null);
+
+                /** SigningInput feePayer */
+                feePayer?: (string|null);
+
+                /** SigningInput rawMessage */
+                rawMessage?: (TW.Solana.Proto.IRawMessage|null);
+
+                /** SigningInput txEncoding */
+                txEncoding?: (TW.Solana.Proto.Encoding|null);
+
+                /** SigningInput priorityFeePrice */
+                priorityFeePrice?: (TW.Solana.Proto.IPriorityFeePrice|null);
+
+                /** SigningInput priorityFeeLimit */
+                priorityFeeLimit?: (TW.Solana.Proto.IPriorityFeeLimit|null);
+
+                /** SigningInput tokenTransferToFeePayer */
+                tokenTransferToFeePayer?: (TW.Solana.Proto.ITokenTransferToFeePayer|null);
+
+                /** SigningInput transferToFeePayer */
+                transferToFeePayer?: (TW.Solana.Proto.ITransfer|null);
             }
 
             /** Represents a SigningInput. */
-            class SigningInput {
+            class SigningInput implements ISigningInput {
 
                 /**
                  * Constructs a new SigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.SigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ISigningInput);
 
                 /** SigningInput privateKey. */
-                privateKey: Uint8Array;
+                public privateKey: Uint8Array;
 
                 /** SigningInput recentBlockhash. */
-                recentBlockhash: string;
+                public recentBlockhash: string;
 
                 /** SigningInput v0Msg. */
-                v0Msg: boolean;
+                public v0Msg: boolean;
 
                 /** SigningInput transferTransaction. */
-                transferTransaction?: (TW.Solana.Proto.Transfer.$Properties|null);
+                public transferTransaction?: (TW.Solana.Proto.ITransfer|null);
 
                 /** SigningInput delegateStakeTransaction. */
-                delegateStakeTransaction?: (TW.Solana.Proto.DelegateStake.$Properties|null);
+                public delegateStakeTransaction?: (TW.Solana.Proto.IDelegateStake|null);
 
                 /** SigningInput deactivateStakeTransaction. */
-                deactivateStakeTransaction?: (TW.Solana.Proto.DeactivateStake.$Properties|null);
+                public deactivateStakeTransaction?: (TW.Solana.Proto.IDeactivateStake|null);
 
                 /** SigningInput deactivateAllStakeTransaction. */
-                deactivateAllStakeTransaction?: (TW.Solana.Proto.DeactivateAllStake.$Properties|null);
+                public deactivateAllStakeTransaction?: (TW.Solana.Proto.IDeactivateAllStake|null);
 
                 /** SigningInput withdrawTransaction. */
-                withdrawTransaction?: (TW.Solana.Proto.WithdrawStake.$Properties|null);
+                public withdrawTransaction?: (TW.Solana.Proto.IWithdrawStake|null);
 
                 /** SigningInput withdrawAllTransaction. */
-                withdrawAllTransaction?: (TW.Solana.Proto.WithdrawAllStake.$Properties|null);
+                public withdrawAllTransaction?: (TW.Solana.Proto.IWithdrawAllStake|null);
 
                 /** SigningInput createTokenAccountTransaction. */
-                createTokenAccountTransaction?: (TW.Solana.Proto.CreateTokenAccount.$Properties|null);
+                public createTokenAccountTransaction?: (TW.Solana.Proto.ICreateTokenAccount|null);
 
                 /** SigningInput tokenTransferTransaction. */
-                tokenTransferTransaction?: (TW.Solana.Proto.TokenTransfer.$Properties|null);
+                public tokenTransferTransaction?: (TW.Solana.Proto.ITokenTransfer|null);
 
                 /** SigningInput createAndTransferTokenTransaction. */
-                createAndTransferTokenTransaction?: (TW.Solana.Proto.CreateAndTransferToken.$Properties|null);
+                public createAndTransferTokenTransaction?: (TW.Solana.Proto.ICreateAndTransferToken|null);
 
                 /** SigningInput createNonceAccount. */
-                createNonceAccount?: (TW.Solana.Proto.CreateNonceAccount.$Properties|null);
+                public createNonceAccount?: (TW.Solana.Proto.ICreateNonceAccount|null);
 
                 /** SigningInput withdrawNonceAccount. */
-                withdrawNonceAccount?: (TW.Solana.Proto.WithdrawNonceAccount.$Properties|null);
+                public withdrawNonceAccount?: (TW.Solana.Proto.IWithdrawNonceAccount|null);
 
                 /** SigningInput advanceNonceAccount. */
-                advanceNonceAccount?: (TW.Solana.Proto.AdvanceNonceAccount.$Properties|null);
+                public advanceNonceAccount?: (TW.Solana.Proto.IAdvanceNonceAccount|null);
 
                 /** SigningInput sender. */
-                sender: string;
+                public sender: string;
 
                 /** SigningInput nonceAccount. */
-                nonceAccount: string;
+                public nonceAccount: string;
 
                 /** SigningInput feePayerPrivateKey. */
-                feePayerPrivateKey: Uint8Array;
+                public feePayerPrivateKey: Uint8Array;
 
                 /** SigningInput feePayer. */
-                feePayer: string;
+                public feePayer: string;
 
                 /** SigningInput rawMessage. */
-                rawMessage?: (TW.Solana.Proto.RawMessage.$Properties|null);
+                public rawMessage?: (TW.Solana.Proto.IRawMessage|null);
 
                 /** SigningInput txEncoding. */
-                txEncoding: TW.Solana.Proto.Encoding;
+                public txEncoding: TW.Solana.Proto.Encoding;
 
                 /** SigningInput priorityFeePrice. */
-                priorityFeePrice?: (TW.Solana.Proto.PriorityFeePrice.$Properties|null);
+                public priorityFeePrice?: (TW.Solana.Proto.IPriorityFeePrice|null);
 
                 /** SigningInput priorityFeeLimit. */
-                priorityFeeLimit?: (TW.Solana.Proto.PriorityFeeLimit.$Properties|null);
+                public priorityFeeLimit?: (TW.Solana.Proto.IPriorityFeeLimit|null);
 
                 /** SigningInput tokenTransferToFeePayer. */
-                tokenTransferToFeePayer?: (TW.Solana.Proto.TokenTransferToFeePayer.$Properties|null);
+                public tokenTransferToFeePayer?: (TW.Solana.Proto.ITokenTransferToFeePayer|null);
 
                 /** SigningInput transferToFeePayer. */
-                transferToFeePayer?: (TW.Solana.Proto.Transfer.$Properties|null);
+                public transferToFeePayer?: (TW.Solana.Proto.ITransfer|null);
 
                 /** SigningInput transactionType. */
-                transactionType?: ("transferTransaction"|"delegateStakeTransaction"|"deactivateStakeTransaction"|"deactivateAllStakeTransaction"|"withdrawTransaction"|"withdrawAllTransaction"|"createTokenAccountTransaction"|"tokenTransferTransaction"|"createAndTransferTokenTransaction"|"createNonceAccount"|"withdrawNonceAccount"|"advanceNonceAccount");
+                public transactionType?: ("transferTransaction"|"delegateStakeTransaction"|"deactivateStakeTransaction"|"deactivateAllStakeTransaction"|"withdrawTransaction"|"withdrawAllTransaction"|"createTokenAccountTransaction"|"tokenTransferTransaction"|"createAndTransferTokenTransaction"|"createNonceAccount"|"withdrawNonceAccount"|"advanceNonceAccount");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ISigningInput): TW.Solana.Proto.SigningInput;
 
                 /**
                  * Encodes the specified SigningInput message. Does not implicitly {@link TW.Solana.Proto.SigningInput.verify|verify} messages.
@@ -8902,179 +7421,75 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.SigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.SigningInput & TW.Solana.Proto.SigningInput.$Shape} SigningInput
+                 * @returns SigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.SigningInput & TW.Solana.Proto.SigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.SigningInput;
 
                 /**
-                 * Gets the type url for SigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningInput {
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
 
-                /** Properties of a SigningInput. */
-                interface $Properties {
+                /** SigningOutput encoded */
+                encoded?: (string|null);
 
-                    /** SigningInput privateKey */
-                    privateKey?: (Uint8Array|null);
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** SigningInput recentBlockhash */
-                    recentBlockhash?: (string|null);
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
 
-                    /** SigningInput v0Msg */
-                    v0Msg?: (boolean|null);
+                /** SigningOutput unsignedTx */
+                unsignedTx?: (string|null);
 
-                    /** SigningInput transferTransaction */
-                    transferTransaction?: (TW.Solana.Proto.Transfer.$Properties|null);
-
-                    /** SigningInput delegateStakeTransaction */
-                    delegateStakeTransaction?: (TW.Solana.Proto.DelegateStake.$Properties|null);
-
-                    /** SigningInput deactivateStakeTransaction */
-                    deactivateStakeTransaction?: (TW.Solana.Proto.DeactivateStake.$Properties|null);
-
-                    /** SigningInput deactivateAllStakeTransaction */
-                    deactivateAllStakeTransaction?: (TW.Solana.Proto.DeactivateAllStake.$Properties|null);
-
-                    /** SigningInput withdrawTransaction */
-                    withdrawTransaction?: (TW.Solana.Proto.WithdrawStake.$Properties|null);
-
-                    /** SigningInput withdrawAllTransaction */
-                    withdrawAllTransaction?: (TW.Solana.Proto.WithdrawAllStake.$Properties|null);
-
-                    /** SigningInput createTokenAccountTransaction */
-                    createTokenAccountTransaction?: (TW.Solana.Proto.CreateTokenAccount.$Properties|null);
-
-                    /** SigningInput tokenTransferTransaction */
-                    tokenTransferTransaction?: (TW.Solana.Proto.TokenTransfer.$Properties|null);
-
-                    /** SigningInput createAndTransferTokenTransaction */
-                    createAndTransferTokenTransaction?: (TW.Solana.Proto.CreateAndTransferToken.$Properties|null);
-
-                    /** SigningInput createNonceAccount */
-                    createNonceAccount?: (TW.Solana.Proto.CreateNonceAccount.$Properties|null);
-
-                    /** SigningInput withdrawNonceAccount */
-                    withdrawNonceAccount?: (TW.Solana.Proto.WithdrawNonceAccount.$Properties|null);
-
-                    /** SigningInput advanceNonceAccount */
-                    advanceNonceAccount?: (TW.Solana.Proto.AdvanceNonceAccount.$Properties|null);
-
-                    /** SigningInput sender */
-                    sender?: (string|null);
-
-                    /** SigningInput nonceAccount */
-                    nonceAccount?: (string|null);
-
-                    /** SigningInput feePayerPrivateKey */
-                    feePayerPrivateKey?: (Uint8Array|null);
-
-                    /** SigningInput feePayer */
-                    feePayer?: (string|null);
-
-                    /** SigningInput rawMessage */
-                    rawMessage?: (TW.Solana.Proto.RawMessage.$Properties|null);
-
-                    /** SigningInput txEncoding */
-                    txEncoding?: (TW.Solana.Proto.Encoding|null);
-
-                    /** SigningInput priorityFeePrice */
-                    priorityFeePrice?: (TW.Solana.Proto.PriorityFeePrice.$Properties|null);
-
-                    /** SigningInput priorityFeeLimit */
-                    priorityFeeLimit?: (TW.Solana.Proto.PriorityFeeLimit.$Properties|null);
-
-                    /** SigningInput tokenTransferToFeePayer */
-                    tokenTransferToFeePayer?: (TW.Solana.Proto.TokenTransferToFeePayer.$Properties|null);
-
-                    /** SigningInput transferToFeePayer */
-                    transferToFeePayer?: (TW.Solana.Proto.Transfer.$Properties|null);
-
-                    /** SigningInput transactionType */
-                    transactionType?: ("transferTransaction"|"delegateStakeTransaction"|"deactivateStakeTransaction"|"deactivateAllStakeTransaction"|"withdrawTransaction"|"withdrawAllTransaction"|"createTokenAccountTransaction"|"tokenTransferTransaction"|"createAndTransferTokenTransaction"|"createNonceAccount"|"withdrawNonceAccount"|"advanceNonceAccount");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a SigningInput. */
-                type $Shape = {
-                  privateKey?: Uint8Array|null;
-                  recentBlockhash?: string|null;
-                  v0Msg?: boolean|null;
-                  transferTransaction?: TW.Solana.Proto.Transfer.$Shape|null;
-                  delegateStakeTransaction?: TW.Solana.Proto.DelegateStake.$Shape|null;
-                  deactivateStakeTransaction?: TW.Solana.Proto.DeactivateStake.$Shape|null;
-                  deactivateAllStakeTransaction?: TW.Solana.Proto.DeactivateAllStake.$Shape|null;
-                  withdrawTransaction?: TW.Solana.Proto.WithdrawStake.$Shape|null;
-                  withdrawAllTransaction?: TW.Solana.Proto.WithdrawAllStake.$Shape|null;
-                  createTokenAccountTransaction?: TW.Solana.Proto.CreateTokenAccount.$Shape|null;
-                  tokenTransferTransaction?: TW.Solana.Proto.TokenTransfer.$Shape|null;
-                  createAndTransferTokenTransaction?: TW.Solana.Proto.CreateAndTransferToken.$Shape|null;
-                  createNonceAccount?: TW.Solana.Proto.CreateNonceAccount.$Shape|null;
-                  withdrawNonceAccount?: TW.Solana.Proto.WithdrawNonceAccount.$Shape|null;
-                  advanceNonceAccount?: TW.Solana.Proto.AdvanceNonceAccount.$Shape|null;
-                  sender?: string|null;
-                  nonceAccount?: string|null;
-                  feePayerPrivateKey?: Uint8Array|null;
-                  feePayer?: string|null;
-                  rawMessage?: TW.Solana.Proto.RawMessage.$Shape|null;
-                  txEncoding?: TW.Solana.Proto.Encoding|null;
-                  priorityFeePrice?: TW.Solana.Proto.PriorityFeePrice.$Shape|null;
-                  priorityFeeLimit?: TW.Solana.Proto.PriorityFeeLimit.$Shape|null;
-                  tokenTransferToFeePayer?: TW.Solana.Proto.TokenTransferToFeePayer.$Shape|null;
-                  transferToFeePayer?: TW.Solana.Proto.Transfer.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ transactionType?: undefined; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "transferTransaction"; transferTransaction: TW.Solana.Proto.Transfer.$Shape; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "delegateStakeTransaction"; transferTransaction?: null; delegateStakeTransaction: TW.Solana.Proto.DelegateStake.$Shape; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "deactivateStakeTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction: TW.Solana.Proto.DeactivateStake.$Shape; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "deactivateAllStakeTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction: TW.Solana.Proto.DeactivateAllStake.$Shape; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "withdrawTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction: TW.Solana.Proto.WithdrawStake.$Shape; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "withdrawAllTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction: TW.Solana.Proto.WithdrawAllStake.$Shape; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "createTokenAccountTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction: TW.Solana.Proto.CreateTokenAccount.$Shape; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "tokenTransferTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction: TW.Solana.Proto.TokenTransfer.$Shape; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "createAndTransferTokenTransaction"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction: TW.Solana.Proto.CreateAndTransferToken.$Shape; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "createNonceAccount"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount: TW.Solana.Proto.CreateNonceAccount.$Shape; withdrawNonceAccount?: null; advanceNonceAccount?: null }|{ transactionType?: "withdrawNonceAccount"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount: TW.Solana.Proto.WithdrawNonceAccount.$Shape; advanceNonceAccount?: null }|{ transactionType?: "advanceNonceAccount"; transferTransaction?: null; delegateStakeTransaction?: null; deactivateStakeTransaction?: null; deactivateAllStakeTransaction?: null; withdrawTransaction?: null; withdrawAllTransaction?: null; createTokenAccountTransaction?: null; tokenTransferTransaction?: null; createAndTransferTokenTransaction?: null; createNonceAccount?: null; withdrawNonceAccount?: null; advanceNonceAccount: TW.Solana.Proto.AdvanceNonceAccount.$Shape })
-                );
-            }
-
-            /**
-             * Properties of a SigningOutput.
-             * @deprecated Use TW.Solana.Proto.SigningOutput.$Properties instead.
-             */
-            interface ISigningOutput extends TW.Solana.Proto.SigningOutput.$Properties {
+                /** SigningOutput signatures */
+                signatures?: (TW.Solana.Proto.IPubkeySignature[]|null);
             }
 
             /** Represents a SigningOutput. */
-            class SigningOutput {
+            class SigningOutput implements ISigningOutput {
 
                 /**
                  * Constructs a new SigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.SigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.ISigningOutput);
 
                 /** SigningOutput encoded. */
-                encoded: string;
+                public encoded: string;
 
                 /** SigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** SigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
 
                 /** SigningOutput unsignedTx. */
-                unsignedTx: string;
+                public unsignedTx: string;
 
                 /** SigningOutput signatures. */
-                signatures: TW.Solana.Proto.PubkeySignature.$Properties[];
+                public signatures: TW.Solana.Proto.IPubkeySignature[];
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.ISigningOutput): TW.Solana.Proto.SigningOutput;
 
                 /**
                  * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Solana.Proto.SigningOutput.verify|verify} messages.
@@ -9082,84 +7497,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.SigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.SigningOutput & TW.Solana.Proto.SigningOutput.$Shape} SigningOutput
+                 * @returns SigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.SigningOutput & TW.Solana.Proto.SigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.SigningOutput;
 
                 /**
-                 * Gets the type url for SigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningOutput {
+            /** Properties of a PreSigningOutput. */
+            interface IPreSigningOutput {
 
-                /** Properties of a SigningOutput. */
-                interface $Properties {
+                /** PreSigningOutput signers */
+                signers?: (Uint8Array[]|null);
 
-                    /** SigningOutput encoded */
-                    encoded?: (string|null);
+                /** PreSigningOutput data */
+                data?: (Uint8Array|null);
 
-                    /** SigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
+                /** PreSigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** SigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** SigningOutput unsignedTx */
-                    unsignedTx?: (string|null);
-
-                    /** SigningOutput signatures */
-                    signatures?: (TW.Solana.Proto.PubkeySignature.$Properties[]|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a SigningOutput. */
-                type $Shape = TW.Solana.Proto.SigningOutput.$Properties;
-            }
-
-            /**
-             * Properties of a PreSigningOutput.
-             * @deprecated Use TW.Solana.Proto.PreSigningOutput.$Properties instead.
-             */
-            interface IPreSigningOutput extends TW.Solana.Proto.PreSigningOutput.$Properties {
+                /** PreSigningOutput errorMessage */
+                errorMessage?: (string|null);
             }
 
             /** Transaction pre-signing output */
-            class PreSigningOutput {
+            class PreSigningOutput implements IPreSigningOutput {
 
                 /**
                  * Constructs a new PreSigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.PreSigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IPreSigningOutput);
 
                 /** PreSigningOutput signers. */
-                signers: Uint8Array[];
+                public signers: Uint8Array[];
 
                 /** PreSigningOutput data. */
-                data: Uint8Array;
+                public data: Uint8Array;
 
                 /** PreSigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** PreSigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
+
+                /**
+                 * Creates a new PreSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PreSigningOutput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IPreSigningOutput): TW.Solana.Proto.PreSigningOutput;
 
                 /**
                  * Encodes the specified PreSigningOutput message. Does not implicitly {@link TW.Solana.Proto.PreSigningOutput.verify|verify} messages.
@@ -9167,95 +7567,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.PreSigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IPreSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PreSigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.PreSigningOutput & TW.Solana.Proto.PreSigningOutput.$Shape} PreSigningOutput
+                 * @returns PreSigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PreSigningOutput & TW.Solana.Proto.PreSigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.PreSigningOutput;
 
                 /**
-                 * Gets the type url for PreSigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PreSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace PreSigningOutput {
-
-                /** Properties of a PreSigningOutput. */
-                interface $Properties {
-
-                    /** PreSigningOutput signers */
-                    signers?: (Uint8Array[]|null);
-
-                    /** PreSigningOutput data */
-                    data?: (Uint8Array|null);
-
-                    /** PreSigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** PreSigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a PreSigningOutput. */
-                type $Shape = TW.Solana.Proto.PreSigningOutput.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             /** MessageType enum. */
             enum MessageType {
-
-                /** MessageType_raw value */
                 MessageType_raw = 0,
-
-                /** MessageType_offchain_v0 value */
                 MessageType_offchain_v0 = 1
             }
 
             /** MessageFormat enum. */
             enum MessageFormat {
-
-                /** MessageFormat_utf8 value */
                 MessageFormat_utf8 = 0,
-
-                /** MessageFormat_restricted_ascii value */
                 MessageFormat_restricted_ascii = 1
             }
 
-            /**
-             * Properties of a StructuredField.
-             * @deprecated Use TW.Solana.Proto.StructuredField.$Properties instead.
-             */
-            interface IStructuredField extends TW.Solana.Proto.StructuredField.$Properties {
+            /** Properties of a StructuredField. */
+            interface IStructuredField {
+
+                /** StructuredField label */
+                label?: (string|null);
+
+                /** StructuredField value */
+                value?: (string|null);
             }
 
             /** Represents a StructuredField. */
-            class StructuredField {
+            class StructuredField implements IStructuredField {
 
                 /**
                  * Constructs a new StructuredField.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.StructuredField.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IStructuredField);
 
                 /** StructuredField label. */
-                label: string;
+                public label: string;
 
                 /** StructuredField value. */
-                value: string;
+                public value: string;
+
+                /**
+                 * Creates a new StructuredField instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns StructuredField instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IStructuredField): TW.Solana.Proto.StructuredField;
 
                 /**
                  * Encodes the specified StructuredField message. Does not implicitly {@link TW.Solana.Proto.StructuredField.verify|verify} messages.
@@ -9263,72 +7637,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.StructuredField.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IStructuredField, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a StructuredField message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.StructuredField & TW.Solana.Proto.StructuredField.$Shape} StructuredField
+                 * @returns StructuredField
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.StructuredField & TW.Solana.Proto.StructuredField.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.StructuredField;
 
                 /**
-                 * Gets the type url for StructuredField
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for StructuredField
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace StructuredField {
+            /** Properties of a StructuredMessage. */
+            interface IStructuredMessage {
 
-                /** Properties of a StructuredField. */
-                interface $Properties {
+                /** StructuredMessage header */
+                header?: (string|null);
 
-                    /** StructuredField label */
-                    label?: (string|null);
+                /** StructuredMessage fields */
+                fields?: (TW.Solana.Proto.IStructuredField[]|null);
 
-                    /** StructuredField value */
-                    value?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a StructuredField. */
-                type $Shape = TW.Solana.Proto.StructuredField.$Properties;
-            }
-
-            /**
-             * Properties of a StructuredMessage.
-             * @deprecated Use TW.Solana.Proto.StructuredMessage.$Properties instead.
-             */
-            interface IStructuredMessage extends TW.Solana.Proto.StructuredMessage.$Properties {
+                /** StructuredMessage statement */
+                statement?: (string|null);
             }
 
             /** Represents a StructuredMessage. */
-            class StructuredMessage {
+            class StructuredMessage implements IStructuredMessage {
 
                 /**
                  * Constructs a new StructuredMessage.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.StructuredMessage.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IStructuredMessage);
 
                 /** StructuredMessage header. */
-                header: string;
+                public header: string;
 
                 /** StructuredMessage fields. */
-                fields: TW.Solana.Proto.StructuredField.$Properties[];
+                public fields: TW.Solana.Proto.IStructuredField[];
 
                 /** StructuredMessage statement. */
-                statement: string;
+                public statement: string;
+
+                /**
+                 * Creates a new StructuredMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns StructuredMessage instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IStructuredMessage): TW.Solana.Proto.StructuredMessage;
 
                 /**
                  * Encodes the specified StructuredMessage message. Does not implicitly {@link TW.Solana.Proto.StructuredMessage.verify|verify} messages.
@@ -9336,90 +7701,90 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.StructuredMessage.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IStructuredMessage, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a StructuredMessage message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.StructuredMessage & TW.Solana.Proto.StructuredMessage.$Shape} StructuredMessage
+                 * @returns StructuredMessage
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.StructuredMessage & TW.Solana.Proto.StructuredMessage.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.StructuredMessage;
 
                 /**
-                 * Gets the type url for StructuredMessage
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for StructuredMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace StructuredMessage {
+            /** Properties of a MessageSigningInput. */
+            interface IMessageSigningInput {
 
-                /** Properties of a StructuredMessage. */
-                interface $Properties {
+                /** MessageSigningInput privateKey */
+                privateKey?: (Uint8Array|null);
 
-                    /** StructuredMessage header */
-                    header?: (string|null);
+                /** MessageSigningInput publicKey */
+                publicKey?: (Uint8Array|null);
 
-                    /** StructuredMessage fields */
-                    fields?: (TW.Solana.Proto.StructuredField.$Properties[]|null);
+                /** MessageSigningInput messageType */
+                messageType?: (TW.Solana.Proto.MessageType|null);
 
-                    /** StructuredMessage statement */
-                    statement?: (string|null);
+                /** MessageSigningInput applicationDomain */
+                applicationDomain?: (Uint8Array|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** MessageSigningInput messageFormat */
+                messageFormat?: (TW.Solana.Proto.MessageFormat|null);
 
-                /** Shape of a StructuredMessage. */
-                type $Shape = TW.Solana.Proto.StructuredMessage.$Properties;
-            }
+                /** MessageSigningInput message */
+                message?: (string|null);
 
-            /**
-             * Properties of a MessageSigningInput.
-             * @deprecated Use TW.Solana.Proto.MessageSigningInput.$Properties instead.
-             */
-            interface IMessageSigningInput extends TW.Solana.Proto.MessageSigningInput.$Properties {
+                /** MessageSigningInput structuredMessage */
+                structuredMessage?: (TW.Solana.Proto.IStructuredMessage|null);
             }
 
             /** Represents a MessageSigningInput. */
-            class MessageSigningInput {
+            class MessageSigningInput implements IMessageSigningInput {
 
                 /**
                  * Constructs a new MessageSigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.MessageSigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IMessageSigningInput);
 
                 /** MessageSigningInput privateKey. */
-                privateKey: Uint8Array;
+                public privateKey: Uint8Array;
 
                 /** MessageSigningInput publicKey. */
-                publicKey: Uint8Array;
+                public publicKey: Uint8Array;
 
                 /** MessageSigningInput messageType. */
-                messageType: TW.Solana.Proto.MessageType;
+                public messageType: TW.Solana.Proto.MessageType;
 
                 /** MessageSigningInput applicationDomain. */
-                applicationDomain: Uint8Array;
+                public applicationDomain: Uint8Array;
 
                 /** MessageSigningInput messageFormat. */
-                messageFormat: TW.Solana.Proto.MessageFormat;
+                public messageFormat: TW.Solana.Proto.MessageFormat;
 
                 /** MessageSigningInput message. */
-                message?: (string|null);
+                public message?: (string|null);
 
                 /** MessageSigningInput structuredMessage. */
-                structuredMessage?: (TW.Solana.Proto.StructuredMessage.$Properties|null);
+                public structuredMessage?: (TW.Solana.Proto.IStructuredMessage|null);
 
                 /** MessageSigningInput messagePayload. */
-                messagePayload?: ("message"|"structuredMessage");
+                public messagePayload?: ("message"|"structuredMessage");
+
+                /**
+                 * Creates a new MessageSigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageSigningInput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IMessageSigningInput): TW.Solana.Proto.MessageSigningInput;
 
                 /**
                  * Encodes the specified MessageSigningInput message. Does not implicitly {@link TW.Solana.Proto.MessageSigningInput.verify|verify} messages.
@@ -9427,101 +7792,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.MessageSigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IMessageSigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MessageSigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.MessageSigningInput & TW.Solana.Proto.MessageSigningInput.$Shape} MessageSigningInput
+                 * @returns MessageSigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.MessageSigningInput & TW.Solana.Proto.MessageSigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.MessageSigningInput;
 
                 /**
-                 * Gets the type url for MessageSigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MessageSigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace MessageSigningInput {
+            /** Properties of a MessageSigningOutput. */
+            interface IMessageSigningOutput {
 
-                /** Properties of a MessageSigningInput. */
-                interface $Properties {
+                /** MessageSigningOutput signature */
+                signature?: (string|null);
 
-                    /** MessageSigningInput privateKey */
-                    privateKey?: (Uint8Array|null);
+                /** MessageSigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-                    /** MessageSigningInput publicKey */
-                    publicKey?: (Uint8Array|null);
-
-                    /** MessageSigningInput messageType */
-                    messageType?: (TW.Solana.Proto.MessageType|null);
-
-                    /** MessageSigningInput applicationDomain */
-                    applicationDomain?: (Uint8Array|null);
-
-                    /** MessageSigningInput messageFormat */
-                    messageFormat?: (TW.Solana.Proto.MessageFormat|null);
-
-                    /** MessageSigningInput message */
-                    message?: (string|null);
-
-                    /** MessageSigningInput structuredMessage */
-                    structuredMessage?: (TW.Solana.Proto.StructuredMessage.$Properties|null);
-
-                    /** MessageSigningInput messagePayload */
-                    messagePayload?: ("message"|"structuredMessage");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a MessageSigningInput. */
-                type $Shape = {
-                  privateKey?: Uint8Array|null;
-                  publicKey?: Uint8Array|null;
-                  messageType?: TW.Solana.Proto.MessageType|null;
-                  applicationDomain?: Uint8Array|null;
-                  messageFormat?: TW.Solana.Proto.MessageFormat|null;
-                  message?: string|null;
-                  structuredMessage?: TW.Solana.Proto.StructuredMessage.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ messagePayload?: undefined; message?: null; structuredMessage?: null }|{ messagePayload?: "message"; message: string; structuredMessage?: null }|{ messagePayload?: "structuredMessage"; message?: null; structuredMessage: TW.Solana.Proto.StructuredMessage.$Shape })
-                );
-            }
-
-            /**
-             * Properties of a MessageSigningOutput.
-             * @deprecated Use TW.Solana.Proto.MessageSigningOutput.$Properties instead.
-             */
-            interface IMessageSigningOutput extends TW.Solana.Proto.MessageSigningOutput.$Properties {
+                /** MessageSigningOutput errorMessage */
+                errorMessage?: (string|null);
             }
 
             /** Represents a MessageSigningOutput. */
-            class MessageSigningOutput {
+            class MessageSigningOutput implements IMessageSigningOutput {
 
                 /**
                  * Constructs a new MessageSigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.MessageSigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IMessageSigningOutput);
 
                 /** MessageSigningOutput signature. */
-                signature: string;
+                public signature: string;
 
                 /** MessageSigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** MessageSigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
+
+                /**
+                 * Creates a new MessageSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageSigningOutput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IMessageSigningOutput): TW.Solana.Proto.MessageSigningOutput;
 
                 /**
                  * Encodes the specified MessageSigningOutput message. Does not implicitly {@link TW.Solana.Proto.MessageSigningOutput.verify|verify} messages.
@@ -9529,90 +7856,90 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.MessageSigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IMessageSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MessageSigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.MessageSigningOutput & TW.Solana.Proto.MessageSigningOutput.$Shape} MessageSigningOutput
+                 * @returns MessageSigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.MessageSigningOutput & TW.Solana.Proto.MessageSigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.MessageSigningOutput;
 
                 /**
-                 * Gets the type url for MessageSigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MessageSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace MessageSigningOutput {
+            /** Properties of a MessageVerifyingInput. */
+            interface IMessageVerifyingInput {
 
-                /** Properties of a MessageSigningOutput. */
-                interface $Properties {
+                /** MessageVerifyingInput publicKey */
+                publicKey?: (Uint8Array|null);
 
-                    /** MessageSigningOutput signature */
-                    signature?: (string|null);
+                /** MessageVerifyingInput signature */
+                signature?: (string|null);
 
-                    /** MessageSigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
+                /** MessageVerifyingInput messageType */
+                messageType?: (TW.Solana.Proto.MessageType|null);
 
-                    /** MessageSigningOutput errorMessage */
-                    errorMessage?: (string|null);
+                /** MessageVerifyingInput applicationDomain */
+                applicationDomain?: (Uint8Array|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** MessageVerifyingInput messageFormat */
+                messageFormat?: (TW.Solana.Proto.MessageFormat|null);
 
-                /** Shape of a MessageSigningOutput. */
-                type $Shape = TW.Solana.Proto.MessageSigningOutput.$Properties;
-            }
+                /** MessageVerifyingInput message */
+                message?: (string|null);
 
-            /**
-             * Properties of a MessageVerifyingInput.
-             * @deprecated Use TW.Solana.Proto.MessageVerifyingInput.$Properties instead.
-             */
-            interface IMessageVerifyingInput extends TW.Solana.Proto.MessageVerifyingInput.$Properties {
+                /** MessageVerifyingInput structuredMessage */
+                structuredMessage?: (TW.Solana.Proto.IStructuredMessage|null);
             }
 
             /** Represents a MessageVerifyingInput. */
-            class MessageVerifyingInput {
+            class MessageVerifyingInput implements IMessageVerifyingInput {
 
                 /**
                  * Constructs a new MessageVerifyingInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Solana.Proto.MessageVerifyingInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Solana.Proto.IMessageVerifyingInput);
 
                 /** MessageVerifyingInput publicKey. */
-                publicKey: Uint8Array;
+                public publicKey: Uint8Array;
 
                 /** MessageVerifyingInput signature. */
-                signature: string;
+                public signature: string;
 
                 /** MessageVerifyingInput messageType. */
-                messageType: TW.Solana.Proto.MessageType;
+                public messageType: TW.Solana.Proto.MessageType;
 
                 /** MessageVerifyingInput applicationDomain. */
-                applicationDomain: Uint8Array;
+                public applicationDomain: Uint8Array;
 
                 /** MessageVerifyingInput messageFormat. */
-                messageFormat: TW.Solana.Proto.MessageFormat;
+                public messageFormat: TW.Solana.Proto.MessageFormat;
 
                 /** MessageVerifyingInput message. */
-                message?: (string|null);
+                public message?: (string|null);
 
                 /** MessageVerifyingInput structuredMessage. */
-                structuredMessage?: (TW.Solana.Proto.StructuredMessage.$Properties|null);
+                public structuredMessage?: (TW.Solana.Proto.IStructuredMessage|null);
 
                 /** MessageVerifyingInput messagePayload. */
-                messagePayload?: ("message"|"structuredMessage");
+                public messagePayload?: ("message"|"structuredMessage");
+
+                /**
+                 * Creates a new MessageVerifyingInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageVerifyingInput instance
+                 */
+                public static create(properties?: TW.Solana.Proto.IMessageVerifyingInput): TW.Solana.Proto.MessageVerifyingInput;
 
                 /**
                  * Encodes the specified MessageVerifyingInput message. Does not implicitly {@link TW.Solana.Proto.MessageVerifyingInput.verify|verify} messages.
@@ -9620,72 +7947,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Solana.Proto.MessageVerifyingInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Solana.Proto.IMessageVerifyingInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a MessageVerifyingInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Solana.Proto.MessageVerifyingInput & TW.Solana.Proto.MessageVerifyingInput.$Shape} MessageVerifyingInput
+                 * @returns MessageVerifyingInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.MessageVerifyingInput & TW.Solana.Proto.MessageVerifyingInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Solana.Proto.MessageVerifyingInput;
 
                 /**
-                 * Gets the type url for MessageVerifyingInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for MessageVerifyingInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace MessageVerifyingInput {
-
-                /** Properties of a MessageVerifyingInput. */
-                interface $Properties {
-
-                    /** MessageVerifyingInput publicKey */
-                    publicKey?: (Uint8Array|null);
-
-                    /** MessageVerifyingInput signature */
-                    signature?: (string|null);
-
-                    /** MessageVerifyingInput messageType */
-                    messageType?: (TW.Solana.Proto.MessageType|null);
-
-                    /** MessageVerifyingInput applicationDomain */
-                    applicationDomain?: (Uint8Array|null);
-
-                    /** MessageVerifyingInput messageFormat */
-                    messageFormat?: (TW.Solana.Proto.MessageFormat|null);
-
-                    /** MessageVerifyingInput message */
-                    message?: (string|null);
-
-                    /** MessageVerifyingInput structuredMessage */
-                    structuredMessage?: (TW.Solana.Proto.StructuredMessage.$Properties|null);
-
-                    /** MessageVerifyingInput messagePayload */
-                    messagePayload?: ("message"|"structuredMessage");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a MessageVerifyingInput. */
-                type $Shape = {
-                  publicKey?: Uint8Array|null;
-                  signature?: string|null;
-                  messageType?: TW.Solana.Proto.MessageType|null;
-                  applicationDomain?: Uint8Array|null;
-                  messageFormat?: TW.Solana.Proto.MessageFormat|null;
-                  message?: string|null;
-                  structuredMessage?: TW.Solana.Proto.StructuredMessage.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ messagePayload?: undefined; message?: null; structuredMessage?: null }|{ messagePayload?: "message"; message: string; structuredMessage?: null }|{ messagePayload?: "structuredMessage"; message?: null; structuredMessage: TW.Solana.Proto.StructuredMessage.$Shape })
-                );
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -9696,36 +7975,49 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a PreSigningOutput.
-             * @deprecated Use TW.TxCompiler.Proto.PreSigningOutput.$Properties instead.
-             */
-            interface IPreSigningOutput extends TW.TxCompiler.Proto.PreSigningOutput.$Properties {
+            /** Properties of a PreSigningOutput. */
+            interface IPreSigningOutput {
+
+                /** Pre-image data hash that will be used for signing */
+                dataHash?: (Uint8Array|null);
+
+                /** Pre-image data */
+                data?: (Uint8Array|null);
+
+                /** error code, 0 is ok, other codes will be treated as errors */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** error code description */
+                errorMessage?: (string|null);
             }
 
             /** Transaction pre-signing output */
-            class PreSigningOutput {
+            class PreSigningOutput implements IPreSigningOutput {
 
                 /**
                  * Constructs a new PreSigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.TxCompiler.Proto.PreSigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.TxCompiler.Proto.IPreSigningOutput);
 
                 /** Pre-image data hash that will be used for signing */
-                dataHash: Uint8Array;
+                public dataHash: Uint8Array;
 
                 /** Pre-image data */
-                data: Uint8Array;
+                public data: Uint8Array;
 
                 /** error code, 0 is ok, other codes will be treated as errors */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** error code description */
-                errorMessage: string;
+                public errorMessage: string;
+
+                /**
+                 * Creates a new PreSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PreSigningOutput instance
+                 */
+                public static create(properties?: TW.TxCompiler.Proto.IPreSigningOutput): TW.TxCompiler.Proto.PreSigningOutput;
 
                 /**
                  * Encodes the specified PreSigningOutput message. Does not implicitly {@link TW.TxCompiler.Proto.PreSigningOutput.verify|verify} messages.
@@ -9733,49 +8025,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.TxCompiler.Proto.PreSigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.TxCompiler.Proto.IPreSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a PreSigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.TxCompiler.Proto.PreSigningOutput & TW.TxCompiler.Proto.PreSigningOutput.$Shape} PreSigningOutput
+                 * @returns PreSigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.TxCompiler.Proto.PreSigningOutput & TW.TxCompiler.Proto.PreSigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.TxCompiler.Proto.PreSigningOutput;
 
                 /**
-                 * Gets the type url for PreSigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for PreSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace PreSigningOutput {
-
-                /** Properties of a PreSigningOutput. */
-                interface $Properties {
-
-                    /** Pre-image data hash that will be used for signing */
-                    dataHash?: (Uint8Array|null);
-
-                    /** Pre-image data */
-                    data?: (Uint8Array|null);
-
-                    /** error code, 0 is ok, other codes will be treated as errors */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** error code description */
-                    errorMessage?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a PreSigningOutput. */
-                type $Shape = TW.TxCompiler.Proto.PreSigningOutput.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }
@@ -9786,33 +8053,43 @@ export namespace TW {
         /** Namespace Proto. */
         namespace Proto {
 
-            /**
-             * Properties of a TransferContract.
-             * @deprecated Use TW.Tron.Proto.TransferContract.$Properties instead.
-             */
-            interface ITransferContract extends TW.Tron.Proto.TransferContract.$Properties {
+            /** Properties of a TransferContract. */
+            interface ITransferContract {
+
+                /** TransferContract ownerAddress */
+                ownerAddress?: (string|null);
+
+                /** TransferContract toAddress */
+                toAddress?: (string|null);
+
+                /** TransferContract amount */
+                amount?: (number|null);
             }
 
             /** Represents a TransferContract. */
-            class TransferContract {
+            class TransferContract implements ITransferContract {
 
                 /**
                  * Constructs a new TransferContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.TransferContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ITransferContract);
 
                 /** TransferContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** TransferContract toAddress. */
-                toAddress: string;
+                public toAddress: string;
 
                 /** TransferContract amount. */
-                amount: number;
+                public amount: number;
+
+                /**
+                 * Creates a new TransferContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransferContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ITransferContract): TW.Tron.Proto.TransferContract;
 
                 /**
                  * Encodes the specified TransferContract message. Does not implicitly {@link TW.Tron.Proto.TransferContract.verify|verify} messages.
@@ -9820,78 +8097,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.TransferContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ITransferContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransferContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.TransferContract & TW.Tron.Proto.TransferContract.$Shape} TransferContract
+                 * @returns TransferContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TransferContract & TW.Tron.Proto.TransferContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TransferContract;
 
                 /**
-                 * Gets the type url for TransferContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransferContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransferContract {
+            /** Properties of a TransferAssetContract. */
+            interface ITransferAssetContract {
 
-                /** Properties of a TransferContract. */
-                interface $Properties {
+                /** TransferAssetContract assetName */
+                assetName?: (string|null);
 
-                    /** TransferContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** TransferAssetContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** TransferContract toAddress */
-                    toAddress?: (string|null);
+                /** TransferAssetContract toAddress */
+                toAddress?: (string|null);
 
-                    /** TransferContract amount */
-                    amount?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransferContract. */
-                type $Shape = TW.Tron.Proto.TransferContract.$Properties;
-            }
-
-            /**
-             * Properties of a TransferAssetContract.
-             * @deprecated Use TW.Tron.Proto.TransferAssetContract.$Properties instead.
-             */
-            interface ITransferAssetContract extends TW.Tron.Proto.TransferAssetContract.$Properties {
+                /** TransferAssetContract amount */
+                amount?: (number|null);
             }
 
             /** Represents a TransferAssetContract. */
-            class TransferAssetContract {
+            class TransferAssetContract implements ITransferAssetContract {
 
                 /**
                  * Constructs a new TransferAssetContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.TransferAssetContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ITransferAssetContract);
 
                 /** TransferAssetContract assetName. */
-                assetName: string;
+                public assetName: string;
 
                 /** TransferAssetContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** TransferAssetContract toAddress. */
-                toAddress: string;
+                public toAddress: string;
 
                 /** TransferAssetContract amount. */
-                amount: number;
+                public amount: number;
+
+                /**
+                 * Creates a new TransferAssetContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransferAssetContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ITransferAssetContract): TW.Tron.Proto.TransferAssetContract;
 
                 /**
                  * Encodes the specified TransferAssetContract message. Does not implicitly {@link TW.Tron.Proto.TransferAssetContract.verify|verify} messages.
@@ -9899,81 +8167,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.TransferAssetContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ITransferAssetContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransferAssetContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.TransferAssetContract & TW.Tron.Proto.TransferAssetContract.$Shape} TransferAssetContract
+                 * @returns TransferAssetContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TransferAssetContract & TW.Tron.Proto.TransferAssetContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TransferAssetContract;
 
                 /**
-                 * Gets the type url for TransferAssetContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransferAssetContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransferAssetContract {
+            /** Properties of a TransferTRC20Contract. */
+            interface ITransferTRC20Contract {
 
-                /** Properties of a TransferAssetContract. */
-                interface $Properties {
+                /** TransferTRC20Contract contractAddress */
+                contractAddress?: (string|null);
 
-                    /** TransferAssetContract assetName */
-                    assetName?: (string|null);
+                /** TransferTRC20Contract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** TransferAssetContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** TransferTRC20Contract toAddress */
+                toAddress?: (string|null);
 
-                    /** TransferAssetContract toAddress */
-                    toAddress?: (string|null);
-
-                    /** TransferAssetContract amount */
-                    amount?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransferAssetContract. */
-                type $Shape = TW.Tron.Proto.TransferAssetContract.$Properties;
-            }
-
-            /**
-             * Properties of a TransferTRC20Contract.
-             * @deprecated Use TW.Tron.Proto.TransferTRC20Contract.$Properties instead.
-             */
-            interface ITransferTRC20Contract extends TW.Tron.Proto.TransferTRC20Contract.$Properties {
+                /** TransferTRC20Contract amount */
+                amount?: (Uint8Array|null);
             }
 
             /** Represents a TransferTRC20Contract. */
-            class TransferTRC20Contract {
+            class TransferTRC20Contract implements ITransferTRC20Contract {
 
                 /**
                  * Constructs a new TransferTRC20Contract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.TransferTRC20Contract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ITransferTRC20Contract);
 
                 /** TransferTRC20Contract contractAddress. */
-                contractAddress: string;
+                public contractAddress: string;
 
                 /** TransferTRC20Contract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** TransferTRC20Contract toAddress. */
-                toAddress: string;
+                public toAddress: string;
 
                 /** TransferTRC20Contract amount. */
-                amount: Uint8Array;
+                public amount: Uint8Array;
+
+                /**
+                 * Creates a new TransferTRC20Contract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransferTRC20Contract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ITransferTRC20Contract): TW.Tron.Proto.TransferTRC20Contract;
 
                 /**
                  * Encodes the specified TransferTRC20Contract message. Does not implicitly {@link TW.Tron.Proto.TransferTRC20Contract.verify|verify} messages.
@@ -9981,84 +8237,75 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.TransferTRC20Contract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ITransferTRC20Contract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TransferTRC20Contract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.TransferTRC20Contract & TW.Tron.Proto.TransferTRC20Contract.$Shape} TransferTRC20Contract
+                 * @returns TransferTRC20Contract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TransferTRC20Contract & TW.Tron.Proto.TransferTRC20Contract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TransferTRC20Contract;
 
                 /**
-                 * Gets the type url for TransferTRC20Contract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TransferTRC20Contract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TransferTRC20Contract {
+            /** Properties of a FreezeBalanceContract. */
+            interface IFreezeBalanceContract {
 
-                /** Properties of a TransferTRC20Contract. */
-                interface $Properties {
+                /** FreezeBalanceContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** TransferTRC20Contract contractAddress */
-                    contractAddress?: (string|null);
+                /** FreezeBalanceContract frozenBalance */
+                frozenBalance?: (number|null);
 
-                    /** TransferTRC20Contract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** FreezeBalanceContract frozenDuration */
+                frozenDuration?: (number|null);
 
-                    /** TransferTRC20Contract toAddress */
-                    toAddress?: (string|null);
+                /** FreezeBalanceContract resource */
+                resource?: (string|null);
 
-                    /** TransferTRC20Contract amount */
-                    amount?: (Uint8Array|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TransferTRC20Contract. */
-                type $Shape = TW.Tron.Proto.TransferTRC20Contract.$Properties;
-            }
-
-            /**
-             * Properties of a FreezeBalanceContract.
-             * @deprecated Use TW.Tron.Proto.FreezeBalanceContract.$Properties instead.
-             */
-            interface IFreezeBalanceContract extends TW.Tron.Proto.FreezeBalanceContract.$Properties {
+                /** FreezeBalanceContract receiverAddress */
+                receiverAddress?: (string|null);
             }
 
             /** Represents a FreezeBalanceContract. */
-            class FreezeBalanceContract {
+            class FreezeBalanceContract implements IFreezeBalanceContract {
 
                 /**
                  * Constructs a new FreezeBalanceContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.FreezeBalanceContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IFreezeBalanceContract);
 
                 /** FreezeBalanceContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** FreezeBalanceContract frozenBalance. */
-                frozenBalance: number;
+                public frozenBalance: number;
 
                 /** FreezeBalanceContract frozenDuration. */
-                frozenDuration: number;
+                public frozenDuration: number;
 
                 /** FreezeBalanceContract resource. */
-                resource: string;
+                public resource: string;
 
                 /** FreezeBalanceContract receiverAddress. */
-                receiverAddress: string;
+                public receiverAddress: string;
+
+                /**
+                 * Creates a new FreezeBalanceContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns FreezeBalanceContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IFreezeBalanceContract): TW.Tron.Proto.FreezeBalanceContract;
 
                 /**
                  * Encodes the specified FreezeBalanceContract message. Does not implicitly {@link TW.Tron.Proto.FreezeBalanceContract.verify|verify} messages.
@@ -10066,81 +8313,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.FreezeBalanceContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IFreezeBalanceContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a FreezeBalanceContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.FreezeBalanceContract & TW.Tron.Proto.FreezeBalanceContract.$Shape} FreezeBalanceContract
+                 * @returns FreezeBalanceContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.FreezeBalanceContract & TW.Tron.Proto.FreezeBalanceContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.FreezeBalanceContract;
 
                 /**
-                 * Gets the type url for FreezeBalanceContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for FreezeBalanceContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace FreezeBalanceContract {
+            /** Properties of a FreezeBalanceV2Contract. */
+            interface IFreezeBalanceV2Contract {
 
-                /** Properties of a FreezeBalanceContract. */
-                interface $Properties {
+                /** FreezeBalanceV2Contract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** FreezeBalanceContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** FreezeBalanceV2Contract frozenBalance */
+                frozenBalance?: (number|null);
 
-                    /** FreezeBalanceContract frozenBalance */
-                    frozenBalance?: (number|null);
-
-                    /** FreezeBalanceContract frozenDuration */
-                    frozenDuration?: (number|null);
-
-                    /** FreezeBalanceContract resource */
-                    resource?: (string|null);
-
-                    /** FreezeBalanceContract receiverAddress */
-                    receiverAddress?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a FreezeBalanceContract. */
-                type $Shape = TW.Tron.Proto.FreezeBalanceContract.$Properties;
-            }
-
-            /**
-             * Properties of a FreezeBalanceV2Contract.
-             * @deprecated Use TW.Tron.Proto.FreezeBalanceV2Contract.$Properties instead.
-             */
-            interface IFreezeBalanceV2Contract extends TW.Tron.Proto.FreezeBalanceV2Contract.$Properties {
+                /** FreezeBalanceV2Contract resource */
+                resource?: (string|null);
             }
 
             /** Represents a FreezeBalanceV2Contract. */
-            class FreezeBalanceV2Contract {
+            class FreezeBalanceV2Contract implements IFreezeBalanceV2Contract {
 
                 /**
                  * Constructs a new FreezeBalanceV2Contract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.FreezeBalanceV2Contract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IFreezeBalanceV2Contract);
 
                 /** FreezeBalanceV2Contract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** FreezeBalanceV2Contract frozenBalance. */
-                frozenBalance: number;
+                public frozenBalance: number;
 
                 /** FreezeBalanceV2Contract resource. */
-                resource: string;
+                public resource: string;
+
+                /**
+                 * Creates a new FreezeBalanceV2Contract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns FreezeBalanceV2Contract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IFreezeBalanceV2Contract): TW.Tron.Proto.FreezeBalanceV2Contract;
 
                 /**
                  * Encodes the specified FreezeBalanceV2Contract message. Does not implicitly {@link TW.Tron.Proto.FreezeBalanceV2Contract.verify|verify} messages.
@@ -10148,75 +8377,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.FreezeBalanceV2Contract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IFreezeBalanceV2Contract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a FreezeBalanceV2Contract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.FreezeBalanceV2Contract & TW.Tron.Proto.FreezeBalanceV2Contract.$Shape} FreezeBalanceV2Contract
+                 * @returns FreezeBalanceV2Contract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.FreezeBalanceV2Contract & TW.Tron.Proto.FreezeBalanceV2Contract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.FreezeBalanceV2Contract;
 
                 /**
-                 * Gets the type url for FreezeBalanceV2Contract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for FreezeBalanceV2Contract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace FreezeBalanceV2Contract {
+            /** Properties of an UnfreezeBalanceV2Contract. */
+            interface IUnfreezeBalanceV2Contract {
 
-                /** Properties of a FreezeBalanceV2Contract. */
-                interface $Properties {
+                /** UnfreezeBalanceV2Contract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** FreezeBalanceV2Contract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** UnfreezeBalanceV2Contract unfreezeBalance */
+                unfreezeBalance?: (number|null);
 
-                    /** FreezeBalanceV2Contract frozenBalance */
-                    frozenBalance?: (number|null);
-
-                    /** FreezeBalanceV2Contract resource */
-                    resource?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a FreezeBalanceV2Contract. */
-                type $Shape = TW.Tron.Proto.FreezeBalanceV2Contract.$Properties;
-            }
-
-            /**
-             * Properties of an UnfreezeBalanceV2Contract.
-             * @deprecated Use TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties instead.
-             */
-            interface IUnfreezeBalanceV2Contract extends TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties {
+                /** UnfreezeBalanceV2Contract resource */
+                resource?: (string|null);
             }
 
             /** Represents an UnfreezeBalanceV2Contract. */
-            class UnfreezeBalanceV2Contract {
+            class UnfreezeBalanceV2Contract implements IUnfreezeBalanceV2Contract {
 
                 /**
                  * Constructs a new UnfreezeBalanceV2Contract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IUnfreezeBalanceV2Contract);
 
                 /** UnfreezeBalanceV2Contract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** UnfreezeBalanceV2Contract unfreezeBalance. */
-                unfreezeBalance: number;
+                public unfreezeBalance: number;
 
                 /** UnfreezeBalanceV2Contract resource. */
-                resource: string;
+                public resource: string;
+
+                /**
+                 * Creates a new UnfreezeBalanceV2Contract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UnfreezeBalanceV2Contract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IUnfreezeBalanceV2Contract): TW.Tron.Proto.UnfreezeBalanceV2Contract;
 
                 /**
                  * Encodes the specified UnfreezeBalanceV2Contract message. Does not implicitly {@link TW.Tron.Proto.UnfreezeBalanceV2Contract.verify|verify} messages.
@@ -10224,69 +8441,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IUnfreezeBalanceV2Contract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an UnfreezeBalanceV2Contract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.UnfreezeBalanceV2Contract & TW.Tron.Proto.UnfreezeBalanceV2Contract.$Shape} UnfreezeBalanceV2Contract
+                 * @returns UnfreezeBalanceV2Contract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnfreezeBalanceV2Contract & TW.Tron.Proto.UnfreezeBalanceV2Contract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnfreezeBalanceV2Contract;
 
                 /**
-                 * Gets the type url for UnfreezeBalanceV2Contract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UnfreezeBalanceV2Contract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace UnfreezeBalanceV2Contract {
+            /** Properties of a WithdrawExpireUnfreezeContract. */
+            interface IWithdrawExpireUnfreezeContract {
 
-                /** Properties of an UnfreezeBalanceV2Contract. */
-                interface $Properties {
-
-                    /** UnfreezeBalanceV2Contract ownerAddress */
-                    ownerAddress?: (string|null);
-
-                    /** UnfreezeBalanceV2Contract unfreezeBalance */
-                    unfreezeBalance?: (number|null);
-
-                    /** UnfreezeBalanceV2Contract resource */
-                    resource?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an UnfreezeBalanceV2Contract. */
-                type $Shape = TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties;
-            }
-
-            /**
-             * Properties of a WithdrawExpireUnfreezeContract.
-             * @deprecated Use TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties instead.
-             */
-            interface IWithdrawExpireUnfreezeContract extends TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties {
+                /** WithdrawExpireUnfreezeContract ownerAddress */
+                ownerAddress?: (string|null);
             }
 
             /** Represents a WithdrawExpireUnfreezeContract. */
-            class WithdrawExpireUnfreezeContract {
+            class WithdrawExpireUnfreezeContract implements IWithdrawExpireUnfreezeContract {
 
                 /**
                  * Constructs a new WithdrawExpireUnfreezeContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IWithdrawExpireUnfreezeContract);
 
                 /** WithdrawExpireUnfreezeContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
+
+                /**
+                 * Creates a new WithdrawExpireUnfreezeContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WithdrawExpireUnfreezeContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IWithdrawExpireUnfreezeContract): TW.Tron.Proto.WithdrawExpireUnfreezeContract;
 
                 /**
                  * Encodes the specified WithdrawExpireUnfreezeContract message. Does not implicitly {@link TW.Tron.Proto.WithdrawExpireUnfreezeContract.verify|verify} messages.
@@ -10294,75 +8493,75 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IWithdrawExpireUnfreezeContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a WithdrawExpireUnfreezeContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.WithdrawExpireUnfreezeContract & TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Shape} WithdrawExpireUnfreezeContract
+                 * @returns WithdrawExpireUnfreezeContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.WithdrawExpireUnfreezeContract & TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.WithdrawExpireUnfreezeContract;
 
                 /**
-                 * Gets the type url for WithdrawExpireUnfreezeContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for WithdrawExpireUnfreezeContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace WithdrawExpireUnfreezeContract {
+            /** Properties of a DelegateResourceContract. */
+            interface IDelegateResourceContract {
 
-                /** Properties of a WithdrawExpireUnfreezeContract. */
-                interface $Properties {
+                /** DelegateResourceContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** WithdrawExpireUnfreezeContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** DelegateResourceContract resource */
+                resource?: (string|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** DelegateResourceContract balance */
+                balance?: (number|null);
 
-                /** Shape of a WithdrawExpireUnfreezeContract. */
-                type $Shape = TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties;
-            }
+                /** DelegateResourceContract receiverAddress */
+                receiverAddress?: (string|null);
 
-            /**
-             * Properties of a DelegateResourceContract.
-             * @deprecated Use TW.Tron.Proto.DelegateResourceContract.$Properties instead.
-             */
-            interface IDelegateResourceContract extends TW.Tron.Proto.DelegateResourceContract.$Properties {
+                /** DelegateResourceContract lock */
+                lock?: (boolean|null);
             }
 
             /** Represents a DelegateResourceContract. */
-            class DelegateResourceContract {
+            class DelegateResourceContract implements IDelegateResourceContract {
 
                 /**
                  * Constructs a new DelegateResourceContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.DelegateResourceContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IDelegateResourceContract);
 
                 /** DelegateResourceContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** DelegateResourceContract resource. */
-                resource: string;
+                public resource: string;
 
                 /** DelegateResourceContract balance. */
-                balance: number;
+                public balance: number;
 
                 /** DelegateResourceContract receiverAddress. */
-                receiverAddress: string;
+                public receiverAddress: string;
 
                 /** DelegateResourceContract lock. */
-                lock: boolean;
+                public lock: boolean;
+
+                /**
+                 * Creates a new DelegateResourceContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DelegateResourceContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IDelegateResourceContract): TW.Tron.Proto.DelegateResourceContract;
 
                 /**
                  * Encodes the specified DelegateResourceContract message. Does not implicitly {@link TW.Tron.Proto.DelegateResourceContract.verify|verify} messages.
@@ -10370,84 +8569,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.DelegateResourceContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IDelegateResourceContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a DelegateResourceContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.DelegateResourceContract & TW.Tron.Proto.DelegateResourceContract.$Shape} DelegateResourceContract
+                 * @returns DelegateResourceContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.DelegateResourceContract & TW.Tron.Proto.DelegateResourceContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.DelegateResourceContract;
 
                 /**
-                 * Gets the type url for DelegateResourceContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for DelegateResourceContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace DelegateResourceContract {
+            /** Properties of an UnDelegateResourceContract. */
+            interface IUnDelegateResourceContract {
 
-                /** Properties of a DelegateResourceContract. */
-                interface $Properties {
+                /** UnDelegateResourceContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** DelegateResourceContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** UnDelegateResourceContract resource */
+                resource?: (string|null);
 
-                    /** DelegateResourceContract resource */
-                    resource?: (string|null);
+                /** UnDelegateResourceContract balance */
+                balance?: (number|null);
 
-                    /** DelegateResourceContract balance */
-                    balance?: (number|null);
-
-                    /** DelegateResourceContract receiverAddress */
-                    receiverAddress?: (string|null);
-
-                    /** DelegateResourceContract lock */
-                    lock?: (boolean|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a DelegateResourceContract. */
-                type $Shape = TW.Tron.Proto.DelegateResourceContract.$Properties;
-            }
-
-            /**
-             * Properties of an UnDelegateResourceContract.
-             * @deprecated Use TW.Tron.Proto.UnDelegateResourceContract.$Properties instead.
-             */
-            interface IUnDelegateResourceContract extends TW.Tron.Proto.UnDelegateResourceContract.$Properties {
+                /** UnDelegateResourceContract receiverAddress */
+                receiverAddress?: (string|null);
             }
 
             /** Represents an UnDelegateResourceContract. */
-            class UnDelegateResourceContract {
+            class UnDelegateResourceContract implements IUnDelegateResourceContract {
 
                 /**
                  * Constructs a new UnDelegateResourceContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.UnDelegateResourceContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IUnDelegateResourceContract);
 
                 /** UnDelegateResourceContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** UnDelegateResourceContract resource. */
-                resource: string;
+                public resource: string;
 
                 /** UnDelegateResourceContract balance. */
-                balance: number;
+                public balance: number;
 
                 /** UnDelegateResourceContract receiverAddress. */
-                receiverAddress: string;
+                public receiverAddress: string;
+
+                /**
+                 * Creates a new UnDelegateResourceContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UnDelegateResourceContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IUnDelegateResourceContract): TW.Tron.Proto.UnDelegateResourceContract;
 
                 /**
                  * Encodes the specified UnDelegateResourceContract message. Does not implicitly {@link TW.Tron.Proto.UnDelegateResourceContract.verify|verify} messages.
@@ -10455,78 +8639,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.UnDelegateResourceContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IUnDelegateResourceContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an UnDelegateResourceContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.UnDelegateResourceContract & TW.Tron.Proto.UnDelegateResourceContract.$Shape} UnDelegateResourceContract
+                 * @returns UnDelegateResourceContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnDelegateResourceContract & TW.Tron.Proto.UnDelegateResourceContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnDelegateResourceContract;
 
                 /**
-                 * Gets the type url for UnDelegateResourceContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UnDelegateResourceContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace UnDelegateResourceContract {
+            /** Properties of an UnfreezeBalanceContract. */
+            interface IUnfreezeBalanceContract {
 
-                /** Properties of an UnDelegateResourceContract. */
-                interface $Properties {
+                /** UnfreezeBalanceContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** UnDelegateResourceContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** UnfreezeBalanceContract resource */
+                resource?: (string|null);
 
-                    /** UnDelegateResourceContract resource */
-                    resource?: (string|null);
-
-                    /** UnDelegateResourceContract balance */
-                    balance?: (number|null);
-
-                    /** UnDelegateResourceContract receiverAddress */
-                    receiverAddress?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an UnDelegateResourceContract. */
-                type $Shape = TW.Tron.Proto.UnDelegateResourceContract.$Properties;
-            }
-
-            /**
-             * Properties of an UnfreezeBalanceContract.
-             * @deprecated Use TW.Tron.Proto.UnfreezeBalanceContract.$Properties instead.
-             */
-            interface IUnfreezeBalanceContract extends TW.Tron.Proto.UnfreezeBalanceContract.$Properties {
+                /** UnfreezeBalanceContract receiverAddress */
+                receiverAddress?: (string|null);
             }
 
             /** Represents an UnfreezeBalanceContract. */
-            class UnfreezeBalanceContract {
+            class UnfreezeBalanceContract implements IUnfreezeBalanceContract {
 
                 /**
                  * Constructs a new UnfreezeBalanceContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.UnfreezeBalanceContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IUnfreezeBalanceContract);
 
                 /** UnfreezeBalanceContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** UnfreezeBalanceContract resource. */
-                resource: string;
+                public resource: string;
 
                 /** UnfreezeBalanceContract receiverAddress. */
-                receiverAddress: string;
+                public receiverAddress: string;
+
+                /**
+                 * Creates a new UnfreezeBalanceContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UnfreezeBalanceContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IUnfreezeBalanceContract): TW.Tron.Proto.UnfreezeBalanceContract;
 
                 /**
                  * Encodes the specified UnfreezeBalanceContract message. Does not implicitly {@link TW.Tron.Proto.UnfreezeBalanceContract.verify|verify} messages.
@@ -10534,69 +8703,51 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.UnfreezeBalanceContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IUnfreezeBalanceContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an UnfreezeBalanceContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.UnfreezeBalanceContract & TW.Tron.Proto.UnfreezeBalanceContract.$Shape} UnfreezeBalanceContract
+                 * @returns UnfreezeBalanceContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnfreezeBalanceContract & TW.Tron.Proto.UnfreezeBalanceContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnfreezeBalanceContract;
 
                 /**
-                 * Gets the type url for UnfreezeBalanceContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UnfreezeBalanceContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace UnfreezeBalanceContract {
+            /** Properties of an UnfreezeAssetContract. */
+            interface IUnfreezeAssetContract {
 
-                /** Properties of an UnfreezeBalanceContract. */
-                interface $Properties {
-
-                    /** UnfreezeBalanceContract ownerAddress */
-                    ownerAddress?: (string|null);
-
-                    /** UnfreezeBalanceContract resource */
-                    resource?: (string|null);
-
-                    /** UnfreezeBalanceContract receiverAddress */
-                    receiverAddress?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of an UnfreezeBalanceContract. */
-                type $Shape = TW.Tron.Proto.UnfreezeBalanceContract.$Properties;
-            }
-
-            /**
-             * Properties of an UnfreezeAssetContract.
-             * @deprecated Use TW.Tron.Proto.UnfreezeAssetContract.$Properties instead.
-             */
-            interface IUnfreezeAssetContract extends TW.Tron.Proto.UnfreezeAssetContract.$Properties {
+                /** UnfreezeAssetContract ownerAddress */
+                ownerAddress?: (string|null);
             }
 
             /** Represents an UnfreezeAssetContract. */
-            class UnfreezeAssetContract {
+            class UnfreezeAssetContract implements IUnfreezeAssetContract {
 
                 /**
                  * Constructs a new UnfreezeAssetContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.UnfreezeAssetContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IUnfreezeAssetContract);
 
                 /** UnfreezeAssetContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
+
+                /**
+                 * Creates a new UnfreezeAssetContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns UnfreezeAssetContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IUnfreezeAssetContract): TW.Tron.Proto.UnfreezeAssetContract;
 
                 /**
                  * Encodes the specified UnfreezeAssetContract message. Does not implicitly {@link TW.Tron.Proto.UnfreezeAssetContract.verify|verify} messages.
@@ -10604,72 +8755,69 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.UnfreezeAssetContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IUnfreezeAssetContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes an UnfreezeAssetContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.UnfreezeAssetContract & TW.Tron.Proto.UnfreezeAssetContract.$Shape} UnfreezeAssetContract
+                 * @returns UnfreezeAssetContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnfreezeAssetContract & TW.Tron.Proto.UnfreezeAssetContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.UnfreezeAssetContract;
 
                 /**
-                 * Gets the type url for UnfreezeAssetContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for UnfreezeAssetContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace UnfreezeAssetContract {
+            /** Properties of a VoteAssetContract. */
+            interface IVoteAssetContract {
 
-                /** Properties of an UnfreezeAssetContract. */
-                interface $Properties {
+                /** VoteAssetContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** UnfreezeAssetContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** VoteAssetContract voteAddress */
+                voteAddress?: (string[]|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** VoteAssetContract support */
+                support?: (boolean|null);
 
-                /** Shape of an UnfreezeAssetContract. */
-                type $Shape = TW.Tron.Proto.UnfreezeAssetContract.$Properties;
-            }
-
-            /**
-             * Properties of a VoteAssetContract.
-             * @deprecated Use TW.Tron.Proto.VoteAssetContract.$Properties instead.
-             */
-            interface IVoteAssetContract extends TW.Tron.Proto.VoteAssetContract.$Properties {
+                /** VoteAssetContract count */
+                count?: (number|null);
             }
 
             /** Represents a VoteAssetContract. */
-            class VoteAssetContract {
+            class VoteAssetContract implements IVoteAssetContract {
 
                 /**
                  * Constructs a new VoteAssetContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.VoteAssetContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IVoteAssetContract);
 
                 /** VoteAssetContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** VoteAssetContract voteAddress. */
-                voteAddress: string[];
+                public voteAddress: string[];
 
                 /** VoteAssetContract support. */
-                support: boolean;
+                public support: boolean;
 
                 /** VoteAssetContract count. */
-                count: number;
+                public count: number;
+
+                /**
+                 * Creates a new VoteAssetContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns VoteAssetContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IVoteAssetContract): TW.Tron.Proto.VoteAssetContract;
 
                 /**
                  * Encodes the specified VoteAssetContract message. Does not implicitly {@link TW.Tron.Proto.VoteAssetContract.verify|verify} messages.
@@ -10677,78 +8825,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.VoteAssetContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IVoteAssetContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a VoteAssetContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.VoteAssetContract & TW.Tron.Proto.VoteAssetContract.$Shape} VoteAssetContract
+                 * @returns VoteAssetContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.VoteAssetContract & TW.Tron.Proto.VoteAssetContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.VoteAssetContract;
 
                 /**
-                 * Gets the type url for VoteAssetContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for VoteAssetContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace VoteAssetContract {
+            /** Properties of a VoteWitnessContract. */
+            interface IVoteWitnessContract {
 
-                /** Properties of a VoteAssetContract. */
-                interface $Properties {
+                /** VoteWitnessContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** VoteAssetContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** VoteWitnessContract votes */
+                votes?: (TW.Tron.Proto.VoteWitnessContract.IVote[]|null);
 
-                    /** VoteAssetContract voteAddress */
-                    voteAddress?: (string[]|null);
-
-                    /** VoteAssetContract support */
-                    support?: (boolean|null);
-
-                    /** VoteAssetContract count */
-                    count?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a VoteAssetContract. */
-                type $Shape = TW.Tron.Proto.VoteAssetContract.$Properties;
-            }
-
-            /**
-             * Properties of a VoteWitnessContract.
-             * @deprecated Use TW.Tron.Proto.VoteWitnessContract.$Properties instead.
-             */
-            interface IVoteWitnessContract extends TW.Tron.Proto.VoteWitnessContract.$Properties {
+                /** VoteWitnessContract support */
+                support?: (boolean|null);
             }
 
             /** Represents a VoteWitnessContract. */
-            class VoteWitnessContract {
+            class VoteWitnessContract implements IVoteWitnessContract {
 
                 /**
                  * Constructs a new VoteWitnessContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.VoteWitnessContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IVoteWitnessContract);
 
                 /** VoteWitnessContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** VoteWitnessContract votes. */
-                votes: TW.Tron.Proto.VoteWitnessContract.Vote.$Properties[];
+                public votes: TW.Tron.Proto.VoteWitnessContract.IVote[];
 
                 /** VoteWitnessContract support. */
-                support: boolean;
+                public support: boolean;
+
+                /**
+                 * Creates a new VoteWitnessContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns VoteWitnessContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IVoteWitnessContract): TW.Tron.Proto.VoteWitnessContract;
 
                 /**
                  * Encodes the specified VoteWitnessContract message. Does not implicitly {@link TW.Tron.Proto.VoteWitnessContract.verify|verify} messages.
@@ -10756,71 +8889,59 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.VoteWitnessContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IVoteWitnessContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a VoteWitnessContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.VoteWitnessContract & TW.Tron.Proto.VoteWitnessContract.$Shape} VoteWitnessContract
+                 * @returns VoteWitnessContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.VoteWitnessContract & TW.Tron.Proto.VoteWitnessContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.VoteWitnessContract;
 
                 /**
-                 * Gets the type url for VoteWitnessContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for VoteWitnessContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
             namespace VoteWitnessContract {
 
-                /** Properties of a VoteWitnessContract. */
-                interface $Properties {
+                /** Properties of a Vote. */
+                interface IVote {
 
-                    /** VoteWitnessContract ownerAddress */
-                    ownerAddress?: (string|null);
+                    /** Vote voteAddress */
+                    voteAddress?: (string|null);
 
-                    /** VoteWitnessContract votes */
-                    votes?: (TW.Tron.Proto.VoteWitnessContract.Vote.$Properties[]|null);
-
-                    /** VoteWitnessContract support */
-                    support?: (boolean|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a VoteWitnessContract. */
-                type $Shape = TW.Tron.Proto.VoteWitnessContract.$Properties;
-
-                /**
-                 * Properties of a Vote.
-                 * @deprecated Use TW.Tron.Proto.VoteWitnessContract.Vote.$Properties instead.
-                 */
-                interface IVote extends TW.Tron.Proto.VoteWitnessContract.Vote.$Properties {
+                    /** Vote voteCount */
+                    voteCount?: (number|null);
                 }
 
                 /** Represents a Vote. */
-                class Vote {
+                class Vote implements IVote {
 
                     /**
                      * Constructs a new Vote.
                      * @param [properties] Properties to set
                      */
-                    constructor(properties?: TW.Tron.Proto.VoteWitnessContract.Vote.$Properties);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
+                    constructor(properties?: TW.Tron.Proto.VoteWitnessContract.IVote);
 
                     /** Vote voteAddress. */
-                    voteAddress: string;
+                    public voteAddress: string;
 
                     /** Vote voteCount. */
-                    voteCount: number;
+                    public voteCount: number;
+
+                    /**
+                     * Creates a new Vote instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Vote instance
+                     */
+                    public static create(properties?: TW.Tron.Proto.VoteWitnessContract.IVote): TW.Tron.Proto.VoteWitnessContract.Vote;
 
                     /**
                      * Encodes the specified Vote message. Does not implicitly {@link TW.Tron.Proto.VoteWitnessContract.Vote.verify|verify} messages.
@@ -10828,67 +8949,52 @@ export namespace TW {
                      * @param [writer] Writer to encode to
                      * @returns Writer
                      */
-                    static encode(message: TW.Tron.Proto.VoteWitnessContract.Vote.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                    public static encode(message: TW.Tron.Proto.VoteWitnessContract.IVote, writer?: $protobuf.Writer): $protobuf.Writer;
 
                     /**
                      * Decodes a Vote message from the specified reader or buffer.
                      * @param reader Reader or buffer to decode from
                      * @param [length] Message length if known beforehand
-                     * @returns {TW.Tron.Proto.VoteWitnessContract.Vote & TW.Tron.Proto.VoteWitnessContract.Vote.$Shape} Vote
+                     * @returns Vote
                      * @throws {Error} If the payload is not a reader or valid buffer
                      * @throws {$protobuf.util.ProtocolError} If required fields are missing
                      */
-                    static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.VoteWitnessContract.Vote & TW.Tron.Proto.VoteWitnessContract.Vote.$Shape;
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.VoteWitnessContract.Vote;
 
                     /**
-                     * Gets the type url for Vote
-                     * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                     * @returns The type url
+                     * Gets the default type url for Vote
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
                      */
-                    static getTypeUrl(prefix?: string): string;
-                }
-
-                namespace Vote {
-
-                    /** Properties of a Vote. */
-                    interface $Properties {
-
-                        /** Vote voteAddress */
-                        voteAddress?: (string|null);
-
-                        /** Vote voteCount */
-                        voteCount?: (number|null);
-
-                        /** Unknown fields preserved while decoding when enabled */
-                        $unknowns?: Uint8Array[];
-                    }
-
-                    /** Shape of a Vote. */
-                    type $Shape = TW.Tron.Proto.VoteWitnessContract.Vote.$Properties;
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
                 }
             }
 
-            /**
-             * Properties of a WithdrawBalanceContract.
-             * @deprecated Use TW.Tron.Proto.WithdrawBalanceContract.$Properties instead.
-             */
-            interface IWithdrawBalanceContract extends TW.Tron.Proto.WithdrawBalanceContract.$Properties {
+            /** Properties of a WithdrawBalanceContract. */
+            interface IWithdrawBalanceContract {
+
+                /** WithdrawBalanceContract ownerAddress */
+                ownerAddress?: (string|null);
             }
 
             /** Represents a WithdrawBalanceContract. */
-            class WithdrawBalanceContract {
+            class WithdrawBalanceContract implements IWithdrawBalanceContract {
 
                 /**
                  * Constructs a new WithdrawBalanceContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.WithdrawBalanceContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IWithdrawBalanceContract);
 
                 /** WithdrawBalanceContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
+
+                /**
+                 * Creates a new WithdrawBalanceContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns WithdrawBalanceContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IWithdrawBalanceContract): TW.Tron.Proto.WithdrawBalanceContract;
 
                 /**
                  * Encodes the specified WithdrawBalanceContract message. Does not implicitly {@link TW.Tron.Proto.WithdrawBalanceContract.verify|verify} messages.
@@ -10896,78 +9002,81 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.WithdrawBalanceContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IWithdrawBalanceContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a WithdrawBalanceContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.WithdrawBalanceContract & TW.Tron.Proto.WithdrawBalanceContract.$Shape} WithdrawBalanceContract
+                 * @returns WithdrawBalanceContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.WithdrawBalanceContract & TW.Tron.Proto.WithdrawBalanceContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.WithdrawBalanceContract;
 
                 /**
-                 * Gets the type url for WithdrawBalanceContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for WithdrawBalanceContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace WithdrawBalanceContract {
+            /** Properties of a TriggerSmartContract. */
+            interface ITriggerSmartContract {
 
-                /** Properties of a WithdrawBalanceContract. */
-                interface $Properties {
+                /** TriggerSmartContract ownerAddress */
+                ownerAddress?: (string|null);
 
-                    /** WithdrawBalanceContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** TriggerSmartContract contractAddress */
+                contractAddress?: (string|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** TriggerSmartContract callValue */
+                callValue?: (number|null);
 
-                /** Shape of a WithdrawBalanceContract. */
-                type $Shape = TW.Tron.Proto.WithdrawBalanceContract.$Properties;
-            }
+                /** TriggerSmartContract data */
+                data?: (Uint8Array|null);
 
-            /**
-             * Properties of a TriggerSmartContract.
-             * @deprecated Use TW.Tron.Proto.TriggerSmartContract.$Properties instead.
-             */
-            interface ITriggerSmartContract extends TW.Tron.Proto.TriggerSmartContract.$Properties {
+                /** TriggerSmartContract callTokenValue */
+                callTokenValue?: (number|null);
+
+                /** TriggerSmartContract tokenId */
+                tokenId?: (number|null);
             }
 
             /** Represents a TriggerSmartContract. */
-            class TriggerSmartContract {
+            class TriggerSmartContract implements ITriggerSmartContract {
 
                 /**
                  * Constructs a new TriggerSmartContract.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.TriggerSmartContract.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ITriggerSmartContract);
 
                 /** TriggerSmartContract ownerAddress. */
-                ownerAddress: string;
+                public ownerAddress: string;
 
                 /** TriggerSmartContract contractAddress. */
-                contractAddress: string;
+                public contractAddress: string;
 
                 /** TriggerSmartContract callValue. */
-                callValue: number;
+                public callValue: number;
 
                 /** TriggerSmartContract data. */
-                data: Uint8Array;
+                public data: Uint8Array;
 
                 /** TriggerSmartContract callTokenValue. */
-                callTokenValue: number;
+                public callTokenValue: number;
 
                 /** TriggerSmartContract tokenId. */
-                tokenId: number;
+                public tokenId: number;
+
+                /**
+                 * Creates a new TriggerSmartContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TriggerSmartContract instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ITriggerSmartContract): TW.Tron.Proto.TriggerSmartContract;
 
                 /**
                  * Encodes the specified TriggerSmartContract message. Does not implicitly {@link TW.Tron.Proto.TriggerSmartContract.verify|verify} messages.
@@ -10975,93 +9084,81 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.TriggerSmartContract.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ITriggerSmartContract, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a TriggerSmartContract message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.TriggerSmartContract & TW.Tron.Proto.TriggerSmartContract.$Shape} TriggerSmartContract
+                 * @returns TriggerSmartContract
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TriggerSmartContract & TW.Tron.Proto.TriggerSmartContract.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.TriggerSmartContract;
 
                 /**
-                 * Gets the type url for TriggerSmartContract
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for TriggerSmartContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace TriggerSmartContract {
+            /** Properties of a BlockHeader. */
+            interface IBlockHeader {
 
-                /** Properties of a TriggerSmartContract. */
-                interface $Properties {
+                /** BlockHeader timestamp */
+                timestamp?: (number|null);
 
-                    /** TriggerSmartContract ownerAddress */
-                    ownerAddress?: (string|null);
+                /** BlockHeader txTrieRoot */
+                txTrieRoot?: (Uint8Array|null);
 
-                    /** TriggerSmartContract contractAddress */
-                    contractAddress?: (string|null);
+                /** BlockHeader parentHash */
+                parentHash?: (Uint8Array|null);
 
-                    /** TriggerSmartContract callValue */
-                    callValue?: (number|null);
+                /** BlockHeader number */
+                number?: (number|null);
 
-                    /** TriggerSmartContract data */
-                    data?: (Uint8Array|null);
+                /** BlockHeader witnessAddress */
+                witnessAddress?: (Uint8Array|null);
 
-                    /** TriggerSmartContract callTokenValue */
-                    callTokenValue?: (number|null);
-
-                    /** TriggerSmartContract tokenId */
-                    tokenId?: (number|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a TriggerSmartContract. */
-                type $Shape = TW.Tron.Proto.TriggerSmartContract.$Properties;
-            }
-
-            /**
-             * Properties of a BlockHeader.
-             * @deprecated Use TW.Tron.Proto.BlockHeader.$Properties instead.
-             */
-            interface IBlockHeader extends TW.Tron.Proto.BlockHeader.$Properties {
+                /** BlockHeader version */
+                version?: (number|null);
             }
 
             /** Represents a BlockHeader. */
-            class BlockHeader {
+            class BlockHeader implements IBlockHeader {
 
                 /**
                  * Constructs a new BlockHeader.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.BlockHeader.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.IBlockHeader);
 
                 /** BlockHeader timestamp. */
-                timestamp: number;
+                public timestamp: number;
 
                 /** BlockHeader txTrieRoot. */
-                txTrieRoot: Uint8Array;
+                public txTrieRoot: Uint8Array;
 
                 /** BlockHeader parentHash. */
-                parentHash: Uint8Array;
+                public parentHash: Uint8Array;
 
                 /** BlockHeader number. */
-                number: number;
+                public number: number;
 
                 /** BlockHeader witnessAddress. */
-                witnessAddress: Uint8Array;
+                public witnessAddress: Uint8Array;
 
                 /** BlockHeader version. */
-                version: number;
+                public version: number;
+
+                /**
+                 * Creates a new BlockHeader instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns BlockHeader instance
+                 */
+                public static create(properties?: TW.Tron.Proto.IBlockHeader): TW.Tron.Proto.BlockHeader;
 
                 /**
                  * Encodes the specified BlockHeader message. Does not implicitly {@link TW.Tron.Proto.BlockHeader.verify|verify} messages.
@@ -11069,138 +9166,168 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.BlockHeader.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.IBlockHeader, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a BlockHeader message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.BlockHeader & TW.Tron.Proto.BlockHeader.$Shape} BlockHeader
+                 * @returns BlockHeader
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.BlockHeader & TW.Tron.Proto.BlockHeader.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.BlockHeader;
 
                 /**
-                 * Gets the type url for BlockHeader
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for BlockHeader
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace BlockHeader {
+            /** Properties of a Transaction. */
+            interface ITransaction {
 
-                /** Properties of a BlockHeader. */
-                interface $Properties {
+                /** Transaction timestamp */
+                timestamp?: (number|null);
 
-                    /** BlockHeader timestamp */
-                    timestamp?: (number|null);
+                /** Transaction expiration */
+                expiration?: (number|null);
 
-                    /** BlockHeader txTrieRoot */
-                    txTrieRoot?: (Uint8Array|null);
+                /** Transaction blockHeader */
+                blockHeader?: (TW.Tron.Proto.IBlockHeader|null);
 
-                    /** BlockHeader parentHash */
-                    parentHash?: (Uint8Array|null);
+                /** Transaction feeLimit */
+                feeLimit?: (number|null);
 
-                    /** BlockHeader number */
-                    number?: (number|null);
+                /** Transaction memo */
+                memo?: (string|null);
 
-                    /** BlockHeader witnessAddress */
-                    witnessAddress?: (Uint8Array|null);
+                /** Transaction transfer */
+                transfer?: (TW.Tron.Proto.ITransferContract|null);
 
-                    /** BlockHeader version */
-                    version?: (number|null);
+                /** Transaction transferAsset */
+                transferAsset?: (TW.Tron.Proto.ITransferAssetContract|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** Transaction freezeBalance */
+                freezeBalance?: (TW.Tron.Proto.IFreezeBalanceContract|null);
 
-                /** Shape of a BlockHeader. */
-                type $Shape = TW.Tron.Proto.BlockHeader.$Properties;
-            }
+                /** Transaction unfreezeBalance */
+                unfreezeBalance?: (TW.Tron.Proto.IUnfreezeBalanceContract|null);
 
-            /**
-             * Properties of a Transaction.
-             * @deprecated Use TW.Tron.Proto.Transaction.$Properties instead.
-             */
-            interface ITransaction extends TW.Tron.Proto.Transaction.$Properties {
+                /** Transaction unfreezeAsset */
+                unfreezeAsset?: (TW.Tron.Proto.IUnfreezeAssetContract|null);
+
+                /** Transaction withdrawBalance */
+                withdrawBalance?: (TW.Tron.Proto.IWithdrawBalanceContract|null);
+
+                /** Transaction voteAsset */
+                voteAsset?: (TW.Tron.Proto.IVoteAssetContract|null);
+
+                /** Transaction voteWitness */
+                voteWitness?: (TW.Tron.Proto.IVoteWitnessContract|null);
+
+                /** Transaction triggerSmartContract */
+                triggerSmartContract?: (TW.Tron.Proto.ITriggerSmartContract|null);
+
+                /** Transaction transferTrc20Contract */
+                transferTrc20Contract?: (TW.Tron.Proto.ITransferTRC20Contract|null);
+
+                /** Transaction freezeBalanceV2 */
+                freezeBalanceV2?: (TW.Tron.Proto.IFreezeBalanceV2Contract|null);
+
+                /** Transaction unfreezeBalanceV2 */
+                unfreezeBalanceV2?: (TW.Tron.Proto.IUnfreezeBalanceV2Contract|null);
+
+                /** Transaction withdrawExpireUnfreeze */
+                withdrawExpireUnfreeze?: (TW.Tron.Proto.IWithdrawExpireUnfreezeContract|null);
+
+                /** Transaction delegateResource */
+                delegateResource?: (TW.Tron.Proto.IDelegateResourceContract|null);
+
+                /** Transaction undelegateResource */
+                undelegateResource?: (TW.Tron.Proto.IUnDelegateResourceContract|null);
             }
 
             /** Represents a Transaction. */
-            class Transaction {
+            class Transaction implements ITransaction {
 
                 /**
                  * Constructs a new Transaction.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.Transaction.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ITransaction);
 
                 /** Transaction timestamp. */
-                timestamp: number;
+                public timestamp: number;
 
                 /** Transaction expiration. */
-                expiration: number;
+                public expiration: number;
 
                 /** Transaction blockHeader. */
-                blockHeader?: (TW.Tron.Proto.BlockHeader.$Properties|null);
+                public blockHeader?: (TW.Tron.Proto.IBlockHeader|null);
 
                 /** Transaction feeLimit. */
-                feeLimit: number;
+                public feeLimit: number;
 
                 /** Transaction memo. */
-                memo: string;
+                public memo: string;
 
                 /** Transaction transfer. */
-                transfer?: (TW.Tron.Proto.TransferContract.$Properties|null);
+                public transfer?: (TW.Tron.Proto.ITransferContract|null);
 
                 /** Transaction transferAsset. */
-                transferAsset?: (TW.Tron.Proto.TransferAssetContract.$Properties|null);
+                public transferAsset?: (TW.Tron.Proto.ITransferAssetContract|null);
 
                 /** Transaction freezeBalance. */
-                freezeBalance?: (TW.Tron.Proto.FreezeBalanceContract.$Properties|null);
+                public freezeBalance?: (TW.Tron.Proto.IFreezeBalanceContract|null);
 
                 /** Transaction unfreezeBalance. */
-                unfreezeBalance?: (TW.Tron.Proto.UnfreezeBalanceContract.$Properties|null);
+                public unfreezeBalance?: (TW.Tron.Proto.IUnfreezeBalanceContract|null);
 
                 /** Transaction unfreezeAsset. */
-                unfreezeAsset?: (TW.Tron.Proto.UnfreezeAssetContract.$Properties|null);
+                public unfreezeAsset?: (TW.Tron.Proto.IUnfreezeAssetContract|null);
 
                 /** Transaction withdrawBalance. */
-                withdrawBalance?: (TW.Tron.Proto.WithdrawBalanceContract.$Properties|null);
+                public withdrawBalance?: (TW.Tron.Proto.IWithdrawBalanceContract|null);
 
                 /** Transaction voteAsset. */
-                voteAsset?: (TW.Tron.Proto.VoteAssetContract.$Properties|null);
+                public voteAsset?: (TW.Tron.Proto.IVoteAssetContract|null);
 
                 /** Transaction voteWitness. */
-                voteWitness?: (TW.Tron.Proto.VoteWitnessContract.$Properties|null);
+                public voteWitness?: (TW.Tron.Proto.IVoteWitnessContract|null);
 
                 /** Transaction triggerSmartContract. */
-                triggerSmartContract?: (TW.Tron.Proto.TriggerSmartContract.$Properties|null);
+                public triggerSmartContract?: (TW.Tron.Proto.ITriggerSmartContract|null);
 
                 /** Transaction transferTrc20Contract. */
-                transferTrc20Contract?: (TW.Tron.Proto.TransferTRC20Contract.$Properties|null);
+                public transferTrc20Contract?: (TW.Tron.Proto.ITransferTRC20Contract|null);
 
                 /** Transaction freezeBalanceV2. */
-                freezeBalanceV2?: (TW.Tron.Proto.FreezeBalanceV2Contract.$Properties|null);
+                public freezeBalanceV2?: (TW.Tron.Proto.IFreezeBalanceV2Contract|null);
 
                 /** Transaction unfreezeBalanceV2. */
-                unfreezeBalanceV2?: (TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties|null);
+                public unfreezeBalanceV2?: (TW.Tron.Proto.IUnfreezeBalanceV2Contract|null);
 
                 /** Transaction withdrawExpireUnfreeze. */
-                withdrawExpireUnfreeze?: (TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties|null);
+                public withdrawExpireUnfreeze?: (TW.Tron.Proto.IWithdrawExpireUnfreezeContract|null);
 
                 /** Transaction delegateResource. */
-                delegateResource?: (TW.Tron.Proto.DelegateResourceContract.$Properties|null);
+                public delegateResource?: (TW.Tron.Proto.IDelegateResourceContract|null);
 
                 /** Transaction undelegateResource. */
-                undelegateResource?: (TW.Tron.Proto.UnDelegateResourceContract.$Properties|null);
+                public undelegateResource?: (TW.Tron.Proto.IUnDelegateResourceContract|null);
 
                 /** Transaction contractOneof. */
-                contractOneof?: ("transfer"|"transferAsset"|"freezeBalance"|"unfreezeBalance"|"unfreezeAsset"|"withdrawBalance"|"voteAsset"|"voteWitness"|"triggerSmartContract"|"transferTrc20Contract"|"freezeBalanceV2"|"unfreezeBalanceV2"|"withdrawExpireUnfreeze"|"delegateResource"|"undelegateResource");
+                public contractOneof?: ("transfer"|"transferAsset"|"freezeBalance"|"unfreezeBalance"|"unfreezeAsset"|"withdrawBalance"|"voteAsset"|"voteWitness"|"triggerSmartContract"|"transferTrc20Contract"|"freezeBalanceV2"|"unfreezeBalanceV2"|"withdrawExpireUnfreeze"|"delegateResource"|"undelegateResource");
+
+                /**
+                 * Creates a new Transaction instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transaction instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ITransaction): TW.Tron.Proto.Transaction;
 
                 /**
                  * Encodes the specified Transaction message. Does not implicitly {@link TW.Tron.Proto.Transaction.verify|verify} messages.
@@ -11208,153 +9335,63 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.Transaction.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ITransaction, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a Transaction message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.Transaction & TW.Tron.Proto.Transaction.$Shape} Transaction
+                 * @returns Transaction
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.Transaction & TW.Tron.Proto.Transaction.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.Transaction;
 
                 /**
-                 * Gets the type url for Transaction
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace Transaction {
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
 
-                /** Properties of a Transaction. */
-                interface $Properties {
+                /** SigningInput transaction */
+                transaction?: (TW.Tron.Proto.ITransaction|null);
 
-                    /** Transaction timestamp */
-                    timestamp?: (number|null);
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
 
-                    /** Transaction expiration */
-                    expiration?: (number|null);
-
-                    /** Transaction blockHeader */
-                    blockHeader?: (TW.Tron.Proto.BlockHeader.$Properties|null);
-
-                    /** Transaction feeLimit */
-                    feeLimit?: (number|null);
-
-                    /** Transaction memo */
-                    memo?: (string|null);
-
-                    /** Transaction transfer */
-                    transfer?: (TW.Tron.Proto.TransferContract.$Properties|null);
-
-                    /** Transaction transferAsset */
-                    transferAsset?: (TW.Tron.Proto.TransferAssetContract.$Properties|null);
-
-                    /** Transaction freezeBalance */
-                    freezeBalance?: (TW.Tron.Proto.FreezeBalanceContract.$Properties|null);
-
-                    /** Transaction unfreezeBalance */
-                    unfreezeBalance?: (TW.Tron.Proto.UnfreezeBalanceContract.$Properties|null);
-
-                    /** Transaction unfreezeAsset */
-                    unfreezeAsset?: (TW.Tron.Proto.UnfreezeAssetContract.$Properties|null);
-
-                    /** Transaction withdrawBalance */
-                    withdrawBalance?: (TW.Tron.Proto.WithdrawBalanceContract.$Properties|null);
-
-                    /** Transaction voteAsset */
-                    voteAsset?: (TW.Tron.Proto.VoteAssetContract.$Properties|null);
-
-                    /** Transaction voteWitness */
-                    voteWitness?: (TW.Tron.Proto.VoteWitnessContract.$Properties|null);
-
-                    /** Transaction triggerSmartContract */
-                    triggerSmartContract?: (TW.Tron.Proto.TriggerSmartContract.$Properties|null);
-
-                    /** Transaction transferTrc20Contract */
-                    transferTrc20Contract?: (TW.Tron.Proto.TransferTRC20Contract.$Properties|null);
-
-                    /** Transaction freezeBalanceV2 */
-                    freezeBalanceV2?: (TW.Tron.Proto.FreezeBalanceV2Contract.$Properties|null);
-
-                    /** Transaction unfreezeBalanceV2 */
-                    unfreezeBalanceV2?: (TW.Tron.Proto.UnfreezeBalanceV2Contract.$Properties|null);
-
-                    /** Transaction withdrawExpireUnfreeze */
-                    withdrawExpireUnfreeze?: (TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Properties|null);
-
-                    /** Transaction delegateResource */
-                    delegateResource?: (TW.Tron.Proto.DelegateResourceContract.$Properties|null);
-
-                    /** Transaction undelegateResource */
-                    undelegateResource?: (TW.Tron.Proto.UnDelegateResourceContract.$Properties|null);
-
-                    /** Transaction contractOneof */
-                    contractOneof?: ("transfer"|"transferAsset"|"freezeBalance"|"unfreezeBalance"|"unfreezeAsset"|"withdrawBalance"|"voteAsset"|"voteWitness"|"triggerSmartContract"|"transferTrc20Contract"|"freezeBalanceV2"|"unfreezeBalanceV2"|"withdrawExpireUnfreeze"|"delegateResource"|"undelegateResource");
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Narrowed shape of a Transaction. */
-                type $Shape = {
-                  timestamp?: number|null;
-                  expiration?: number|null;
-                  blockHeader?: TW.Tron.Proto.BlockHeader.$Shape|null;
-                  feeLimit?: number|null;
-                  memo?: string|null;
-                  transfer?: TW.Tron.Proto.TransferContract.$Shape|null;
-                  transferAsset?: TW.Tron.Proto.TransferAssetContract.$Shape|null;
-                  freezeBalance?: TW.Tron.Proto.FreezeBalanceContract.$Shape|null;
-                  unfreezeBalance?: TW.Tron.Proto.UnfreezeBalanceContract.$Shape|null;
-                  unfreezeAsset?: TW.Tron.Proto.UnfreezeAssetContract.$Shape|null;
-                  withdrawBalance?: TW.Tron.Proto.WithdrawBalanceContract.$Shape|null;
-                  voteAsset?: TW.Tron.Proto.VoteAssetContract.$Shape|null;
-                  voteWitness?: TW.Tron.Proto.VoteWitnessContract.$Shape|null;
-                  triggerSmartContract?: TW.Tron.Proto.TriggerSmartContract.$Shape|null;
-                  transferTrc20Contract?: TW.Tron.Proto.TransferTRC20Contract.$Shape|null;
-                  freezeBalanceV2?: TW.Tron.Proto.FreezeBalanceV2Contract.$Shape|null;
-                  unfreezeBalanceV2?: TW.Tron.Proto.UnfreezeBalanceV2Contract.$Shape|null;
-                  withdrawExpireUnfreeze?: TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Shape|null;
-                  delegateResource?: TW.Tron.Proto.DelegateResourceContract.$Shape|null;
-                  undelegateResource?: TW.Tron.Proto.UnDelegateResourceContract.$Shape|null;
-                  $unknowns?: Uint8Array[];
-                } & (
-                  ({ contractOneof?: undefined; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "transfer"; transfer: TW.Tron.Proto.TransferContract.$Shape; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "transferAsset"; transfer?: null; transferAsset: TW.Tron.Proto.TransferAssetContract.$Shape; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "freezeBalance"; transfer?: null; transferAsset?: null; freezeBalance: TW.Tron.Proto.FreezeBalanceContract.$Shape; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "unfreezeBalance"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance: TW.Tron.Proto.UnfreezeBalanceContract.$Shape; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "unfreezeAsset"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset: TW.Tron.Proto.UnfreezeAssetContract.$Shape; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "withdrawBalance"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance: TW.Tron.Proto.WithdrawBalanceContract.$Shape; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "voteAsset"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset: TW.Tron.Proto.VoteAssetContract.$Shape; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "voteWitness"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness: TW.Tron.Proto.VoteWitnessContract.$Shape; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "triggerSmartContract"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract: TW.Tron.Proto.TriggerSmartContract.$Shape; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "transferTrc20Contract"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract: TW.Tron.Proto.TransferTRC20Contract.$Shape; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "freezeBalanceV2"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2: TW.Tron.Proto.FreezeBalanceV2Contract.$Shape; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "unfreezeBalanceV2"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2: TW.Tron.Proto.UnfreezeBalanceV2Contract.$Shape; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "withdrawExpireUnfreeze"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze: TW.Tron.Proto.WithdrawExpireUnfreezeContract.$Shape; delegateResource?: null; undelegateResource?: null }|{ contractOneof?: "delegateResource"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource: TW.Tron.Proto.DelegateResourceContract.$Shape; undelegateResource?: null }|{ contractOneof?: "undelegateResource"; transfer?: null; transferAsset?: null; freezeBalance?: null; unfreezeBalance?: null; unfreezeAsset?: null; withdrawBalance?: null; voteAsset?: null; voteWitness?: null; triggerSmartContract?: null; transferTrc20Contract?: null; freezeBalanceV2?: null; unfreezeBalanceV2?: null; withdrawExpireUnfreeze?: null; delegateResource?: null; undelegateResource: TW.Tron.Proto.UnDelegateResourceContract.$Shape })
-                );
-            }
-
-            /**
-             * Properties of a SigningInput.
-             * @deprecated Use TW.Tron.Proto.SigningInput.$Properties instead.
-             */
-            interface ISigningInput extends TW.Tron.Proto.SigningInput.$Properties {
+                /** SigningInput rawJson */
+                rawJson?: (string|null);
             }
 
             /** Represents a SigningInput. */
-            class SigningInput {
+            class SigningInput implements ISigningInput {
 
                 /**
                  * Constructs a new SigningInput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.SigningInput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ISigningInput);
 
                 /** SigningInput transaction. */
-                transaction?: (TW.Tron.Proto.Transaction.$Properties|null);
+                public transaction?: (TW.Tron.Proto.ITransaction|null);
 
                 /** SigningInput privateKey. */
-                privateKey: Uint8Array;
+                public privateKey: Uint8Array;
 
                 /** SigningInput rawJson. */
-                rawJson: string;
+                public rawJson: string;
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ISigningInput): TW.Tron.Proto.SigningInput;
 
                 /**
                  * Encodes the specified SigningInput message. Does not implicitly {@link TW.Tron.Proto.SigningInput.verify|verify} messages.
@@ -11362,92 +9399,87 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.SigningInput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningInput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.SigningInput & TW.Tron.Proto.SigningInput.$Shape} SigningInput
+                 * @returns SigningInput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.SigningInput & TW.Tron.Proto.SigningInput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.SigningInput;
 
                 /**
-                 * Gets the type url for SigningInput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
 
-            namespace SigningInput {
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
 
-                /** Properties of a SigningInput. */
-                interface $Properties {
+                /** SigningOutput id */
+                id?: (Uint8Array|null);
 
-                    /** SigningInput transaction */
-                    transaction?: (TW.Tron.Proto.Transaction.$Properties|null);
+                /** SigningOutput signature */
+                signature?: (Uint8Array|null);
 
-                    /** SigningInput privateKey */
-                    privateKey?: (Uint8Array|null);
+                /** SigningOutput refBlockBytes */
+                refBlockBytes?: (Uint8Array|null);
 
-                    /** SigningInput rawJson */
-                    rawJson?: (string|null);
+                /** SigningOutput refBlockHash */
+                refBlockHash?: (Uint8Array|null);
 
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
+                /** SigningOutput json */
+                json?: (string|null);
 
-                /** Shape of a SigningInput. */
-                type $Shape = {
-                  transaction?: TW.Tron.Proto.Transaction.$Shape|null;
-                  privateKey?: Uint8Array|null;
-                  rawJson?: string|null;
-                  $unknowns?: Uint8Array[];
-                };
-            }
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
 
-            /**
-             * Properties of a SigningOutput.
-             * @deprecated Use TW.Tron.Proto.SigningOutput.$Properties instead.
-             */
-            interface ISigningOutput extends TW.Tron.Proto.SigningOutput.$Properties {
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
             }
 
             /** Represents a SigningOutput. */
-            class SigningOutput {
+            class SigningOutput implements ISigningOutput {
 
                 /**
                  * Constructs a new SigningOutput.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: TW.Tron.Proto.SigningOutput.$Properties);
-
-                /** Unknown fields preserved while decoding when enabled */
-                $unknowns?: Uint8Array[];
+                constructor(properties?: TW.Tron.Proto.ISigningOutput);
 
                 /** SigningOutput id. */
-                id: Uint8Array;
+                public id: Uint8Array;
 
                 /** SigningOutput signature. */
-                signature: Uint8Array;
+                public signature: Uint8Array;
 
                 /** SigningOutput refBlockBytes. */
-                refBlockBytes: Uint8Array;
+                public refBlockBytes: Uint8Array;
 
                 /** SigningOutput refBlockHash. */
-                refBlockHash: Uint8Array;
+                public refBlockHash: Uint8Array;
 
                 /** SigningOutput json. */
-                json: string;
+                public json: string;
 
                 /** SigningOutput error. */
-                error: TW.Common.Proto.SigningError;
+                public error: TW.Common.Proto.SigningError;
 
                 /** SigningOutput errorMessage. */
-                errorMessage: string;
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Tron.Proto.ISigningOutput): TW.Tron.Proto.SigningOutput;
 
                 /**
                  * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Tron.Proto.SigningOutput.verify|verify} messages.
@@ -11455,58 +9487,24 @@ export namespace TW {
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                static encode(message: TW.Tron.Proto.SigningOutput.$Properties, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: TW.Tron.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
                  * Decodes a SigningOutput message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns {TW.Tron.Proto.SigningOutput & TW.Tron.Proto.SigningOutput.$Shape} SigningOutput
+                 * @returns SigningOutput
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.SigningOutput & TW.Tron.Proto.SigningOutput.$Shape;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Tron.Proto.SigningOutput;
 
                 /**
-                 * Gets the type url for SigningOutput
-                 * @param [prefix] Custom type url prefix, defaults to `"type.googleapis.com"`
-                 * @returns The type url
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
                  */
-                static getTypeUrl(prefix?: string): string;
-            }
-
-            namespace SigningOutput {
-
-                /** Properties of a SigningOutput. */
-                interface $Properties {
-
-                    /** SigningOutput id */
-                    id?: (Uint8Array|null);
-
-                    /** SigningOutput signature */
-                    signature?: (Uint8Array|null);
-
-                    /** SigningOutput refBlockBytes */
-                    refBlockBytes?: (Uint8Array|null);
-
-                    /** SigningOutput refBlockHash */
-                    refBlockHash?: (Uint8Array|null);
-
-                    /** SigningOutput json */
-                    json?: (string|null);
-
-                    /** SigningOutput error */
-                    error?: (TW.Common.Proto.SigningError|null);
-
-                    /** SigningOutput errorMessage */
-                    errorMessage?: (string|null);
-
-                    /** Unknown fields preserved while decoding when enabled */
-                    $unknowns?: Uint8Array[];
-                }
-
-                /** Shape of a SigningOutput. */
-                type $Shape = TW.Tron.Proto.SigningOutput.$Properties;
+                public static getTypeUrl(typeUrlPrefix?: string): string;
             }
         }
     }

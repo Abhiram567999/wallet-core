@@ -399,7 +399,10 @@ class WalletStore(context: Context) {
       val key = privateKey(r, c, account)
       val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
       if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
-      val sig = key.sign(pre.dataHash.toByteArray(), c.curve()) ?: throw WalletException("CRYPTO", "signing failed")
+      // Solana signs the whole message (pre.data); its pre-image output has a different layout,
+      // so the generic dataHash field would hold the signer's key instead (SPEC §7).
+      val digest = if (c.blockchain() == Blockchain.SOLANA) pre.data.toByteArray() else pre.dataHash.toByteArray()
+      val sig = key.sign(digest, c.curve()) ?: throw WalletException("CRYPTO", "signing failed")
       val out = TransactionCompiler.compileWithSignatures(
         c, input, DataVector().apply { add(sig) }, DataVector().apply { add(key.getPublicKey(c).data()) },
       )
