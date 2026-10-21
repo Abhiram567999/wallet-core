@@ -43,3 +43,42 @@ export async function makeSigningVector() {
     expectedRawTx: EIP155.expectedRawTx,
   };
 }
+
+// Bitcoin vector: an unsigned input built by bitcoinTransferInput (as the app
+// does), then completed the way the native code does it: change and locking
+// scripts forced to the wallet's own address, key added, Bitcoin signer.
+export async function makeBitcoinVector() {
+  const { bitcoinTransferInput } = await import('../src/tx.ts');
+  const core = await initWasm();
+  const { CoinType, CoinTypeExt, HDWallet, BitcoinScript, AnySigner } = core;
+  const words = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+  const coin = CoinType.bitcoin;
+  const wallet = HDWallet.createWithMnemonic(words, '');
+  const key = wallet.getKeyForCoin(coin);
+  const own = CoinTypeExt.deriveAddress(coin, key);
+  const inputBase64 = bitcoinTransferInput({
+    coin: 0,
+    from: 'bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // deliberately wrong: native code must replace it
+    to: 'bc1qku0qh0mc00y8tk0n65x2tqw4trlspak0fnjmfz', // the same test phrase, account 2
+    amount: 30_000n,
+    byteFee: 10n,
+    utxos: [{ txid: '1111111111111111111111111111111111111111111111111111111111111111', vout: 0, value: 100_000n }],
+  });
+  const input = TW.Bitcoin.Proto.SigningInput.decode(Buffer.from(inputBase64, 'base64'));
+  input.changeAddress = own;
+  const script = BitcoinScript.lockScriptForAddress(own, coin).data();
+  for (const u of input.utxo) u.script = script;
+  input.privateKey = [key.data()];
+  const out = TW.Bitcoin.Proto.SigningOutput.decode(AnySigner.sign(TW.Bitcoin.Proto.SigningInput.encode(input).finish(), coin));
+  if (out.error || out.encoded.length === 0) throw new Error(`bitcoin signing failed: ${out.error} ${out.errorMessage}`);
+  key.delete();
+  wallet.delete();
+  return {
+    note: 'Fake input (txid 1111…); signs with the public test phrase. Never fund it.',
+    words,
+    ownAddress: own,
+    inputBase64,
+    rawHex: Buffer.from(out.encoded).toString('hex'),
+    txid: out.transactionId,
+  };
+}

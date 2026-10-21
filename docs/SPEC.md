@@ -269,3 +269,26 @@ and passes it to the native module, which:
 
 The key never reaches JavaScript. `test/vectors/signing.json` (the EIP-155
 example transaction) must come out byte for byte on every platform.
+
+### 7.1 Bitcoin family
+
+A Bitcoin transaction spends earlier outputs (UTXOs), and every input needs
+its own signature, so steps 3–5 don't fit. For coins whose blockchain is
+Bitcoin, the native module instead:
+
+1. parses the `Bitcoin.Proto.SigningInput` the app built with
+   `bitcoinTransferInput` (`src/tx.ts`): recipient, amount, fee rate in
+   sat/vB, UTXOs, and whether to send the maximum,
+2. **sets the change address to the wallet's own address** and every input's
+   locking script to that address's script, whatever the app sent, so the
+   app layer can't redirect the change (the user only sees and confirms the
+   recipient and the amount),
+3. adds the key and signs with Trust Wallet Core's Bitcoin signer
+   (`AnySigner`), then removes the key from the input,
+4. returns the `Bitcoin.Proto.SigningOutput` (`bitcoinOutput` reads the raw
+   transaction and its id).
+
+Inputs use sequence `0xfffffffd`, so a stuck transaction can later be
+replaced with a higher fee (RBF). `test/vectors/bitcoin.json` deliberately
+names a wrong change address; the signed transaction must match byte for
+byte, paying the change to the wallet's own address.

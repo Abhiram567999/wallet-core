@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import { indexContains } from '../src/addressIndex.ts';
 import { openVault, VaultError, encodeVault, decodeVault } from '../src/vault.ts';
 import { deriveAll, makeEnvelopes, makeAddressIndex } from '../scripts/make-vectors.ts';
-import { makeSigningVector } from '../scripts/signing-vector.ts';
+import { makeBitcoinVector, makeSigningVector } from '../scripts/signing-vector.ts';
 
 const load = (f: string) => JSON.parse(readFileSync(new URL(`./vectors/${f}`, import.meta.url), 'utf8'));
 const hex = (h: string) => Uint8Array.from(Buffer.from(h, 'hex'));
@@ -94,4 +94,10 @@ test('vault records: solanaPath is checked', async () => {
   assert.throws(() => decodeVault(encodeVault([{ ...base, solanaPath: 'ledger' } as never])), /solanaPath/);
   const key = { ...base, kind: 'single', secret: { type: 'privateKey', hex: '11'.repeat(32), coin: 501 }, solanaPath: 'phantom' };
   assert.throws(() => decodeVault(encodeVault([key as never])), /solanaPath/);
+});
+
+test('bitcoin vector: native-style signing reproduces the stored transaction', async () => {
+  const v = load('bitcoin.json');
+  assert.deepEqual(await makeBitcoinVector(), v);
+  assert.equal(v.ownAddress, 'bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu');
 });

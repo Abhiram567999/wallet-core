@@ -575,6 +575,7 @@ final class WalletStore {
     guard let coin = CoinType(rawValue: raw), let input = Data(base64Encoded: inputBase64) else { throw WalletError.invalid("bad coin or input") }
     return try withSecrets([id], reason: "Confirm the transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
+      if coin.blockchain == .bitcoin { return try Self.signBitcoin(input, key: key, coin: coin) }
       let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
       guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
       // Solana signs the whole message (pre.data); its pre-image output has a different layout,
@@ -587,6 +588,24 @@ final class WalletStore {
       )
       return output.base64EncodedString()
     }
+  }
+
+  /// Bitcoin family: every UTXO input needs its own signature, so Trust Wallet
+  /// Core's Bitcoin signer signs here, inside native code. The change address
+  /// and the inputs' locking scripts are forced to the wallet's own address, so
+  /// the app layer can't redirect the change (SPEC §7).
+  static func signBitcoin(_ data: Data, key: PrivateKey, coin: CoinType) throws -> String {
+    var input = try BitcoinSigningInput(serializedBytes: data)
+    guard input.coinType == coin.rawValue else { throw WalletError.invalid("bitcoin input is for another coin") }
+    let own = coin.deriveAddress(privateKey: key)
+    input.changeAddress = own
+    let script = BitcoinScript.lockScriptForAddress(address: own, coin: coin).data
+    for i in input.utxo.indices { input.utxo[i].script = script }
+    input.privateKey = [key.data]
+    let out: BitcoinSigningOutput = AnySigner.sign(input: input, coin: coin)
+    input.privateKey = []
+    guard out.error == .ok else { throw WalletError.invalid("cannot sign: \(out.errorMessage)") }
+    return try out.serializedData().base64EncodedString()
   }
 
   func signMessage(id: String, coin raw: UInt32, message: String, typed: Bool, account: UInt32) throws -> String {

@@ -4,7 +4,10 @@ import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import org.json.JSONArray
 import org.json.JSONObject
+import com.google.protobuf.ByteString
+import wallet.core.java.AnySigner
 import wallet.core.jni.AnyAddress
+import wallet.core.jni.BitcoinScript
 import wallet.core.jni.Base58
 import wallet.core.jni.Blockchain
 import wallet.core.jni.CoinType
@@ -15,6 +18,7 @@ import wallet.core.jni.Mnemonic
 import wallet.core.jni.PrivateKey
 import wallet.core.jni.TransactionCompiler
 import wallet.core.jni.TronMessageSigner
+import wallet.core.jni.proto.Bitcoin
 import wallet.core.jni.proto.Common.SigningError
 import wallet.core.jni.proto.TransactionCompiler.PreSigningOutput
 import java.security.MessageDigest
@@ -519,6 +523,7 @@ class WalletStore(context: Context) {
     val input = Envelope.unb64(inputB64)
     withSecret(id, activity, "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
+      if (c.blockchain() == Blockchain.BITCOIN) return@withSecret signBitcoin(input, key, c)
       val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
       if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
       // Solana signs the whole message (pre.data); its pre-image output has a different layout,
@@ -530,6 +535,23 @@ class WalletStore(context: Context) {
       )
       Envelope.b64(out)
     }
+  }
+
+  /**
+   * Bitcoin family: every UTXO input needs its own signature, so Trust Wallet
+   * Core's Bitcoin signer signs here. Change and the inputs' locking scripts are
+   * forced to the wallet's own address so the app layer can't redirect change (SPEC §7).
+   */
+  private fun signBitcoin(data: ByteArray, key: PrivateKey, c: CoinType): String {
+    val parsed = Bitcoin.SigningInput.parseFrom(data)
+    if (parsed.coinType != c.value()) throw WalletException("INVALID", "bitcoin input is for another coin")
+    val own = c.deriveAddress(key)
+    val script = ByteString.copyFrom(BitcoinScript.lockScriptForAddress(own, c).data())
+    val b = parsed.toBuilder().setChangeAddress(own).clearPrivateKey().addPrivateKey(ByteString.copyFrom(key.data()))
+    for (i in 0 until b.utxoCount) b.setUtxo(i, b.getUtxo(i).toBuilder().setScript(script))
+    val out = AnySigner.sign(b.build(), c, Bitcoin.SigningOutput.parser())
+    if (out.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${out.errorMessage}")
+    return Envelope.b64(out.toByteArray())
   }
 
   fun signMessage(id: String, coinValue: Int, message: String, typed: Boolean, account: Int, activity: FragmentActivity?): String = synchronized(lock) {

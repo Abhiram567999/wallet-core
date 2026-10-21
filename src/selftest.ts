@@ -6,6 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { WalletCore } from './native.ts';
+import { bitcoinOutput } from './tx.ts';
 import { decodeVault } from './vault.ts';
 
 export interface Vectors {
@@ -18,6 +19,7 @@ export interface Vectors {
   derivation: { mnemonic: { words: string; addresses: Record<string, { coin: number; address: string }> }[] };
   envelopes: { wallets: unknown[]; cases: { name: string; secret: Record<string, string>; envelope: { kind: string; [k: string]: unknown } }[] };
   signing: { coin: number; privateKeyHex: string; inputBase64: string; outputBase64: string };
+  bitcoin: { inputBase64: string; rawHex: string; txid: string; ownAddress: string };
 }
 
 export interface CheckResult {
@@ -159,6 +161,13 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await rejects(WalletCore.addAccount(ethKeyIdPlaceholder(), null, PASSCODE), 'NOT_FOUND');
     await rejects(WalletCore.addAccount(multiId, null, PASSCODE), 'INVALID'); // only HD wallets get more accounts
     return 'accounts 2 and 3 work';
+  });
+
+  await check('sign Bitcoin; change is forced to the own address', async () => {
+    // The vector's input names a wrong change address on purpose; native signing must replace it.
+    const out = bitcoinOutput(await WalletCore.signTransaction(importedId, 0, v.bitcoin.inputBase64));
+    expect(out.raw === v.bitcoin.rawHex && out.txid === v.bitcoin.txid, `bitcoin tx differs: ${out.txid}`);
+    return 'matches the reference';
   });
 
   await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {

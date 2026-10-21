@@ -1,0 +1,8 @@
+{
+  "note": "Fake input (txid 1111…); signs with the public test phrase. Never fund it.",
+  "words": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+  "ownAddress": "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu",
+  "inputBase64": "CAEQsOoBGAoiKmJjMXFrdTBxaDBtYzAweTh0azBuNjV4MnRxdzR0cmxzcGFrMGZuam1meiosYmMxcXh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHhCMAoqCiARERERERERERERERERERERERERERERERERERERERERERAAGP3///8PGKCNBkgAUAA=",
+  "rawHex": "0100000000010111111111111111111111111111111111111111111111111111111111111111110000000000fdffffff023075000000000000160014b71e0bbf787bc875d9f3d50ca581d558ff00f6cfee0b010000000000160014c0cebcd6c3d3ca8c75dc5ec62ebe55330ef910e20247304402203cbcfc992ca6154919fbec1b654614ba3dd3d2604efd9cd2a248739ab1a029e5022007916c4fe819ed8db5e29b7968f6d30c68f738f7be556d3d1d15bcac16ccfb0201210330d54fd0dd420a6e5f8d3624f5f3482cae350f79d5f0753bf5beef9c2d91af3c00000000",
+  "txid": "5b8592a59f9af3f8636c53f9ba17aa8aa0cfcb97d55441eb80d3cd86f0377f71"
+}

@@ -151,3 +151,55 @@ export function solanaOutput(b64: string): { tx: string } {
   if (out.errorMessage) throw new Error(out.errorMessage);
   return { tx: out.encoded };
 }
+
+// MARK: Bitcoin family (BTC; LTC, DOGE, BCH use the same format)
+
+export interface Utxo {
+  txid: string; // hex, as explorers show it
+  vout: number;
+  value: bigint; // satoshis
+}
+
+export interface BitcoinTransfer {
+  coin: number; // CoinType (0 = Bitcoin)
+  from: string; // sender's own address; the native code forces change back to it
+  to: string;
+  amount: bigint; // satoshis (ignored when useMax)
+  byteFee: bigint; // satoshis per virtual byte
+  utxos: Utxo[];
+  /** Send everything minus the fee. */
+  useMax?: boolean;
+}
+
+/**
+ * Unsigned Bitcoin SigningInput. Locking scripts are left empty: the native
+ * code fills them for the wallet's own address, adds the key and signs with
+ * Trust Wallet Core's Bitcoin signer (SPEC §7).
+ */
+export function bitcoinTransferInput(p: BitcoinTransfer): string {
+  const P = TW.Bitcoin.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        hashType: 1, // SIGHASH_ALL
+        amount: Number(p.amount),
+        byteFee: Number(p.byteFee),
+        toAddress: p.to,
+        changeAddress: p.from,
+        coinType: p.coin,
+        useMaxAmount: !!p.useMax,
+        utxo: p.utxos.map((u) => ({
+          outPoint: { hash: hexToBytes(u.txid).reverse(), index: u.vout, sequence: 0xfffffffd }, // RBF-enabled
+          amount: Number(u.value),
+        })),
+      }),
+    ),
+  );
+}
+
+/** Raw signed transaction (hex) for broadcasting, its id, and the fee actually paid. */
+export function bitcoinOutput(b64: string): { raw: string; txid: string } {
+  const out = TW.Bitcoin.Proto.SigningOutput.decode(fromBase64(b64));
+  if (out.error) throw new Error(out.errorMessage || `bitcoin signing error ${out.error}`);
+  return { raw: toHex(out.encoded), txid: out.transactionId };
+}
