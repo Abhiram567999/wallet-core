@@ -20,6 +20,7 @@ export interface Vectors {
   envelopes: { wallets: unknown[]; cases: { name: string; secret: Record<string, string>; envelope: { kind: string; [k: string]: unknown } }[] };
   signing: { coin: number; privateKeyHex: string; inputBase64: string; outputBase64: string };
   bitcoin: { inputBase64: string; rawHex: string; txid: string; ownAddress: string };
+  utxo: Record<'litecoin' | 'dogecoin' | 'bitcoinCash', { coin: number; inputBase64: string; rawHex: string }>;
 }
 
 export interface CheckResult {
@@ -168,6 +169,15 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const out = bitcoinOutput(await WalletCore.signTransaction(importedId, 0, v.bitcoin.inputBase64));
     expect(out.raw === v.bitcoin.rawHex && out.txid === v.bitcoin.txid, `bitcoin tx differs: ${out.txid}`);
     return 'matches the reference';
+  });
+
+  await check('sign Litecoin, Dogecoin and Bitcoin Cash', async () => {
+    for (const name of ['litecoin', 'dogecoin', 'bitcoinCash'] as const) {
+      const c = v.utxo[name];
+      const out = bitcoinOutput(await WalletCore.signTransaction(importedId, c.coin, c.inputBase64));
+      expect(out.raw === c.rawHex, `${name}: signed transaction differs`);
+    }
+    return '3 coins match';
   });
 
   await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {

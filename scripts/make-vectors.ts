@@ -9,7 +9,7 @@ import { initWasm } from '@trustwallet/wallet-core';
 import { buildAddressIndex } from '../src/addressIndex.ts';
 import { sealVault } from '../src/vault.ts';
 import type { WalletRecord } from '../src/types.ts';
-import { makeBitcoinVector, makeSigningVector } from './signing-vector.ts';
+import { makeBitcoinVector, makeSigningVector, makeUtxoVectors } from './signing-vector.ts';
 import { accountPath, SOLANA_PATHS } from '../src/hd.ts';
 
 export const MNEMONICS = [
@@ -139,6 +139,7 @@ if (import.meta.main) {
   writeFileSync('test/vectors/hd.json', JSON.stringify(await deriveAccounts(), null, 2) + '\n');
   writeFileSync('test/vectors/signing.json', JSON.stringify(await makeSigningVector(), null, 2) + '\n');
   writeFileSync('test/vectors/bitcoin.json', JSON.stringify(await makeBitcoinVector(), null, 2) + '\n');
+  writeFileSync('test/vectors/utxo.json', JSON.stringify(await makeUtxoVectors(), null, 2) + '\n');
   writeFileSync('test/vectors/address-index.json', JSON.stringify(makeAddressIndex(derived), null, 2) + '\n');
   const m = derived.mnemonic[0]!;
   console.log(`${Object.keys(m.addresses).length} of ${derived.coinCount} coins derived; unsupported: ${m.unsupported.join(', ') || 'none'}`);

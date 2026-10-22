@@ -575,7 +575,7 @@ final class WalletStore {
     guard let coin = CoinType(rawValue: raw), let input = Data(base64Encoded: inputBase64) else { throw WalletError.invalid("bad coin or input") }
     return try withSecrets([id], reason: "Confirm the transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
-      if coin.blockchain == .bitcoin { return try Self.signBitcoin(input, key: key, coin: coin) }
+      if coin.blockchain == .bitcoin || coin.blockchain == .bitcoinCash { return try Self.signBitcoin(input, key: key, coin: coin) }
       let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
       guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
       // Solana signs the whole message (pre.data); its pre-image output has a different layout,

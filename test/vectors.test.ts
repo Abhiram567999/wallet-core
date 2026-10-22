@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import { indexContains } from '../src/addressIndex.ts';
 import { openVault, VaultError, encodeVault, decodeVault } from '../src/vault.ts';
 import { deriveAll, makeEnvelopes, makeAddressIndex } from '../scripts/make-vectors.ts';
-import { makeBitcoinVector, makeSigningVector } from '../scripts/signing-vector.ts';
+import { makeBitcoinVector, makeSigningVector, makeUtxoVectors } from '../scripts/signing-vector.ts';
 
 const load = (f: string) => JSON.parse(readFileSync(new URL(`./vectors/${f}`, import.meta.url), 'utf8'));
 const hex = (h: string) => Uint8Array.from(Buffer.from(h, 'hex'));
@@ -100,4 +100,8 @@ test('bitcoin vector: native-style signing reproduces the stored transaction', a
   const v = load('bitcoin.json');
   assert.deepEqual(await makeBitcoinVector(), v);
   assert.equal(v.ownAddress, 'bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu');
+});
+
+test('Litecoin, Dogecoin, Bitcoin Cash vectors reproduce', async () => {
+  assert.deepEqual(await makeUtxoVectors(), load('utxo.json'));
 });

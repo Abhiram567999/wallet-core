@@ -82,3 +82,37 @@ export async function makeBitcoinVector() {
     txid: out.transactionId,
   };
 }
+
+// Litecoin, Dogecoin and Bitcoin Cash: the same native path as Bitcoin, with
+// their own address types (SegWit, legacy P2PKH, CashAddr) and, for BCH, the
+// fork-id signature. Recipient: account 2 of the same public test phrase.
+export async function makeUtxoVectors() {
+  const { bitcoinTransferInput } = await import('../src/tx.ts');
+  const core = await initWasm();
+  const { CoinType, CoinTypeExt, HDWallet, BitcoinScript, AnySigner } = core;
+  const words = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+  const cases: [string, any, string, bigint, bigint, bigint][] = [
+    // name, coin, recipient (account 2), amount, fee rate, utxo value
+    ['litecoin', CoinType.litecoin, 'ltc1q6he42udnkdx2m5dctfyjs2z9xl76xcdshd5htt', 3_000_000n, 10n, 10_000_000n],
+    ['dogecoin', CoinType.dogecoin, 'DEiUcV7xvCRdpQmsW3i8T9EVsb7zeiUQRt', 500_000_000n, 1000n, 1_000_000_000n],
+    ['bitcoinCash', CoinType.bitcoinCash, 'bitcoincash:qqsmeq8pee5px5z3f3uj57cu8dch9d5x55sn68q6wd', 30_000n, 1n, 100_000n],
+  ];
+  const wallet = HDWallet.createWithMnemonic(words, '');
+  const out: Record<string, unknown> = {};
+  for (const [name, coin, to, amount, byteFee, value] of cases) {
+    const key = wallet.getKeyForCoin(coin);
+    const own = CoinTypeExt.deriveAddress(coin, key);
+    const inputBase64 = bitcoinTransferInput({ coin: coin.value, from: 'wrong-change-address', to, amount, byteFee, utxos: [{ txid: '22'.repeat(32), vout: 1, value }] });
+    const input = TW.Bitcoin.Proto.SigningInput.decode(Buffer.from(inputBase64, 'base64'));
+    input.changeAddress = own;
+    const script = BitcoinScript.lockScriptForAddress(own, coin).data();
+    for (const u of input.utxo) u.script = script;
+    input.privateKey = [key.data()];
+    const o = TW.Bitcoin.Proto.SigningOutput.decode(AnySigner.sign(TW.Bitcoin.Proto.SigningInput.encode(input).finish(), coin));
+    if (o.error || o.encoded.length === 0) throw new Error(`${name} signing failed: ${o.error} ${o.errorMessage}`);
+    out[name] = { coin: coin.value, ownAddress: own, to, inputBase64, rawHex: Buffer.from(o.encoded).toString('hex'), txid: o.transactionId };
+    key.delete();
+  }
+  wallet.delete();
+  return { note: 'Fake inputs (txid 2222…); public test phrase. Never fund it.', words, ...out };
+}

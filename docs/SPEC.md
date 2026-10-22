@@ -274,7 +274,7 @@ example transaction) must come out byte for byte on every platform.
 
 A Bitcoin transaction spends earlier outputs (UTXOs), and every input needs
 its own signature, so steps 3–5 don't fit. For coins whose blockchain is
-Bitcoin, the native module instead:
+Bitcoin or Bitcoin Cash (BTC, LTC, DOGE, BCH), the native module instead:
 
 1. parses the `Bitcoin.Proto.SigningInput` the app built with
    `bitcoinTransferInput` (`src/tx.ts`): recipient, amount, fee rate in

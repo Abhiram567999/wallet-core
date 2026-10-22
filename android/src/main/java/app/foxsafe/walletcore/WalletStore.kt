@@ -523,7 +523,7 @@ class WalletStore(context: Context) {
     val input = Envelope.unb64(inputB64)
     withSecret(id, activity, "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
-      if (c.blockchain() == Blockchain.BITCOIN) return@withSecret signBitcoin(input, key, c)
+      if (c.blockchain() == Blockchain.BITCOIN || c.blockchain() == Blockchain.BITCOINCASH) return@withSecret signBitcoin(input, key, c)
       val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
       if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
       // Solana signs the whole message (pre.data); its pre-image output has a different layout,
