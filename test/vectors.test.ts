@@ -105,3 +105,11 @@ test('bitcoin vector: native-style signing reproduces the stored transaction', a
 test('Litecoin, Dogecoin, Bitcoin Cash vectors reproduce', async () => {
   assert.deepEqual(await makeUtxoVectors(), load('utxo.json'));
 });
+
+test('Solana associated token address matches the network', async () => {
+  const { associatedTokenAddress, base58Decode, base58Encode } = await import('../src/solana.ts');
+  // USDC account of a real wallet, as returned by getTokenAccountsByOwner on mainnet (2026-10-22).
+  assert.equal(associatedTokenAddress('BwWK17cbHxwWBKZkUYvzxLcNQ1YVyaFezduWbtm2de6s', 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), '2Y3wfpoDxGWYsuqDhSZKWeVh5Mgg42edV9bd5CFYA679');
+  const k = '11111111111111111111111111111111';
+  assert.equal(base58Encode(base58Decode(k)), k);
+});

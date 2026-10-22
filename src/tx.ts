@@ -203,3 +203,41 @@ export function bitcoinOutput(b64: string): { raw: string; txid: string } {
   if (out.error) throw new Error(out.errorMessage || `bitcoin signing error ${out.error}`);
   return { raw: toHex(out.encoded), txid: out.transactionId };
 }
+
+// MARK: Solana tokens (SPL: USDT, USDC …)
+
+export interface SolanaTokenTransfer {
+  from: string; // sender's main address
+  mint: string;
+  decimals: number;
+  amount: bigint; // token base units
+  senderTokenAddress: string;
+  recipient: string; // recipient's main address
+  recipientTokenAddress: string; // associatedTokenAddress(recipient, mint)
+  /** The recipient has no account for this token yet: create it (the sender pays ~0.002 SOL rent). */
+  createRecipientAccount: boolean;
+  recentBlockhash: string;
+}
+
+export function solanaTokenTransferInput(p: SolanaTokenTransfer): string {
+  const P = TW.Solana.Proto;
+  const common = {
+    tokenMintAddress: p.mint,
+    senderTokenAddress: p.senderTokenAddress,
+    recipientTokenAddress: p.recipientTokenAddress,
+    amount: Number(p.amount),
+    decimals: p.decimals,
+  };
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        sender: p.from,
+        recentBlockhash: p.recentBlockhash,
+        txEncoding: P.Encoding.Base64,
+        ...(p.createRecipientAccount
+          ? { createAndTransferTokenTransaction: { ...common, recipientMainAddress: p.recipient } }
+          : { tokenTransferTransaction: common }),
+      }),
+    ),
+  );
+}
