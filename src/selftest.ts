@@ -5,8 +5,8 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
-import { WalletCore } from './native.ts';
-import { bitcoinOutput } from './tx.ts';
+import { signTransactions, WalletCore } from './native.ts';
+import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
 import { decodeVault } from './vault.ts';
 
 export interface Vectors {
@@ -178,6 +178,21 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
       expect(out.raw === c.rawHex, `${name}: signed transaction differs`);
     }
     return '3 coins match';
+  });
+
+  await check('sign a payment and its fee with one Face ID (gasless)', async () => {
+    const from = (await WalletCore.getAddresses(importedId, [195]))[0]!.address;
+    const block = { number: 70_000_000, timestamp: 1_760_000_000_000, txTrieRoot: '00'.repeat(32), parentHash: '00'.repeat(32), witnessAddress: `41${'00'.repeat(20)}`, version: 30 };
+    const usdt = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+    const inputs = [
+      tronTransferInput({ from, to: 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN', amount: 5_000_000n, token: usdt, feeLimit: 30_000_000n, block, now: 1_760_000_001_000 }),
+      tronTransferInput({ from, to: 'TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV', amount: 2_000_000n, token: usdt, feeLimit: 30_000_000n, block, now: 1_760_000_001_000, expiresInMs: 120_000 }),
+    ];
+    const batch = await signTransactions(importedId, 195, inputs);
+    const single = [await WalletCore.signTransaction(importedId, 195, inputs[0]!), await WalletCore.signTransaction(importedId, 195, inputs[1]!)];
+    expect(batch.length === 2, 'expected two signed transactions');
+    for (let i = 0; i < 2; i++) expect(tronOutput(batch[i]!).json === tronOutput(single[i]!).json, `transaction ${i + 1} differs from signing it alone`);
+    return typeof (WalletCore as { signTransactions?: unknown }).signTransactions === 'function' ? 'one unlock for both, same signatures' : 'this build signs one by one';
   });
 
   await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {

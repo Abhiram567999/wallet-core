@@ -86,6 +86,8 @@ export interface NativeWalletCore {
   // Signing. `input` is a Trust Wallet Core SigningInput protobuf (base64)
   // built WITHOUT a private key; returns the SigningOutput protobuf (base64).
   signTransaction(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
+  /** Up to 4 transactions with ONE Face ID (builds from 2026-10-23 on; use `signTransactions` below). */
+  signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
@@ -128,3 +130,14 @@ export const WalletCore: NativeWalletCore =
       throw new Error(`UNAVAILABLE: wallet core not in this build (${String(name)}); use the Foxsafe development build`);
     },
   });
+
+/**
+ * Signs several transactions (e.g. a payment and its fee transfer) with one
+ * Face ID. Builds without the batch function ask once per transaction.
+ */
+export async function signTransactions(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]> {
+  if (typeof native?.signTransactions === 'function') return native.signTransactions(id, coin, inputs, account);
+  const out: string[] = [];
+  for (const input of inputs) out.push(await WalletCore.signTransaction(id, coin, input, account));
+  return out;
+}

@@ -518,23 +518,35 @@ class WalletStore(context: Context) {
   }
 
   /** Pre-image hash → sign → compile (SPEC §7). The key never reaches JavaScript. */
-  fun signTransaction(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+  fun signTransaction(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?): String =
+    signTransactions(id, coinValue, listOf(inputB64), account, activity)[0]
+
+  /**
+   * Several transactions with ONE fingerprint / face prompt, e.g. a payment and
+   * its network-fee transfer (gasless). The app shows all of them before asking.
+   */
+  fun signTransactions(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
     val c = coin(coinValue)
-    val input = Envelope.unb64(inputB64)
-    withSecret(id, activity, "Confirm the transaction") { r ->
+    if (inputsB64.size !in 1..4) throw WalletException("INVALID", "bad inputs")
+    val inputs = inputsB64.map { Envelope.unb64(it) }
+    withSecret(id, activity, if (inputs.size > 1) "Confirm the transactions" else "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
-      if (c.blockchain() == Blockchain.BITCOIN || c.blockchain() == Blockchain.BITCOINCASH) return@withSecret signBitcoin(input, key, c)
-      val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
-      if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
-      // Solana signs the whole message (pre.data); its pre-image output has a different layout,
-      // so the generic dataHash field would hold the signer's key instead (SPEC §7).
-      val digest = if (c.blockchain() == Blockchain.SOLANA) pre.data.toByteArray() else pre.dataHash.toByteArray()
-      val sig = key.sign(digest, c.curve()) ?: throw WalletException("CRYPTO", "signing failed")
-      val out = TransactionCompiler.compileWithSignatures(
-        c, input, DataVector().apply { add(sig) }, DataVector().apply { add(key.getPublicKey(c).data()) },
-      )
-      Envelope.b64(out)
+      inputs.map { signOne(it, key, c) }
     }
+  }
+
+  private fun signOne(input: ByteArray, key: PrivateKey, c: CoinType): String {
+    if (c.blockchain() == Blockchain.BITCOIN || c.blockchain() == Blockchain.BITCOINCASH) return signBitcoin(input, key, c)
+    val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
+    if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
+    // Solana signs the whole message (pre.data); its pre-image output has a different layout,
+    // so the generic dataHash field would hold the signer's key instead (SPEC §7).
+    val digest = if (c.blockchain() == Blockchain.SOLANA) pre.data.toByteArray() else pre.dataHash.toByteArray()
+    val sig = key.sign(digest, c.curve()) ?: throw WalletException("CRYPTO", "signing failed")
+    val out = TransactionCompiler.compileWithSignatures(
+      c, input, DataVector().apply { add(sig) }, DataVector().apply { add(key.getPublicKey(c).data()) },
+    )
+    return Envelope.b64(out)
   }
 
   /**

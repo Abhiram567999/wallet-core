@@ -571,23 +571,37 @@ final class WalletStore {
   /// Signs a Trust Wallet Core SigningInput built without a key:
   /// pre-image hash, sign inside this process, compile (SPEC §6).
   func signTransaction(id: String, coin raw: UInt32, inputBase64: String, account: UInt32) throws -> String {
+    try signTransactions(id: id, coin: raw, inputsBase64: [inputBase64], account: account)[0]
+  }
+
+  /// Several transactions with ONE Face ID, e.g. a payment and its network-fee
+  /// transfer (gasless). The app shows all of them on the confirm screen first.
+  func signTransactions(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32) throws -> [String] {
     lock.lock(); defer { lock.unlock() }
-    guard let coin = CoinType(rawValue: raw), let input = Data(base64Encoded: inputBase64) else { throw WalletError.invalid("bad coin or input") }
-    return try withSecrets([id], reason: "Confirm the transaction") { records in
-      let key = try Self.privateKey(records[0], coin: coin, account: account)
-      if coin.blockchain == .bitcoin || coin.blockchain == .bitcoinCash { return try Self.signBitcoin(input, key: key, coin: coin) }
-      let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
-      guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
-      // Solana signs the whole message (pre.data); its pre-image output has a different layout,
-      // so the generic dataHash field would hold the signer's key instead (SPEC §7).
-      let digest = coin.blockchain == .solana ? pre.data : pre.dataHash
-      guard let signature = key.sign(digest: digest, curve: coin.curve) else { throw WalletError.crypto("signing failed") }
-      let output = TransactionCompiler.compileWithSignatures(
-        coinType: coin, txInputData: input,
-        signatures: DataVector(data: signature), publicKeys: DataVector(data: key.getPublicKey(coinType: coin).data)
-      )
-      return output.base64EncodedString()
+    guard let coin = CoinType(rawValue: raw), (1...4).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
+    let inputs = try inputsBase64.map { b64 -> Data in
+      guard let d = Data(base64Encoded: b64) else { throw WalletError.invalid("bad input") }
+      return d
     }
+    return try withSecrets([id], reason: inputs.count > 1 ? "Confirm the transactions" : "Confirm the transaction") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      return try inputs.map { try Self.signOne($0, key: key, coin: coin) }
+    }
+  }
+
+  private static func signOne(_ input: Data, key: PrivateKey, coin: CoinType) throws -> String {
+    if coin.blockchain == .bitcoin || coin.blockchain == .bitcoinCash { return try signBitcoin(input, key: key, coin: coin) }
+    let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
+    guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
+    // Solana signs the whole message (pre.data); its pre-image output has a different layout,
+    // so the generic dataHash field would hold the signer's key instead (SPEC §7).
+    let digest = coin.blockchain == .solana ? pre.data : pre.dataHash
+    guard let signature = key.sign(digest: digest, curve: coin.curve) else { throw WalletError.crypto("signing failed") }
+    let output = TransactionCompiler.compileWithSignatures(
+      coinType: coin, txInputData: input,
+      signatures: DataVector(data: signature), publicKeys: DataVector(data: key.getPublicKey(coinType: coin).data)
+    )
+    return output.base64EncodedString()
   }
 
   /// Bitcoin family: every UTXO input needs its own signature, so Trust Wallet

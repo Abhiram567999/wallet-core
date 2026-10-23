@@ -84,6 +84,8 @@ export interface TronTransfer {
   feeLimit?: bigint; // sun, TRC-20 only
   block: TronBlock;
   now?: number;
+  /** How long the signed transaction stays valid (default 10 minutes). */
+  expiresInMs?: number;
 }
 
 export function tronTransferInput(p: TronTransfer): string {
@@ -94,7 +96,7 @@ export function tronTransferInput(p: TronTransfer): string {
       P.SigningInput.create({
         transaction: {
           timestamp: now,
-          expiration: now + 10 * 60 * 1000,
+          expiration: now + (p.expiresInMs ?? 10 * 60 * 1000),
           blockHeader: {
             number: p.block.number,
             timestamp: p.block.timestamp,

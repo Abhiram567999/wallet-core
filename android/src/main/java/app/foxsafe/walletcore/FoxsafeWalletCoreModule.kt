@@ -145,6 +145,9 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("signTransaction") { id: String, coin: Int, input: String, account: Int? ->
       call { store.signTransaction(id, coin, input, account ?: 0, activity) }
     }
+    AsyncFunction("signTransactions") { id: String, coin: Int, inputs: List<String>, account: Int? ->
+      call { store.signTransactions(id, coin, inputs, account ?: 0, activity) }
+    }
     AsyncFunction("signMessage") { id: String, coin: Int, message: String, account: Int? ->
       call { store.signMessage(id, coin, message, false, account ?: 0, activity) }
     }
