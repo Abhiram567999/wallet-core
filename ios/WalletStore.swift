@@ -622,6 +622,116 @@ final class WalletStore {
     return t.ownerAddress
   }
 
+  // MARK: EVM gasless (EIP-7702 + EntryPoint 0.8)
+
+  /// Foxsafe's EVM fee rule, compiled in on purpose: an app update can't change it.
+  enum EvmFeePolicy {
+    static let entryPoint = "0x4337084d9e255ff0702461cf8895ce9e3b5ff108"
+    /// The only contract a wallet may be upgraded to (eth-infinitism Simple7702Account, audited).
+    static let delegate = "0xe6Cae83BdE06E4c305530e199D7217f42808555B"
+    static let feeWallet = "0x4fe28082398c2ddf89c010785e9acd8604ea9607"
+    /// App coin → allowed chain ids (Base also allows Base Sepolia for tests).
+    static let chains: [UInt32: [UInt64]] = [60: [1], 20000714: [56], 8453: [8453, 84532], 966: [137], 10042221: [42161], 10000070: [10]]
+    /// Chain id → stablecoins that can pay the fee (lowercase) → decimals.
+    static let tokens: [UInt64: [String: Int]] = [
+      1: ["0xdac17f958d2ee523a2206206994597c13d831ec7": 6, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": 6],
+      56: ["0x55d398326f99059ff775485246999027b3197955": 18, "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d": 18],
+      8453: ["0x833589fcd6edb6e08f4c7c32d4f71b54bda02913": 6],
+      137: ["0xc2132d05d31c914a87c6611c10748aeb04b58e8f": 6, "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": 6],
+      42161: ["0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9": 6, "0xaf88d065e77c8cc2239327c5edb3a432268e5831": 6],
+      10: ["0x94b008aa00579c1307b0ef2c499ad98a8ce58e58": 6, "0x01bff41798a0bcf287b996046ca68b395dbc1071": 6, "0x0b2c639c533813f4aa9d7837caf62653d097ff85": 6],
+      84532: ["0x036cbd53842c5426634e7929541ec2318f3dcf7e": 6],
+    ]
+    static let maxFeeUnits = 5 // whole tokens
+  }
+
+  /// Signs a gasless EVM send with ONE Face ID: the EntryPoint 0.8 operation and, on a
+  /// wallet's first use, the EIP-7702 upgrade to the built-in Simple7702Account. Refuses unless
+  /// the operation is exactly [token.transfer(to, amount), token.transfer(Foxsafe, fee ≤ 5)],
+  /// sent by this wallet and paid for by a paymaster (SPEC §7.3).
+  /// `request` JSON: {token, to, amount, fee, upgradeNonce (-1 = already upgraded)}.
+  func signGaslessEvm(id: String, coin raw: UInt32, typedData: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("gasless transfer refused: \(why)") }
+    guard let coin = CoinType(rawValue: raw), coin.blockchain == .ethereum, let allowedChains = EvmFeePolicy.chains[raw] else { throw bad("network") }
+    guard let td = try JSONSerialization.jsonObject(with: Data(typedData.utf8)) as? [String: Any],
+          let domain = td["domain"] as? [String: Any], let message = td["message"] as? [String: Any],
+          td["primaryType"] as? String == "PackedUserOperation",
+          let req = try JSONSerialization.jsonObject(with: Data(request.utf8)) as? [String: Any] else { throw bad("unreadable") }
+
+    let chainId = (domain["chainId"] as? NSNumber)?.uint64Value ?? UInt64("\(domain["chainId"] ?? "")") ?? 0
+    guard allowedChains.contains(chainId),
+          (domain["verifyingContract"] as? String)?.lowercased() == EvmFeePolicy.entryPoint,
+          domain["name"] as? String == "ERC4337", domain["version"] as? String == "1" else { throw bad("not EntryPoint 0.8 on this network") }
+    guard let token = (req["token"] as? String)?.lowercased(), let decimals = EvmFeePolicy.tokens[chainId]?[token],
+          let tokenWord = Self.addressWord(token), let toWord = Self.addressWord(req["to"] as? String ?? ""),
+          let amount = Self.uint256(req["amount"] as? String ?? ""), let fee = Self.uint256(req["fee"] as? String ?? ""),
+          let cap = Self.uint256(String(EvmFeePolicy.maxFeeUnits) + String(repeating: "0", count: decimals)) else { throw bad("parameters") }
+    let zero = Data(repeating: 0, count: 32)
+    guard amount != zero, fee != zero, fee == cap || fee.lexicographicallyPrecedes(cap) else { throw bad("the fee is above 5") }
+    let expected = Self.gaslessCallData(token: tokenWord, to: toWord, amount: amount, fee: fee, feeWallet: Self.addressWord(EvmFeePolicy.feeWallet)!)
+    guard (message["callData"] as? String)?.lowercased() == expected else { throw bad("the transaction is not exactly the payment plus Foxsafe's fee") }
+    guard let pad = message["paymasterAndData"] as? String, pad.count >= 42 else { throw bad("no paymaster: it would spend your own gas") }
+    let upgradeNonce = (req["upgradeNonce"] as? NSNumber)?.int64Value ?? -1
+    let initCode = (message["initCode"] as? String ?? "0x").lowercased()
+    guard upgradeNonce >= 0 ? initCode == EvmFeePolicy.delegate.lowercased() : (initCode == "0x" || initCode.isEmpty) else { throw bad("unexpected account upgrade") }
+    let sender = (message["sender"] as? String ?? "").lowercased()
+
+    return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      guard sender == coin.deriveAddress(privateKey: key).lowercased() else { throw bad("not sent by this wallet") }
+      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: typedData)
+      if !sig.hasPrefix("0x") { sig = "0x" + sig }
+      guard sig.count == 132 else { throw WalletError.crypto("signing failed") }
+      var out: [String: Any] = ["signature": sig]
+      if upgradeNonce >= 0 {
+        guard let json = Eip7702.signAuthorization(chainId: Self.minimalBytes(chainId), contractAddress: EvmFeePolicy.delegate,
+                                                   nonce: Self.minimalBytes(UInt64(upgradeNonce)), privateKey: key.data.hexString),
+              let a = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any] else { throw WalletError.crypto("upgrade signing failed") }
+        out["authorization"] = ["r": a["r"] ?? "", "s": a["s"] ?? "", "yParity": a["yParity"] ?? ""]
+      }
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
+  /// executeBatch([token.transfer(to, amount), token.transfer(feeWallet, fee)]), ABI-encoded by hand.
+  static func gaslessCallData(token: Data, to: Data, amount: Data, fee: Data, feeWallet: Data) -> String {
+    func num(_ n: Int) -> Data { var d = Data(repeating: 0, count: 32); d[31] = UInt8(n & 0xff); d[30] = UInt8((n >> 8) & 0xff); return d }
+    func transfer(_ a: Data, _ v: Data) -> Data { Data([0xa9, 0x05, 0x9c, 0xbb]) + a + v } // 68 bytes
+    func tuple(_ target: Data, _ data: Data) -> Data { target + num(0) + num(0x60) + num(68) + data + Data(repeating: 0, count: 28) }
+    let body = Data([0x34, 0xfc, 0xd5, 0xbe]) + num(0x20) + num(2) + num(0x40) + num(0x40 + 224)
+      + tuple(token, transfer(to, amount)) + tuple(token, transfer(feeWallet, fee))
+    return "0x" + body.hexString
+  }
+
+  /// "0x" + 40 hex → 32-byte ABI word.
+  static func addressWord(_ a: String) -> Data? {
+    let hex = a.lowercased().hasPrefix("0x") ? String(a.dropFirst(2)) : a
+    guard hex.count == 40, let d = Data(hexString: hex) else { return nil }
+    return Data(repeating: 0, count: 12) + d
+  }
+
+  /// Decimal string → 32-byte big-endian word (nil if not a whole number below 2^256).
+  static func uint256(_ s: String) -> Data? {
+    guard !s.isEmpty, s.count <= 78, s.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }) else { return nil }
+    var bytes = [UInt8](repeating: 0, count: 32)
+    for ch in s.utf8 {
+      var carry = Int(ch) - 48
+      for i in stride(from: 31, through: 0, by: -1) {
+        let v = Int(bytes[i]) * 10 + carry
+        bytes[i] = UInt8(v & 0xff)
+        carry = v >> 8
+      }
+      if carry != 0 { return nil }
+    }
+    return Data(bytes)
+  }
+
+  static func minimalBytes(_ n: UInt64) -> Data {
+    var v = n.bigEndian
+    return Data(bytes: &v, count: 8).drop(while: { $0 == 0 })
+  }
+
   private static func signOne(_ input: Data, key: PrivateKey, coin: CoinType) throws -> String {
     if coin.blockchain == .bitcoin || coin.blockchain == .bitcoinCash { return try signBitcoin(input, key: key, coin: coin) }
     let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))

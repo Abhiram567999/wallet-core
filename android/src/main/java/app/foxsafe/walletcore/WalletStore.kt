@@ -13,6 +13,7 @@ import wallet.core.jni.Blockchain
 import wallet.core.jni.CoinType
 import wallet.core.jni.DataVector
 import wallet.core.jni.EthereumMessageSigner
+import wallet.core.jni.Eip7702
 import wallet.core.jni.HDWallet
 import wallet.core.jni.Mnemonic
 import wallet.core.jni.PrivateKey
@@ -562,6 +563,101 @@ class WalletStore(context: Context) {
     if (amount.signum() <= 0 || amount > FeePolicy.MAX_FEE) throw WalletException("INVALID", "the fee is above 5 USDT")
     return t.ownerAddress
   }
+
+  // MARK: EVM gasless (EIP-7702 + EntryPoint 0.8)
+
+  /** Foxsafe's EVM fee rule, compiled in on purpose: an app update can't change it. */
+  private object EvmFeePolicy {
+    const val ENTRY_POINT = "0x4337084d9e255ff0702461cf8895ce9e3b5ff108"
+    /** The only contract a wallet may be upgraded to (eth-infinitism Simple7702Account, audited). */
+    const val DELEGATE = "0xe6Cae83BdE06E4c305530e199D7217f42808555B"
+    const val FEE_WALLET = "0x4fe28082398c2ddf89c010785e9acd8604ea9607"
+    val CHAINS: Map<Int, List<Long>> = mapOf(60 to listOf(1L), 20000714 to listOf(56L), 8453 to listOf(8453L, 84532L), 966 to listOf(137L), 10042221 to listOf(42161L), 10000070 to listOf(10L))
+    val TOKENS: Map<Long, Map<String, Int>> = mapOf(
+      1L to mapOf("0xdac17f958d2ee523a2206206994597c13d831ec7" to 6, "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" to 6),
+      56L to mapOf("0x55d398326f99059ff775485246999027b3197955" to 18, "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d" to 18),
+      8453L to mapOf("0x833589fcd6edb6e08f4c7c32d4f71b54bda02913" to 6),
+      137L to mapOf("0xc2132d05d31c914a87c6611c10748aeb04b58e8f" to 6, "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359" to 6),
+      42161L to mapOf("0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9" to 6, "0xaf88d065e77c8cc2239327c5edb3a432268e5831" to 6),
+      10L to mapOf("0x94b008aa00579c1307b0ef2c499ad98a8ce58e58" to 6, "0x01bff41798a0bcf287b996046ca68b395dbc1071" to 6, "0x0b2c639c533813f4aa9d7837caf62653d097ff85" to 6),
+      84532L to mapOf("0x036cbd53842c5426634e7929541ec2318f3dcf7e" to 6),
+    )
+    const val MAX_FEE_UNITS = 5
+  }
+
+  /**
+   * Signs a gasless EVM send with ONE prompt: the EntryPoint 0.8 operation and, on first use, the
+   * EIP-7702 upgrade to the built-in Simple7702Account. Refuses unless the operation is exactly
+   * [token.transfer(to, amount), token.transfer(Foxsafe, fee ≤ 5)], sent by this wallet and paid for
+   * by a paymaster (SPEC §7.3). [request] JSON: {token, to, amount, fee, upgradeNonce (-1 = upgraded)}.
+   */
+  fun signGaslessEvm(id: String, coinValue: Int, typedData: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "gasless transfer refused: $why")
+    val c = coin(coinValue)
+    val allowedChains = EvmFeePolicy.CHAINS[coinValue]
+    if (c.blockchain() != Blockchain.ETHEREUM || allowedChains == null) throw bad("network")
+    val td = JSONObject(typedData)
+    val domain = td.getJSONObject("domain")
+    val message = td.getJSONObject("message")
+    val req = JSONObject(request)
+    if (td.optString("primaryType") != "PackedUserOperation") throw bad("not a user operation")
+    val chainId = domain.optString("chainId").toLongOrNull() ?: throw bad("chain")
+    if (chainId !in allowedChains || domain.optString("verifyingContract").lowercase() != EvmFeePolicy.ENTRY_POINT ||
+      domain.optString("name") != "ERC4337" || domain.optString("version") != "1") throw bad("not EntryPoint 0.8 on this network")
+    val token = req.optString("token").lowercase()
+    val decimals = EvmFeePolicy.TOKENS[chainId]?.get(token) ?: throw bad("this token can't pay the fee")
+    val amount = req.optString("amount").toBigIntegerOrNull() ?: throw bad("amount")
+    val fee = req.optString("fee").toBigIntegerOrNull() ?: throw bad("fee")
+    val cap = BigInteger.valueOf(EvmFeePolicy.MAX_FEE_UNITS.toLong()).multiply(BigInteger.TEN.pow(decimals))
+    if (amount.signum() <= 0 || amount.bitLength() > 256 || fee.signum() <= 0 || fee > cap) throw bad("the fee is above 5")
+    val expected = gaslessCallData(addressWord(token), addressWord(req.optString("to")), word(amount), word(fee), addressWord(EvmFeePolicy.FEE_WALLET))
+    if (message.optString("callData").lowercase() != expected) throw bad("the transaction is not exactly the payment plus Foxsafe's fee")
+    if (message.optString("paymasterAndData").length < 42) throw bad("no paymaster: it would spend your own gas")
+    val upgradeNonce = req.optLong("upgradeNonce", -1)
+    val initCode = message.optString("initCode", "0x").lowercase()
+    if (if (upgradeNonce >= 0) initCode != EvmFeePolicy.DELEGATE.lowercase() else initCode != "0x" && initCode.isNotEmpty()) throw bad("unexpected account upgrade")
+    val sender = message.optString("sender").lowercase()
+
+    withSecret(id, activity, "Confirm the transfer and its network fee") { r ->
+      val key = privateKey(r, c, account)
+      if (sender != c.deriveAddress(key).lowercase()) throw bad("not sent by this wallet")
+      var sig = EthereumMessageSigner.signTypedMessage(key, typedData)
+      if (!sig.startsWith("0x")) sig = "0x$sig"
+      if (sig.length != 132) throw WalletException("CRYPTO", "signing failed")
+      val out = JSONObject().put("signature", sig)
+      if (upgradeNonce >= 0) {
+        val a = JSONObject(
+          Eip7702.signAuthorization(minimalBytes(chainId), EvmFeePolicy.DELEGATE, minimalBytes(upgradeNonce), hex(key.data()))
+            ?: throw WalletException("CRYPTO", "upgrade signing failed"),
+        )
+        out.put("authorization", JSONObject().put("r", a.opt("r")).put("s", a.opt("s")).put("yParity", a.opt("yParity")))
+      }
+      out.toString()
+    }
+  }
+
+  /** executeBatch([token.transfer(to, amount), token.transfer(feeWallet, fee)]), ABI-encoded by hand. */
+  private fun gaslessCallData(token: ByteArray, to: ByteArray, amount: ByteArray, fee: ByteArray, feeWallet: ByteArray): String {
+    fun num(n: Int) = ByteArray(32).also { it[31] = (n and 0xff).toByte(); it[30] = ((n shr 8) and 0xff).toByte() }
+    fun transfer(a: ByteArray, v: ByteArray) = byteArrayOf(0xa9.toByte(), 0x05, 0x9c.toByte(), 0xbb.toByte()) + a + v
+    fun tuple(target: ByteArray, data: ByteArray) = target + num(0) + num(0x60) + num(68) + data + ByteArray(28)
+    val body = byteArrayOf(0x34, 0xfc.toByte(), 0xd5.toByte(), 0xbe.toByte()) + num(0x20) + num(2) + num(0x40) + num(0x40 + 224) +
+      tuple(token, transfer(to, amount)) + tuple(token, transfer(feeWallet, fee))
+    return "0x" + hex(body)
+  }
+
+  private fun addressWord(a: String): ByteArray {
+    val h = a.lowercase().removePrefix("0x")
+    if (h.length != 40 || !h.all { it in '0'..'9' || it in 'a'..'f' }) throw WalletException("INVALID", "gasless transfer refused: address")
+    return ByteArray(12) + unhex(h)!!
+  }
+
+  private fun word(v: BigInteger): ByteArray {
+    val b = v.toByteArray().dropWhile { it == 0.toByte() }.toByteArray()
+    return ByteArray(32 - b.size) + b
+  }
+
+  private fun minimalBytes(n: Long): ByteArray = word(BigInteger.valueOf(n)).dropWhile { it == 0.toByte() }.toByteArray()
 
   private fun signOne(input: ByteArray, key: PrivateKey, c: CoinType): String {
     if (c.blockchain() == Blockchain.BITCOIN || c.blockchain() == Blockchain.BITCOINCASH) return signBitcoin(input, key, c)

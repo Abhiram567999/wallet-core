@@ -5,7 +5,7 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
-import { signTransactions, WalletCore } from './native.ts';
+import { canSignGaslessEvm, signGaslessEvm, signTransactions, WalletCore, type GaslessEvmRequest } from './native.ts';
 import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
 import { decodeVault } from './vault.ts';
 
@@ -21,6 +21,7 @@ export interface Vectors {
   signing: { coin: number; privateKeyHex: string; inputBase64: string; outputBase64: string };
   bitcoin: { inputBase64: string; rawHex: string; txid: string; ownAddress: string };
   utxo: Record<'litecoin' | 'dogecoin' | 'bitcoinCash', { coin: number; inputBase64: string; rawHex: string }>;
+  gaslessEvm: { coin: number; sender: string; typedData: string; request: GaslessEvmRequest; signature: string; authorization: { r: string; s: string; yParity: number } };
 }
 
 export interface CheckResult {
@@ -209,6 +210,29 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused([payment, fee, fee], 'a third transaction');
     await refused([payment, t(feeWallet, 2_000_000n, 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN')], 'a fee from another wallet');
     return 'one unlock for both, same signatures; 4 bad batches refused';
+  });
+
+  await check('gasless EVM: one Face ID signs the operation and the 7702 upgrade; tampering is refused', async () => {
+    if (!canSignGaslessEvm()) return 'this build has no gasless EVM signing';
+    const g = v.gaslessEvm;
+    const out = await signGaslessEvm(importedId, g.coin, g.typedData, g.request);
+    expect(out.signature.toLowerCase() === g.signature.toLowerCase(), 'operation signature differs from viem');
+    expect(BigInt(out.authorization!.r) === BigInt(g.authorization.r) && BigInt(out.authorization!.s) === BigInt(g.authorization.s), 'upgrade signature differs from viem');
+    const refused = async (typedData: string, request: GaslessEvmRequest, what: string) => {
+      const ok = await signGaslessEvm(importedId, g.coin, typedData, request).then(() => true, () => false);
+      expect(!ok, `${what} was signed`);
+    };
+    const td = JSON.parse(g.typedData);
+    const swap = (path: (t: any) => void) => { const c = JSON.parse(g.typedData); path(c); return JSON.stringify(c); };
+    await refused(g.typedData, { ...g.request, fee: (6n * 10n ** 18n).toString() }, 'a fee above 5');
+    await refused(g.typedData, { ...g.request, to: '0x000000000000000000000000000000000000bEEF' }, 'a payment the operation does not contain');
+    await refused(swap((t) => (t.message.callData = t.message.callData.replace(/4fe28082398c2ddf89c010785e9acd8604ea9607/i, '000000000000000000000000000000000000bEEF'))), g.request, 'a fee redirected to another address');
+    await refused(swap((t) => (t.domain.verifyingContract = '0x0000000071727De22E5E9d8BAf0edAc6f37da032')), g.request, 'another EntryPoint');
+    await refused(swap((t) => (t.message.paymasterAndData = '0x')), g.request, 'an operation without a paymaster');
+    await refused(swap((t) => (t.message.initCode = '0x63c0c19a282a1B52b07dD5a65b58948A07DAE32B')), g.request, 'an upgrade to another contract');
+    await refused(swap((t) => (t.message.sender = '0x000000000000000000000000000000000000bEEF')), g.request, 'an operation from another wallet');
+    void td;
+    return 'signatures equal viem; 7 tampered versions refused';
   });
 
   await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {

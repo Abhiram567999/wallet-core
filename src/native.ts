@@ -92,6 +92,14 @@ export interface NativeWalletCore {
    * Builds from 2026-10-23 on; use `signTransactions` below.
    */
   signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
+  /**
+   * Gasless EVM send with ONE Face ID: signs the EntryPoint 0.8 operation (EIP-712 JSON) and, when
+   * `request.upgradeNonce` ≥ 0, the EIP-7702 upgrade to the built-in Simple7702Account. Native code
+   * refuses unless the operation is exactly [transfer(to, amount), transfer(Foxsafe, fee ≤ 5)] of an
+   * allowed stablecoin from this wallet, paid by a paymaster. Returns JSON {signature, authorization?}.
+   * Builds from 2026-10-24 on.
+   */
+  signGaslessEvm?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
@@ -144,4 +152,26 @@ export async function signTransactions(id: string, coin: CoinType, inputs: strin
   const out: string[] = [];
   for (const input of inputs) out.push(await WalletCore.signTransaction(id, coin, input, account));
   return out;
+}
+
+export interface GaslessEvmRequest {
+  token: string;
+  to: string;
+  amount: string; // base units
+  fee: string; // base units
+  /** The wallet's account nonce for its first-time upgrade, or -1 when already upgraded. */
+  upgradeNonce: number;
+}
+
+export interface GaslessEvmSignature {
+  signature: string;
+  authorization?: { r: string; s: string; yParity: number | string };
+}
+
+/** True when this build can sign gasless EVM sends (native fee rule included). */
+export const canSignGaslessEvm = () => typeof native?.signGaslessEvm === 'function';
+
+export async function signGaslessEvm(id: string, coin: CoinType, typedData: string, request: GaslessEvmRequest, account?: number): Promise<GaslessEvmSignature> {
+  if (!native?.signGaslessEvm) throw new Error('UNAVAILABLE: this app build cannot sign fee-free EVM transfers yet');
+  return JSON.parse(await native.signGaslessEvm(id, coin, typedData, JSON.stringify(request), account)) as GaslessEvmSignature;
 }
