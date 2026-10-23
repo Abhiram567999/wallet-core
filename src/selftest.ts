@@ -184,15 +184,31 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const from = (await WalletCore.getAddresses(importedId, [195]))[0]!.address;
     const block = { number: 70_000_000, timestamp: 1_760_000_000_000, txTrieRoot: '00'.repeat(32), parentHash: '00'.repeat(32), witnessAddress: `41${'00'.repeat(20)}`, version: 30 };
     const usdt = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
-    const inputs = [
-      tronTransferInput({ from, to: 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN', amount: 5_000_000n, token: usdt, feeLimit: 30_000_000n, block, now: 1_760_000_001_000 }),
-      tronTransferInput({ from, to: 'TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV', amount: 2_000_000n, token: usdt, feeLimit: 30_000_000n, block, now: 1_760_000_001_000, expiresInMs: 120_000 }),
-    ];
-    const batch = await signTransactions(importedId, 195, inputs);
-    const single = [await WalletCore.signTransaction(importedId, 195, inputs[0]!), await WalletCore.signTransaction(importedId, 195, inputs[1]!)];
+    const feeWallet = 'TRmToStoTAxU414feHAS67w33Qzi4VyEVJ';
+    const t = (to: string, amount: bigint, owner = from) =>
+      tronTransferInput({ from: owner, to, amount, token: usdt, feeLimit: 30_000_000n, block, now: 1_760_000_001_000, expiresInMs: 120_000 });
+    const payment = t('TCEezhePNTyie5gkrb77zAZLBx9RMffLuN', 5_000_000n);
+    const fee = t(feeWallet, 2_000_000n);
+
+    const batch = await signTransactions(importedId, 195, [payment, fee]);
+    const single = [await WalletCore.signTransaction(importedId, 195, payment), await WalletCore.signTransaction(importedId, 195, fee)];
     expect(batch.length === 2, 'expected two signed transactions');
     for (let i = 0; i < 2; i++) expect(tronOutput(batch[i]!).json === tronOutput(single[i]!).json, `transaction ${i + 1} differs from signing it alone`);
-    return typeof (WalletCore as { signTransactions?: unknown }).signTransactions === 'function' ? 'one unlock for both, same signatures' : 'this build signs one by one';
+
+    if (typeof (WalletCore as { signTransactions?: unknown }).signTransactions !== 'function') return 'this build signs one by one';
+    // The native rule: the second transaction may only be a fee of at most 5 USDT to Foxsafe's fee wallet.
+    const refused = async (inputs: string[], what: string) => {
+      const ok = await signTransactions(importedId, 195, inputs).then(
+        () => true,
+        () => false,
+      );
+      expect(!ok, `${what} was signed`);
+    };
+    await refused([payment, t('TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV', 2_000_000n)], 'a second transfer to someone else');
+    await refused([payment, t(feeWallet, 6_000_000n)], 'a fee above 5 USDT');
+    await refused([payment, fee, fee], 'a third transaction');
+    await refused([payment, t(feeWallet, 2_000_000n, 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN')], 'a fee from another wallet');
+    return 'one unlock for both, same signatures; 4 bad batches refused';
   });
 
   await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {

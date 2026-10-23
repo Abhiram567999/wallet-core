@@ -574,19 +574,52 @@ final class WalletStore {
     try signTransactions(id: id, coin: raw, inputsBase64: [inputBase64], account: account)[0]
   }
 
-  /// Several transactions with ONE Face ID, e.g. a payment and its network-fee
-  /// transfer (gasless). The app shows all of them on the confirm screen first.
+  /// A transaction plus, at most, ONE network-fee transfer with one Face ID
+  /// (gasless). The batch rule is enforced here, below the app: the second
+  /// transaction must pay at most 5 USDT to Foxsafe's fee wallet, so even a
+  /// tampered app can't use one Face ID to pay anyone else (SPEC §7.2).
   func signTransactions(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32) throws -> [String] {
     lock.lock(); defer { lock.unlock() }
-    guard let coin = CoinType(rawValue: raw), (1...4).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
+    guard let coin = CoinType(rawValue: raw), (1...2).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
     let inputs = try inputsBase64.map { b64 -> Data in
       guard let d = Data(base64Encoded: b64) else { throw WalletError.invalid("bad input") }
       return d
     }
-    return try withSecrets([id], reason: inputs.count > 1 ? "Confirm the transactions" : "Confirm the transaction") { records in
+    // Checked before Face ID, so a refused batch never asks.
+    var feeOwner: String?
+    if inputs.count == 2 { feeOwner = try Self.feeTransferOwner(inputs[1], coin: coin) }
+    return try withSecrets([id], reason: inputs.count > 1 ? "Confirm the transfer and its network fee" : "Confirm the transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
+      if let owner = feeOwner, owner != coin.deriveAddress(privateKey: key) {
+        throw WalletError.invalid("the fee transfer is not from this wallet")
+      }
       return try inputs.map { try Self.signOne($0, key: key, coin: coin) }
     }
+  }
+
+  /// Foxsafe's fee wallets and the largest fee one Face ID may pay. Changing
+  /// them needs a new app build on purpose: an app update can't redirect fees.
+  enum FeePolicy {
+    static let tronUSDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+    static let tronFeeWallet = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
+    static let maxFee: UInt64 = 5_000_000 // 5 USDT (6 decimals)
+  }
+
+  /// Returns the sender if `data` is a valid Foxsafe fee transfer; throws otherwise.
+  static func feeTransferOwner(_ data: Data, coin: CoinType) throws -> String {
+    guard coin == .tron else { throw WalletError.invalid("a second transaction is allowed only for TRON network fees") }
+    let input = try TronSigningInput(serializedBytes: data)
+    guard case .transferTrc20Contract(let t)? = input.transaction.contractOneof else {
+      throw WalletError.invalid("the second transaction is not a fee transfer")
+    }
+    guard t.contractAddress == FeePolicy.tronUSDT, t.toAddress == FeePolicy.tronFeeWallet else {
+      throw WalletError.invalid("the fee transfer does not go to Foxsafe's fee wallet")
+    }
+    let digits = t.amount.drop(while: { $0 == 0 })
+    guard digits.count <= 8 else { throw WalletError.invalid("the fee is too large") }
+    let amount = digits.reduce(UInt64(0)) { $0 << 8 | UInt64($1) }
+    guard amount > 0, amount <= FeePolicy.maxFee else { throw WalletError.invalid("the fee is above 5 USDT") }
+    return t.ownerAddress
   }
 
   private static func signOne(_ input: Data, key: PrivateKey, coin: CoinType) throws -> String {

@@ -19,8 +19,10 @@ import wallet.core.jni.PrivateKey
 import wallet.core.jni.TransactionCompiler
 import wallet.core.jni.TronMessageSigner
 import wallet.core.jni.proto.Bitcoin
+import wallet.core.jni.proto.Tron
 import wallet.core.jni.proto.Common.SigningError
 import wallet.core.jni.proto.TransactionCompiler.PreSigningOutput
+import java.math.BigInteger
 import java.security.MessageDigest
 import java.time.Instant
 import java.util.UUID
@@ -522,17 +524,43 @@ class WalletStore(context: Context) {
     signTransactions(id, coinValue, listOf(inputB64), account, activity)[0]
 
   /**
-   * Several transactions with ONE fingerprint / face prompt, e.g. a payment and
-   * its network-fee transfer (gasless). The app shows all of them before asking.
+   * A transaction plus, at most, ONE network-fee transfer with one fingerprint /
+   * face prompt (gasless). The batch rule is enforced here, below the app: the
+   * second transaction must pay at most 5 USDT to Foxsafe's fee wallet, so even a
+   * tampered app can't use one prompt to pay anyone else (SPEC §7.2).
    */
   fun signTransactions(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
     val c = coin(coinValue)
-    if (inputsB64.size !in 1..4) throw WalletException("INVALID", "bad inputs")
+    if (inputsB64.size !in 1..2) throw WalletException("INVALID", "bad inputs")
     val inputs = inputsB64.map { Envelope.unb64(it) }
-    withSecret(id, activity, if (inputs.size > 1) "Confirm the transactions" else "Confirm the transaction") { r ->
+    // Checked before the prompt, so a refused batch never asks.
+    val feeOwner = if (inputs.size == 2) feeTransferOwner(inputs[1], c) else null
+    withSecret(id, activity, if (inputs.size > 1) "Confirm the transfer and its network fee" else "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
+      if (feeOwner != null && feeOwner != c.deriveAddress(key)) throw WalletException("INVALID", "the fee transfer is not from this wallet")
       inputs.map { signOne(it, key, c) }
     }
+  }
+
+  /** Foxsafe's fee wallets and the largest fee one prompt may pay. Changing them needs a new build on purpose. */
+  private object FeePolicy {
+    const val TRON_USDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+    const val TRON_FEE_WALLET = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
+    val MAX_FEE: BigInteger = BigInteger.valueOf(5_000_000) // 5 USDT (6 decimals)
+  }
+
+  /** Returns the sender if [data] is a valid Foxsafe fee transfer; throws otherwise. */
+  private fun feeTransferOwner(data: ByteArray, c: CoinType): String {
+    if (c != CoinType.TRON) throw WalletException("INVALID", "a second transaction is allowed only for TRON network fees")
+    val tx = Tron.SigningInput.parseFrom(data).transaction
+    if (!tx.hasTransferTrc20Contract()) throw WalletException("INVALID", "the second transaction is not a fee transfer")
+    val t = tx.transferTrc20Contract
+    if (t.contractAddress != FeePolicy.TRON_USDT || t.toAddress != FeePolicy.TRON_FEE_WALLET) {
+      throw WalletException("INVALID", "the fee transfer does not go to Foxsafe's fee wallet")
+    }
+    val amount = BigInteger(1, t.amount.toByteArray())
+    if (amount.signum() <= 0 || amount > FeePolicy.MAX_FEE) throw WalletException("INVALID", "the fee is above 5 USDT")
+    return t.ownerAddress
   }
 
   private fun signOne(input: ByteArray, key: PrivateKey, c: CoinType): String {

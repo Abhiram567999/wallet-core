@@ -86,7 +86,11 @@ export interface NativeWalletCore {
   // Signing. `input` is a Trust Wallet Core SigningInput protobuf (base64)
   // built WITHOUT a private key; returns the SigningOutput protobuf (base64).
   signTransaction(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
-  /** Up to 4 transactions with ONE Face ID (builds from 2026-10-23 on; use `signTransactions` below). */
+  /**
+   * A transaction plus at most one Foxsafe network-fee transfer (TRON USDT, ≤ 5 USDT, to the
+   * fee wallet built into the native code) with ONE Face ID. Anything else is refused natively.
+   * Builds from 2026-10-23 on; use `signTransactions` below.
+   */
   signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
@@ -132,8 +136,8 @@ export const WalletCore: NativeWalletCore =
   });
 
 /**
- * Signs several transactions (e.g. a payment and its fee transfer) with one
- * Face ID. Builds without the batch function ask once per transaction.
+ * Signs a payment and its fee transfer with one Face ID. Builds without the
+ * batch function ask once per transaction.
  */
 export async function signTransactions(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]> {
   if (typeof native?.signTransactions === 'function') return native.signTransactions(id, coin, inputs, account);
