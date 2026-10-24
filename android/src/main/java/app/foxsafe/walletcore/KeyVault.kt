@@ -58,7 +58,15 @@ object KeyVault {
         }
       }
       .build()
-    KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, "AndroidKeyStore").apply { initialize(spec) }.generateKeyPair()
+    try {
+      KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, "AndroidKeyStore").apply { initialize(spec) }.generateKeyPair()
+    } catch (e: java.security.GeneralSecurityException) {
+      // Android only makes a fingerprint/PIN-protected key when the phone has a screen lock.
+      if (generateSequence(e as Throwable) { it.cause }.any { it.message?.contains("lock screen", ignoreCase = true) == true }) {
+        throw WalletException("NO_SCREEN_LOCK", "Set a screen lock (PIN, pattern, password or fingerprint) in your phone's Settings, then try again. Foxsafe uses it to protect your wallet keys.")
+      }
+      throw e
+    }
   }
 
   /** Wrapping only needs the public half: no prompt. Done in software with the exported public key. */
