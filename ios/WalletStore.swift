@@ -694,6 +694,94 @@ final class WalletStore {
     }
   }
 
+  // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
+
+  /// Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it.
+  enum SolanaFeePolicy {
+    static let feeWallet = "3DvVfRtM2SR49P6zkdA59g78BYsjXtnaKgvaUK1CPMnj"
+    /// Stablecoin mints that can pay the fee → decimals.
+    static let tokens: [String: UInt8] = ["Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": 6, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": 6]
+    static let maxFeeUnits: UInt64 = 5 // whole tokens
+    static let tokenProgram = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    static let ataProgram = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+    static let systemProgram = "11111111111111111111111111111111"
+    static let computeBudgetProgram = "ComputeBudget111111111111111111111111111111"
+  }
+
+  /// Signs a gasless Solana send with ONE Face ID. The message is rebuilt here from the user's
+  /// choices (layout in server/src/gasless/solana/message.ts) and must match the server's byte for
+  /// byte: [compute budget, (create receiver / fee account, rent paid by the paymaster),
+  /// transferChecked(payment), transferChecked(Foxsafe fee ≤ 5)]. The paymaster is only the fee payer;
+  /// the user is a read-only signer (SPEC §7.4). `request` JSON: {to, mint, amount, fee, feePayer,
+  /// blockhash, toIsTokenAccount, createRecipient, createFeeAccount, computeUnitLimit, computeUnitPrice}.
+  func signGaslessSolana(id: String, messageBase64: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("gasless transfer refused: \(why)") }
+    guard let message = Data(base64Encoded: messageBase64),
+          let req = try JSONSerialization.jsonObject(with: Data(request.utf8)) as? [String: Any] else { throw bad("unreadable") }
+    let str = { (k: String) in req[k] as? String ?? "" }
+    let num = { (k: String) -> UInt64? in (req[k] as? NSNumber)?.uint64Value ?? UInt64(str(k)) }
+    let flag = { (k: String) in (req[k] as? NSNumber)?.boolValue ?? false }
+    let mint = str("mint"), to = str("to"), feePayer = str("feePayer"), blockhash = str("blockhash")
+    guard let decimals = SolanaFeePolicy.tokens[mint] else { throw bad("this token can't pay the fee") }
+    guard let amount = num("amount"), amount > 0, let fee = num("fee"), fee > 0,
+          fee <= SolanaFeePolicy.maxFeeUnits * UInt64(pow(10.0, Double(decimals))) else { throw bad("the fee is above 5") }
+    guard let cuLimit = num("computeUnitLimit"), cuLimit <= 1_400_000, let cuPrice = num("computeUnitPrice"), cuPrice <= 10_000_000 else { throw bad("compute budget") }
+    for k in [to, feePayer, blockhash] where Base58.decodeNoCheck(string: k)?.count != 32 { throw bad("address") }
+    if flag("toIsTokenAccount") && flag("createRecipient") { throw bad("inconsistent receiver") }
+
+    return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
+      let key = try Self.privateKey(records[0], coin: .solana, account: account)
+      let user = CoinType.solana.deriveAddress(privateKey: key)
+      guard feePayer != user, feePayer != SolanaFeePolicy.feeWallet else { throw bad("the paymaster can't be you or Foxsafe") }
+      guard let userAta = SolanaAddress(string: user)?.defaultTokenAddress(tokenMintAddress: mint),
+            let feeAta = SolanaAddress(string: SolanaFeePolicy.feeWallet)?.defaultTokenAddress(tokenMintAddress: mint),
+            let destination = flag("toIsTokenAccount") ? to : SolanaAddress(string: to)?.defaultTokenAddress(tokenMintAddress: mint) else { throw bad("token accounts") }
+      guard destination != userAta, destination != feeAta else { throw bad("receiver") }
+      let expected = try Self.gaslessSolanaMessage(
+        feePayer: feePayer, user: user, mint: mint, decimals: decimals, userAta: userAta, destination: destination,
+        recipientOwner: flag("createRecipient") ? to : nil, feeAta: feeAta, createFeeAccount: flag("createFeeAccount"),
+        amount: amount, fee: fee, blockhash: blockhash, cuLimit: UInt32(cuLimit), cuPrice: cuPrice)
+      guard expected == message else { throw bad("the transaction is not exactly the payment plus Foxsafe's fee") }
+      guard let signature = key.sign(digest: message, curve: .ed25519), signature.count == 64 else { throw WalletError.crypto("signing failed") }
+      return Base58.encodeNoCheck(data: signature)
+    }
+  }
+
+  /// Byte-for-byte twin of server/src/gasless/solana/message.ts (legacy message, fixed account order).
+  static func gaslessSolanaMessage(feePayer: String, user: String, mint: String, decimals: UInt8, userAta: String, destination: String,
+                                   recipientOwner: String?, feeAta: String, createFeeAccount: Bool, amount: UInt64, fee: UInt64,
+                                   blockhash: String, cuLimit: UInt32, cuPrice: UInt64) throws -> Data {
+    let P = SolanaFeePolicy.self
+    var readonly = [mint, P.tokenProgram, P.computeBudgetProgram]
+    if recipientOwner != nil || createFeeAccount { readonly += [P.ataProgram, P.systemProgram] }
+    if let owner = recipientOwner { readonly.append(owner) }
+    if createFeeAccount { readonly.append(P.feeWallet) }
+    let keys = [feePayer, user, userAta, destination, feeAta] + readonly
+    guard Set(keys).count == keys.count else { throw WalletError.invalid("gasless transfer refused: accounts must be distinct") }
+    func idx(_ k: String) -> UInt8 { UInt8(keys.firstIndex(of: k)!) }
+    func compact(_ n: Int) -> Data {
+      var out = Data(), v = n
+      while true { let b = UInt8(v & 0x7f); v >>= 7; if v == 0 { out.append(b); return out }; out.append(b | 0x80) }
+    }
+    func le<T: FixedWidthInteger>(_ n: T) -> Data { withUnsafeBytes(of: n.littleEndian) { Data($0) } }
+    func ix(_ program: String, _ accounts: [String], _ data: Data) -> Data {
+      Data([idx(program)]) + compact(accounts.count) + Data(accounts.map(idx)) + compact(data.count) + data
+    }
+    func transferChecked(_ dest: String, _ value: UInt64) -> Data { ix(P.tokenProgram, [userAta, mint, dest, user], Data([12]) + le(value) + Data([decimals])) }
+    func createAta(_ ata: String, _ owner: String) -> Data { ix(P.ataProgram, [feePayer, ata, owner, mint, P.systemProgram, P.tokenProgram], Data([1])) }
+    var instructions = [ix(P.computeBudgetProgram, [], Data([2]) + le(cuLimit)), ix(P.computeBudgetProgram, [], Data([3]) + le(cuPrice))]
+    if let owner = recipientOwner { instructions.append(createAta(destination, owner)) }
+    if createFeeAccount { instructions.append(createAta(feeAta, P.feeWallet)) }
+    instructions += [transferChecked(destination, amount), transferChecked(feeAta, fee)]
+    var out = Data([2, 1, UInt8(readonly.count)]) + compact(keys.count)
+    for k in keys { guard let b = Base58.decodeNoCheck(string: k), b.count == 32 else { throw WalletError.invalid("bad address") }; out += b }
+    guard let hash = Base58.decodeNoCheck(string: blockhash), hash.count == 32 else { throw WalletError.invalid("bad blockhash") }
+    out += hash + compact(instructions.count)
+    for i in instructions { out += i }
+    return out
+  }
+
   /// executeBatch([token.transfer(to, amount), token.transfer(feeWallet, fee)]), ABI-encoded by hand.
   static func gaslessCallData(token: Data, to: Data, amount: Data, fee: Data, feeWallet: Data) -> String {
     func num(_ n: Int) -> Data { var d = Data(repeating: 0, count: 32); d[31] = UInt8(n & 0xff); d[30] = UInt8((n >> 8) & 0xff); return d }

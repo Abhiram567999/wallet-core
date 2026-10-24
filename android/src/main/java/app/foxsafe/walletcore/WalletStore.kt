@@ -14,6 +14,8 @@ import wallet.core.jni.CoinType
 import wallet.core.jni.DataVector
 import wallet.core.jni.EthereumMessageSigner
 import wallet.core.jni.Eip7702
+import wallet.core.jni.SolanaAddress
+import wallet.core.jni.Curve
 import wallet.core.jni.HDWallet
 import wallet.core.jni.Mnemonic
 import wallet.core.jni.PrivateKey
@@ -634,6 +636,100 @@ class WalletStore(context: Context) {
       }
       out.toString()
     }
+  }
+
+  // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
+
+  /** Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it. */
+  private object SolanaFeePolicy {
+    const val FEE_WALLET = "3DvVfRtM2SR49P6zkdA59g78BYsjXtnaKgvaUK1CPMnj"
+    val TOKENS: Map<String, Int> = mapOf("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB" to 6, "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" to 6)
+    const val MAX_FEE_UNITS = 5L
+    const val TOKEN_PROGRAM = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    const val ATA_PROGRAM = "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+    const val SYSTEM_PROGRAM = "11111111111111111111111111111111"
+    const val COMPUTE_BUDGET_PROGRAM = "ComputeBudget111111111111111111111111111111"
+  }
+
+  /**
+   * Signs a gasless Solana send with ONE prompt. The message is rebuilt here from the user's choices
+   * (layout in server/src/gasless/solana/message.ts) and must match the server's byte for byte. The
+   * paymaster is only the fee payer; the user is a read-only signer (SPEC §7.4).
+   */
+  fun signGaslessSolana(id: String, messageB64: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "gasless transfer refused: $why")
+    val message = Envelope.unb64(messageB64)
+    val req = JSONObject(request)
+    val mint = req.optString("mint")
+    val to = req.optString("to")
+    val feePayer = req.optString("feePayer")
+    val blockhash = req.optString("blockhash")
+    val decimals = SolanaFeePolicy.TOKENS[mint] ?: throw bad("this token can't pay the fee")
+    val amount = req.optString("amount").toBigIntegerOrNull() ?: throw bad("amount")
+    val fee = req.optString("fee").toBigIntegerOrNull() ?: throw bad("fee")
+    val cap = BigInteger.valueOf(SolanaFeePolicy.MAX_FEE_UNITS).multiply(BigInteger.TEN.pow(decimals))
+    if (amount.signum() <= 0 || amount.bitLength() > 64 || fee.signum() <= 0 || fee > cap) throw bad("the fee is above 5")
+    val cuLimit = req.optString("computeUnitLimit").toLongOrNull() ?: throw bad("compute budget")
+    val cuPrice = req.optString("computeUnitPrice").toBigIntegerOrNull() ?: throw bad("compute budget")
+    if (cuLimit !in 0..1_400_000 || cuPrice.signum() < 0 || cuPrice > BigInteger.valueOf(10_000_000)) throw bad("compute budget")
+    for (k in listOf(to, feePayer, blockhash)) if (Base58.decodeNoCheck(k)?.size != 32) throw bad("address")
+    val toIsTokenAccount = req.optBoolean("toIsTokenAccount")
+    val createRecipient = req.optBoolean("createRecipient")
+    if (toIsTokenAccount && createRecipient) throw bad("inconsistent receiver")
+
+    withSecret(id, activity, "Confirm the transfer and its network fee") { r ->
+      val key = privateKey(r, CoinType.SOLANA, account)
+      val user = CoinType.SOLANA.deriveAddress(key)
+      if (feePayer == user || feePayer == SolanaFeePolicy.FEE_WALLET) throw bad("the paymaster can't be you or Foxsafe")
+      val userAta = SolanaAddress(user).defaultTokenAddress(mint) ?: throw bad("token accounts")
+      val feeAta = SolanaAddress(SolanaFeePolicy.FEE_WALLET).defaultTokenAddress(mint) ?: throw bad("token accounts")
+      val destination = if (toIsTokenAccount) to else SolanaAddress(to).defaultTokenAddress(mint) ?: throw bad("token accounts")
+      if (destination == userAta || destination == feeAta) throw bad("receiver")
+      val expected = gaslessSolanaMessage(
+        feePayer, user, mint, decimals, userAta, destination, if (createRecipient) to else null, feeAta,
+        req.optBoolean("createFeeAccount"), amount.toLong(), fee.toLong(), blockhash, cuLimit.toInt(), cuPrice.toLong(),
+      )
+      if (!expected.contentEquals(message)) throw bad("the transaction is not exactly the payment plus Foxsafe's fee")
+      val sig = key.sign(message, Curve.ED25519) ?: throw WalletException("CRYPTO", "signing failed")
+      if (sig.size != 64) throw WalletException("CRYPTO", "signing failed")
+      Base58.encodeNoCheck(sig)
+    }
+  }
+
+  /** Byte-for-byte twin of server/src/gasless/solana/message.ts (legacy message, fixed account order). */
+  private fun gaslessSolanaMessage(
+    feePayer: String, user: String, mint: String, decimals: Int, userAta: String, destination: String, recipientOwner: String?,
+    feeAta: String, createFeeAccount: Boolean, amount: Long, fee: Long, blockhash: String, cuLimit: Int, cuPrice: Long,
+  ): ByteArray {
+    val p = SolanaFeePolicy
+    val readonly = mutableListOf(mint, p.TOKEN_PROGRAM, p.COMPUTE_BUDGET_PROGRAM)
+    if (recipientOwner != null || createFeeAccount) readonly += listOf(p.ATA_PROGRAM, p.SYSTEM_PROGRAM)
+    if (recipientOwner != null) readonly += recipientOwner
+    if (createFeeAccount) readonly += p.FEE_WALLET
+    val keys = listOf(feePayer, user, userAta, destination, feeAta) + readonly
+    if (keys.toSet().size != keys.size) throw WalletException("INVALID", "gasless transfer refused: accounts must be distinct")
+    fun idx(k: String) = keys.indexOf(k).toByte()
+    fun compact(n: Int): ByteArray {
+      val out = mutableListOf<Byte>()
+      var v = n
+      while (true) { val b = v and 0x7f; v = v shr 7; if (v == 0) { out += b.toByte(); return out.toByteArray() }; out += (b or 0x80).toByte() }
+    }
+    fun le(n: Long, bytes: Int) = ByteArray(bytes) { ((n shr (8 * it)) and 0xff).toByte() }
+    fun ix(program: String, accounts: List<String>, data: ByteArray) =
+      byteArrayOf(idx(program)) + compact(accounts.size) + accounts.map { idx(it) }.toByteArray() + compact(data.size) + data
+    fun transferChecked(dest: String, value: Long) = ix(p.TOKEN_PROGRAM, listOf(userAta, mint, dest, user), byteArrayOf(12) + le(value, 8) + byteArrayOf(decimals.toByte()))
+    fun createAta(ata: String, owner: String) = ix(p.ATA_PROGRAM, listOf(feePayer, ata, owner, mint, p.SYSTEM_PROGRAM, p.TOKEN_PROGRAM), byteArrayOf(1))
+    val instructions = mutableListOf(ix(p.COMPUTE_BUDGET_PROGRAM, emptyList(), byteArrayOf(2) + le(cuLimit.toLong(), 4)), ix(p.COMPUTE_BUDGET_PROGRAM, emptyList(), byteArrayOf(3) + le(cuPrice, 8)))
+    if (recipientOwner != null) instructions += createAta(destination, recipientOwner)
+    if (createFeeAccount) instructions += createAta(feeAta, p.FEE_WALLET)
+    instructions += transferChecked(destination, amount)
+    instructions += transferChecked(feeAta, fee)
+    var out = byteArrayOf(2, 1, readonly.size.toByte()) + compact(keys.size)
+    for (k in keys) out += (Base58.decodeNoCheck(k)?.takeIf { it.size == 32 } ?: throw WalletException("INVALID", "bad address"))
+    out += (Base58.decodeNoCheck(blockhash)?.takeIf { it.size == 32 } ?: throw WalletException("INVALID", "bad blockhash"))
+    out += compact(instructions.size)
+    for (i in instructions) out += i
+    return out
   }
 
   /** executeBatch([token.transfer(to, amount), token.transfer(feeWallet, fee)]), ABI-encoded by hand. */

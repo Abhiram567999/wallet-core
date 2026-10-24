@@ -100,6 +100,12 @@ export interface NativeWalletCore {
    * Builds from 2026-10-24 on.
    */
   signGaslessEvm?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
+  /**
+   * Gasless Solana send with ONE Face ID: native code rebuilds the message from `request` and signs
+   * only if it matches `message` (base64) byte for byte. Returns the base58 signature.
+   * Builds from 2026-10-24 on.
+   */
+  signGaslessSolana?(id: string, message: string, request: string, account?: number): Promise<string>;
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
@@ -174,4 +180,25 @@ export const canSignGaslessEvm = () => typeof native?.signGaslessEvm === 'functi
 export async function signGaslessEvm(id: string, coin: CoinType, typedData: string, request: GaslessEvmRequest, account?: number): Promise<GaslessEvmSignature> {
   if (!native?.signGaslessEvm) throw new Error('UNAVAILABLE: this app build cannot sign fee-free EVM transfers yet');
   return JSON.parse(await native.signGaslessEvm(id, coin, typedData, JSON.stringify(request), account)) as GaslessEvmSignature;
+}
+
+export interface GaslessSolanaRequest {
+  to: string;
+  mint: string;
+  amount: string;
+  fee: string;
+  feePayer: string;
+  blockhash: string;
+  toIsTokenAccount: boolean;
+  createRecipient: boolean;
+  createFeeAccount: boolean;
+  computeUnitLimit: string;
+  computeUnitPrice: string;
+}
+
+export const canSignGaslessSolana = () => typeof native?.signGaslessSolana === 'function';
+
+export async function signGaslessSolana(id: string, messageBase64: string, request: GaslessSolanaRequest, account?: number): Promise<string> {
+  if (!native?.signGaslessSolana) throw new Error('UNAVAILABLE: this app build cannot sign fee-free Solana transfers yet');
+  return native.signGaslessSolana(id, messageBase64, JSON.stringify(request), account);
 }

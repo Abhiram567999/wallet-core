@@ -5,7 +5,10 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
-import { canSignGaslessEvm, signGaslessEvm, signTransactions, WalletCore, type GaslessEvmRequest } from './native.ts';
+import { ed25519 } from '@noble/curves/ed25519.js';
+import { canSignGaslessEvm, canSignGaslessSolana, signGaslessEvm, signGaslessSolana, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest } from './native.ts';
+import { associatedTokenAddress, base58Decode } from './solana.ts';
+import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
 import { decodeVault } from './vault.ts';
 
@@ -233,6 +236,36 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused(swap((t) => (t.message.sender = '0x000000000000000000000000000000000000bEEF')), g.request, 'an operation from another wallet');
     void td;
     return 'signatures equal viem; 7 tampered versions refused';
+  });
+
+  await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {
+    if (!canSignGaslessSolana()) return 'this build has no gasless Solana signing';
+    const user = (await WalletCore.getAddresses(importedId, [501]))[0]!.address;
+    const USDT = 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB';
+    const FEE = '3DvVfRtM2SR49P6zkdA59g78BYsjXtnaKgvaUK1CPMnj';
+    const payer = '9m1VupjQAYjjwaPwvw5tSuXX6jE52Jes1P8pR5Ek6iob';
+    const to = '8kQ6nF3cWwfS1Lw5Yp6VQb2hZJg1pB4H8sTbKqfrbYxN';
+    const blockhash = 'A3znyaRYUvi7GbQv1pp9CqqiVo7anddU9rPKFH55V28R';
+    const b64 = (b: Uint8Array) => { let s = ''; for (const x of b) s += String.fromCharCode(x); return btoa(s); };
+    const build = (o: { feeWallet?: string; fee?: bigint; amount?: bigint; to?: string }) =>
+      gaslessSolanaMessage({ feePayer: payer, user, mint: USDT, decimals: 6, destination: associatedTokenAddress(o.to ?? to, USDT), recipientOwner: o.to ?? to, feeWallet: o.feeWallet ?? FEE,
+        createFeeAccount: true, amount: o.amount ?? 10_000_000n, fee: o.fee ?? 500_000n, blockhash, computeUnitLimit: 120_000, computeUnitPrice: 50_000n });
+    const req: GaslessSolanaRequest = { to, mint: USDT, amount: '10000000', fee: '500000', feePayer: payer, blockhash, toIsTokenAccount: false, createRecipient: true, createFeeAccount: true, computeUnitLimit: '120000', computeUnitPrice: '50000' };
+    const msg = build({});
+    const sig = await signGaslessSolana(importedId, b64(msg), req);
+    expect(ed25519.verify(base58Decode(sig), msg, base58Decode(user)), 'signature does not verify for this wallet');
+    const refused = async (m: Uint8Array, r: GaslessSolanaRequest, what: string) => {
+      const ok = await signGaslessSolana(importedId, b64(m), r).then(() => true, () => false);
+      expect(!ok, `${what} was signed`);
+    };
+    await refused(build({ feeWallet: to }), req, 'a fee redirected to another wallet');
+    await refused(build({ fee: 6_000_000n }), { ...req, fee: '6000000' }, 'a fee above 5');
+    await refused(build({ amount: 99_000_000n }), req, 'a different payment amount');
+    await refused(build({ to: payer }), req, 'a different receiver');
+    await refused(msg, { ...req, feePayer: user }, 'the user as fee payer');
+    const flipped = msg.slice(); flipped[flipped.length - 1] = flipped[flipped.length - 1]! ^ 1;
+    await refused(flipped, req, 'a changed byte');
+    return 'signature valid; 6 tampered versions refused';
   });
 
   await check('Phantom import: many accounts at once, Solana path, base58 key', async () => {
