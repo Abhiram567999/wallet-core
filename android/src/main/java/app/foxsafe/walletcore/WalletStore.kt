@@ -38,6 +38,7 @@ class WalletStore(context: Context) {
 
   companion object {
     const val MIN_PASSCODE = 6
+    const val MIN_BACKUP_PASSWORD = 8
     val DEFAULT_COINS = listOf(0, 60, 195, 501)
 
     /** Chains whose addresses go into the recovery address index (SPEC §5). EVM networks share Ethereum's address. */
@@ -183,8 +184,19 @@ class WalletStore(context: Context) {
     val cache = Envelope.KeyCache()
     try {
       val entries = recovery.keys("w.").map { it to decodeVault(Envelope.open(recovery.get(it)!!, Envelope.Source.Passcode(old), Envelope.Kind.RECOVERY, cache)) }
+      val backupKey = main.get("backup")?.let { Envelope.open(JSONObject(it).getString("key"), Envelope.Source.Passcode(old), Envelope.Kind.RECOVERY, cache) }
       writePasscode(new, null)
       val m = meta()
+      if (backupKey != null) {
+        try {
+          val b = JSONObject(main.get("backup")!!)
+          b.put("key", Envelope.seal(Envelope.Kind.RECOVERY, backupKey, Envelope.Source.Passcode(new),
+            Envelope.unb64(m.getString("salt")), m.getInt("m"), m.getInt("t"), cache))
+          main.set("backup", b.toString())
+        } finally {
+          backupKey.fill(0)
+        }
+      }
       for ((account, recs) in entries) {
         recovery.set(account, Envelope.seal(Envelope.Kind.RECOVERY, encodeVault(recs), Envelope.Source.Passcode(new),
           Envelope.unb64(m.getString("salt")), m.getInt("m"), m.getInt("t"), cache))
@@ -867,6 +879,59 @@ class WalletStore(context: Context) {
     try {
       JSONArray(records.filter { "w.${it.id}" !in existing }.map { info(store(it, passcode, cache)) })
     } finally {
+      cache.wipe()
+    }
+  }
+
+  // MARK: backup password (SPEC §3.4)
+  // The backup password's Argon2id key, kept on this phone locked with the app passcode, so the
+  // backup file can be rebuilt whenever wallets change without asking for the password again.
+
+  fun hasBackupPassword(): Boolean = synchronized(lock) { main.get("backup") != null }
+
+  /** Sets or replaces the backup password. Backups made with an earlier password keep that password. */
+  fun setBackupPassword(password: String, passcode: String) = synchronized(lock) {
+    if (password.length < MIN_BACKUP_PASSWORD) throw WalletException("INVALID", "the backup password needs at least $MIN_BACKUP_PASSWORD characters")
+    requirePasscode(passcode)
+    val salt = Envelope.random(16)
+    val key = Envelope.argon2id(password, salt, Envelope.DEFAULT_M, Envelope.DEFAULT_T)
+    try {
+      val m = meta()
+      val sealed = Envelope.seal(Envelope.Kind.RECOVERY, key, Envelope.Source.Passcode(passcode),
+        Envelope.unb64(m.getString("salt")), m.getInt("m"), m.getInt("t"))
+      main.set("backup", JSONObject().put("v", 1).put("salt", Envelope.b64(salt)).put("m", Envelope.DEFAULT_M)
+        .put("t", Envelope.DEFAULT_T).put("key", sealed).toString())
+    } finally {
+      key.fill(0)
+    }
+  }
+
+  /**
+   * A backup envelope with every wallet on this phone, locked with the backup password. Needs only
+   * the app passcode (secrets come from the passcode-locked recovery copy, no fingerprint prompt).
+   */
+  fun buildBackup(passcode: String): String = synchronized(lock) {
+    val b = JSONObject(main.get("backup") ?: throw WalletException("INVALID", "set a backup password first"))
+    val cache = Envelope.KeyCache()
+    var key: ByteArray? = null
+    try {
+      key = try {
+        Envelope.open(b.getString("key"), Envelope.Source.Passcode(passcode), Envelope.Kind.RECOVERY, cache)
+      } catch (e: WalletException) {
+        throw WalletException("PASSCODE", "wrong passcode")
+      }
+      val records = main.keys("w.").sorted().map { account ->
+        val entry = recovery.get(account) ?: throw WalletException("NOT_FOUND", "no recovery entry for $account")
+        val r = decodeVault(Envelope.open(entry, Envelope.Source.Passcode(passcode), Envelope.Kind.RECOVERY, cache)).firstOrNull()
+          ?: throw WalletException("CRYPTO", "empty recovery entry")
+        val info = info(load(account.removePrefix("w.")))
+        withCurrentNames(r, info).copy(name = info.getString("name"))
+      }
+      if (records.isEmpty()) throw WalletException("INVALID", "there are no wallets to back up")
+      Envelope.seal(Envelope.Kind.BACKUP, encodeVault(records), Envelope.Source.Derived(key),
+        Envelope.unb64(b.getString("salt")), b.getInt("m"), b.getInt("t"))
+    } finally {
+      key?.fill(0)
       cache.wipe()
     }
   }

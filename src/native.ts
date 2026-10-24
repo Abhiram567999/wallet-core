@@ -121,6 +121,16 @@ export interface NativeWalletCore {
   exportBackup(ids: string[], lock: BackupLock): Promise<string>;
   importBackup(envelope: string, lock: BackupLock, passcode: string): Promise<WalletInfo[]>;
 
+  // Backup password (builds from 2026-10-25 on). The password's key is kept on the phone locked
+  // with the app passcode, so the backup can be rebuilt whenever wallets change.
+  hasBackupPassword?(): Promise<boolean>;
+  /** Sets or replaces it (at least 8 characters). Files made with an earlier password keep that password. */
+  setBackupPassword?(password: string, passcode: string): Promise<void>;
+  /** Envelope JSON with every wallet on the phone, locked with the backup password. Only the passcode is asked. */
+  buildBackup?(passcode: string): Promise<string>;
+  /** Android only: writes the file to Downloads/Foxsafe (kept after uninstalling); returns where. */
+  saveBackupFile?(name: string, content: string): Promise<string>;
+
   /** Logout: removes wallets from the phone. keepRecovery leaves the passcode-locked recovery copy. */
   wipe(keepRecovery: boolean): Promise<void>;
 
@@ -202,3 +212,8 @@ export async function signGaslessSolana(id: string, messageBase64: string, reque
   if (!native?.signGaslessSolana) throw new Error('UNAVAILABLE: this app build cannot sign fee-free Solana transfers yet');
   return native.signGaslessSolana(id, messageBase64, JSON.stringify(request), account);
 }
+
+/** True when this build has the backup password (backup file, later cloud backup). */
+export const canBackupWithPassword = () => typeof native?.buildBackup === 'function';
+/** True on Android builds that can keep the backup file in Downloads/Foxsafe. */
+export const canSaveBackupFile = () => typeof native?.saveBackupFile === 'function';

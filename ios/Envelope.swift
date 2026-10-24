@@ -10,6 +10,8 @@ enum Envelope {
     case passcode(String)
     case prf(Data)
     case key(Data)
+    /// An Argon2id key derived earlier from the backup password (the header still names Argon2id and its salt).
+    case derived(Data)
   }
 
   enum Kdf: Equatable {
@@ -116,6 +118,9 @@ enum Envelope {
       return HKDF<SHA256>.deriveKey(
         inputKeyMaterial: SymmetricKey(data: prf), salt: Data(base64Encoded: salt)!, info: hkdfInfo, outputByteCount: 32
       )
+    case let (.argon2id, .derived(key)):
+      guard key.count == 32 else { throw WalletError.envelope("key-type", "derived key must be 32 bytes") }
+      return SymmetricKey(data: key)
     case let (.none, .key(key)):
       guard key.count == 32 else { throw WalletError.envelope("key-type", "device key must be 32 bytes") }
       return SymmetricKey(data: key)
@@ -133,7 +138,7 @@ enum Envelope {
     let saltText = (salt ?? random(16)).base64EncodedString()
     let kdf: Kdf
     switch source {
-    case .passcode: kdf = .argon2id(m: argon2.m, t: argon2.t, salt: saltText)
+    case .passcode, .derived: kdf = .argon2id(m: argon2.m, t: argon2.t, salt: saltText)
     case .prf: kdf = .hkdf(salt: saltText)
     case .key: kdf = .none
     }

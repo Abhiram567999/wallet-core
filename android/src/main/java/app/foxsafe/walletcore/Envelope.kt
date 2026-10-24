@@ -26,6 +26,8 @@ object Envelope {
     class Passcode(val passcode: String) : Source()
     class Prf(val prf: ByteArray) : Source()
     class Key(val key: ByteArray) : Source()
+    /** An Argon2id key derived earlier from the backup password (the header still names Argon2id and its salt). */
+    class Derived(val key: ByteArray) : Source()
   }
 
   sealed class Kdf {
@@ -140,6 +142,10 @@ object Envelope {
         ?: argon2id(source.passcode, unb64(kdf.salt), kdf.m, kdf.t).also {
           cache?.put(it.copyOf(), source.passcode, kdf.salt, kdf.m, kdf.t)
         }
+    kdf is Kdf.Argon2id && source is Source.Derived -> {
+      if (source.key.size != 32) throw WalletException("ENVELOPE_KEY-TYPE", "derived key must be 32 bytes")
+      source.key.copyOf()
+    }
     kdf is Kdf.Hkdf && source is Source.Prf -> {
       if (source.prf.size < 32) throw WalletException("ENVELOPE_KEY-TYPE", "passkey output too short")
       ByteArray(32).also {
@@ -164,7 +170,7 @@ object Envelope {
   ): String {
     val saltText = b64(salt ?: random(16))
     val kdf = when (source) {
-      is Source.Passcode -> Kdf.Argon2id(m, t, saltText)
+      is Source.Passcode, is Source.Derived -> Kdf.Argon2id(m, t, saltText)
       is Source.Prf -> Kdf.Hkdf(saltText)
       is Source.Key -> Kdf.None
     }

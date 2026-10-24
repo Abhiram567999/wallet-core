@@ -6,7 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canSignGaslessEvm, canSignGaslessSolana, signGaslessEvm, signGaslessSolana, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignGaslessEvm, canSignGaslessSolana, signGaslessEvm, signGaslessSolana, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
@@ -351,6 +351,40 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     expect((await WalletCore.listWallets()).length === 2, 'not deleted');
     expect((await WalletCore.scanRecovery()).walletCount === 2, 'recovery entry not deleted');
     return 'ok';
+  });
+
+  await check('backup password: the file holds every wallet and opens only with that password', async () => {
+    if (!canBackupWithPassword()) return 'this build has no backup password';
+    const PASS = 'correct horse 9';
+    let pc = '739104';
+    expect(!(await WalletCore.hasBackupPassword!()), 'a backup password is already set');
+    await rejects(WalletCore.buildBackup!(pc), 'INVALID');
+    await rejects(WalletCore.setBackupPassword!('short', pc), 'INVALID');
+    await rejects(WalletCore.setBackupPassword!(PASS, PASSCODE), 'PASSCODE');
+    await WalletCore.setBackupPassword!(PASS, pc);
+    expect(await WalletCore.hasBackupPassword!(), 'not saved');
+    await rejects(WalletCore.buildBackup!(PASSCODE), 'PASSCODE');
+    await WalletCore.renameAccount(importedId, 1, 'Savings');
+    await WalletCore.changePasscode(pc, '582047');
+    pc = '582047';
+    const file = await WalletCore.buildBackup!(pc); // still works after a passcode change
+    if (canSaveBackupFile()) {
+      // Android: saving twice keeps one file with the plain name (old copy removed only after the new one is written).
+      const p1 = await WalletCore.saveBackupFile!('foxsafe-selftest.json', file);
+      const p2 = await WalletCore.saveBackupFile!('foxsafe-selftest.json', file);
+      expect(p2 === 'Download/Foxsafe/foxsafe-selftest.json', `saved as ${p1}, then ${p2}`);
+    }
+    await WalletCore.wipe(false); // a new phone
+    await WalletCore.setPasscode('264810');
+    await rejects(WalletCore.importBackup(file, { type: 'password', password: 'wrong password 1' }, '264810'), 'ENVELOPE');
+    const back = await WalletCore.importBackup(file, { type: 'password', password: PASS }, '264810');
+    expect(back.length === 2, `restored ${back.length} wallets`);
+    const hd = back.find((w) => w.id === importedId);
+    expect(!!hd && hd.accounts.length === 2 && hd.accounts[1]!.name === 'Savings', `accounts: ${JSON.stringify(hd?.accounts)}`);
+    const out = await WalletCore.signTransaction(ethKeyId, v.signing.coin, v.signing.inputBase64);
+    expect(out === v.signing.outputBase64, 'restored key signs differently');
+    expect(!(await WalletCore.hasBackupPassword!()), 'backup password should not come back on a new phone');
+    return '2 wallets back; wrong password refused';
   });
 
   await WalletCore.wipe(false);

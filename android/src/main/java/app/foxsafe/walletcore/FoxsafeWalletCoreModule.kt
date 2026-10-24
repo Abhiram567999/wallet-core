@@ -175,6 +175,18 @@ class FoxsafeWalletCoreModule : Module() {
     }
 
     // Logout
+    // Backup password: the backup file is rebuilt with it whenever wallets change (SPEC §3.4)
+    AsyncFunction("hasBackupPassword") { call { store.hasBackupPassword() } }
+    AsyncFunction("setBackupPassword") { password: String, passcode: String -> call { store.setBackupPassword(password, passcode) } }
+    AsyncFunction("buildBackup") { passcode: String -> call { store.buildBackup(passcode) } }
+    /** Android only: saves the encrypted backup in Downloads/Foxsafe (kept after uninstalling). */
+    AsyncFunction("saveBackupFile") { name: String, content: String ->
+      call {
+        val context = appContext.reactContext?.applicationContext ?: throw WalletException("CRYPTO", "no Android context")
+        BackupFile.save(context, name, content)
+      }
+    }
+
     AsyncFunction("wipe") { keepRecovery: Boolean -> call { store.wipe(keepRecovery) } }
 
     // Helpers that never read stored secrets

@@ -198,6 +198,13 @@ public class FoxsafeWalletCoreModule: Module {
       try run { try self.store.importBackup(envelope, source: try lock.source(), passcode: passcode) }
     }
 
+    // Backup password: the backup file is rebuilt with it whenever wallets change (SPEC §3.4)
+    AsyncFunction("hasBackupPassword") { try run { try self.store.hasBackupPassword() } }
+    AsyncFunction("setBackupPassword") { (password: String, passcode: String) in
+      try run { try self.store.setBackupPassword(password, passcode: passcode) }
+    }
+    AsyncFunction("buildBackup") { (passcode: String) in try run { try self.store.buildBackup(passcode: passcode) } }
+
     // Logout
     AsyncFunction("wipe") { (keepRecovery: Bool) in try run { try self.store.wipe(keepRecovery: keepRecovery) } }
 

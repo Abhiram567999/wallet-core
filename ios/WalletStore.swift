@@ -204,8 +204,14 @@ final class WalletStore {
     let cache = KeyCache()
     let entries = try recovery.accounts(prefix: "w.").map { ($0, try recovery.get($0)!) }
     let records = try entries.map { try Self.decodeVault(Envelope.open($0.1, .passcode(old), expect: .recovery, cache: cache)) }
+    var backupKey = try backupSetting().map { try Envelope.open($0.key, .passcode(old), expect: .recovery, cache: cache) }
+    defer { if let n = backupKey?.count { backupKey?.resetBytes(in: 0..<n) } }
     try writePasscode(new, recoverySalt: nil)
     let meta = try recoveryMeta()
+    if let key = backupKey, var b = try backupSetting() {
+      b.key = try Envelope.seal(.recovery, key, .passcode(new), salt: Data(base64Encoded: meta.salt)!, argon2: (meta.m, meta.t), cache: cache)
+      try main.set(String(decoding: try JSONEncoder().encode(b), as: UTF8.self), for: "backup")
+    }
     for (account, recs) in zip(entries.map(\.0), records) {
       let env = try Envelope.seal(.recovery, Self.encodeVault(recs), .passcode(new),
                                   salt: Data(base64Encoded: meta.salt)!, argon2: (meta.m, meta.t), cache: cache)
@@ -945,6 +951,62 @@ final class WalletStore {
     let existing = Set(try main.accounts(prefix: "w."))
     let cache = KeyCache()
     return try records.filter { !existing.contains("w.\($0.id)") }.map { try store($0, passcode: passcode, cache: cache).info.dict }
+  }
+
+  // MARK: Backup password (SPEC §3.4)
+
+  /// The backup password's Argon2id key, kept on this phone locked with the app passcode, so the
+  /// backup file can be rebuilt whenever wallets change without asking for the password again.
+  private struct BackupSetting: Codable { var v: Int; var salt: String; var m: Int; var t: Int; var key: String }
+  static let minBackupPasswordLength = 8
+
+  private func backupSetting() throws -> BackupSetting? {
+    guard let raw = try main.get("backup") else { return nil }
+    guard let b = try? JSONDecoder().decode(BackupSetting.self, from: Data(raw.utf8)) else { throw WalletError.invalid("backup setting is damaged") }
+    return b
+  }
+
+  func hasBackupPassword() throws -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    return try main.get("backup") != nil
+  }
+
+  /// Sets or replaces the backup password. Backups made with an earlier password keep that password.
+  func setBackupPassword(_ password: String, passcode: String) throws {
+    lock.lock(); defer { lock.unlock() }
+    guard password.count >= Self.minBackupPasswordLength else { throw WalletError.invalid("the backup password needs at least \(Self.minBackupPasswordLength) characters") }
+    try requirePasscode(passcode)
+    let (m, t) = Envelope.defaultArgon2
+    let salt = Envelope.random(16)
+    var key = try Envelope.argon2id(password, salt: salt, m: m, t: t).withUnsafeBytes { Data($0) }
+    defer { key.resetBytes(in: 0..<key.count) }
+    let meta = try recoveryMeta()
+    let sealed = try Envelope.seal(.recovery, key, .passcode(passcode), salt: Data(base64Encoded: meta.salt)!, argon2: (meta.m, meta.t))
+    let b = BackupSetting(v: 1, salt: salt.base64EncodedString(), m: m, t: t, key: sealed)
+    try main.set(String(decoding: try JSONEncoder().encode(b), as: UTF8.self), for: "backup")
+  }
+
+  /// A backup envelope with every wallet on this phone, locked with the backup password.
+  /// Needs only the app passcode (secrets come from the passcode-locked recovery copy, no Face ID).
+  func buildBackup(passcode: String) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    guard let b = try backupSetting() else { throw WalletError.invalid("set a backup password first") }
+    let cache = KeyCache()
+    var key: Data
+    do { key = try Envelope.open(b.key, .passcode(passcode), expect: .recovery, cache: cache) } catch { throw WalletError.passcode("wrong passcode") }
+    defer { key.resetBytes(in: 0..<key.count) }
+    let records = try main.accounts(prefix: "w.").sorted().map { account -> Record in
+      guard let entry = try recovery.get(account) else { throw WalletError.notFound("no recovery entry for \(account)") }
+      guard let r = try Self.decodeVault(Envelope.open(entry, .passcode(passcode), expect: .recovery, cache: cache)).first else {
+        throw WalletError.crypto("empty recovery entry")
+      }
+      let info = try load(String(account.dropFirst(2))).info
+      var out = Self.withCurrentNames(r, info)
+      out.name = info.name
+      return out
+    }
+    guard !records.isEmpty else { throw WalletError.invalid("there are no wallets to back up") }
+    return try Envelope.seal(.backup, Self.encodeVault(records), .derived(key), salt: Data(base64Encoded: b.salt)!, argon2: (b.m, b.t))
   }
 
   // MARK: Logout

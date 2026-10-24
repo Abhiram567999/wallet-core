@@ -160,6 +160,32 @@ It is locked by one of:
 
 Manual backup (writing down the phrase) is always available.
 
+### 3.4 Backup password and the backup file
+
+Decision 2026-10-24: backups off the phone (cloud and the Android file) are
+locked with a **backup password** the user creates, separate from the app
+passcode. Foxsafe never sees it; a forgotten backup password cannot be
+recovered by anyone.
+
+- `setBackupPassword(password, passcode)`: at least 8 characters. Derives
+  `K = Argon2id(password, fresh 16-byte salt, default m/t)` and stores, in the
+  main copy (item `backup`, so it is gone after a reinstall or logout):
+  `{ v: 1, salt, m, t, key }` where `key` is a `recovery`-kind envelope of the
+  32 bytes of K, locked with the app passcode (recovery `meta` salt).
+  `changePasscode` re-locks it with the new passcode.
+- `buildBackup(passcode)`: opens K and every wallet's recovery entry with the
+  passcode (one Argon2id run, no Face ID) and seals a `backup` envelope of all
+  wallets with K. Its header names `argon2id` with the backup password's salt
+  and parameters, so it opens with the password alone. Current wallet and
+  account names are used.
+- Android keeps the newest file at `Download/Foxsafe/foxsafe-backup.json`
+  (MediaStore; survives uninstalling). The new copy is written in full under a
+  temporary name before the older copy is removed. After a reinstall the user
+  picks the file in the system file picker. iOS: the user saves the file with
+  the share sheet (Files, iCloud Drive, AirDrop); the Keychain recovery copy
+  (3.2) already survives uninstalling there.
+- Restoring is `importBackup(file, { type: "password", password }, passcode)`.
+
 ## 4. Envelope format v1
 
 UTF-8 JSON:
