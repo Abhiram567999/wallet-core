@@ -206,6 +206,15 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("buildBackup") { (passcode: String) in try run { try self.store.buildBackup(passcode: passcode) } }
 
     // Logout
+    // iCloud backup (iOS): the encrypted backup file in the user's own iCloud Drive (SPEC §3.4)
+    Function("cloudAvailable") { CloudBackup.available() }
+    AsyncFunction("cloudWrite") { (container: String, name: String, content: String) in
+      try run { try CloudBackup.write(container: container, name: name, content: content) }
+    }
+    AsyncFunction("cloudRead") { (container: String, name: String, timeoutSeconds: Double) in
+      try run { try CloudBackup.read(container: container, name: name, timeout: min(max(timeoutSeconds, 5), 60)) }
+    }
+
     AsyncFunction("wipe") { (keepRecovery: Bool) in try run { try self.store.wipe(keepRecovery: keepRecovery) } }
 
     // Helpers that never read stored secrets

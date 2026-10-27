@@ -131,6 +131,14 @@ export interface NativeWalletCore {
   /** Android only: writes the file to Downloads/Foxsafe (kept after uninstalling); returns where. */
   saveBackupFile?(name: string, content: string): Promise<string>;
 
+  // iCloud backup (iOS builds from 2026-10-27 on)
+  /** Signed in to iCloud with iCloud Drive on. */
+  cloudAvailable?(): boolean;
+  /** Saves `content` as Backups/<name> in the app's hidden iCloud Drive folder; returns the save time (ms). */
+  cloudWrite?(container: string, name: string, content: string): Promise<number>;
+  /** Finds and downloads Backups/<name> (also on a new iPhone). */
+  cloudRead?(container: string, name: string, timeoutSeconds: number): Promise<{ found: boolean; content?: string; modified?: number }>;
+
   /** Logout: removes wallets from the phone. keepRecovery leaves the passcode-locked recovery copy. */
   wipe(keepRecovery: boolean): Promise<void>;
 
@@ -217,3 +225,6 @@ export async function signGaslessSolana(id: string, messageBase64: string, reque
 export const canBackupWithPassword = () => typeof native?.buildBackup === 'function';
 /** True on Android builds that can keep the backup file in Downloads/Foxsafe. */
 export const canSaveBackupFile = () => typeof native?.saveBackupFile === 'function';
+
+/** True on iOS builds that can keep the backup in iCloud Drive. */
+export const canUseICloud = () => typeof native?.cloudWrite === 'function';
