@@ -215,7 +215,23 @@ public class FoxsafeWalletCoreModule: Module {
       try run { try CloudBackup.read(container: container, name: name, timeout: min(max(timeoutSeconds, 5), 60)) }
     }
 
-    AsyncFunction("wipe") { (keepRecovery: Bool) in try run { try self.store.wipe(keepRecovery: keepRecovery) } }
+    // Opening the app with Face ID / Touch ID (never used for wallet keys)
+    Function("unlockStatus") { AppUnlock.status() }
+    AsyncFunction("enableUnlock") { (passcode: String, reason: String) in
+      try run {
+        guard try self.store.verifyPasscode(passcode) else { throw WalletError.passcode("wrong passcode") }
+        return try AppUnlock.enable(reason: reason)
+      }
+    }
+    AsyncFunction("unlockWithBiometrics") { (reason: String) in try run { try AppUnlock.unlock(reason: reason) } }
+    AsyncFunction("disableUnlock") { AppUnlock.disable() }
+
+    AsyncFunction("wipe") { (keepRecovery: Bool) in
+      try run {
+        AppUnlock.disable()
+        try self.store.wipe(keepRecovery: keepRecovery)
+      }
+    }
 
     // Helpers that never read stored secrets
     AsyncFunction("previewAddresses") { (words: String, passphrase: String?, coins: [Int], account: Int?, solanaPath: String?) in

@@ -187,7 +187,24 @@ class FoxsafeWalletCoreModule : Module() {
       }
     }
 
-    AsyncFunction("wipe") { keepRecovery: Boolean -> call { store.wipe(keepRecovery) } }
+    // Opening the app with a fingerprint (never used for wallet keys)
+    Function("unlockStatus") { AppUnlock.status(appContext.reactContext?.applicationContext ?: throw CodedException("CRYPTO", "no Android context", null)) }
+    AsyncFunction("enableUnlock") { passcode: String, reason: String ->
+      call {
+        if (!store.verifyPasscode(passcode)) throw WalletException("PASSCODE", "wrong passcode")
+        val context = appContext.reactContext?.applicationContext ?: throw WalletException("CRYPTO", "no Android context")
+        AppUnlock.enable(context, activity, reason)
+      }
+    }
+    AsyncFunction("unlockWithBiometrics") { reason: String -> call { AppUnlock.unlock(activity, reason) } }
+    AsyncFunction("disableUnlock") { AppUnlock.disable() }
+
+    AsyncFunction("wipe") { keepRecovery: Boolean ->
+      call {
+        AppUnlock.disable()
+        store.wipe(keepRecovery)
+      }
+    }
 
     // Helpers that never read stored secrets
     AsyncFunction("previewAddresses") { words: String, passphrase: String?, coins: List<Int>, account: Int?, solanaPath: String? ->

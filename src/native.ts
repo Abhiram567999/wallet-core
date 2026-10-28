@@ -139,6 +139,14 @@ export interface NativeWalletCore {
   /** Finds and downloads Backups/<name> (also on a new iPhone). */
   cloudRead?(container: string, name: string, timeoutSeconds: number): Promise<{ found: boolean; content?: string; modified?: number }>;
 
+  // Opening the app with Face ID / Touch ID / fingerprint (its own key; never used for wallet keys).
+  // Turned off by the phone when a face or finger is added, so the passcode is needed again.
+  unlockStatus?(): BiometricUnlockStatus;
+  /** Checks the passcode, creates the key and asks for Face ID once. Anything but 'ok' leaves it off. */
+  enableUnlock?(passcode: string, reason: string): Promise<BiometricUnlockResult>;
+  unlockWithBiometrics?(reason: string): Promise<BiometricUnlockResult>;
+  disableUnlock?(): Promise<void>;
+
   /** Logout: removes wallets from the phone. keepRecovery leaves the passcode-locked recovery copy. */
   wipe(keepRecovery: boolean): Promise<void>;
 
@@ -228,3 +236,15 @@ export const canSaveBackupFile = () => typeof native?.saveBackupFile === 'functi
 
 /** True on iOS builds that can keep the backup in iCloud Drive. */
 export const canUseICloud = () => typeof native?.cloudWrite === 'function';
+export const canUseBiometricUnlock = () => typeof native?.unlockWithBiometrics === 'function';
+
+export interface BiometricUnlockStatus {
+  /** What the phone has: faceID, touchID (iPhone), fingerprint (Android) or none. */
+  kind: 'faceID' | 'touchID' | 'fingerprint' | 'none';
+  /** Set up on the phone and allowed for Foxsafe. */
+  ready: boolean;
+  /** Turned on in Foxsafe. */
+  enabled: boolean;
+}
+/** ok, cancel (chose the passcode), lockout (too many tries), failed, changed (faces/fingers changed: now off), off, unavailable. */
+export type BiometricUnlockResult = 'ok' | 'cancel' | 'lockout' | 'failed' | 'changed' | 'off' | 'unavailable';
