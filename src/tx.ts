@@ -58,6 +58,66 @@ export function evmTransferInput(p: EvmTransfer): string {
   );
 }
 
+/** A contract call (swap routers, THORChain's router): `value` in the native coin plus calldata. */
+export interface EvmCall {
+  chainId: bigint;
+  nonce: bigint;
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+  gasLimit: bigint;
+  to: string;
+  value: bigint;
+  data: string; // 0x… calldata
+}
+
+export function evmCallInput(p: EvmCall): string {
+  const P = TW.Ethereum.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        chainId: bigToBytes(p.chainId),
+        nonce: bigToBytes(p.nonce),
+        txMode: P.TransactionMode.Enveloped,
+        maxFeePerGas: bigToBytes(p.maxFeePerGas),
+        maxInclusionFeePerGas: bigToBytes(p.maxPriorityFeePerGas),
+        gasLimit: bigToBytes(p.gasLimit),
+        toAddress: p.to,
+        transaction: { contractGeneric: { amount: bigToBytes(p.value), data: hexToBytes(p.data) } },
+      }),
+    ),
+  );
+}
+
+/** ERC-20 approve(spender, amount): lets a swap router take exactly `amount` of the token. */
+export interface EvmApprove {
+  chainId: bigint;
+  nonce: bigint;
+  maxFeePerGas: bigint;
+  maxPriorityFeePerGas: bigint;
+  gasLimit: bigint;
+  token: string;
+  spender: string;
+  amount: bigint;
+}
+
+export function evmApproveInput(p: EvmApprove): string {
+  const P = TW.Ethereum.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        chainId: bigToBytes(p.chainId),
+        nonce: bigToBytes(p.nonce),
+        txMode: P.TransactionMode.Enveloped,
+        maxFeePerGas: bigToBytes(p.maxFeePerGas),
+        maxInclusionFeePerGas: bigToBytes(p.maxPriorityFeePerGas),
+        gasLimit: bigToBytes(p.gasLimit),
+        toAddress: p.token,
+        transaction: { erc20Approve: { spender: p.spender, amount: bigToBytes(p.amount) } },
+      }),
+    ),
+  );
+}
+
 /** Raw signed transaction (0x…) for eth_sendRawTransaction. */
 export function evmOutput(b64: string): { raw: string } {
   const out = TW.Ethereum.Proto.SigningOutput.decode(fromBase64(b64));
@@ -86,6 +146,8 @@ export interface TronTransfer {
   now?: number;
   /** How long the signed transaction stays valid (default 10 minutes). */
   expiresInMs?: number;
+  /** Note stored with the transaction (THORChain swap instructions). */
+  memo?: string;
 }
 
 export function tronTransferInput(p: TronTransfer): string {
@@ -97,6 +159,7 @@ export function tronTransferInput(p: TronTransfer): string {
         transaction: {
           timestamp: now,
           expiration: now + (p.expiresInMs ?? 10 * 60 * 1000),
+          ...(p.memo ? { memo: p.memo } : {}),
           blockHeader: {
             number: p.block.number,
             timestamp: p.block.timestamp,
@@ -131,6 +194,8 @@ export interface SolanaTransfer {
   to: string;
   lamports: bigint;
   recentBlockhash: string;
+  /** Memo instruction (THORChain swap instructions). */
+  memo?: string;
 }
 
 export function solanaTransferInput(p: SolanaTransfer): string {
@@ -140,7 +205,7 @@ export function solanaTransferInput(p: SolanaTransfer): string {
       P.SigningInput.create({
         sender: p.from,
         recentBlockhash: p.recentBlockhash,
-        transferTransaction: { recipient: p.to, value: Number(p.lamports) },
+        transferTransaction: { recipient: p.to, value: Number(p.lamports), ...(p.memo ? { memo: p.memo } : {}) },
         txEncoding: P.Encoding.Base64,
       }),
     ),
@@ -171,6 +236,8 @@ export interface BitcoinTransfer {
   utxos: Utxo[];
   /** Send everything minus the fee. */
   useMax?: boolean;
+  /** OP_RETURN output with this text (THORChain swap instructions, at most 80 bytes). */
+  memo?: string;
 }
 
 /**
@@ -190,6 +257,7 @@ export function bitcoinTransferInput(p: BitcoinTransfer): string {
         changeAddress: p.from,
         coinType: p.coin,
         useMaxAmount: !!p.useMax,
+        ...(p.memo ? { outputOpReturn: new TextEncoder().encode(p.memo) } : {}),
         utxo: p.utxos.map((u) => ({
           outPoint: { hash: hexToBytes(u.txid).reverse(), index: u.vout, sequence: 0xfffffffd }, // RBF-enabled
           amount: Number(u.value),
