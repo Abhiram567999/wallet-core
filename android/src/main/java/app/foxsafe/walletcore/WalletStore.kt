@@ -515,6 +515,16 @@ class WalletStore(context: Context) {
     }
   }
 
+  /** Removes a wallet after the fingerprint / face prompt: unlocking the wallet's own key proves it's the owner. */
+  fun deleteWithBiometrics(id: String, reason: String, activity: FragmentActivity?) = synchronized(lock) {
+    load(id)
+    withSecret(id, activity, reason) { it }
+    main.delete("w.$id")
+    recovery.delete("w.$id")
+    recovery.delete("i.$id")
+    runCatching { recovery.delete("l.$id") }
+  }
+
   fun delete(id: String, passcode: String) = synchronized(lock) {
     requirePasscode(passcode)
     load(id)

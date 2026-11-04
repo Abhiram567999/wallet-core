@@ -75,6 +75,8 @@ export interface NativeWalletCore {
   /** Changes how Solana addresses are derived; the Solana address of every account changes. */
   setSolanaPath(id: string, solanaPath: SolanaPath, passcode: string): Promise<WalletInfo>;
   deleteWallet(id: string, passcode: string): Promise<void>;
+  /** Removes a wallet after Face ID / fingerprint (the wallet's own key is opened to prove it's the owner). */
+  deleteWalletWithBiometrics?(id: string, reason: string): Promise<void>;
   /** `account` is the HD account index (default 0). */
   getAddresses(id: string, coins: CoinType[], account?: number): Promise<AddressInfo[]>;
   /** Adds the next HD account on a phrase wallet (Face ID + passcode). */

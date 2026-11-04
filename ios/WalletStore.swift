@@ -548,6 +548,18 @@ final class WalletStore {
     }
   }
 
+  /// Removes a wallet after Face ID / Touch ID: opening the wallet's own key (the same check as
+  /// sending) proves it's the owner. Deletes the main copy and the recovery copy for good.
+  func deleteWithBiometrics(id: String, reason: String) throws {
+    lock.lock(); defer { lock.unlock() }
+    _ = try load(id)
+    _ = try withSecrets([id], reason: reason) { _ in true }
+    try main.delete("w.\(id)")
+    try recovery.delete("w.\(id)")
+    try recovery.delete("i.\(id)")
+    try? recovery.delete("l.\(id)")
+  }
+
   func delete(id: String, passcode: String) throws {
     lock.lock(); defer { lock.unlock() }
     try requirePasscode(passcode)

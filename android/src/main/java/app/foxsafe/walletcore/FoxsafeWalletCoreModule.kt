@@ -124,6 +124,7 @@ class FoxsafeWalletCoreModule : Module() {
       call { store.setSolanaPath(id, solanaPath, passcode, activity) }
     }
     AsyncFunction("deleteWallet") { id: String, passcode: String -> call { store.delete(id, passcode) } }
+    AsyncFunction("deleteWalletWithBiometrics") { id: String, reason: String -> call { store.deleteWithBiometrics(id, reason, activity) } }
     AsyncFunction("getAddresses") { id: String, coins: List<Int>, account: Int? -> call { store.addresses(id, coins, account ?: 0) } }
     AsyncFunction("addAccount") { id: String, name: String?, passcode: String -> call { store.addAccount(id, name, passcode, activity) } }
     AsyncFunction("removeAccount") { id: String, index: Int, passcode: String -> call { store.removeAccount(id, index, passcode, activity) } }
