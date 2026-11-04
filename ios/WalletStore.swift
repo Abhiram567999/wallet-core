@@ -341,7 +341,22 @@ final class WalletStore {
       try recovery.set(AddressIndex.build(remembered), for: "i.\(r.id)")
     }
     try save(stored)
+    writeLabel(info)
     return stored
+  }
+
+  /// What a wallet looks like (name, account names, networks, backup state) next to its recovery copy,
+  /// so a restore brings back the names the user chose. No secrets: plain JSON in the device-only keychain.
+  private struct Label: Codable { var name: String; var accounts: [Info.Account]; var coins: [UInt32]; var backup: Info.Backup }
+
+  private func writeLabel(_ info: Info) {
+    let label = Label(name: info.name, accounts: info.accounts, coins: info.coins, backup: info.backup)
+    if let data = try? JSONEncoder().encode(label) { try? recovery.set(String(decoding: data, as: UTF8.self), for: "l.\(info.id)") }
+  }
+
+  private func readLabel(_ id: String) -> Label? {
+    guard let raw = try? recovery.get("l.\(id)") else { return nil }
+    return try? JSONDecoder().decode(Label.self, from: Data(raw.utf8))
   }
 
   private func save(_ s: Stored) throws {
@@ -495,6 +510,7 @@ final class WalletStore {
     var s = try load(id)
     try change(&s.info)
     try save(s)
+    writeLabel(s.info)
     return s.info.dict
   }
 
@@ -539,6 +555,7 @@ final class WalletStore {
     try main.delete("w.\(id)")
     try recovery.delete("w.\(id)")
     try recovery.delete("i.\(id)")
+    try? recovery.delete("l.\(id)")
   }
 
   // MARK: Using secrets
@@ -925,7 +942,16 @@ final class WalletStore {
           guard case let .argon2id(_, _, salt) = item.env.kdf, let meta = try? recoveryMeta() else { return true }
           return lockWith != passcode || salt != meta.salt
         }()
-        restored.append(try store(r, passcode: lockWith, cache: cache, writeRecovery: needsReseal).info.dict)
+        // Bring back the names, networks and backup state the user had.
+        var rec = r
+        var keep: Info? = nil
+        if let label = readLabel(r.id) {
+          rec.name = label.name
+          rec.accounts = r.accounts.map { a in label.accounts.first { $0.index == a.index }.map { Info.Account(index: a.index, name: $0.name) } ?? a }
+          keep = Info(id: rec.id, name: label.name, kind: rec.kind, secretType: rec.words != nil ? "mnemonic" : "privateKey", coins: label.coins,
+                      createdAt: rec.createdAt, backup: label.backup, accounts: rec.accounts, solanaPath: rec.words != nil ? rec.solanaPath : nil)
+        }
+        restored.append(try store(rec, passcode: lockWith, cache: cache, writeRecovery: needsReseal, keep: keep).info.dict)
       }
     }
     return restored

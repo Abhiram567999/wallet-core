@@ -337,8 +337,25 @@ class WalletStore(context: Context) {
       recovery.set("i.${r.id}", AddressIndex.build(indexed.flatMap { i -> INDEX_COINS.mapNotNull { addresses[i.toString()]?.get(it.toString()) } }))
     }
     main.set("w.${r.id}", stored.toString())
+    writeLabel(info)
     return stored
   }
+
+  /**
+   * What a wallet looks like (name, account names, networks, backup state) next to its recovery copy,
+   * so a restore brings back the names the user chose. No secrets.
+   */
+  private fun writeLabel(info: JSONObject) {
+    runCatching {
+      recovery.set(
+        "l.${info.getString("id")}",
+        JSONObject().put("name", info.getString("name")).put("accounts", info.getJSONArray("accounts"))
+          .put("coins", info.getJSONArray("coins")).put("backup", info.getJSONObject("backup")).toString(),
+      )
+    }
+  }
+
+  private fun readLabel(id: String): JSONObject? = recovery.get("l.$id")?.let { runCatching { JSONObject(it) }.getOrNull() }
 
   // MARK: addresses
 
@@ -463,6 +480,7 @@ class WalletStore(context: Context) {
     val s = load(id)
     change(info(s))
     main.set("w.$id", s.toString())
+    writeLabel(info(s))
     info(s)
   }
 
@@ -503,6 +521,7 @@ class WalletStore(context: Context) {
     main.delete("w.$id")
     recovery.delete("w.$id")
     recovery.delete("i.$id")
+    runCatching { recovery.delete("l.$id") }
   }
 
   // MARK: using secrets
@@ -852,7 +871,17 @@ class WalletStore(context: Context) {
       for ((_, records, env) in opened) {
         val salt = (env.kdf as? Envelope.Kdf.Argon2id)?.salt
         val reseal = lockWith != passcode || salt != metaSalt
-        for (r in records) if ("w.${r.id}" !in existing) restored.put(info(store(r, lockWith, cache, reseal)))
+        for (r in records) if ("w.${r.id}" !in existing) {
+          // Bring back the names, networks and backup state the user had.
+          val label = readLabel(r.id)
+          val rec = if (label == null) r else {
+            val names = label.optJSONArray("accounts")
+            val byIndex = (0 until (names?.length() ?: 0)).associate { names!!.getJSONObject(it).getInt("index") to names.getJSONObject(it).getString("name") }
+            r.copy(name = label.optString("name", r.name), accounts = r.accounts.map { a -> byIndex[a.index]?.let { Account(a.index, it) } ?: a })
+          }
+          val keep = label?.let { JSONObject().put("name", rec.name).put("coins", it.getJSONArray("coins")).put("backup", it.getJSONObject("backup")) }
+          restored.put(info(store(rec, lockWith, cache, reseal, keep)))
+        }
       }
       restored
     } finally {
