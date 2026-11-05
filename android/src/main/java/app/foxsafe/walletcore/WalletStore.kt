@@ -24,6 +24,14 @@ import wallet.core.jni.TronMessageSigner
 import wallet.core.jni.proto.Bitcoin
 import wallet.core.jni.proto.Cosmos
 import wallet.core.jni.proto.Tron
+import wallet.core.jni.proto.Aptos
+import wallet.core.jni.proto.Cardano
+import wallet.core.jni.proto.NEAR
+import wallet.core.jni.proto.Polkadot
+import wallet.core.jni.proto.Ripple
+import wallet.core.jni.proto.Stellar
+import wallet.core.jni.proto.Sui
+import wallet.core.jni.proto.TheOpenNetwork
 import wallet.core.jni.proto.Common.SigningError
 import wallet.core.jni.proto.TransactionCompiler.PreSigningOutput
 import java.math.BigInteger
@@ -651,6 +659,118 @@ class WalletStore(context: Context) {
     }
   }
 
+  // MARK: Network group 2 (XRP, Stellar, Polkadot, NEAR, TON, Aptos, Sui, Cardano)
+
+  private val networkCoins = setOf(CoinType.XRP, CoinType.STELLAR, CoinType.POLKADOT, CoinType.NEAR, CoinType.TON, CoinType.APTOS, CoinType.SUI, CoinType.CARDANO)
+
+  /**
+   * A plain transfer on a group-2 network (and USDT-style jettons on TON). The shape
+   * is checked before the prompt; the sender is checked and the wallet's public key
+   * (and Cardano's change address) filled in here, below the app layer (SPEC §7).
+   */
+  fun signNetwork(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    val c = coin(coinValue)
+    if (c !in networkCoins) throw WalletException("INVALID", "this network can't be signed here")
+    val data = runCatching { Envelope.unb64(inputB64) }.getOrElse { throw WalletException("INVALID", "bad input") }
+    networkInput(data, c, null, null)
+    withSecret(id, activity, "Confirm the transaction") { r ->
+      val key = privateKey(r, c, account)
+      val ready = networkInput(data, c, c.deriveAddress(key), key.getPublicKey(c).data())
+      signOne(ready, key, c)
+    }
+  }
+
+  /** Checks a group-2 input; with `own` (after the prompt) checks the sender and fills in the public key. */
+  private fun networkInput(data: ByteArray, c: CoinType, own: String?, publicKey: ByteArray?): ByteArray {
+    val unsupported = WalletException("INVALID", "not a transfer this wallet can sign")
+    val notOwn = WalletException("INVALID", "this transaction is not from this wallet")
+    val parsed = { block: () -> ByteArray -> runCatching(block).getOrElse { e -> if (e is WalletException) throw e else throw unsupported } }
+    return parsed {
+      when (c) {
+        CoinType.XRP -> {
+          val i = Ripple.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty || !i.publicKey.isEmpty) throw unsupported
+          if (i.rawJson.isNotEmpty()) {
+            // Payments with a memo (THORChain swaps): XRP only, no flags, no other fields.
+            if (i.operationOneofCase != Ripple.SigningInput.OperationOneofCase.OPERATIONONEOF_NOT_SET) throw unsupported
+            val tx = JSONObject(i.rawJson)
+            val allowed = setOf("TransactionType", "Account", "Destination", "Amount", "Fee", "Sequence", "LastLedgerSequence", "Flags", "Memos", "DestinationTag")
+            if (!tx.keys().asSequence().all { it in allowed } || tx.optString("TransactionType") != "Payment" || tx.opt("Amount") !is String || tx.optInt("Flags", 0) != 0) throw unsupported
+            if (own != null && tx.optString("Account") != own) throw notOwn
+          } else {
+            if (i.operationOneofCase != Ripple.SigningInput.OperationOneofCase.OP_PAYMENT ||
+              i.opPayment.amountOneofCase != Ripple.OperationPayment.AmountOneofCase.AMOUNT) throw unsupported
+            if (own != null && i.account != own) throw notOwn
+          }
+          if (publicKey == null) data else i.toBuilder().setPublicKey(ByteString.copyFrom(publicKey)).build().toByteArray()
+        }
+        CoinType.STELLAR -> {
+          val i = Stellar.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty) throw unsupported
+          when (i.operationOneofCase) {
+            Stellar.SigningInput.OperationOneofCase.OP_CREATE_ACCOUNT -> {}
+            Stellar.SigningInput.OperationOneofCase.OP_PAYMENT ->
+              if (i.opPayment.hasAsset() && (i.opPayment.asset.issuer.isNotEmpty() || i.opPayment.asset.alphanum4.isNotEmpty())) throw unsupported
+            else -> throw unsupported
+          }
+          if (own != null && i.account != own) throw notOwn
+          data
+        }
+        CoinType.POLKADOT -> {
+          // No sender field: the signature itself names the wallet.
+          val i = Polkadot.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty || i.messageOneofCase != Polkadot.SigningInput.MessageOneofCase.BALANCE_CALL ||
+            i.balanceCall.messageOneofCase != Polkadot.Balance.MessageOneofCase.TRANSFER) throw unsupported
+          data
+        }
+        CoinType.NEAR -> {
+          val i = NEAR.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty || !i.publicKey.isEmpty || i.actionsCount != 1 || i.getActions(0).payloadCase != NEAR.Action.PayloadCase.TRANSFER) throw unsupported
+          if (own != null && i.signerId != own) throw notOwn
+          if (publicKey == null) data else i.toBuilder().setPublicKey(ByteString.copyFrom(publicKey)).build().toByteArray()
+        }
+        CoinType.TON -> {
+          // The wallet contract is derived from the public key, so it is always this wallet's.
+          val i = TheOpenNetwork.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty || !i.publicKey.isEmpty || i.walletVersion != TheOpenNetwork.WalletVersion.WALLET_V4_R2 ||
+            i.messagesCount != 1 || i.getMessages(0).stateInit.isNotEmpty()) throw unsupported
+          val m = i.getMessages(0)
+          when (m.payloadCase) {
+            TheOpenNetwork.Transfer.PayloadCase.PAYLOAD_NOT_SET -> {}
+            TheOpenNetwork.Transfer.PayloadCase.JETTON_TRANSFER -> if (m.jettonTransfer.customPayload.isNotEmpty()) throw unsupported
+            else -> throw unsupported
+          }
+          if (publicKey == null) data else i.toBuilder().setPublicKey(ByteString.copyFrom(publicKey)).build().toByteArray()
+        }
+        CoinType.APTOS -> {
+          val i = Aptos.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty || i.anyEncoded.isNotEmpty() || i.transactionPayloadCase != Aptos.SigningInput.TransactionPayloadCase.TRANSFER) throw unsupported
+          if (own != null && !i.sender.equals(own, ignoreCase = true)) throw notOwn
+          data
+        }
+        CoinType.SUI -> {
+          val i = Sui.SigningInput.parseFrom(data)
+          if (!i.privateKey.isEmpty || i.transactionPayloadCase !in setOf(Sui.SigningInput.TransactionPayloadCase.PAY_SUI, Sui.SigningInput.TransactionPayloadCase.PAY_ALL_SUI)) throw unsupported
+          if (own != null && !i.signer.equals(own, ignoreCase = true)) throw notOwn
+          data
+        }
+        CoinType.CARDANO -> {
+          // Like Bitcoin: change and every input are forced to the wallet's own address.
+          val i = Cardano.SigningInput.parseFrom(data)
+          if (i.privateKeyCount != 0 || !i.hasTransferMessage() || i.hasPlan() || i.hasRegisterStakingKey() || i.hasDelegate() || i.hasWithdraw() ||
+            i.hasDeregisterStakingKey() || i.hasVoteDelegation() || i.extraOutputsCount != 0 || !i.auxiliaryData.isEmpty || i.utxosCount == 0) throw unsupported
+          if (own == null) data else {
+            val b = i.toBuilder()
+            b.setTransferMessage(b.transferMessage.toBuilder().setChangeAddress(own))
+            for (n in 0 until b.utxosCount) b.setUtxos(n, b.getUtxos(n).toBuilder().setAddress(own))
+            b.build().toByteArray()
+          }
+        }
+        else -> throw WalletException("INVALID", "this network can't be signed here")
+      }
+    }
+  }
+
   // MARK: EVM gasless (EIP-7702 + EntryPoint 0.8)
 
   /** Foxsafe's EVM fee rule, compiled in on purpose: an app update can't change it. */
@@ -844,9 +964,10 @@ class WalletStore(context: Context) {
     if (c.blockchain() == Blockchain.BITCOIN || c.blockchain() == Blockchain.BITCOINCASH) return signBitcoin(input, key, c)
     val pre = PreSigningOutput.parseFrom(TransactionCompiler.preImageHashes(c, input))
     if (pre.error != SigningError.OK) throw WalletException("INVALID", "cannot sign: ${pre.errorMessage}")
-    // Solana signs the whole message (pre.data); its pre-image output has a different layout,
-    // so the generic dataHash field would hold the signer's key instead (SPEC §7).
-    val digest = if (c.blockchain() == Blockchain.SOLANA) pre.data.toByteArray() else pre.dataHash.toByteArray()
+    // Solana, TON and Aptos sign the whole message (pre.data); their pre-image output has a
+    // different layout, so the generic dataHash field is not the thing to sign (SPEC §7).
+    val wholeMessage = c.blockchain() in setOf(Blockchain.SOLANA, Blockchain.THEOPENNETWORK, Blockchain.APTOS)
+    val digest = if (wholeMessage) pre.data.toByteArray() else pre.dataHash.toByteArray()
     val sig = key.sign(digest, c.curve()) ?: throw WalletException("CRYPTO", "signing failed")
     val out = TransactionCompiler.compileWithSignatures(
       c, input, DataVector().apply { add(sig) }, DataVector().apply { add(key.getPublicKey(c).data()) },

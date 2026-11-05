@@ -3,6 +3,1234 @@ import Long = require("long");
 /** Namespace TW. */
 export namespace TW {
 
+    /** Namespace Aptos. */
+    namespace Aptos {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of a TransferMessage. */
+            interface ITransferMessage {
+
+                /** TransferMessage to */
+                to?: (string|null);
+
+                /** TransferMessage amount */
+                amount?: (number|null);
+            }
+
+            /** Represents a TransferMessage. */
+            class TransferMessage implements ITransferMessage {
+
+                /**
+                 * Constructs a new TransferMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITransferMessage);
+
+                /** TransferMessage to. */
+                public to: string;
+
+                /** TransferMessage amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new TransferMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransferMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITransferMessage): TW.Aptos.Proto.TransferMessage;
+
+                /**
+                 * Encodes the specified TransferMessage message. Does not implicitly {@link TW.Aptos.Proto.TransferMessage.verify|verify} messages.
+                 * @param message TransferMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITransferMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TransferMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TransferMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TransferMessage;
+
+                /**
+                 * Gets the default type url for TransferMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a StructTag. */
+            interface IStructTag {
+
+                /** StructTag accountAddress */
+                accountAddress?: (string|null);
+
+                /** StructTag module */
+                module?: (string|null);
+
+                /** StructTag name */
+                name?: (string|null);
+            }
+
+            /** Represents a StructTag. */
+            class StructTag implements IStructTag {
+
+                /**
+                 * Constructs a new StructTag.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.IStructTag);
+
+                /** StructTag accountAddress. */
+                public accountAddress: string;
+
+                /** StructTag module. */
+                public module: string;
+
+                /** StructTag name. */
+                public name: string;
+
+                /**
+                 * Creates a new StructTag instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns StructTag instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.IStructTag): TW.Aptos.Proto.StructTag;
+
+                /**
+                 * Encodes the specified StructTag message. Does not implicitly {@link TW.Aptos.Proto.StructTag.verify|verify} messages.
+                 * @param message StructTag message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.IStructTag, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a StructTag message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns StructTag
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.StructTag;
+
+                /**
+                 * Gets the default type url for StructTag
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TokenTransferMessage. */
+            interface ITokenTransferMessage {
+
+                /** TokenTransferMessage to */
+                to?: (string|null);
+
+                /** TokenTransferMessage amount */
+                amount?: (number|null);
+
+                /** TokenTransferMessage function */
+                "function"?: (TW.Aptos.Proto.IStructTag|null);
+            }
+
+            /** Represents a TokenTransferMessage. */
+            class TokenTransferMessage implements ITokenTransferMessage {
+
+                /**
+                 * Constructs a new TokenTransferMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITokenTransferMessage);
+
+                /** TokenTransferMessage to. */
+                public to: string;
+
+                /** TokenTransferMessage amount. */
+                public amount: number;
+
+                /** TokenTransferMessage function. */
+                public function?: (TW.Aptos.Proto.IStructTag|null);
+
+                /**
+                 * Creates a new TokenTransferMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenTransferMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITokenTransferMessage): TW.Aptos.Proto.TokenTransferMessage;
+
+                /**
+                 * Encodes the specified TokenTransferMessage message. Does not implicitly {@link TW.Aptos.Proto.TokenTransferMessage.verify|verify} messages.
+                 * @param message TokenTransferMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITokenTransferMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TokenTransferMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TokenTransferMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TokenTransferMessage;
+
+                /**
+                 * Gets the default type url for TokenTransferMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TokenTransferCoinsMessage. */
+            interface ITokenTransferCoinsMessage {
+
+                /** TokenTransferCoinsMessage to */
+                to?: (string|null);
+
+                /** TokenTransferCoinsMessage amount */
+                amount?: (number|null);
+
+                /** TokenTransferCoinsMessage function */
+                "function"?: (TW.Aptos.Proto.IStructTag|null);
+            }
+
+            /** Represents a TokenTransferCoinsMessage. */
+            class TokenTransferCoinsMessage implements ITokenTransferCoinsMessage {
+
+                /**
+                 * Constructs a new TokenTransferCoinsMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITokenTransferCoinsMessage);
+
+                /** TokenTransferCoinsMessage to. */
+                public to: string;
+
+                /** TokenTransferCoinsMessage amount. */
+                public amount: number;
+
+                /** TokenTransferCoinsMessage function. */
+                public function?: (TW.Aptos.Proto.IStructTag|null);
+
+                /**
+                 * Creates a new TokenTransferCoinsMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenTransferCoinsMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITokenTransferCoinsMessage): TW.Aptos.Proto.TokenTransferCoinsMessage;
+
+                /**
+                 * Encodes the specified TokenTransferCoinsMessage message. Does not implicitly {@link TW.Aptos.Proto.TokenTransferCoinsMessage.verify|verify} messages.
+                 * @param message TokenTransferCoinsMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITokenTransferCoinsMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TokenTransferCoinsMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TokenTransferCoinsMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TokenTransferCoinsMessage;
+
+                /**
+                 * Gets the default type url for TokenTransferCoinsMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a FungibleAssetTransferMessage. */
+            interface IFungibleAssetTransferMessage {
+
+                /** FungibleAssetTransferMessage metadataAddress */
+                metadataAddress?: (string|null);
+
+                /** FungibleAssetTransferMessage to */
+                to?: (string|null);
+
+                /** FungibleAssetTransferMessage amount */
+                amount?: (number|null);
+            }
+
+            /** Represents a FungibleAssetTransferMessage. */
+            class FungibleAssetTransferMessage implements IFungibleAssetTransferMessage {
+
+                /**
+                 * Constructs a new FungibleAssetTransferMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.IFungibleAssetTransferMessage);
+
+                /** FungibleAssetTransferMessage metadataAddress. */
+                public metadataAddress: string;
+
+                /** FungibleAssetTransferMessage to. */
+                public to: string;
+
+                /** FungibleAssetTransferMessage amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new FungibleAssetTransferMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns FungibleAssetTransferMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.IFungibleAssetTransferMessage): TW.Aptos.Proto.FungibleAssetTransferMessage;
+
+                /**
+                 * Encodes the specified FungibleAssetTransferMessage message. Does not implicitly {@link TW.Aptos.Proto.FungibleAssetTransferMessage.verify|verify} messages.
+                 * @param message FungibleAssetTransferMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.IFungibleAssetTransferMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a FungibleAssetTransferMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns FungibleAssetTransferMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.FungibleAssetTransferMessage;
+
+                /**
+                 * Gets the default type url for FungibleAssetTransferMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a CreateAccountMessage. */
+            interface ICreateAccountMessage {
+
+                /** CreateAccountMessage authKey */
+                authKey?: (string|null);
+            }
+
+            /** Represents a CreateAccountMessage. */
+            class CreateAccountMessage implements ICreateAccountMessage {
+
+                /**
+                 * Constructs a new CreateAccountMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ICreateAccountMessage);
+
+                /** CreateAccountMessage authKey. */
+                public authKey: string;
+
+                /**
+                 * Creates a new CreateAccountMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateAccountMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ICreateAccountMessage): TW.Aptos.Proto.CreateAccountMessage;
+
+                /**
+                 * Encodes the specified CreateAccountMessage message. Does not implicitly {@link TW.Aptos.Proto.CreateAccountMessage.verify|verify} messages.
+                 * @param message CreateAccountMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ICreateAccountMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CreateAccountMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CreateAccountMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.CreateAccountMessage;
+
+                /**
+                 * Gets the default type url for CreateAccountMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OfferNftMessage. */
+            interface IOfferNftMessage {
+
+                /** OfferNftMessage receiver */
+                receiver?: (string|null);
+
+                /** OfferNftMessage creator */
+                creator?: (string|null);
+
+                /** OfferNftMessage collectionName */
+                collectionName?: (string|null);
+
+                /** OfferNftMessage name */
+                name?: (string|null);
+
+                /** OfferNftMessage propertyVersion */
+                propertyVersion?: (number|null);
+
+                /** OfferNftMessage amount */
+                amount?: (number|null);
+            }
+
+            /** Represents an OfferNftMessage. */
+            class OfferNftMessage implements IOfferNftMessage {
+
+                /**
+                 * Constructs a new OfferNftMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.IOfferNftMessage);
+
+                /** OfferNftMessage receiver. */
+                public receiver: string;
+
+                /** OfferNftMessage creator. */
+                public creator: string;
+
+                /** OfferNftMessage collectionName. */
+                public collectionName: string;
+
+                /** OfferNftMessage name. */
+                public name: string;
+
+                /** OfferNftMessage propertyVersion. */
+                public propertyVersion: number;
+
+                /** OfferNftMessage amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new OfferNftMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OfferNftMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.IOfferNftMessage): TW.Aptos.Proto.OfferNftMessage;
+
+                /**
+                 * Encodes the specified OfferNftMessage message. Does not implicitly {@link TW.Aptos.Proto.OfferNftMessage.verify|verify} messages.
+                 * @param message OfferNftMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.IOfferNftMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OfferNftMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OfferNftMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.OfferNftMessage;
+
+                /**
+                 * Gets the default type url for OfferNftMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a CancelOfferNftMessage. */
+            interface ICancelOfferNftMessage {
+
+                /** CancelOfferNftMessage receiver */
+                receiver?: (string|null);
+
+                /** CancelOfferNftMessage creator */
+                creator?: (string|null);
+
+                /** CancelOfferNftMessage collectionName */
+                collectionName?: (string|null);
+
+                /** CancelOfferNftMessage name */
+                name?: (string|null);
+
+                /** CancelOfferNftMessage propertyVersion */
+                propertyVersion?: (number|null);
+            }
+
+            /** Represents a CancelOfferNftMessage. */
+            class CancelOfferNftMessage implements ICancelOfferNftMessage {
+
+                /**
+                 * Constructs a new CancelOfferNftMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ICancelOfferNftMessage);
+
+                /** CancelOfferNftMessage receiver. */
+                public receiver: string;
+
+                /** CancelOfferNftMessage creator. */
+                public creator: string;
+
+                /** CancelOfferNftMessage collectionName. */
+                public collectionName: string;
+
+                /** CancelOfferNftMessage name. */
+                public name: string;
+
+                /** CancelOfferNftMessage propertyVersion. */
+                public propertyVersion: number;
+
+                /**
+                 * Creates a new CancelOfferNftMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CancelOfferNftMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ICancelOfferNftMessage): TW.Aptos.Proto.CancelOfferNftMessage;
+
+                /**
+                 * Encodes the specified CancelOfferNftMessage message. Does not implicitly {@link TW.Aptos.Proto.CancelOfferNftMessage.verify|verify} messages.
+                 * @param message CancelOfferNftMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ICancelOfferNftMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CancelOfferNftMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CancelOfferNftMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.CancelOfferNftMessage;
+
+                /**
+                 * Gets the default type url for CancelOfferNftMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a ClaimNftMessage. */
+            interface IClaimNftMessage {
+
+                /** ClaimNftMessage sender */
+                sender?: (string|null);
+
+                /** ClaimNftMessage creator */
+                creator?: (string|null);
+
+                /** ClaimNftMessage collectionName */
+                collectionName?: (string|null);
+
+                /** ClaimNftMessage name */
+                name?: (string|null);
+
+                /** ClaimNftMessage propertyVersion */
+                propertyVersion?: (number|null);
+            }
+
+            /** Represents a ClaimNftMessage. */
+            class ClaimNftMessage implements IClaimNftMessage {
+
+                /**
+                 * Constructs a new ClaimNftMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.IClaimNftMessage);
+
+                /** ClaimNftMessage sender. */
+                public sender: string;
+
+                /** ClaimNftMessage creator. */
+                public creator: string;
+
+                /** ClaimNftMessage collectionName. */
+                public collectionName: string;
+
+                /** ClaimNftMessage name. */
+                public name: string;
+
+                /** ClaimNftMessage propertyVersion. */
+                public propertyVersion: number;
+
+                /**
+                 * Creates a new ClaimNftMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ClaimNftMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.IClaimNftMessage): TW.Aptos.Proto.ClaimNftMessage;
+
+                /**
+                 * Encodes the specified ClaimNftMessage message. Does not implicitly {@link TW.Aptos.Proto.ClaimNftMessage.verify|verify} messages.
+                 * @param message ClaimNftMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.IClaimNftMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a ClaimNftMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ClaimNftMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.ClaimNftMessage;
+
+                /**
+                 * Gets the default type url for ClaimNftMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TortugaClaim. */
+            interface ITortugaClaim {
+
+                /** TortugaClaim idx */
+                idx?: (number|null);
+            }
+
+            /** Represents a TortugaClaim. */
+            class TortugaClaim implements ITortugaClaim {
+
+                /**
+                 * Constructs a new TortugaClaim.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITortugaClaim);
+
+                /** TortugaClaim idx. */
+                public idx: number;
+
+                /**
+                 * Creates a new TortugaClaim instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TortugaClaim instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITortugaClaim): TW.Aptos.Proto.TortugaClaim;
+
+                /**
+                 * Encodes the specified TortugaClaim message. Does not implicitly {@link TW.Aptos.Proto.TortugaClaim.verify|verify} messages.
+                 * @param message TortugaClaim message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITortugaClaim, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TortugaClaim message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TortugaClaim
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TortugaClaim;
+
+                /**
+                 * Gets the default type url for TortugaClaim
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TortugaStake. */
+            interface ITortugaStake {
+
+                /** TortugaStake amount */
+                amount?: (number|null);
+            }
+
+            /** Represents a TortugaStake. */
+            class TortugaStake implements ITortugaStake {
+
+                /**
+                 * Constructs a new TortugaStake.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITortugaStake);
+
+                /** TortugaStake amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new TortugaStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TortugaStake instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITortugaStake): TW.Aptos.Proto.TortugaStake;
+
+                /**
+                 * Encodes the specified TortugaStake message. Does not implicitly {@link TW.Aptos.Proto.TortugaStake.verify|verify} messages.
+                 * @param message TortugaStake message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITortugaStake, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TortugaStake message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TortugaStake
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TortugaStake;
+
+                /**
+                 * Gets the default type url for TortugaStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TortugaUnstake. */
+            interface ITortugaUnstake {
+
+                /** TortugaUnstake amount */
+                amount?: (number|null);
+            }
+
+            /** Represents a TortugaUnstake. */
+            class TortugaUnstake implements ITortugaUnstake {
+
+                /**
+                 * Constructs a new TortugaUnstake.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITortugaUnstake);
+
+                /** TortugaUnstake amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new TortugaUnstake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TortugaUnstake instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITortugaUnstake): TW.Aptos.Proto.TortugaUnstake;
+
+                /**
+                 * Encodes the specified TortugaUnstake message. Does not implicitly {@link TW.Aptos.Proto.TortugaUnstake.verify|verify} messages.
+                 * @param message TortugaUnstake message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITortugaUnstake, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TortugaUnstake message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TortugaUnstake
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TortugaUnstake;
+
+                /**
+                 * Gets the default type url for TortugaUnstake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a LiquidStaking. */
+            interface ILiquidStaking {
+
+                /** LiquidStaking smartContractAddress */
+                smartContractAddress?: (string|null);
+
+                /** LiquidStaking stake */
+                stake?: (TW.Aptos.Proto.ITortugaStake|null);
+
+                /** LiquidStaking unstake */
+                unstake?: (TW.Aptos.Proto.ITortugaUnstake|null);
+
+                /** LiquidStaking claim */
+                claim?: (TW.Aptos.Proto.ITortugaClaim|null);
+            }
+
+            /** Represents a LiquidStaking. */
+            class LiquidStaking implements ILiquidStaking {
+
+                /**
+                 * Constructs a new LiquidStaking.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ILiquidStaking);
+
+                /** LiquidStaking smartContractAddress. */
+                public smartContractAddress: string;
+
+                /** LiquidStaking stake. */
+                public stake?: (TW.Aptos.Proto.ITortugaStake|null);
+
+                /** LiquidStaking unstake. */
+                public unstake?: (TW.Aptos.Proto.ITortugaUnstake|null);
+
+                /** LiquidStaking claim. */
+                public claim?: (TW.Aptos.Proto.ITortugaClaim|null);
+
+                /** LiquidStaking liquidStakeTransactionPayload. */
+                public liquidStakeTransactionPayload?: ("stake"|"unstake"|"claim");
+
+                /**
+                 * Creates a new LiquidStaking instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns LiquidStaking instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ILiquidStaking): TW.Aptos.Proto.LiquidStaking;
+
+                /**
+                 * Encodes the specified LiquidStaking message. Does not implicitly {@link TW.Aptos.Proto.LiquidStaking.verify|verify} messages.
+                 * @param message LiquidStaking message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ILiquidStaking, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a LiquidStaking message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns LiquidStaking
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.LiquidStaking;
+
+                /**
+                 * Gets the default type url for LiquidStaking
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a NftMessage. */
+            interface INftMessage {
+
+                /** NftMessage offerNft */
+                offerNft?: (TW.Aptos.Proto.IOfferNftMessage|null);
+
+                /** NftMessage cancelOfferNft */
+                cancelOfferNft?: (TW.Aptos.Proto.ICancelOfferNftMessage|null);
+
+                /** NftMessage claimNft */
+                claimNft?: (TW.Aptos.Proto.IClaimNftMessage|null);
+            }
+
+            /** Represents a NftMessage. */
+            class NftMessage implements INftMessage {
+
+                /**
+                 * Constructs a new NftMessage.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.INftMessage);
+
+                /** NftMessage offerNft. */
+                public offerNft?: (TW.Aptos.Proto.IOfferNftMessage|null);
+
+                /** NftMessage cancelOfferNft. */
+                public cancelOfferNft?: (TW.Aptos.Proto.ICancelOfferNftMessage|null);
+
+                /** NftMessage claimNft. */
+                public claimNft?: (TW.Aptos.Proto.IClaimNftMessage|null);
+
+                /** NftMessage nftTransactionPayload. */
+                public nftTransactionPayload?: ("offerNft"|"cancelOfferNft"|"claimNft");
+
+                /**
+                 * Creates a new NftMessage instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns NftMessage instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.INftMessage): TW.Aptos.Proto.NftMessage;
+
+                /**
+                 * Encodes the specified NftMessage message. Does not implicitly {@link TW.Aptos.Proto.NftMessage.verify|verify} messages.
+                 * @param message NftMessage message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.INftMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a NftMessage message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns NftMessage
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.NftMessage;
+
+                /**
+                 * Gets the default type url for NftMessage
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput sender */
+                sender?: (string|null);
+
+                /** SigningInput sequenceNumber */
+                sequenceNumber?: (number|null);
+
+                /** SigningInput maxGasAmount */
+                maxGasAmount?: (number|null);
+
+                /** SigningInput gasUnitPrice */
+                gasUnitPrice?: (number|null);
+
+                /** SigningInput expirationTimestampSecs */
+                expirationTimestampSecs?: (number|null);
+
+                /** SigningInput chainId */
+                chainId?: (number|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput anyEncoded */
+                anyEncoded?: (string|null);
+
+                /** SigningInput transfer */
+                transfer?: (TW.Aptos.Proto.ITransferMessage|null);
+
+                /** SigningInput tokenTransfer */
+                tokenTransfer?: (TW.Aptos.Proto.ITokenTransferMessage|null);
+
+                /** SigningInput createAccount */
+                createAccount?: (TW.Aptos.Proto.ICreateAccountMessage|null);
+
+                /** SigningInput nftMessage */
+                nftMessage?: (TW.Aptos.Proto.INftMessage|null);
+
+                /** SigningInput liquidStakingMessage */
+                liquidStakingMessage?: (TW.Aptos.Proto.ILiquidStaking|null);
+
+                /** SigningInput tokenTransferCoins */
+                tokenTransferCoins?: (TW.Aptos.Proto.ITokenTransferCoinsMessage|null);
+
+                /** SigningInput fungibleAssetTransfer */
+                fungibleAssetTransfer?: (TW.Aptos.Proto.IFungibleAssetTransferMessage|null);
+
+                /** SigningInput abi */
+                abi?: (string|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ISigningInput);
+
+                /** SigningInput sender. */
+                public sender: string;
+
+                /** SigningInput sequenceNumber. */
+                public sequenceNumber: number;
+
+                /** SigningInput maxGasAmount. */
+                public maxGasAmount: number;
+
+                /** SigningInput gasUnitPrice. */
+                public gasUnitPrice: number;
+
+                /** SigningInput expirationTimestampSecs. */
+                public expirationTimestampSecs: number;
+
+                /** SigningInput chainId. */
+                public chainId: number;
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput anyEncoded. */
+                public anyEncoded: string;
+
+                /** SigningInput transfer. */
+                public transfer?: (TW.Aptos.Proto.ITransferMessage|null);
+
+                /** SigningInput tokenTransfer. */
+                public tokenTransfer?: (TW.Aptos.Proto.ITokenTransferMessage|null);
+
+                /** SigningInput createAccount. */
+                public createAccount?: (TW.Aptos.Proto.ICreateAccountMessage|null);
+
+                /** SigningInput nftMessage. */
+                public nftMessage?: (TW.Aptos.Proto.INftMessage|null);
+
+                /** SigningInput liquidStakingMessage. */
+                public liquidStakingMessage?: (TW.Aptos.Proto.ILiquidStaking|null);
+
+                /** SigningInput tokenTransferCoins. */
+                public tokenTransferCoins?: (TW.Aptos.Proto.ITokenTransferCoinsMessage|null);
+
+                /** SigningInput fungibleAssetTransfer. */
+                public fungibleAssetTransfer?: (TW.Aptos.Proto.IFungibleAssetTransferMessage|null);
+
+                /** SigningInput abi. */
+                public abi: string;
+
+                /** SigningInput transactionPayload. */
+                public transactionPayload?: ("transfer"|"tokenTransfer"|"createAccount"|"nftMessage"|"liquidStakingMessage"|"tokenTransferCoins"|"fungibleAssetTransfer");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ISigningInput): TW.Aptos.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Aptos.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TransactionAuthenticator. */
+            interface ITransactionAuthenticator {
+
+                /** TransactionAuthenticator signature */
+                signature?: (Uint8Array|null);
+
+                /** TransactionAuthenticator publicKey */
+                publicKey?: (Uint8Array|null);
+            }
+
+            /** Represents a TransactionAuthenticator. */
+            class TransactionAuthenticator implements ITransactionAuthenticator {
+
+                /**
+                 * Constructs a new TransactionAuthenticator.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ITransactionAuthenticator);
+
+                /** TransactionAuthenticator signature. */
+                public signature: Uint8Array;
+
+                /** TransactionAuthenticator publicKey. */
+                public publicKey: Uint8Array;
+
+                /**
+                 * Creates a new TransactionAuthenticator instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionAuthenticator instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ITransactionAuthenticator): TW.Aptos.Proto.TransactionAuthenticator;
+
+                /**
+                 * Encodes the specified TransactionAuthenticator message. Does not implicitly {@link TW.Aptos.Proto.TransactionAuthenticator.verify|verify} messages.
+                 * @param message TransactionAuthenticator message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ITransactionAuthenticator, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TransactionAuthenticator message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TransactionAuthenticator
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.TransactionAuthenticator;
+
+                /**
+                 * Gets the default type url for TransactionAuthenticator
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** The raw transaction (bytes) */
+                rawTxn?: (Uint8Array|null);
+
+                /** Public key and signature to authenticate */
+                authenticator?: (TW.Aptos.Proto.ITransactionAuthenticator|null);
+
+                /** Signed and encoded transaction bytes. */
+                encoded?: (Uint8Array|null);
+
+                /** SigningOutput json */
+                json?: (string|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Aptos.Proto.ISigningOutput);
+
+                /** The raw transaction (bytes) */
+                public rawTxn: Uint8Array;
+
+                /** Public key and signature to authenticate */
+                public authenticator?: (TW.Aptos.Proto.ITransactionAuthenticator|null);
+
+                /** Signed and encoded transaction bytes. */
+                public encoded: Uint8Array;
+
+                /** SigningOutput json. */
+                public json: string;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Aptos.Proto.ISigningOutput): TW.Aptos.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Aptos.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Aptos.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Aptos.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace Common. */
+    namespace Common {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** SigningError enum. */
+            enum SigningError {
+                OK = 0,
+                Error_general = 1,
+                Error_internal = 2,
+                Error_low_balance = 3,
+                Error_zero_amount_requested = 4,
+                Error_missing_private_key = 5,
+                Error_invalid_private_key = 15,
+                Error_invalid_address = 16,
+                Error_invalid_utxo = 17,
+                Error_invalid_utxo_amount = 18,
+                Error_wrong_fee = 6,
+                Error_signing = 7,
+                Error_tx_too_big = 8,
+                Error_missing_input_utxos = 9,
+                Error_not_enough_utxos = 10,
+                Error_script_redeem = 11,
+                Error_script_output = 12,
+                Error_script_witness_program = 13,
+                Error_invalid_memo = 14,
+                Error_input_parse = 19,
+                Error_no_support_n2n = 20,
+                Error_signatures_count = 21,
+                Error_invalid_params = 22,
+                Error_invalid_requested_token_amount = 23,
+                Error_not_supported = 24,
+                Error_dust_amount_requested = 25,
+                Error_tx_hash_mismatch = 26
+            }
+        }
+    }
+
     /** Namespace BabylonStaking. */
     namespace BabylonStaking {
 
@@ -3304,45 +4532,6 @@ export namespace TW {
         }
     }
 
-    /** Namespace Common. */
-    namespace Common {
-
-        /** Namespace Proto. */
-        namespace Proto {
-
-            /** SigningError enum. */
-            enum SigningError {
-                OK = 0,
-                Error_general = 1,
-                Error_internal = 2,
-                Error_low_balance = 3,
-                Error_zero_amount_requested = 4,
-                Error_missing_private_key = 5,
-                Error_invalid_private_key = 15,
-                Error_invalid_address = 16,
-                Error_invalid_utxo = 17,
-                Error_invalid_utxo_amount = 18,
-                Error_wrong_fee = 6,
-                Error_signing = 7,
-                Error_tx_too_big = 8,
-                Error_missing_input_utxos = 9,
-                Error_not_enough_utxos = 10,
-                Error_script_redeem = 11,
-                Error_script_output = 12,
-                Error_script_witness_program = 13,
-                Error_invalid_memo = 14,
-                Error_input_parse = 19,
-                Error_no_support_n2n = 20,
-                Error_signatures_count = 21,
-                Error_invalid_params = 22,
-                Error_invalid_requested_token_amount = 23,
-                Error_not_supported = 24,
-                Error_dust_amount_requested = 25,
-                Error_tx_hash_mismatch = 26
-            }
-        }
-    }
-
     /** Namespace DecredV2. */
     namespace DecredV2 {
 
@@ -4117,6 +5306,1028 @@ export namespace TW {
 
                 /**
                  * Gets the default type url for Transaction
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace Cardano. */
+    namespace Cardano {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of an OutPoint. */
+            interface IOutPoint {
+
+                /** OutPoint txHash */
+                txHash?: (Uint8Array|null);
+
+                /** OutPoint outputIndex */
+                outputIndex?: (number|null);
+            }
+
+            /** Represents an OutPoint. */
+            class OutPoint implements IOutPoint {
+
+                /**
+                 * Constructs a new OutPoint.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.IOutPoint);
+
+                /** OutPoint txHash. */
+                public txHash: Uint8Array;
+
+                /** OutPoint outputIndex. */
+                public outputIndex: number;
+
+                /**
+                 * Creates a new OutPoint instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OutPoint instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.IOutPoint): TW.Cardano.Proto.OutPoint;
+
+                /**
+                 * Encodes the specified OutPoint message. Does not implicitly {@link TW.Cardano.Proto.OutPoint.verify|verify} messages.
+                 * @param message OutPoint message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.IOutPoint, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OutPoint message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OutPoint
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.OutPoint;
+
+                /**
+                 * Gets the default type url for OutPoint
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TokenAmount. */
+            interface ITokenAmount {
+
+                /** TokenAmount policyId */
+                policyId?: (string|null);
+
+                /** TokenAmount assetName */
+                assetName?: (string|null);
+
+                /** TokenAmount amount */
+                amount?: (Uint8Array|null);
+
+                /** TokenAmount assetNameHex */
+                assetNameHex?: (string|null);
+            }
+
+            /** Represents a TokenAmount. */
+            class TokenAmount implements ITokenAmount {
+
+                /**
+                 * Constructs a new TokenAmount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ITokenAmount);
+
+                /** TokenAmount policyId. */
+                public policyId: string;
+
+                /** TokenAmount assetName. */
+                public assetName: string;
+
+                /** TokenAmount amount. */
+                public amount: Uint8Array;
+
+                /** TokenAmount assetNameHex. */
+                public assetNameHex: string;
+
+                /**
+                 * Creates a new TokenAmount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenAmount instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ITokenAmount): TW.Cardano.Proto.TokenAmount;
+
+                /**
+                 * Encodes the specified TokenAmount message. Does not implicitly {@link TW.Cardano.Proto.TokenAmount.verify|verify} messages.
+                 * @param message TokenAmount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ITokenAmount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TokenAmount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TokenAmount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.TokenAmount;
+
+                /**
+                 * Gets the default type url for TokenAmount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TxInput. */
+            interface ITxInput {
+
+                /** TxInput outPoint */
+                outPoint?: (TW.Cardano.Proto.IOutPoint|null);
+
+                /** TxInput address */
+                address?: (string|null);
+
+                /** TxInput amount */
+                amount?: (number|null);
+
+                /** TxInput tokenAmount */
+                tokenAmount?: (TW.Cardano.Proto.ITokenAmount[]|null);
+            }
+
+            /** Represents a TxInput. */
+            class TxInput implements ITxInput {
+
+                /**
+                 * Constructs a new TxInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ITxInput);
+
+                /** TxInput outPoint. */
+                public outPoint?: (TW.Cardano.Proto.IOutPoint|null);
+
+                /** TxInput address. */
+                public address: string;
+
+                /** TxInput amount. */
+                public amount: number;
+
+                /** TxInput tokenAmount. */
+                public tokenAmount: TW.Cardano.Proto.ITokenAmount[];
+
+                /**
+                 * Creates a new TxInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TxInput instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ITxInput): TW.Cardano.Proto.TxInput;
+
+                /**
+                 * Encodes the specified TxInput message. Does not implicitly {@link TW.Cardano.Proto.TxInput.verify|verify} messages.
+                 * @param message TxInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ITxInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TxInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TxInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.TxInput;
+
+                /**
+                 * Gets the default type url for TxInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TxOutput. */
+            interface ITxOutput {
+
+                /** TxOutput address */
+                address?: (string|null);
+
+                /** TxOutput amount */
+                amount?: (number|null);
+
+                /** TxOutput tokenAmount */
+                tokenAmount?: (TW.Cardano.Proto.ITokenAmount[]|null);
+            }
+
+            /** Represents a TxOutput. */
+            class TxOutput implements ITxOutput {
+
+                /**
+                 * Constructs a new TxOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ITxOutput);
+
+                /** TxOutput address. */
+                public address: string;
+
+                /** TxOutput amount. */
+                public amount: number;
+
+                /** TxOutput tokenAmount. */
+                public tokenAmount: TW.Cardano.Proto.ITokenAmount[];
+
+                /**
+                 * Creates a new TxOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TxOutput instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ITxOutput): TW.Cardano.Proto.TxOutput;
+
+                /**
+                 * Encodes the specified TxOutput message. Does not implicitly {@link TW.Cardano.Proto.TxOutput.verify|verify} messages.
+                 * @param message TxOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ITxOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TxOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TxOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.TxOutput;
+
+                /**
+                 * Gets the default type url for TxOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TokenBundle. */
+            interface ITokenBundle {
+
+                /** TokenBundle token */
+                token?: (TW.Cardano.Proto.ITokenAmount[]|null);
+            }
+
+            /** Represents a TokenBundle. */
+            class TokenBundle implements ITokenBundle {
+
+                /**
+                 * Constructs a new TokenBundle.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ITokenBundle);
+
+                /** TokenBundle token. */
+                public token: TW.Cardano.Proto.ITokenAmount[];
+
+                /**
+                 * Creates a new TokenBundle instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenBundle instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ITokenBundle): TW.Cardano.Proto.TokenBundle;
+
+                /**
+                 * Encodes the specified TokenBundle message. Does not implicitly {@link TW.Cardano.Proto.TokenBundle.verify|verify} messages.
+                 * @param message TokenBundle message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ITokenBundle, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TokenBundle message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TokenBundle
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.TokenBundle;
+
+                /**
+                 * Gets the default type url for TokenBundle
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Transfer. */
+            interface ITransfer {
+
+                /** Transfer toAddress */
+                toAddress?: (string|null);
+
+                /** Transfer changeAddress */
+                changeAddress?: (string|null);
+
+                /** Transfer amount */
+                amount?: (number|null);
+
+                /** Transfer tokenAmount */
+                tokenAmount?: (TW.Cardano.Proto.ITokenBundle|null);
+
+                /** Transfer useMaxAmount */
+                useMaxAmount?: (boolean|null);
+
+                /** Transfer forceFee */
+                forceFee?: (number|null);
+            }
+
+            /** Represents a Transfer. */
+            class Transfer implements ITransfer {
+
+                /**
+                 * Constructs a new Transfer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ITransfer);
+
+                /** Transfer toAddress. */
+                public toAddress: string;
+
+                /** Transfer changeAddress. */
+                public changeAddress: string;
+
+                /** Transfer amount. */
+                public amount: number;
+
+                /** Transfer tokenAmount. */
+                public tokenAmount?: (TW.Cardano.Proto.ITokenBundle|null);
+
+                /** Transfer useMaxAmount. */
+                public useMaxAmount: boolean;
+
+                /** Transfer forceFee. */
+                public forceFee: number;
+
+                /**
+                 * Creates a new Transfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transfer instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ITransfer): TW.Cardano.Proto.Transfer;
+
+                /**
+                 * Encodes the specified Transfer message. Does not implicitly {@link TW.Cardano.Proto.Transfer.verify|verify} messages.
+                 * @param message Transfer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Transfer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Transfer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.Transfer;
+
+                /**
+                 * Gets the default type url for Transfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a RegisterStakingKey. */
+            interface IRegisterStakingKey {
+
+                /** RegisterStakingKey stakingAddress */
+                stakingAddress?: (string|null);
+
+                /** RegisterStakingKey depositAmount */
+                depositAmount?: (number|null);
+            }
+
+            /** Represents a RegisterStakingKey. */
+            class RegisterStakingKey implements IRegisterStakingKey {
+
+                /**
+                 * Constructs a new RegisterStakingKey.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.IRegisterStakingKey);
+
+                /** RegisterStakingKey stakingAddress. */
+                public stakingAddress: string;
+
+                /** RegisterStakingKey depositAmount. */
+                public depositAmount: number;
+
+                /**
+                 * Creates a new RegisterStakingKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns RegisterStakingKey instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.IRegisterStakingKey): TW.Cardano.Proto.RegisterStakingKey;
+
+                /**
+                 * Encodes the specified RegisterStakingKey message. Does not implicitly {@link TW.Cardano.Proto.RegisterStakingKey.verify|verify} messages.
+                 * @param message RegisterStakingKey message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.IRegisterStakingKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a RegisterStakingKey message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns RegisterStakingKey
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.RegisterStakingKey;
+
+                /**
+                 * Gets the default type url for RegisterStakingKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a DeregisterStakingKey. */
+            interface IDeregisterStakingKey {
+
+                /** DeregisterStakingKey stakingAddress */
+                stakingAddress?: (string|null);
+
+                /** DeregisterStakingKey undepositAmount */
+                undepositAmount?: (number|null);
+            }
+
+            /** Represents a DeregisterStakingKey. */
+            class DeregisterStakingKey implements IDeregisterStakingKey {
+
+                /**
+                 * Constructs a new DeregisterStakingKey.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.IDeregisterStakingKey);
+
+                /** DeregisterStakingKey stakingAddress. */
+                public stakingAddress: string;
+
+                /** DeregisterStakingKey undepositAmount. */
+                public undepositAmount: number;
+
+                /**
+                 * Creates a new DeregisterStakingKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeregisterStakingKey instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.IDeregisterStakingKey): TW.Cardano.Proto.DeregisterStakingKey;
+
+                /**
+                 * Encodes the specified DeregisterStakingKey message. Does not implicitly {@link TW.Cardano.Proto.DeregisterStakingKey.verify|verify} messages.
+                 * @param message DeregisterStakingKey message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.IDeregisterStakingKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeregisterStakingKey message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeregisterStakingKey
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.DeregisterStakingKey;
+
+                /**
+                 * Gets the default type url for DeregisterStakingKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a VoteDelegation. */
+            interface IVoteDelegation {
+
+                /** VoteDelegation stakingAddress */
+                stakingAddress?: (string|null);
+
+                /** VoteDelegation drepType */
+                drepType?: (TW.Cardano.Proto.VoteDelegation.DRepType|null);
+
+                /** VoteDelegation drepId */
+                drepId?: (string|null);
+            }
+
+            /** Represents a VoteDelegation. */
+            class VoteDelegation implements IVoteDelegation {
+
+                /**
+                 * Constructs a new VoteDelegation.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.IVoteDelegation);
+
+                /** VoteDelegation stakingAddress. */
+                public stakingAddress: string;
+
+                /** VoteDelegation drepType. */
+                public drepType: TW.Cardano.Proto.VoteDelegation.DRepType;
+
+                /** VoteDelegation drepId. */
+                public drepId: string;
+
+                /**
+                 * Creates a new VoteDelegation instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns VoteDelegation instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.IVoteDelegation): TW.Cardano.Proto.VoteDelegation;
+
+                /**
+                 * Encodes the specified VoteDelegation message. Does not implicitly {@link TW.Cardano.Proto.VoteDelegation.verify|verify} messages.
+                 * @param message VoteDelegation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.IVoteDelegation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a VoteDelegation message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns VoteDelegation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.VoteDelegation;
+
+                /**
+                 * Gets the default type url for VoteDelegation
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            namespace VoteDelegation {
+
+                /** DRepType enum. */
+                enum DRepType {
+                    DREP_ID = 0,
+                    DREP_ALWAYS_ABSTAIN = 2,
+                    DREP_NO_CONFIDENCE = 3
+                }
+            }
+
+            /** Properties of a Delegate. */
+            interface IDelegate {
+
+                /** Delegate stakingAddress */
+                stakingAddress?: (string|null);
+
+                /** Delegate poolId */
+                poolId?: (Uint8Array|null);
+
+                /** Delegate depositAmount */
+                depositAmount?: (number|null);
+            }
+
+            /** Represents a Delegate. */
+            class Delegate implements IDelegate {
+
+                /**
+                 * Constructs a new Delegate.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.IDelegate);
+
+                /** Delegate stakingAddress. */
+                public stakingAddress: string;
+
+                /** Delegate poolId. */
+                public poolId: Uint8Array;
+
+                /** Delegate depositAmount. */
+                public depositAmount: number;
+
+                /**
+                 * Creates a new Delegate instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Delegate instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.IDelegate): TW.Cardano.Proto.Delegate;
+
+                /**
+                 * Encodes the specified Delegate message. Does not implicitly {@link TW.Cardano.Proto.Delegate.verify|verify} messages.
+                 * @param message Delegate message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.IDelegate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Delegate message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Delegate
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.Delegate;
+
+                /**
+                 * Gets the default type url for Delegate
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Withdraw. */
+            interface IWithdraw {
+
+                /** Withdraw stakingAddress */
+                stakingAddress?: (string|null);
+
+                /** Withdraw withdrawAmount */
+                withdrawAmount?: (number|null);
+            }
+
+            /** Represents a Withdraw. */
+            class Withdraw implements IWithdraw {
+
+                /**
+                 * Constructs a new Withdraw.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.IWithdraw);
+
+                /** Withdraw stakingAddress. */
+                public stakingAddress: string;
+
+                /** Withdraw withdrawAmount. */
+                public withdrawAmount: number;
+
+                /**
+                 * Creates a new Withdraw instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Withdraw instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.IWithdraw): TW.Cardano.Proto.Withdraw;
+
+                /**
+                 * Encodes the specified Withdraw message. Does not implicitly {@link TW.Cardano.Proto.Withdraw.verify|verify} messages.
+                 * @param message Withdraw message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.IWithdraw, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Withdraw message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Withdraw
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.Withdraw;
+
+                /**
+                 * Gets the default type url for Withdraw
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TransactionPlan. */
+            interface ITransactionPlan {
+
+                /** TransactionPlan availableAmount */
+                availableAmount?: (number|null);
+
+                /** TransactionPlan amount */
+                amount?: (number|null);
+
+                /** TransactionPlan fee */
+                fee?: (number|null);
+
+                /** TransactionPlan change */
+                change?: (number|null);
+
+                /** TransactionPlan deposit */
+                deposit?: (number|null);
+
+                /** TransactionPlan undeposit */
+                undeposit?: (number|null);
+
+                /** TransactionPlan availableTokens */
+                availableTokens?: (TW.Cardano.Proto.ITokenAmount[]|null);
+
+                /** TransactionPlan outputTokens */
+                outputTokens?: (TW.Cardano.Proto.ITokenAmount[]|null);
+
+                /** TransactionPlan changeTokens */
+                changeTokens?: (TW.Cardano.Proto.ITokenAmount[]|null);
+
+                /** TransactionPlan utxos */
+                utxos?: (TW.Cardano.Proto.ITxInput[]|null);
+
+                /** TransactionPlan error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** TransactionPlan extraOutputs */
+                extraOutputs?: (TW.Cardano.Proto.ITxOutput[]|null);
+            }
+
+            /** Represents a TransactionPlan. */
+            class TransactionPlan implements ITransactionPlan {
+
+                /**
+                 * Constructs a new TransactionPlan.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ITransactionPlan);
+
+                /** TransactionPlan availableAmount. */
+                public availableAmount: number;
+
+                /** TransactionPlan amount. */
+                public amount: number;
+
+                /** TransactionPlan fee. */
+                public fee: number;
+
+                /** TransactionPlan change. */
+                public change: number;
+
+                /** TransactionPlan deposit. */
+                public deposit: number;
+
+                /** TransactionPlan undeposit. */
+                public undeposit: number;
+
+                /** TransactionPlan availableTokens. */
+                public availableTokens: TW.Cardano.Proto.ITokenAmount[];
+
+                /** TransactionPlan outputTokens. */
+                public outputTokens: TW.Cardano.Proto.ITokenAmount[];
+
+                /** TransactionPlan changeTokens. */
+                public changeTokens: TW.Cardano.Proto.ITokenAmount[];
+
+                /** TransactionPlan utxos. */
+                public utxos: TW.Cardano.Proto.ITxInput[];
+
+                /** TransactionPlan error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** TransactionPlan extraOutputs. */
+                public extraOutputs: TW.Cardano.Proto.ITxOutput[];
+
+                /**
+                 * Creates a new TransactionPlan instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransactionPlan instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ITransactionPlan): TW.Cardano.Proto.TransactionPlan;
+
+                /**
+                 * Encodes the specified TransactionPlan message. Does not implicitly {@link TW.Cardano.Proto.TransactionPlan.verify|verify} messages.
+                 * @param message TransactionPlan message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ITransactionPlan, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TransactionPlan message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TransactionPlan
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.TransactionPlan;
+
+                /**
+                 * Gets the default type url for TransactionPlan
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput utxos */
+                utxos?: (TW.Cardano.Proto.ITxInput[]|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array[]|null);
+
+                /** SigningInput transferMessage */
+                transferMessage?: (TW.Cardano.Proto.ITransfer|null);
+
+                /** SigningInput registerStakingKey */
+                registerStakingKey?: (TW.Cardano.Proto.IRegisterStakingKey|null);
+
+                /** SigningInput delegate */
+                delegate?: (TW.Cardano.Proto.IDelegate|null);
+
+                /** SigningInput withdraw */
+                withdraw?: (TW.Cardano.Proto.IWithdraw|null);
+
+                /** SigningInput deregisterStakingKey */
+                deregisterStakingKey?: (TW.Cardano.Proto.IDeregisterStakingKey|null);
+
+                /** SigningInput voteDelegation */
+                voteDelegation?: (TW.Cardano.Proto.IVoteDelegation|null);
+
+                /** SigningInput ttl */
+                ttl?: (number|null);
+
+                /** SigningInput plan */
+                plan?: (TW.Cardano.Proto.ITransactionPlan|null);
+
+                /** SigningInput extraOutputs */
+                extraOutputs?: (TW.Cardano.Proto.ITxOutput[]|null);
+
+                /** SigningInput auxiliaryData */
+                auxiliaryData?: (Uint8Array|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ISigningInput);
+
+                /** SigningInput utxos. */
+                public utxos: TW.Cardano.Proto.ITxInput[];
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array[];
+
+                /** SigningInput transferMessage. */
+                public transferMessage?: (TW.Cardano.Proto.ITransfer|null);
+
+                /** SigningInput registerStakingKey. */
+                public registerStakingKey?: (TW.Cardano.Proto.IRegisterStakingKey|null);
+
+                /** SigningInput delegate. */
+                public delegate?: (TW.Cardano.Proto.IDelegate|null);
+
+                /** SigningInput withdraw. */
+                public withdraw?: (TW.Cardano.Proto.IWithdraw|null);
+
+                /** SigningInput deregisterStakingKey. */
+                public deregisterStakingKey?: (TW.Cardano.Proto.IDeregisterStakingKey|null);
+
+                /** SigningInput voteDelegation. */
+                public voteDelegation?: (TW.Cardano.Proto.IVoteDelegation|null);
+
+                /** SigningInput ttl. */
+                public ttl: number;
+
+                /** SigningInput plan. */
+                public plan?: (TW.Cardano.Proto.ITransactionPlan|null);
+
+                /** SigningInput extraOutputs. */
+                public extraOutputs: TW.Cardano.Proto.ITxOutput[];
+
+                /** SigningInput auxiliaryData. */
+                public auxiliaryData: Uint8Array;
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ISigningInput): TW.Cardano.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Cardano.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput encoded */
+                encoded?: (Uint8Array|null);
+
+                /** SigningOutput txId */
+                txId?: (Uint8Array|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cardano.Proto.ISigningOutput);
+
+                /** SigningOutput encoded. */
+                public encoded: Uint8Array;
+
+                /** SigningOutput txId. */
+                public txId: Uint8Array;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Cardano.Proto.ISigningOutput): TW.Cardano.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Cardano.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cardano.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cardano.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
                  * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
                  * @returns The default type url
                  */
@@ -8224,6 +10435,3341 @@ export namespace TW {
         }
     }
 
+    /** Namespace NEAR. */
+    namespace NEAR {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of a PublicKey. */
+            interface IPublicKey {
+
+                /** PublicKey keyType */
+                keyType?: (number|null);
+
+                /** PublicKey data */
+                data?: (Uint8Array|null);
+            }
+
+            /** Represents a PublicKey. */
+            class PublicKey implements IPublicKey {
+
+                /**
+                 * Constructs a new PublicKey.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IPublicKey);
+
+                /** PublicKey keyType. */
+                public keyType: number;
+
+                /** PublicKey data. */
+                public data: Uint8Array;
+
+                /**
+                 * Creates a new PublicKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PublicKey instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IPublicKey): TW.NEAR.Proto.PublicKey;
+
+                /**
+                 * Encodes the specified PublicKey message. Does not implicitly {@link TW.NEAR.Proto.PublicKey.verify|verify} messages.
+                 * @param message PublicKey message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IPublicKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a PublicKey message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns PublicKey
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.PublicKey;
+
+                /**
+                 * Gets the default type url for PublicKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a FunctionCallPermission. */
+            interface IFunctionCallPermission {
+
+                /** FunctionCallPermission allowance */
+                allowance?: (Uint8Array|null);
+
+                /** FunctionCallPermission receiverId */
+                receiverId?: (string|null);
+
+                /** FunctionCallPermission methodNames */
+                methodNames?: (string[]|null);
+            }
+
+            /** Represents a FunctionCallPermission. */
+            class FunctionCallPermission implements IFunctionCallPermission {
+
+                /**
+                 * Constructs a new FunctionCallPermission.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IFunctionCallPermission);
+
+                /** FunctionCallPermission allowance. */
+                public allowance: Uint8Array;
+
+                /** FunctionCallPermission receiverId. */
+                public receiverId: string;
+
+                /** FunctionCallPermission methodNames. */
+                public methodNames: string[];
+
+                /**
+                 * Creates a new FunctionCallPermission instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns FunctionCallPermission instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IFunctionCallPermission): TW.NEAR.Proto.FunctionCallPermission;
+
+                /**
+                 * Encodes the specified FunctionCallPermission message. Does not implicitly {@link TW.NEAR.Proto.FunctionCallPermission.verify|verify} messages.
+                 * @param message FunctionCallPermission message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IFunctionCallPermission, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a FunctionCallPermission message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns FunctionCallPermission
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.FunctionCallPermission;
+
+                /**
+                 * Gets the default type url for FunctionCallPermission
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a FullAccessPermission. */
+            interface IFullAccessPermission {
+            }
+
+            /** Represents a FullAccessPermission. */
+            class FullAccessPermission implements IFullAccessPermission {
+
+                /**
+                 * Constructs a new FullAccessPermission.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IFullAccessPermission);
+
+                /**
+                 * Creates a new FullAccessPermission instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns FullAccessPermission instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IFullAccessPermission): TW.NEAR.Proto.FullAccessPermission;
+
+                /**
+                 * Encodes the specified FullAccessPermission message. Does not implicitly {@link TW.NEAR.Proto.FullAccessPermission.verify|verify} messages.
+                 * @param message FullAccessPermission message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IFullAccessPermission, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a FullAccessPermission message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns FullAccessPermission
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.FullAccessPermission;
+
+                /**
+                 * Gets the default type url for FullAccessPermission
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an AccessKey. */
+            interface IAccessKey {
+
+                /** AccessKey nonce */
+                nonce?: (number|null);
+
+                /** AccessKey functionCall */
+                functionCall?: (TW.NEAR.Proto.IFunctionCallPermission|null);
+
+                /** AccessKey fullAccess */
+                fullAccess?: (TW.NEAR.Proto.IFullAccessPermission|null);
+            }
+
+            /** Represents an AccessKey. */
+            class AccessKey implements IAccessKey {
+
+                /**
+                 * Constructs a new AccessKey.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IAccessKey);
+
+                /** AccessKey nonce. */
+                public nonce: number;
+
+                /** AccessKey functionCall. */
+                public functionCall?: (TW.NEAR.Proto.IFunctionCallPermission|null);
+
+                /** AccessKey fullAccess. */
+                public fullAccess?: (TW.NEAR.Proto.IFullAccessPermission|null);
+
+                /** AccessKey permission. */
+                public permission?: ("functionCall"|"fullAccess");
+
+                /**
+                 * Creates a new AccessKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns AccessKey instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IAccessKey): TW.NEAR.Proto.AccessKey;
+
+                /**
+                 * Encodes the specified AccessKey message. Does not implicitly {@link TW.NEAR.Proto.AccessKey.verify|verify} messages.
+                 * @param message AccessKey message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IAccessKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an AccessKey message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns AccessKey
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.AccessKey;
+
+                /**
+                 * Gets the default type url for AccessKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a CreateAccount. */
+            interface ICreateAccount {
+            }
+
+            /** Represents a CreateAccount. */
+            class CreateAccount implements ICreateAccount {
+
+                /**
+                 * Constructs a new CreateAccount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.ICreateAccount);
+
+                /**
+                 * Creates a new CreateAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CreateAccount instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.ICreateAccount): TW.NEAR.Proto.CreateAccount;
+
+                /**
+                 * Encodes the specified CreateAccount message. Does not implicitly {@link TW.NEAR.Proto.CreateAccount.verify|verify} messages.
+                 * @param message CreateAccount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.ICreateAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CreateAccount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CreateAccount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.CreateAccount;
+
+                /**
+                 * Gets the default type url for CreateAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a DeployContract. */
+            interface IDeployContract {
+
+                /** DeployContract code */
+                code?: (Uint8Array|null);
+            }
+
+            /** Represents a DeployContract. */
+            class DeployContract implements IDeployContract {
+
+                /**
+                 * Constructs a new DeployContract.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IDeployContract);
+
+                /** DeployContract code. */
+                public code: Uint8Array;
+
+                /**
+                 * Creates a new DeployContract instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeployContract instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IDeployContract): TW.NEAR.Proto.DeployContract;
+
+                /**
+                 * Encodes the specified DeployContract message. Does not implicitly {@link TW.NEAR.Proto.DeployContract.verify|verify} messages.
+                 * @param message DeployContract message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IDeployContract, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeployContract message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeployContract
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.DeployContract;
+
+                /**
+                 * Gets the default type url for DeployContract
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a FunctionCall. */
+            interface IFunctionCall {
+
+                /** FunctionCall methodName */
+                methodName?: (string|null);
+
+                /** FunctionCall args */
+                args?: (Uint8Array|null);
+
+                /** FunctionCall gas */
+                gas?: (number|null);
+
+                /** FunctionCall deposit */
+                deposit?: (Uint8Array|null);
+            }
+
+            /** Represents a FunctionCall. */
+            class FunctionCall implements IFunctionCall {
+
+                /**
+                 * Constructs a new FunctionCall.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IFunctionCall);
+
+                /** FunctionCall methodName. */
+                public methodName: string;
+
+                /** FunctionCall args. */
+                public args: Uint8Array;
+
+                /** FunctionCall gas. */
+                public gas: number;
+
+                /** FunctionCall deposit. */
+                public deposit: Uint8Array;
+
+                /**
+                 * Creates a new FunctionCall instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns FunctionCall instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IFunctionCall): TW.NEAR.Proto.FunctionCall;
+
+                /**
+                 * Encodes the specified FunctionCall message. Does not implicitly {@link TW.NEAR.Proto.FunctionCall.verify|verify} messages.
+                 * @param message FunctionCall message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IFunctionCall, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a FunctionCall message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns FunctionCall
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.FunctionCall;
+
+                /**
+                 * Gets the default type url for FunctionCall
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Transfer. */
+            interface ITransfer {
+
+                /** Transfer deposit */
+                deposit?: (Uint8Array|null);
+            }
+
+            /** Represents a Transfer. */
+            class Transfer implements ITransfer {
+
+                /**
+                 * Constructs a new Transfer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.ITransfer);
+
+                /** Transfer deposit. */
+                public deposit: Uint8Array;
+
+                /**
+                 * Creates a new Transfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transfer instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.ITransfer): TW.NEAR.Proto.Transfer;
+
+                /**
+                 * Encodes the specified Transfer message. Does not implicitly {@link TW.NEAR.Proto.Transfer.verify|verify} messages.
+                 * @param message Transfer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Transfer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Transfer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.Transfer;
+
+                /**
+                 * Gets the default type url for Transfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Stake. */
+            interface IStake {
+
+                /** Stake stake */
+                stake?: (Uint8Array|null);
+
+                /** Stake publicKey */
+                publicKey?: (TW.NEAR.Proto.IPublicKey|null);
+            }
+
+            /** Represents a Stake. */
+            class Stake implements IStake {
+
+                /**
+                 * Constructs a new Stake.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IStake);
+
+                /** Stake stake. */
+                public stake: Uint8Array;
+
+                /** Stake publicKey. */
+                public publicKey?: (TW.NEAR.Proto.IPublicKey|null);
+
+                /**
+                 * Creates a new Stake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Stake instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IStake): TW.NEAR.Proto.Stake;
+
+                /**
+                 * Encodes the specified Stake message. Does not implicitly {@link TW.NEAR.Proto.Stake.verify|verify} messages.
+                 * @param message Stake message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IStake, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Stake message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Stake
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.Stake;
+
+                /**
+                 * Gets the default type url for Stake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an AddKey. */
+            interface IAddKey {
+
+                /** AddKey publicKey */
+                publicKey?: (TW.NEAR.Proto.IPublicKey|null);
+
+                /** AddKey accessKey */
+                accessKey?: (TW.NEAR.Proto.IAccessKey|null);
+            }
+
+            /** Represents an AddKey. */
+            class AddKey implements IAddKey {
+
+                /**
+                 * Constructs a new AddKey.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IAddKey);
+
+                /** AddKey publicKey. */
+                public publicKey?: (TW.NEAR.Proto.IPublicKey|null);
+
+                /** AddKey accessKey. */
+                public accessKey?: (TW.NEAR.Proto.IAccessKey|null);
+
+                /**
+                 * Creates a new AddKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns AddKey instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IAddKey): TW.NEAR.Proto.AddKey;
+
+                /**
+                 * Encodes the specified AddKey message. Does not implicitly {@link TW.NEAR.Proto.AddKey.verify|verify} messages.
+                 * @param message AddKey message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IAddKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an AddKey message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns AddKey
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.AddKey;
+
+                /**
+                 * Gets the default type url for AddKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a DeleteKey. */
+            interface IDeleteKey {
+
+                /** DeleteKey publicKey */
+                publicKey?: (TW.NEAR.Proto.IPublicKey|null);
+            }
+
+            /** Represents a DeleteKey. */
+            class DeleteKey implements IDeleteKey {
+
+                /**
+                 * Constructs a new DeleteKey.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IDeleteKey);
+
+                /** DeleteKey publicKey. */
+                public publicKey?: (TW.NEAR.Proto.IPublicKey|null);
+
+                /**
+                 * Creates a new DeleteKey instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeleteKey instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IDeleteKey): TW.NEAR.Proto.DeleteKey;
+
+                /**
+                 * Encodes the specified DeleteKey message. Does not implicitly {@link TW.NEAR.Proto.DeleteKey.verify|verify} messages.
+                 * @param message DeleteKey message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IDeleteKey, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteKey message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteKey
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.DeleteKey;
+
+                /**
+                 * Gets the default type url for DeleteKey
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a DeleteAccount. */
+            interface IDeleteAccount {
+
+                /** DeleteAccount beneficiaryId */
+                beneficiaryId?: (string|null);
+            }
+
+            /** Represents a DeleteAccount. */
+            class DeleteAccount implements IDeleteAccount {
+
+                /**
+                 * Constructs a new DeleteAccount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IDeleteAccount);
+
+                /** DeleteAccount beneficiaryId. */
+                public beneficiaryId: string;
+
+                /**
+                 * Creates a new DeleteAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns DeleteAccount instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IDeleteAccount): TW.NEAR.Proto.DeleteAccount;
+
+                /**
+                 * Encodes the specified DeleteAccount message. Does not implicitly {@link TW.NEAR.Proto.DeleteAccount.verify|verify} messages.
+                 * @param message DeleteAccount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IDeleteAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteAccount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteAccount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.DeleteAccount;
+
+                /**
+                 * Gets the default type url for DeleteAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TokenTransfer. */
+            interface ITokenTransfer {
+
+                /** TokenTransfer tokenAmount */
+                tokenAmount?: (string|null);
+
+                /** TokenTransfer receiverId */
+                receiverId?: (string|null);
+
+                /** TokenTransfer gas */
+                gas?: (number|null);
+
+                /** TokenTransfer deposit */
+                deposit?: (Uint8Array|null);
+            }
+
+            /** Represents a TokenTransfer. */
+            class TokenTransfer implements ITokenTransfer {
+
+                /**
+                 * Constructs a new TokenTransfer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.ITokenTransfer);
+
+                /** TokenTransfer tokenAmount. */
+                public tokenAmount: string;
+
+                /** TokenTransfer receiverId. */
+                public receiverId: string;
+
+                /** TokenTransfer gas. */
+                public gas: number;
+
+                /** TokenTransfer deposit. */
+                public deposit: Uint8Array;
+
+                /**
+                 * Creates a new TokenTransfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TokenTransfer instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.ITokenTransfer): TW.NEAR.Proto.TokenTransfer;
+
+                /**
+                 * Encodes the specified TokenTransfer message. Does not implicitly {@link TW.NEAR.Proto.TokenTransfer.verify|verify} messages.
+                 * @param message TokenTransfer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.ITokenTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TokenTransfer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TokenTransfer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.TokenTransfer;
+
+                /**
+                 * Gets the default type url for TokenTransfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an Action. */
+            interface IAction {
+
+                /** Action createAccount */
+                createAccount?: (TW.NEAR.Proto.ICreateAccount|null);
+
+                /** Action deployContract */
+                deployContract?: (TW.NEAR.Proto.IDeployContract|null);
+
+                /** Action functionCall */
+                functionCall?: (TW.NEAR.Proto.IFunctionCall|null);
+
+                /** Action transfer */
+                transfer?: (TW.NEAR.Proto.ITransfer|null);
+
+                /** Action stake */
+                stake?: (TW.NEAR.Proto.IStake|null);
+
+                /** Action addKey */
+                addKey?: (TW.NEAR.Proto.IAddKey|null);
+
+                /** Action deleteKey */
+                deleteKey?: (TW.NEAR.Proto.IDeleteKey|null);
+
+                /** Action deleteAccount */
+                deleteAccount?: (TW.NEAR.Proto.IDeleteAccount|null);
+
+                /** Action tokenTransfer */
+                tokenTransfer?: (TW.NEAR.Proto.ITokenTransfer|null);
+            }
+
+            /** Represents an Action. */
+            class Action implements IAction {
+
+                /**
+                 * Constructs a new Action.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.IAction);
+
+                /** Action createAccount. */
+                public createAccount?: (TW.NEAR.Proto.ICreateAccount|null);
+
+                /** Action deployContract. */
+                public deployContract?: (TW.NEAR.Proto.IDeployContract|null);
+
+                /** Action functionCall. */
+                public functionCall?: (TW.NEAR.Proto.IFunctionCall|null);
+
+                /** Action transfer. */
+                public transfer?: (TW.NEAR.Proto.ITransfer|null);
+
+                /** Action stake. */
+                public stake?: (TW.NEAR.Proto.IStake|null);
+
+                /** Action addKey. */
+                public addKey?: (TW.NEAR.Proto.IAddKey|null);
+
+                /** Action deleteKey. */
+                public deleteKey?: (TW.NEAR.Proto.IDeleteKey|null);
+
+                /** Action deleteAccount. */
+                public deleteAccount?: (TW.NEAR.Proto.IDeleteAccount|null);
+
+                /** Action tokenTransfer. */
+                public tokenTransfer?: (TW.NEAR.Proto.ITokenTransfer|null);
+
+                /** Action payload. */
+                public payload?: ("createAccount"|"deployContract"|"functionCall"|"transfer"|"stake"|"addKey"|"deleteKey"|"deleteAccount"|"tokenTransfer");
+
+                /**
+                 * Creates a new Action instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Action instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.IAction): TW.NEAR.Proto.Action;
+
+                /**
+                 * Encodes the specified Action message. Does not implicitly {@link TW.NEAR.Proto.Action.verify|verify} messages.
+                 * @param message Action message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.IAction, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an Action message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Action
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.Action;
+
+                /**
+                 * Gets the default type url for Action
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput signerId */
+                signerId?: (string|null);
+
+                /** SigningInput nonce */
+                nonce?: (number|null);
+
+                /** SigningInput receiverId */
+                receiverId?: (string|null);
+
+                /** SigningInput blockHash */
+                blockHash?: (Uint8Array|null);
+
+                /** SigningInput actions */
+                actions?: (TW.NEAR.Proto.IAction[]|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput publicKey */
+                publicKey?: (Uint8Array|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.ISigningInput);
+
+                /** SigningInput signerId. */
+                public signerId: string;
+
+                /** SigningInput nonce. */
+                public nonce: number;
+
+                /** SigningInput receiverId. */
+                public receiverId: string;
+
+                /** SigningInput blockHash. */
+                public blockHash: Uint8Array;
+
+                /** SigningInput actions. */
+                public actions: TW.NEAR.Proto.IAction[];
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput publicKey. */
+                public publicKey: Uint8Array;
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.ISigningInput): TW.NEAR.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.NEAR.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput signedTransaction */
+                signedTransaction?: (Uint8Array|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+
+                /** SigningOutput hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.NEAR.Proto.ISigningOutput);
+
+                /** SigningOutput signedTransaction. */
+                public signedTransaction: Uint8Array;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /** SigningOutput hash. */
+                public hash: Uint8Array;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.NEAR.Proto.ISigningOutput): TW.NEAR.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.NEAR.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.NEAR.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.NEAR.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace Polkadot. */
+    namespace Polkadot {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** RewardDestination enum. */
+            enum RewardDestination {
+                STAKED = 0,
+                STASH = 1,
+                CONTROLLER = 2
+            }
+
+            /** Properties of an Era. */
+            interface IEra {
+
+                /** Era blockNumber */
+                blockNumber?: (number|null);
+
+                /** Era period */
+                period?: (number|null);
+            }
+
+            /** Represents an Era. */
+            class Era implements IEra {
+
+                /**
+                 * Constructs a new Era.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.IEra);
+
+                /** Era blockNumber. */
+                public blockNumber: number;
+
+                /** Era period. */
+                public period: number;
+
+                /**
+                 * Creates a new Era instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Era instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.IEra): TW.Polkadot.Proto.Era;
+
+                /**
+                 * Encodes the specified Era message. Does not implicitly {@link TW.Polkadot.Proto.Era.verify|verify} messages.
+                 * @param message Era message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.IEra, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an Era message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Era
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Era;
+
+                /**
+                 * Gets the default type url for Era
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a CustomCallIndices. */
+            interface ICustomCallIndices {
+
+                /** CustomCallIndices moduleIndex */
+                moduleIndex?: (number|null);
+
+                /** CustomCallIndices methodIndex */
+                methodIndex?: (number|null);
+            }
+
+            /** Represents a CustomCallIndices. */
+            class CustomCallIndices implements ICustomCallIndices {
+
+                /**
+                 * Constructs a new CustomCallIndices.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.ICustomCallIndices);
+
+                /** CustomCallIndices moduleIndex. */
+                public moduleIndex: number;
+
+                /** CustomCallIndices methodIndex. */
+                public methodIndex: number;
+
+                /**
+                 * Creates a new CustomCallIndices instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CustomCallIndices instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.ICustomCallIndices): TW.Polkadot.Proto.CustomCallIndices;
+
+                /**
+                 * Encodes the specified CustomCallIndices message. Does not implicitly {@link TW.Polkadot.Proto.CustomCallIndices.verify|verify} messages.
+                 * @param message CustomCallIndices message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.ICustomCallIndices, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CustomCallIndices message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CustomCallIndices
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.CustomCallIndices;
+
+                /**
+                 * Gets the default type url for CustomCallIndices
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a CallIndices. */
+            interface ICallIndices {
+
+                /** CallIndices custom */
+                custom?: (TW.Polkadot.Proto.ICustomCallIndices|null);
+            }
+
+            /** Represents a CallIndices. */
+            class CallIndices implements ICallIndices {
+
+                /**
+                 * Constructs a new CallIndices.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.ICallIndices);
+
+                /** CallIndices custom. */
+                public custom?: (TW.Polkadot.Proto.ICustomCallIndices|null);
+
+                /** CallIndices variant. */
+                public variant?: "custom";
+
+                /**
+                 * Creates a new CallIndices instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CallIndices instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.ICallIndices): TW.Polkadot.Proto.CallIndices;
+
+                /**
+                 * Encodes the specified CallIndices message. Does not implicitly {@link TW.Polkadot.Proto.CallIndices.verify|verify} messages.
+                 * @param message CallIndices message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.ICallIndices, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CallIndices message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CallIndices
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.CallIndices;
+
+                /**
+                 * Gets the default type url for CallIndices
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Balance. */
+            interface IBalance {
+
+                /** Balance transfer */
+                transfer?: (TW.Polkadot.Proto.Balance.ITransfer|null);
+
+                /** Balance batchTransfer */
+                batchTransfer?: (TW.Polkadot.Proto.Balance.IBatchTransfer|null);
+
+                /** Balance assetTransfer */
+                assetTransfer?: (TW.Polkadot.Proto.Balance.IAssetTransfer|null);
+
+                /** Balance batchAssetTransfer */
+                batchAssetTransfer?: (TW.Polkadot.Proto.Balance.IBatchAssetTransfer|null);
+            }
+
+            /** Represents a Balance. */
+            class Balance implements IBalance {
+
+                /**
+                 * Constructs a new Balance.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.IBalance);
+
+                /** Balance transfer. */
+                public transfer?: (TW.Polkadot.Proto.Balance.ITransfer|null);
+
+                /** Balance batchTransfer. */
+                public batchTransfer?: (TW.Polkadot.Proto.Balance.IBatchTransfer|null);
+
+                /** Balance assetTransfer. */
+                public assetTransfer?: (TW.Polkadot.Proto.Balance.IAssetTransfer|null);
+
+                /** Balance batchAssetTransfer. */
+                public batchAssetTransfer?: (TW.Polkadot.Proto.Balance.IBatchAssetTransfer|null);
+
+                /** Balance messageOneof. */
+                public messageOneof?: ("transfer"|"batchTransfer"|"assetTransfer"|"batchAssetTransfer");
+
+                /**
+                 * Creates a new Balance instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Balance instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.IBalance): TW.Polkadot.Proto.Balance;
+
+                /**
+                 * Encodes the specified Balance message. Does not implicitly {@link TW.Polkadot.Proto.Balance.verify|verify} messages.
+                 * @param message Balance message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.IBalance, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Balance message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Balance
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Balance;
+
+                /**
+                 * Gets the default type url for Balance
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            namespace Balance {
+
+                /** Properties of a Transfer. */
+                interface ITransfer {
+
+                    /** Transfer toAddress */
+                    toAddress?: (string|null);
+
+                    /** Transfer value */
+                    value?: (Uint8Array|null);
+
+                    /** Transfer memo */
+                    memo?: (string|null);
+
+                    /** Transfer callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a Transfer. */
+                class Transfer implements ITransfer {
+
+                    /**
+                     * Constructs a new Transfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Balance.ITransfer);
+
+                    /** Transfer toAddress. */
+                    public toAddress: string;
+
+                    /** Transfer value. */
+                    public value: Uint8Array;
+
+                    /** Transfer memo. */
+                    public memo: string;
+
+                    /** Transfer callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new Transfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Transfer instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Balance.ITransfer): TW.Polkadot.Proto.Balance.Transfer;
+
+                    /**
+                     * Encodes the specified Transfer message. Does not implicitly {@link TW.Polkadot.Proto.Balance.Transfer.verify|verify} messages.
+                     * @param message Transfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Balance.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Transfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Transfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Balance.Transfer;
+
+                    /**
+                     * Gets the default type url for Transfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a BatchTransfer. */
+                interface IBatchTransfer {
+
+                    /** BatchTransfer callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BatchTransfer transfers */
+                    transfers?: (TW.Polkadot.Proto.Balance.ITransfer[]|null);
+                }
+
+                /** Represents a BatchTransfer. */
+                class BatchTransfer implements IBatchTransfer {
+
+                    /**
+                     * Constructs a new BatchTransfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Balance.IBatchTransfer);
+
+                    /** BatchTransfer callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BatchTransfer transfers. */
+                    public transfers: TW.Polkadot.Proto.Balance.ITransfer[];
+
+                    /**
+                     * Creates a new BatchTransfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns BatchTransfer instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Balance.IBatchTransfer): TW.Polkadot.Proto.Balance.BatchTransfer;
+
+                    /**
+                     * Encodes the specified BatchTransfer message. Does not implicitly {@link TW.Polkadot.Proto.Balance.BatchTransfer.verify|verify} messages.
+                     * @param message BatchTransfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Balance.IBatchTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a BatchTransfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns BatchTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Balance.BatchTransfer;
+
+                    /**
+                     * Gets the default type url for BatchTransfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of an AssetTransfer. */
+                interface IAssetTransfer {
+
+                    /** AssetTransfer callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** AssetTransfer toAddress */
+                    toAddress?: (string|null);
+
+                    /** AssetTransfer value */
+                    value?: (Uint8Array|null);
+
+                    /** AssetTransfer assetId */
+                    assetId?: (number|null);
+
+                    /** AssetTransfer feeAssetId */
+                    feeAssetId?: (number|null);
+                }
+
+                /** Represents an AssetTransfer. */
+                class AssetTransfer implements IAssetTransfer {
+
+                    /**
+                     * Constructs a new AssetTransfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Balance.IAssetTransfer);
+
+                    /** AssetTransfer callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** AssetTransfer toAddress. */
+                    public toAddress: string;
+
+                    /** AssetTransfer value. */
+                    public value: Uint8Array;
+
+                    /** AssetTransfer assetId. */
+                    public assetId: number;
+
+                    /** AssetTransfer feeAssetId. */
+                    public feeAssetId: number;
+
+                    /**
+                     * Creates a new AssetTransfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns AssetTransfer instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Balance.IAssetTransfer): TW.Polkadot.Proto.Balance.AssetTransfer;
+
+                    /**
+                     * Encodes the specified AssetTransfer message. Does not implicitly {@link TW.Polkadot.Proto.Balance.AssetTransfer.verify|verify} messages.
+                     * @param message AssetTransfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Balance.IAssetTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes an AssetTransfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns AssetTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Balance.AssetTransfer;
+
+                    /**
+                     * Gets the default type url for AssetTransfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a BatchAssetTransfer. */
+                interface IBatchAssetTransfer {
+
+                    /** BatchAssetTransfer callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BatchAssetTransfer feeAssetId */
+                    feeAssetId?: (number|null);
+
+                    /** BatchAssetTransfer transfers */
+                    transfers?: (TW.Polkadot.Proto.Balance.IAssetTransfer[]|null);
+                }
+
+                /** Represents a BatchAssetTransfer. */
+                class BatchAssetTransfer implements IBatchAssetTransfer {
+
+                    /**
+                     * Constructs a new BatchAssetTransfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Balance.IBatchAssetTransfer);
+
+                    /** BatchAssetTransfer callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BatchAssetTransfer feeAssetId. */
+                    public feeAssetId: number;
+
+                    /** BatchAssetTransfer transfers. */
+                    public transfers: TW.Polkadot.Proto.Balance.IAssetTransfer[];
+
+                    /**
+                     * Creates a new BatchAssetTransfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns BatchAssetTransfer instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Balance.IBatchAssetTransfer): TW.Polkadot.Proto.Balance.BatchAssetTransfer;
+
+                    /**
+                     * Encodes the specified BatchAssetTransfer message. Does not implicitly {@link TW.Polkadot.Proto.Balance.BatchAssetTransfer.verify|verify} messages.
+                     * @param message BatchAssetTransfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Balance.IBatchAssetTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a BatchAssetTransfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns BatchAssetTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Balance.BatchAssetTransfer;
+
+                    /**
+                     * Gets the default type url for BatchAssetTransfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+            }
+
+            /** Properties of a Staking. */
+            interface IStaking {
+
+                /** Staking bond */
+                bond?: (TW.Polkadot.Proto.Staking.IBond|null);
+
+                /** Staking bondAndNominate */
+                bondAndNominate?: (TW.Polkadot.Proto.Staking.IBondAndNominate|null);
+
+                /** Staking bondExtra */
+                bondExtra?: (TW.Polkadot.Proto.Staking.IBondExtra|null);
+
+                /** Staking unbond */
+                unbond?: (TW.Polkadot.Proto.Staking.IUnbond|null);
+
+                /** Staking withdrawUnbonded */
+                withdrawUnbonded?: (TW.Polkadot.Proto.Staking.IWithdrawUnbonded|null);
+
+                /** Staking nominate */
+                nominate?: (TW.Polkadot.Proto.Staking.INominate|null);
+
+                /** Staking chill */
+                chill?: (TW.Polkadot.Proto.Staking.IChill|null);
+
+                /** Staking chillAndUnbond */
+                chillAndUnbond?: (TW.Polkadot.Proto.Staking.IChillAndUnbond|null);
+
+                /** Staking rebond */
+                rebond?: (TW.Polkadot.Proto.Staking.IRebond|null);
+
+                /** Staking bondExtraAndNominate */
+                bondExtraAndNominate?: (TW.Polkadot.Proto.Staking.IBondExtraAndNominate|null);
+            }
+
+            /** Represents a Staking. */
+            class Staking implements IStaking {
+
+                /**
+                 * Constructs a new Staking.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.IStaking);
+
+                /** Staking bond. */
+                public bond?: (TW.Polkadot.Proto.Staking.IBond|null);
+
+                /** Staking bondAndNominate. */
+                public bondAndNominate?: (TW.Polkadot.Proto.Staking.IBondAndNominate|null);
+
+                /** Staking bondExtra. */
+                public bondExtra?: (TW.Polkadot.Proto.Staking.IBondExtra|null);
+
+                /** Staking unbond. */
+                public unbond?: (TW.Polkadot.Proto.Staking.IUnbond|null);
+
+                /** Staking withdrawUnbonded. */
+                public withdrawUnbonded?: (TW.Polkadot.Proto.Staking.IWithdrawUnbonded|null);
+
+                /** Staking nominate. */
+                public nominate?: (TW.Polkadot.Proto.Staking.INominate|null);
+
+                /** Staking chill. */
+                public chill?: (TW.Polkadot.Proto.Staking.IChill|null);
+
+                /** Staking chillAndUnbond. */
+                public chillAndUnbond?: (TW.Polkadot.Proto.Staking.IChillAndUnbond|null);
+
+                /** Staking rebond. */
+                public rebond?: (TW.Polkadot.Proto.Staking.IRebond|null);
+
+                /** Staking bondExtraAndNominate. */
+                public bondExtraAndNominate?: (TW.Polkadot.Proto.Staking.IBondExtraAndNominate|null);
+
+                /** Staking messageOneof. */
+                public messageOneof?: ("bond"|"bondAndNominate"|"bondExtra"|"unbond"|"withdrawUnbonded"|"nominate"|"chill"|"chillAndUnbond"|"rebond"|"bondExtraAndNominate");
+
+                /**
+                 * Creates a new Staking instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Staking instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.IStaking): TW.Polkadot.Proto.Staking;
+
+                /**
+                 * Encodes the specified Staking message. Does not implicitly {@link TW.Polkadot.Proto.Staking.verify|verify} messages.
+                 * @param message Staking message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.IStaking, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Staking message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Staking
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking;
+
+                /**
+                 * Gets the default type url for Staking
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            namespace Staking {
+
+                /** Properties of a Bond. */
+                interface IBond {
+
+                    /** Bond controller */
+                    controller?: (string|null);
+
+                    /** Bond value */
+                    value?: (Uint8Array|null);
+
+                    /** Bond rewardDestination */
+                    rewardDestination?: (TW.Polkadot.Proto.RewardDestination|null);
+
+                    /** Bond callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a Bond. */
+                class Bond implements IBond {
+
+                    /**
+                     * Constructs a new Bond.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IBond);
+
+                    /** Bond controller. */
+                    public controller: string;
+
+                    /** Bond value. */
+                    public value: Uint8Array;
+
+                    /** Bond rewardDestination. */
+                    public rewardDestination: TW.Polkadot.Proto.RewardDestination;
+
+                    /** Bond callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new Bond instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Bond instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IBond): TW.Polkadot.Proto.Staking.Bond;
+
+                    /**
+                     * Encodes the specified Bond message. Does not implicitly {@link TW.Polkadot.Proto.Staking.Bond.verify|verify} messages.
+                     * @param message Bond message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IBond, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Bond message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Bond
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.Bond;
+
+                    /**
+                     * Gets the default type url for Bond
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a BondAndNominate. */
+                interface IBondAndNominate {
+
+                    /** BondAndNominate controller */
+                    controller?: (string|null);
+
+                    /** BondAndNominate value */
+                    value?: (Uint8Array|null);
+
+                    /** BondAndNominate rewardDestination */
+                    rewardDestination?: (TW.Polkadot.Proto.RewardDestination|null);
+
+                    /** BondAndNominate nominators */
+                    nominators?: (string[]|null);
+
+                    /** BondAndNominate callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondAndNominate bondCallIndices */
+                    bondCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondAndNominate nominateCallIndices */
+                    nominateCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a BondAndNominate. */
+                class BondAndNominate implements IBondAndNominate {
+
+                    /**
+                     * Constructs a new BondAndNominate.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IBondAndNominate);
+
+                    /** BondAndNominate controller. */
+                    public controller: string;
+
+                    /** BondAndNominate value. */
+                    public value: Uint8Array;
+
+                    /** BondAndNominate rewardDestination. */
+                    public rewardDestination: TW.Polkadot.Proto.RewardDestination;
+
+                    /** BondAndNominate nominators. */
+                    public nominators: string[];
+
+                    /** BondAndNominate callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondAndNominate bondCallIndices. */
+                    public bondCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondAndNominate nominateCallIndices. */
+                    public nominateCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new BondAndNominate instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns BondAndNominate instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IBondAndNominate): TW.Polkadot.Proto.Staking.BondAndNominate;
+
+                    /**
+                     * Encodes the specified BondAndNominate message. Does not implicitly {@link TW.Polkadot.Proto.Staking.BondAndNominate.verify|verify} messages.
+                     * @param message BondAndNominate message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IBondAndNominate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a BondAndNominate message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns BondAndNominate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.BondAndNominate;
+
+                    /**
+                     * Gets the default type url for BondAndNominate
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a BondExtraAndNominate. */
+                interface IBondExtraAndNominate {
+
+                    /** BondExtraAndNominate value */
+                    value?: (Uint8Array|null);
+
+                    /** BondExtraAndNominate nominators */
+                    nominators?: (string[]|null);
+
+                    /** BondExtraAndNominate callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondExtraAndNominate bondExtraCallIndices */
+                    bondExtraCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondExtraAndNominate nominateCallIndices */
+                    nominateCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a BondExtraAndNominate. */
+                class BondExtraAndNominate implements IBondExtraAndNominate {
+
+                    /**
+                     * Constructs a new BondExtraAndNominate.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IBondExtraAndNominate);
+
+                    /** BondExtraAndNominate value. */
+                    public value: Uint8Array;
+
+                    /** BondExtraAndNominate nominators. */
+                    public nominators: string[];
+
+                    /** BondExtraAndNominate callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondExtraAndNominate bondExtraCallIndices. */
+                    public bondExtraCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** BondExtraAndNominate nominateCallIndices. */
+                    public nominateCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new BondExtraAndNominate instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns BondExtraAndNominate instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IBondExtraAndNominate): TW.Polkadot.Proto.Staking.BondExtraAndNominate;
+
+                    /**
+                     * Encodes the specified BondExtraAndNominate message. Does not implicitly {@link TW.Polkadot.Proto.Staking.BondExtraAndNominate.verify|verify} messages.
+                     * @param message BondExtraAndNominate message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IBondExtraAndNominate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a BondExtraAndNominate message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns BondExtraAndNominate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.BondExtraAndNominate;
+
+                    /**
+                     * Gets the default type url for BondExtraAndNominate
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a BondExtra. */
+                interface IBondExtra {
+
+                    /** BondExtra value */
+                    value?: (Uint8Array|null);
+
+                    /** BondExtra callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a BondExtra. */
+                class BondExtra implements IBondExtra {
+
+                    /**
+                     * Constructs a new BondExtra.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IBondExtra);
+
+                    /** BondExtra value. */
+                    public value: Uint8Array;
+
+                    /** BondExtra callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new BondExtra instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns BondExtra instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IBondExtra): TW.Polkadot.Proto.Staking.BondExtra;
+
+                    /**
+                     * Encodes the specified BondExtra message. Does not implicitly {@link TW.Polkadot.Proto.Staking.BondExtra.verify|verify} messages.
+                     * @param message BondExtra message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IBondExtra, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a BondExtra message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns BondExtra
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.BondExtra;
+
+                    /**
+                     * Gets the default type url for BondExtra
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of an Unbond. */
+                interface IUnbond {
+
+                    /** Unbond value */
+                    value?: (Uint8Array|null);
+
+                    /** Unbond callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents an Unbond. */
+                class Unbond implements IUnbond {
+
+                    /**
+                     * Constructs a new Unbond.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IUnbond);
+
+                    /** Unbond value. */
+                    public value: Uint8Array;
+
+                    /** Unbond callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new Unbond instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Unbond instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IUnbond): TW.Polkadot.Proto.Staking.Unbond;
+
+                    /**
+                     * Encodes the specified Unbond message. Does not implicitly {@link TW.Polkadot.Proto.Staking.Unbond.verify|verify} messages.
+                     * @param message Unbond message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IUnbond, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes an Unbond message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Unbond
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.Unbond;
+
+                    /**
+                     * Gets the default type url for Unbond
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a Rebond. */
+                interface IRebond {
+
+                    /** Rebond value */
+                    value?: (Uint8Array|null);
+
+                    /** Rebond callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a Rebond. */
+                class Rebond implements IRebond {
+
+                    /**
+                     * Constructs a new Rebond.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IRebond);
+
+                    /** Rebond value. */
+                    public value: Uint8Array;
+
+                    /** Rebond callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new Rebond instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Rebond instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IRebond): TW.Polkadot.Proto.Staking.Rebond;
+
+                    /**
+                     * Encodes the specified Rebond message. Does not implicitly {@link TW.Polkadot.Proto.Staking.Rebond.verify|verify} messages.
+                     * @param message Rebond message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IRebond, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Rebond message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Rebond
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.Rebond;
+
+                    /**
+                     * Gets the default type url for Rebond
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WithdrawUnbonded. */
+                interface IWithdrawUnbonded {
+
+                    /** WithdrawUnbonded slashingSpans */
+                    slashingSpans?: (number|null);
+
+                    /** WithdrawUnbonded callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a WithdrawUnbonded. */
+                class WithdrawUnbonded implements IWithdrawUnbonded {
+
+                    /**
+                     * Constructs a new WithdrawUnbonded.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IWithdrawUnbonded);
+
+                    /** WithdrawUnbonded slashingSpans. */
+                    public slashingSpans: number;
+
+                    /** WithdrawUnbonded callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new WithdrawUnbonded instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WithdrawUnbonded instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IWithdrawUnbonded): TW.Polkadot.Proto.Staking.WithdrawUnbonded;
+
+                    /**
+                     * Encodes the specified WithdrawUnbonded message. Does not implicitly {@link TW.Polkadot.Proto.Staking.WithdrawUnbonded.verify|verify} messages.
+                     * @param message WithdrawUnbonded message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IWithdrawUnbonded, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WithdrawUnbonded message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WithdrawUnbonded
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.WithdrawUnbonded;
+
+                    /**
+                     * Gets the default type url for WithdrawUnbonded
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a Nominate. */
+                interface INominate {
+
+                    /** Nominate nominators */
+                    nominators?: (string[]|null);
+
+                    /** Nominate callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a Nominate. */
+                class Nominate implements INominate {
+
+                    /**
+                     * Constructs a new Nominate.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.INominate);
+
+                    /** Nominate nominators. */
+                    public nominators: string[];
+
+                    /** Nominate callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new Nominate instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Nominate instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.INominate): TW.Polkadot.Proto.Staking.Nominate;
+
+                    /**
+                     * Encodes the specified Nominate message. Does not implicitly {@link TW.Polkadot.Proto.Staking.Nominate.verify|verify} messages.
+                     * @param message Nominate message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.INominate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Nominate message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Nominate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.Nominate;
+
+                    /**
+                     * Gets the default type url for Nominate
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a ChillAndUnbond. */
+                interface IChillAndUnbond {
+
+                    /** ChillAndUnbond value */
+                    value?: (Uint8Array|null);
+
+                    /** ChillAndUnbond callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** ChillAndUnbond chillCallIndices */
+                    chillCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** ChillAndUnbond unbondCallIndices */
+                    unbondCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a ChillAndUnbond. */
+                class ChillAndUnbond implements IChillAndUnbond {
+
+                    /**
+                     * Constructs a new ChillAndUnbond.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IChillAndUnbond);
+
+                    /** ChillAndUnbond value. */
+                    public value: Uint8Array;
+
+                    /** ChillAndUnbond callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** ChillAndUnbond chillCallIndices. */
+                    public chillCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /** ChillAndUnbond unbondCallIndices. */
+                    public unbondCallIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new ChillAndUnbond instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns ChillAndUnbond instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IChillAndUnbond): TW.Polkadot.Proto.Staking.ChillAndUnbond;
+
+                    /**
+                     * Encodes the specified ChillAndUnbond message. Does not implicitly {@link TW.Polkadot.Proto.Staking.ChillAndUnbond.verify|verify} messages.
+                     * @param message ChillAndUnbond message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IChillAndUnbond, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a ChillAndUnbond message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns ChillAndUnbond
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.ChillAndUnbond;
+
+                    /**
+                     * Gets the default type url for ChillAndUnbond
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a Chill. */
+                interface IChill {
+
+                    /** Chill callIndices */
+                    callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+                }
+
+                /** Represents a Chill. */
+                class Chill implements IChill {
+
+                    /**
+                     * Constructs a new Chill.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Polkadot.Proto.Staking.IChill);
+
+                    /** Chill callIndices. */
+                    public callIndices?: (TW.Polkadot.Proto.ICallIndices|null);
+
+                    /**
+                     * Creates a new Chill instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Chill instance
+                     */
+                    public static create(properties?: TW.Polkadot.Proto.Staking.IChill): TW.Polkadot.Proto.Staking.Chill;
+
+                    /**
+                     * Encodes the specified Chill message. Does not implicitly {@link TW.Polkadot.Proto.Staking.Chill.verify|verify} messages.
+                     * @param message Chill message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Polkadot.Proto.Staking.IChill, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Chill message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Chill
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.Staking.Chill;
+
+                    /**
+                     * Gets the default type url for Chill
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput blockHash */
+                blockHash?: (Uint8Array|null);
+
+                /** SigningInput genesisHash */
+                genesisHash?: (Uint8Array|null);
+
+                /** SigningInput nonce */
+                nonce?: (number|null);
+
+                /** SigningInput specVersion */
+                specVersion?: (number|null);
+
+                /** SigningInput transactionVersion */
+                transactionVersion?: (number|null);
+
+                /** SigningInput tip */
+                tip?: (Uint8Array|null);
+
+                /** SigningInput era */
+                era?: (TW.Polkadot.Proto.IEra|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput network */
+                network?: (number|null);
+
+                /** SigningInput multiAddress */
+                multiAddress?: (boolean|null);
+
+                /** SigningInput chargeNativeAsAssetTxPayment */
+                chargeNativeAsAssetTxPayment?: (boolean|null);
+
+                /** SigningInput balanceCall */
+                balanceCall?: (TW.Polkadot.Proto.IBalance|null);
+
+                /** SigningInput stakingCall */
+                stakingCall?: (TW.Polkadot.Proto.IStaking|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.ISigningInput);
+
+                /** SigningInput blockHash. */
+                public blockHash: Uint8Array;
+
+                /** SigningInput genesisHash. */
+                public genesisHash: Uint8Array;
+
+                /** SigningInput nonce. */
+                public nonce: number;
+
+                /** SigningInput specVersion. */
+                public specVersion: number;
+
+                /** SigningInput transactionVersion. */
+                public transactionVersion: number;
+
+                /** SigningInput tip. */
+                public tip: Uint8Array;
+
+                /** SigningInput era. */
+                public era?: (TW.Polkadot.Proto.IEra|null);
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput network. */
+                public network: number;
+
+                /** SigningInput multiAddress. */
+                public multiAddress: boolean;
+
+                /** SigningInput chargeNativeAsAssetTxPayment. */
+                public chargeNativeAsAssetTxPayment: boolean;
+
+                /** SigningInput balanceCall. */
+                public balanceCall?: (TW.Polkadot.Proto.IBalance|null);
+
+                /** SigningInput stakingCall. */
+                public stakingCall?: (TW.Polkadot.Proto.IStaking|null);
+
+                /** SigningInput messageOneof. */
+                public messageOneof?: ("balanceCall"|"stakingCall");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.ISigningInput): TW.Polkadot.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Polkadot.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput encoded */
+                encoded?: (Uint8Array|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Polkadot.Proto.ISigningOutput);
+
+                /** SigningOutput encoded. */
+                public encoded: Uint8Array;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Polkadot.Proto.ISigningOutput): TW.Polkadot.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Polkadot.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Polkadot.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Polkadot.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace Ripple. */
+    namespace Ripple {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of a CurrencyAmount. */
+            interface ICurrencyAmount {
+
+                /** CurrencyAmount currency */
+                currency?: (string|null);
+
+                /** CurrencyAmount value */
+                value?: (string|null);
+
+                /** CurrencyAmount issuer */
+                issuer?: (string|null);
+            }
+
+            /** Represents a CurrencyAmount. */
+            class CurrencyAmount implements ICurrencyAmount {
+
+                /**
+                 * Constructs a new CurrencyAmount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.ICurrencyAmount);
+
+                /** CurrencyAmount currency. */
+                public currency: string;
+
+                /** CurrencyAmount value. */
+                public value: string;
+
+                /** CurrencyAmount issuer. */
+                public issuer: string;
+
+                /**
+                 * Creates a new CurrencyAmount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns CurrencyAmount instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.ICurrencyAmount): TW.Ripple.Proto.CurrencyAmount;
+
+                /**
+                 * Encodes the specified CurrencyAmount message. Does not implicitly {@link TW.Ripple.Proto.CurrencyAmount.verify|verify} messages.
+                 * @param message CurrencyAmount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.ICurrencyAmount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CurrencyAmount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CurrencyAmount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.CurrencyAmount;
+
+                /**
+                 * Gets the default type url for CurrencyAmount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationTrustSet. */
+            interface IOperationTrustSet {
+
+                /** OperationTrustSet limitAmount */
+                limitAmount?: (TW.Ripple.Proto.ICurrencyAmount|null);
+            }
+
+            /** Represents an OperationTrustSet. */
+            class OperationTrustSet implements IOperationTrustSet {
+
+                /**
+                 * Constructs a new OperationTrustSet.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationTrustSet);
+
+                /** OperationTrustSet limitAmount. */
+                public limitAmount?: (TW.Ripple.Proto.ICurrencyAmount|null);
+
+                /**
+                 * Creates a new OperationTrustSet instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationTrustSet instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationTrustSet): TW.Ripple.Proto.OperationTrustSet;
+
+                /**
+                 * Encodes the specified OperationTrustSet message. Does not implicitly {@link TW.Ripple.Proto.OperationTrustSet.verify|verify} messages.
+                 * @param message OperationTrustSet message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationTrustSet, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationTrustSet message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationTrustSet
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationTrustSet;
+
+                /**
+                 * Gets the default type url for OperationTrustSet
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationPayment. */
+            interface IOperationPayment {
+
+                /** OperationPayment amount */
+                amount?: (number|null);
+
+                /** OperationPayment currencyAmount */
+                currencyAmount?: (TW.Ripple.Proto.ICurrencyAmount|null);
+
+                /** OperationPayment destination */
+                destination?: (string|null);
+
+                /** OperationPayment destinationTag */
+                destinationTag?: (number|null);
+            }
+
+            /** Represents an OperationPayment. */
+            class OperationPayment implements IOperationPayment {
+
+                /**
+                 * Constructs a new OperationPayment.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationPayment);
+
+                /** OperationPayment amount. */
+                public amount?: (number|null);
+
+                /** OperationPayment currencyAmount. */
+                public currencyAmount?: (TW.Ripple.Proto.ICurrencyAmount|null);
+
+                /** OperationPayment destination. */
+                public destination: string;
+
+                /** OperationPayment destinationTag. */
+                public destinationTag: number;
+
+                /** OperationPayment amountOneof. */
+                public amountOneof?: ("amount"|"currencyAmount");
+
+                /**
+                 * Creates a new OperationPayment instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationPayment instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationPayment): TW.Ripple.Proto.OperationPayment;
+
+                /**
+                 * Encodes the specified OperationPayment message. Does not implicitly {@link TW.Ripple.Proto.OperationPayment.verify|verify} messages.
+                 * @param message OperationPayment message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationPayment, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationPayment message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationPayment
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationPayment;
+
+                /**
+                 * Gets the default type url for OperationPayment
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationEscrowCreate. */
+            interface IOperationEscrowCreate {
+
+                /** OperationEscrowCreate amount */
+                amount?: (number|null);
+
+                /** OperationEscrowCreate destination */
+                destination?: (string|null);
+
+                /** OperationEscrowCreate destinationTag */
+                destinationTag?: (number|null);
+
+                /** OperationEscrowCreate cancelAfter */
+                cancelAfter?: (number|null);
+
+                /** OperationEscrowCreate finishAfter */
+                finishAfter?: (number|null);
+
+                /** OperationEscrowCreate condition */
+                condition?: (string|null);
+            }
+
+            /** Represents an OperationEscrowCreate. */
+            class OperationEscrowCreate implements IOperationEscrowCreate {
+
+                /**
+                 * Constructs a new OperationEscrowCreate.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationEscrowCreate);
+
+                /** OperationEscrowCreate amount. */
+                public amount: number;
+
+                /** OperationEscrowCreate destination. */
+                public destination: string;
+
+                /** OperationEscrowCreate destinationTag. */
+                public destinationTag: number;
+
+                /** OperationEscrowCreate cancelAfter. */
+                public cancelAfter: number;
+
+                /** OperationEscrowCreate finishAfter. */
+                public finishAfter: number;
+
+                /** OperationEscrowCreate condition. */
+                public condition: string;
+
+                /**
+                 * Creates a new OperationEscrowCreate instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationEscrowCreate instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationEscrowCreate): TW.Ripple.Proto.OperationEscrowCreate;
+
+                /**
+                 * Encodes the specified OperationEscrowCreate message. Does not implicitly {@link TW.Ripple.Proto.OperationEscrowCreate.verify|verify} messages.
+                 * @param message OperationEscrowCreate message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationEscrowCreate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationEscrowCreate message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationEscrowCreate
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationEscrowCreate;
+
+                /**
+                 * Gets the default type url for OperationEscrowCreate
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationEscrowCancel. */
+            interface IOperationEscrowCancel {
+
+                /** OperationEscrowCancel owner */
+                owner?: (string|null);
+
+                /** OperationEscrowCancel offerSequence */
+                offerSequence?: (number|null);
+            }
+
+            /** Represents an OperationEscrowCancel. */
+            class OperationEscrowCancel implements IOperationEscrowCancel {
+
+                /**
+                 * Constructs a new OperationEscrowCancel.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationEscrowCancel);
+
+                /** OperationEscrowCancel owner. */
+                public owner: string;
+
+                /** OperationEscrowCancel offerSequence. */
+                public offerSequence: number;
+
+                /**
+                 * Creates a new OperationEscrowCancel instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationEscrowCancel instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationEscrowCancel): TW.Ripple.Proto.OperationEscrowCancel;
+
+                /**
+                 * Encodes the specified OperationEscrowCancel message. Does not implicitly {@link TW.Ripple.Proto.OperationEscrowCancel.verify|verify} messages.
+                 * @param message OperationEscrowCancel message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationEscrowCancel, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationEscrowCancel message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationEscrowCancel
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationEscrowCancel;
+
+                /**
+                 * Gets the default type url for OperationEscrowCancel
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationEscrowFinish. */
+            interface IOperationEscrowFinish {
+
+                /** OperationEscrowFinish owner */
+                owner?: (string|null);
+
+                /** OperationEscrowFinish offerSequence */
+                offerSequence?: (number|null);
+
+                /** OperationEscrowFinish condition */
+                condition?: (string|null);
+
+                /** OperationEscrowFinish fulfillment */
+                fulfillment?: (string|null);
+            }
+
+            /** Represents an OperationEscrowFinish. */
+            class OperationEscrowFinish implements IOperationEscrowFinish {
+
+                /**
+                 * Constructs a new OperationEscrowFinish.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationEscrowFinish);
+
+                /** OperationEscrowFinish owner. */
+                public owner: string;
+
+                /** OperationEscrowFinish offerSequence. */
+                public offerSequence: number;
+
+                /** OperationEscrowFinish condition. */
+                public condition: string;
+
+                /** OperationEscrowFinish fulfillment. */
+                public fulfillment: string;
+
+                /**
+                 * Creates a new OperationEscrowFinish instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationEscrowFinish instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationEscrowFinish): TW.Ripple.Proto.OperationEscrowFinish;
+
+                /**
+                 * Encodes the specified OperationEscrowFinish message. Does not implicitly {@link TW.Ripple.Proto.OperationEscrowFinish.verify|verify} messages.
+                 * @param message OperationEscrowFinish message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationEscrowFinish, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationEscrowFinish message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationEscrowFinish
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationEscrowFinish;
+
+                /**
+                 * Gets the default type url for OperationEscrowFinish
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationNFTokenBurn. */
+            interface IOperationNFTokenBurn {
+
+                /** OperationNFTokenBurn nftokenId */
+                nftokenId?: (string|null);
+            }
+
+            /** Represents an OperationNFTokenBurn. */
+            class OperationNFTokenBurn implements IOperationNFTokenBurn {
+
+                /**
+                 * Constructs a new OperationNFTokenBurn.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationNFTokenBurn);
+
+                /** OperationNFTokenBurn nftokenId. */
+                public nftokenId: string;
+
+                /**
+                 * Creates a new OperationNFTokenBurn instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationNFTokenBurn instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationNFTokenBurn): TW.Ripple.Proto.OperationNFTokenBurn;
+
+                /**
+                 * Encodes the specified OperationNFTokenBurn message. Does not implicitly {@link TW.Ripple.Proto.OperationNFTokenBurn.verify|verify} messages.
+                 * @param message OperationNFTokenBurn message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationNFTokenBurn, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationNFTokenBurn message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationNFTokenBurn
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationNFTokenBurn;
+
+                /**
+                 * Gets the default type url for OperationNFTokenBurn
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationNFTokenCreateOffer. */
+            interface IOperationNFTokenCreateOffer {
+
+                /** OperationNFTokenCreateOffer nftokenId */
+                nftokenId?: (string|null);
+
+                /** OperationNFTokenCreateOffer destination */
+                destination?: (string|null);
+            }
+
+            /** Represents an OperationNFTokenCreateOffer. */
+            class OperationNFTokenCreateOffer implements IOperationNFTokenCreateOffer {
+
+                /**
+                 * Constructs a new OperationNFTokenCreateOffer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationNFTokenCreateOffer);
+
+                /** OperationNFTokenCreateOffer nftokenId. */
+                public nftokenId: string;
+
+                /** OperationNFTokenCreateOffer destination. */
+                public destination: string;
+
+                /**
+                 * Creates a new OperationNFTokenCreateOffer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationNFTokenCreateOffer instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationNFTokenCreateOffer): TW.Ripple.Proto.OperationNFTokenCreateOffer;
+
+                /**
+                 * Encodes the specified OperationNFTokenCreateOffer message. Does not implicitly {@link TW.Ripple.Proto.OperationNFTokenCreateOffer.verify|verify} messages.
+                 * @param message OperationNFTokenCreateOffer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationNFTokenCreateOffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationNFTokenCreateOffer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationNFTokenCreateOffer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationNFTokenCreateOffer;
+
+                /**
+                 * Gets the default type url for OperationNFTokenCreateOffer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationNFTokenAcceptOffer. */
+            interface IOperationNFTokenAcceptOffer {
+
+                /** OperationNFTokenAcceptOffer sellOffer */
+                sellOffer?: (string|null);
+            }
+
+            /** Represents an OperationNFTokenAcceptOffer. */
+            class OperationNFTokenAcceptOffer implements IOperationNFTokenAcceptOffer {
+
+                /**
+                 * Constructs a new OperationNFTokenAcceptOffer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationNFTokenAcceptOffer);
+
+                /** OperationNFTokenAcceptOffer sellOffer. */
+                public sellOffer: string;
+
+                /**
+                 * Creates a new OperationNFTokenAcceptOffer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationNFTokenAcceptOffer instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationNFTokenAcceptOffer): TW.Ripple.Proto.OperationNFTokenAcceptOffer;
+
+                /**
+                 * Encodes the specified OperationNFTokenAcceptOffer message. Does not implicitly {@link TW.Ripple.Proto.OperationNFTokenAcceptOffer.verify|verify} messages.
+                 * @param message OperationNFTokenAcceptOffer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationNFTokenAcceptOffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationNFTokenAcceptOffer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationNFTokenAcceptOffer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationNFTokenAcceptOffer;
+
+                /**
+                 * Gets the default type url for OperationNFTokenAcceptOffer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationNFTokenCancelOffer. */
+            interface IOperationNFTokenCancelOffer {
+
+                /** OperationNFTokenCancelOffer tokenOffers */
+                tokenOffers?: (string[]|null);
+            }
+
+            /** Represents an OperationNFTokenCancelOffer. */
+            class OperationNFTokenCancelOffer implements IOperationNFTokenCancelOffer {
+
+                /**
+                 * Constructs a new OperationNFTokenCancelOffer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.IOperationNFTokenCancelOffer);
+
+                /** OperationNFTokenCancelOffer tokenOffers. */
+                public tokenOffers: string[];
+
+                /**
+                 * Creates a new OperationNFTokenCancelOffer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationNFTokenCancelOffer instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.IOperationNFTokenCancelOffer): TW.Ripple.Proto.OperationNFTokenCancelOffer;
+
+                /**
+                 * Encodes the specified OperationNFTokenCancelOffer message. Does not implicitly {@link TW.Ripple.Proto.OperationNFTokenCancelOffer.verify|verify} messages.
+                 * @param message OperationNFTokenCancelOffer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.IOperationNFTokenCancelOffer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationNFTokenCancelOffer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationNFTokenCancelOffer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.OperationNFTokenCancelOffer;
+
+                /**
+                 * Gets the default type url for OperationNFTokenCancelOffer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput fee */
+                fee?: (number|null);
+
+                /** SigningInput sequence */
+                sequence?: (number|null);
+
+                /** SigningInput lastLedgerSequence */
+                lastLedgerSequence?: (number|null);
+
+                /** SigningInput account */
+                account?: (string|null);
+
+                /** SigningInput flags */
+                flags?: (number|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput opTrustSet */
+                opTrustSet?: (TW.Ripple.Proto.IOperationTrustSet|null);
+
+                /** SigningInput opPayment */
+                opPayment?: (TW.Ripple.Proto.IOperationPayment|null);
+
+                /** SigningInput opNftokenBurn */
+                opNftokenBurn?: (TW.Ripple.Proto.IOperationNFTokenBurn|null);
+
+                /** SigningInput opNftokenCreateOffer */
+                opNftokenCreateOffer?: (TW.Ripple.Proto.IOperationNFTokenCreateOffer|null);
+
+                /** SigningInput opNftokenAcceptOffer */
+                opNftokenAcceptOffer?: (TW.Ripple.Proto.IOperationNFTokenAcceptOffer|null);
+
+                /** SigningInput opNftokenCancelOffer */
+                opNftokenCancelOffer?: (TW.Ripple.Proto.IOperationNFTokenCancelOffer|null);
+
+                /** SigningInput opEscrowCreate */
+                opEscrowCreate?: (TW.Ripple.Proto.IOperationEscrowCreate|null);
+
+                /** SigningInput opEscrowCancel */
+                opEscrowCancel?: (TW.Ripple.Proto.IOperationEscrowCancel|null);
+
+                /** SigningInput opEscrowFinish */
+                opEscrowFinish?: (TW.Ripple.Proto.IOperationEscrowFinish|null);
+
+                /** SigningInput publicKey */
+                publicKey?: (Uint8Array|null);
+
+                /** SigningInput rawJson */
+                rawJson?: (string|null);
+
+                /** SigningInput sourceTag */
+                sourceTag?: (number|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.ISigningInput);
+
+                /** SigningInput fee. */
+                public fee: number;
+
+                /** SigningInput sequence. */
+                public sequence: number;
+
+                /** SigningInput lastLedgerSequence. */
+                public lastLedgerSequence: number;
+
+                /** SigningInput account. */
+                public account: string;
+
+                /** SigningInput flags. */
+                public flags: number;
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput opTrustSet. */
+                public opTrustSet?: (TW.Ripple.Proto.IOperationTrustSet|null);
+
+                /** SigningInput opPayment. */
+                public opPayment?: (TW.Ripple.Proto.IOperationPayment|null);
+
+                /** SigningInput opNftokenBurn. */
+                public opNftokenBurn?: (TW.Ripple.Proto.IOperationNFTokenBurn|null);
+
+                /** SigningInput opNftokenCreateOffer. */
+                public opNftokenCreateOffer?: (TW.Ripple.Proto.IOperationNFTokenCreateOffer|null);
+
+                /** SigningInput opNftokenAcceptOffer. */
+                public opNftokenAcceptOffer?: (TW.Ripple.Proto.IOperationNFTokenAcceptOffer|null);
+
+                /** SigningInput opNftokenCancelOffer. */
+                public opNftokenCancelOffer?: (TW.Ripple.Proto.IOperationNFTokenCancelOffer|null);
+
+                /** SigningInput opEscrowCreate. */
+                public opEscrowCreate?: (TW.Ripple.Proto.IOperationEscrowCreate|null);
+
+                /** SigningInput opEscrowCancel. */
+                public opEscrowCancel?: (TW.Ripple.Proto.IOperationEscrowCancel|null);
+
+                /** SigningInput opEscrowFinish. */
+                public opEscrowFinish?: (TW.Ripple.Proto.IOperationEscrowFinish|null);
+
+                /** SigningInput publicKey. */
+                public publicKey: Uint8Array;
+
+                /** SigningInput rawJson. */
+                public rawJson: string;
+
+                /** SigningInput sourceTag. */
+                public sourceTag: number;
+
+                /** SigningInput operationOneof. */
+                public operationOneof?: ("opTrustSet"|"opPayment"|"opNftokenBurn"|"opNftokenCreateOffer"|"opNftokenAcceptOffer"|"opNftokenCancelOffer"|"opEscrowCreate"|"opEscrowCancel"|"opEscrowFinish");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.ISigningInput): TW.Ripple.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Ripple.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput encoded */
+                encoded?: (Uint8Array|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Ripple.Proto.ISigningOutput);
+
+                /** SigningOutput encoded. */
+                public encoded: Uint8Array;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Ripple.Proto.ISigningOutput): TW.Ripple.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Ripple.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Ripple.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Ripple.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
     /** Namespace Solana. */
     namespace Solana {
 
@@ -10527,6 +16073,2139 @@ export namespace TW {
 
                 /**
                  * Gets the default type url for MessageVerifyingInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace Stellar. */
+    namespace Stellar {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of an Asset. */
+            interface IAsset {
+
+                /** Asset issuer */
+                issuer?: (string|null);
+
+                /** Asset alphanum4 */
+                alphanum4?: (string|null);
+            }
+
+            /** Represents an Asset. */
+            class Asset implements IAsset {
+
+                /**
+                 * Constructs a new Asset.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IAsset);
+
+                /** Asset issuer. */
+                public issuer: string;
+
+                /** Asset alphanum4. */
+                public alphanum4: string;
+
+                /**
+                 * Creates a new Asset instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Asset instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IAsset): TW.Stellar.Proto.Asset;
+
+                /**
+                 * Encodes the specified Asset message. Does not implicitly {@link TW.Stellar.Proto.Asset.verify|verify} messages.
+                 * @param message Asset message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IAsset, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an Asset message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Asset
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.Asset;
+
+                /**
+                 * Gets the default type url for Asset
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationCreateAccount. */
+            interface IOperationCreateAccount {
+
+                /** OperationCreateAccount destination */
+                destination?: (string|null);
+
+                /** OperationCreateAccount amount */
+                amount?: (number|null);
+            }
+
+            /** Represents an OperationCreateAccount. */
+            class OperationCreateAccount implements IOperationCreateAccount {
+
+                /**
+                 * Constructs a new OperationCreateAccount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IOperationCreateAccount);
+
+                /** OperationCreateAccount destination. */
+                public destination: string;
+
+                /** OperationCreateAccount amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new OperationCreateAccount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationCreateAccount instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IOperationCreateAccount): TW.Stellar.Proto.OperationCreateAccount;
+
+                /**
+                 * Encodes the specified OperationCreateAccount message. Does not implicitly {@link TW.Stellar.Proto.OperationCreateAccount.verify|verify} messages.
+                 * @param message OperationCreateAccount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IOperationCreateAccount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationCreateAccount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationCreateAccount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.OperationCreateAccount;
+
+                /**
+                 * Gets the default type url for OperationCreateAccount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationPayment. */
+            interface IOperationPayment {
+
+                /** OperationPayment destination */
+                destination?: (string|null);
+
+                /** OperationPayment asset */
+                asset?: (TW.Stellar.Proto.IAsset|null);
+
+                /** OperationPayment amount */
+                amount?: (number|null);
+            }
+
+            /** Represents an OperationPayment. */
+            class OperationPayment implements IOperationPayment {
+
+                /**
+                 * Constructs a new OperationPayment.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IOperationPayment);
+
+                /** OperationPayment destination. */
+                public destination: string;
+
+                /** OperationPayment asset. */
+                public asset?: (TW.Stellar.Proto.IAsset|null);
+
+                /** OperationPayment amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new OperationPayment instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationPayment instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IOperationPayment): TW.Stellar.Proto.OperationPayment;
+
+                /**
+                 * Encodes the specified OperationPayment message. Does not implicitly {@link TW.Stellar.Proto.OperationPayment.verify|verify} messages.
+                 * @param message OperationPayment message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IOperationPayment, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationPayment message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationPayment
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.OperationPayment;
+
+                /**
+                 * Gets the default type url for OperationPayment
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationChangeTrust. */
+            interface IOperationChangeTrust {
+
+                /** OperationChangeTrust asset */
+                asset?: (TW.Stellar.Proto.IAsset|null);
+
+                /** OperationChangeTrust validBefore */
+                validBefore?: (number|null);
+            }
+
+            /** Represents an OperationChangeTrust. */
+            class OperationChangeTrust implements IOperationChangeTrust {
+
+                /**
+                 * Constructs a new OperationChangeTrust.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IOperationChangeTrust);
+
+                /** OperationChangeTrust asset. */
+                public asset?: (TW.Stellar.Proto.IAsset|null);
+
+                /** OperationChangeTrust validBefore. */
+                public validBefore: number;
+
+                /**
+                 * Creates a new OperationChangeTrust instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationChangeTrust instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IOperationChangeTrust): TW.Stellar.Proto.OperationChangeTrust;
+
+                /**
+                 * Encodes the specified OperationChangeTrust message. Does not implicitly {@link TW.Stellar.Proto.OperationChangeTrust.verify|verify} messages.
+                 * @param message OperationChangeTrust message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IOperationChangeTrust, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationChangeTrust message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationChangeTrust
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.OperationChangeTrust;
+
+                /**
+                 * Gets the default type url for OperationChangeTrust
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** ClaimPredicate enum. */
+            enum ClaimPredicate {
+                Predicate_unconditional = 0
+            }
+
+            /** Properties of a Claimant. */
+            interface IClaimant {
+
+                /** Claimant account */
+                account?: (string|null);
+
+                /** Claimant predicate */
+                predicate?: (TW.Stellar.Proto.ClaimPredicate|null);
+            }
+
+            /** Represents a Claimant. */
+            class Claimant implements IClaimant {
+
+                /**
+                 * Constructs a new Claimant.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IClaimant);
+
+                /** Claimant account. */
+                public account: string;
+
+                /** Claimant predicate. */
+                public predicate: TW.Stellar.Proto.ClaimPredicate;
+
+                /**
+                 * Creates a new Claimant instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Claimant instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IClaimant): TW.Stellar.Proto.Claimant;
+
+                /**
+                 * Encodes the specified Claimant message. Does not implicitly {@link TW.Stellar.Proto.Claimant.verify|verify} messages.
+                 * @param message Claimant message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IClaimant, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Claimant message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Claimant
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.Claimant;
+
+                /**
+                 * Gets the default type url for Claimant
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationCreateClaimableBalance. */
+            interface IOperationCreateClaimableBalance {
+
+                /** OperationCreateClaimableBalance asset */
+                asset?: (TW.Stellar.Proto.IAsset|null);
+
+                /** OperationCreateClaimableBalance amount */
+                amount?: (number|null);
+
+                /** OperationCreateClaimableBalance claimants */
+                claimants?: (TW.Stellar.Proto.IClaimant[]|null);
+            }
+
+            /** Represents an OperationCreateClaimableBalance. */
+            class OperationCreateClaimableBalance implements IOperationCreateClaimableBalance {
+
+                /**
+                 * Constructs a new OperationCreateClaimableBalance.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IOperationCreateClaimableBalance);
+
+                /** OperationCreateClaimableBalance asset. */
+                public asset?: (TW.Stellar.Proto.IAsset|null);
+
+                /** OperationCreateClaimableBalance amount. */
+                public amount: number;
+
+                /** OperationCreateClaimableBalance claimants. */
+                public claimants: TW.Stellar.Proto.IClaimant[];
+
+                /**
+                 * Creates a new OperationCreateClaimableBalance instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationCreateClaimableBalance instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IOperationCreateClaimableBalance): TW.Stellar.Proto.OperationCreateClaimableBalance;
+
+                /**
+                 * Encodes the specified OperationCreateClaimableBalance message. Does not implicitly {@link TW.Stellar.Proto.OperationCreateClaimableBalance.verify|verify} messages.
+                 * @param message OperationCreateClaimableBalance message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IOperationCreateClaimableBalance, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationCreateClaimableBalance message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationCreateClaimableBalance
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.OperationCreateClaimableBalance;
+
+                /**
+                 * Gets the default type url for OperationCreateClaimableBalance
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an OperationClaimClaimableBalance. */
+            interface IOperationClaimClaimableBalance {
+
+                /** OperationClaimClaimableBalance balanceId */
+                balanceId?: (Uint8Array|null);
+            }
+
+            /** Represents an OperationClaimClaimableBalance. */
+            class OperationClaimClaimableBalance implements IOperationClaimClaimableBalance {
+
+                /**
+                 * Constructs a new OperationClaimClaimableBalance.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IOperationClaimClaimableBalance);
+
+                /** OperationClaimClaimableBalance balanceId. */
+                public balanceId: Uint8Array;
+
+                /**
+                 * Creates a new OperationClaimClaimableBalance instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns OperationClaimClaimableBalance instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IOperationClaimClaimableBalance): TW.Stellar.Proto.OperationClaimClaimableBalance;
+
+                /**
+                 * Encodes the specified OperationClaimClaimableBalance message. Does not implicitly {@link TW.Stellar.Proto.OperationClaimClaimableBalance.verify|verify} messages.
+                 * @param message OperationClaimClaimableBalance message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IOperationClaimClaimableBalance, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an OperationClaimClaimableBalance message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns OperationClaimClaimableBalance
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.OperationClaimClaimableBalance;
+
+                /**
+                 * Gets the default type url for OperationClaimClaimableBalance
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MemoVoid. */
+            interface IMemoVoid {
+            }
+
+            /** Represents a MemoVoid. */
+            class MemoVoid implements IMemoVoid {
+
+                /**
+                 * Constructs a new MemoVoid.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IMemoVoid);
+
+                /**
+                 * Creates a new MemoVoid instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MemoVoid instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IMemoVoid): TW.Stellar.Proto.MemoVoid;
+
+                /**
+                 * Encodes the specified MemoVoid message. Does not implicitly {@link TW.Stellar.Proto.MemoVoid.verify|verify} messages.
+                 * @param message MemoVoid message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IMemoVoid, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MemoVoid message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MemoVoid
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.MemoVoid;
+
+                /**
+                 * Gets the default type url for MemoVoid
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MemoText. */
+            interface IMemoText {
+
+                /** MemoText text */
+                text?: (string|null);
+            }
+
+            /** Represents a MemoText. */
+            class MemoText implements IMemoText {
+
+                /**
+                 * Constructs a new MemoText.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IMemoText);
+
+                /** MemoText text. */
+                public text: string;
+
+                /**
+                 * Creates a new MemoText instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MemoText instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IMemoText): TW.Stellar.Proto.MemoText;
+
+                /**
+                 * Encodes the specified MemoText message. Does not implicitly {@link TW.Stellar.Proto.MemoText.verify|verify} messages.
+                 * @param message MemoText message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IMemoText, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MemoText message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MemoText
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.MemoText;
+
+                /**
+                 * Gets the default type url for MemoText
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MemoId. */
+            interface IMemoId {
+
+                /** MemoId id */
+                id?: (number|null);
+            }
+
+            /** Represents a MemoId. */
+            class MemoId implements IMemoId {
+
+                /**
+                 * Constructs a new MemoId.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IMemoId);
+
+                /** MemoId id. */
+                public id: number;
+
+                /**
+                 * Creates a new MemoId instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MemoId instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IMemoId): TW.Stellar.Proto.MemoId;
+
+                /**
+                 * Encodes the specified MemoId message. Does not implicitly {@link TW.Stellar.Proto.MemoId.verify|verify} messages.
+                 * @param message MemoId message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IMemoId, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MemoId message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MemoId
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.MemoId;
+
+                /**
+                 * Gets the default type url for MemoId
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MemoHash. */
+            interface IMemoHash {
+
+                /** MemoHash hash */
+                hash?: (Uint8Array|null);
+            }
+
+            /** Represents a MemoHash. */
+            class MemoHash implements IMemoHash {
+
+                /**
+                 * Constructs a new MemoHash.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.IMemoHash);
+
+                /** MemoHash hash. */
+                public hash: Uint8Array;
+
+                /**
+                 * Creates a new MemoHash instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MemoHash instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.IMemoHash): TW.Stellar.Proto.MemoHash;
+
+                /**
+                 * Encodes the specified MemoHash message. Does not implicitly {@link TW.Stellar.Proto.MemoHash.verify|verify} messages.
+                 * @param message MemoHash message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.IMemoHash, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MemoHash message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MemoHash
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.MemoHash;
+
+                /**
+                 * Gets the default type url for MemoHash
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput fee */
+                fee?: (number|null);
+
+                /** SigningInput sequence */
+                sequence?: (number|null);
+
+                /** SigningInput account */
+                account?: (string|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput passphrase */
+                passphrase?: (string|null);
+
+                /** SigningInput opCreateAccount */
+                opCreateAccount?: (TW.Stellar.Proto.IOperationCreateAccount|null);
+
+                /** SigningInput opPayment */
+                opPayment?: (TW.Stellar.Proto.IOperationPayment|null);
+
+                /** SigningInput opChangeTrust */
+                opChangeTrust?: (TW.Stellar.Proto.IOperationChangeTrust|null);
+
+                /** SigningInput opCreateClaimableBalance */
+                opCreateClaimableBalance?: (TW.Stellar.Proto.IOperationCreateClaimableBalance|null);
+
+                /** SigningInput opClaimClaimableBalance */
+                opClaimClaimableBalance?: (TW.Stellar.Proto.IOperationClaimClaimableBalance|null);
+
+                /** SigningInput memoVoid */
+                memoVoid?: (TW.Stellar.Proto.IMemoVoid|null);
+
+                /** SigningInput memoText */
+                memoText?: (TW.Stellar.Proto.IMemoText|null);
+
+                /** SigningInput memoId */
+                memoId?: (TW.Stellar.Proto.IMemoId|null);
+
+                /** SigningInput memoHash */
+                memoHash?: (TW.Stellar.Proto.IMemoHash|null);
+
+                /** SigningInput memoReturnHash */
+                memoReturnHash?: (TW.Stellar.Proto.IMemoHash|null);
+
+                /** SigningInput timeBounds */
+                timeBounds?: (number|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.ISigningInput);
+
+                /** SigningInput fee. */
+                public fee: number;
+
+                /** SigningInput sequence. */
+                public sequence: number;
+
+                /** SigningInput account. */
+                public account: string;
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput passphrase. */
+                public passphrase: string;
+
+                /** SigningInput opCreateAccount. */
+                public opCreateAccount?: (TW.Stellar.Proto.IOperationCreateAccount|null);
+
+                /** SigningInput opPayment. */
+                public opPayment?: (TW.Stellar.Proto.IOperationPayment|null);
+
+                /** SigningInput opChangeTrust. */
+                public opChangeTrust?: (TW.Stellar.Proto.IOperationChangeTrust|null);
+
+                /** SigningInput opCreateClaimableBalance. */
+                public opCreateClaimableBalance?: (TW.Stellar.Proto.IOperationCreateClaimableBalance|null);
+
+                /** SigningInput opClaimClaimableBalance. */
+                public opClaimClaimableBalance?: (TW.Stellar.Proto.IOperationClaimClaimableBalance|null);
+
+                /** SigningInput memoVoid. */
+                public memoVoid?: (TW.Stellar.Proto.IMemoVoid|null);
+
+                /** SigningInput memoText. */
+                public memoText?: (TW.Stellar.Proto.IMemoText|null);
+
+                /** SigningInput memoId. */
+                public memoId?: (TW.Stellar.Proto.IMemoId|null);
+
+                /** SigningInput memoHash. */
+                public memoHash?: (TW.Stellar.Proto.IMemoHash|null);
+
+                /** SigningInput memoReturnHash. */
+                public memoReturnHash?: (TW.Stellar.Proto.IMemoHash|null);
+
+                /** SigningInput timeBounds. */
+                public timeBounds: number;
+
+                /** SigningInput operationOneof. */
+                public operationOneof?: ("opCreateAccount"|"opPayment"|"opChangeTrust"|"opCreateClaimableBalance"|"opClaimClaimableBalance");
+
+                /** SigningInput memoTypeOneof. */
+                public memoTypeOneof?: ("memoVoid"|"memoText"|"memoId"|"memoHash"|"memoReturnHash");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.ISigningInput): TW.Stellar.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Stellar.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput signature */
+                signature?: (string|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Stellar.Proto.ISigningOutput);
+
+                /** SigningOutput signature. */
+                public signature: string;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Stellar.Proto.ISigningOutput): TW.Stellar.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Stellar.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Stellar.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Stellar.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace Sui. */
+    namespace Sui {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of an ObjectRef. */
+            interface IObjectRef {
+
+                /** ObjectRef objectId */
+                objectId?: (string|null);
+
+                /** ObjectRef version */
+                version?: (number|null);
+
+                /** ObjectRef objectDigest */
+                objectDigest?: (string|null);
+            }
+
+            /** Represents an ObjectRef. */
+            class ObjectRef implements IObjectRef {
+
+                /**
+                 * Constructs a new ObjectRef.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IObjectRef);
+
+                /** ObjectRef objectId. */
+                public objectId: string;
+
+                /** ObjectRef version. */
+                public version: number;
+
+                /** ObjectRef objectDigest. */
+                public objectDigest: string;
+
+                /**
+                 * Creates a new ObjectRef instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns ObjectRef instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IObjectRef): TW.Sui.Proto.ObjectRef;
+
+                /**
+                 * Encodes the specified ObjectRef message. Does not implicitly {@link TW.Sui.Proto.ObjectRef.verify|verify} messages.
+                 * @param message ObjectRef message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IObjectRef, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an ObjectRef message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns ObjectRef
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.ObjectRef;
+
+                /**
+                 * Gets the default type url for ObjectRef
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an Amount. */
+            interface IAmount {
+
+                /** Amount amount */
+                amount?: (number|null);
+            }
+
+            /** Represents an Amount. */
+            class Amount implements IAmount {
+
+                /**
+                 * Constructs a new Amount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IAmount);
+
+                /** Amount amount. */
+                public amount: number;
+
+                /**
+                 * Creates a new Amount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Amount instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IAmount): TW.Sui.Proto.Amount;
+
+                /**
+                 * Encodes the specified Amount message. Does not implicitly {@link TW.Sui.Proto.Amount.verify|verify} messages.
+                 * @param message Amount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IAmount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an Amount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Amount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.Amount;
+
+                /**
+                 * Gets the default type url for Amount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SignDirect. */
+            interface ISignDirect {
+
+                /** SignDirect unsignedTxMsg */
+                unsignedTxMsg?: (string|null);
+            }
+
+            /** Represents a SignDirect. */
+            class SignDirect implements ISignDirect {
+
+                /**
+                 * Constructs a new SignDirect.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.ISignDirect);
+
+                /** SignDirect unsignedTxMsg. */
+                public unsignedTxMsg: string;
+
+                /**
+                 * Creates a new SignDirect instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SignDirect instance
+                 */
+                public static create(properties?: TW.Sui.Proto.ISignDirect): TW.Sui.Proto.SignDirect;
+
+                /**
+                 * Encodes the specified SignDirect message. Does not implicitly {@link TW.Sui.Proto.SignDirect.verify|verify} messages.
+                 * @param message SignDirect message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.ISignDirect, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SignDirect message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SignDirect
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.SignDirect;
+
+                /**
+                 * Gets the default type url for SignDirect
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Pay. */
+            interface IPay {
+
+                /** Pay inputCoins */
+                inputCoins?: (TW.Sui.Proto.IObjectRef[]|null);
+
+                /** Pay recipients */
+                recipients?: (string[]|null);
+
+                /** Pay amounts */
+                amounts?: (number[]|null);
+
+                /** Pay gas */
+                gas?: (TW.Sui.Proto.IObjectRef|null);
+            }
+
+            /** Represents a Pay. */
+            class Pay implements IPay {
+
+                /**
+                 * Constructs a new Pay.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IPay);
+
+                /** Pay inputCoins. */
+                public inputCoins: TW.Sui.Proto.IObjectRef[];
+
+                /** Pay recipients. */
+                public recipients: string[];
+
+                /** Pay amounts. */
+                public amounts: number[];
+
+                /** Pay gas. */
+                public gas?: (TW.Sui.Proto.IObjectRef|null);
+
+                /**
+                 * Creates a new Pay instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Pay instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IPay): TW.Sui.Proto.Pay;
+
+                /**
+                 * Encodes the specified Pay message. Does not implicitly {@link TW.Sui.Proto.Pay.verify|verify} messages.
+                 * @param message Pay message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IPay, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Pay message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Pay
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.Pay;
+
+                /**
+                 * Gets the default type url for Pay
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a PaySui. */
+            interface IPaySui {
+
+                /** PaySui inputCoins */
+                inputCoins?: (TW.Sui.Proto.IObjectRef[]|null);
+
+                /** PaySui recipients */
+                recipients?: (string[]|null);
+
+                /** PaySui amounts */
+                amounts?: (number[]|null);
+            }
+
+            /** Represents a PaySui. */
+            class PaySui implements IPaySui {
+
+                /**
+                 * Constructs a new PaySui.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IPaySui);
+
+                /** PaySui inputCoins. */
+                public inputCoins: TW.Sui.Proto.IObjectRef[];
+
+                /** PaySui recipients. */
+                public recipients: string[];
+
+                /** PaySui amounts. */
+                public amounts: number[];
+
+                /**
+                 * Creates a new PaySui instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PaySui instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IPaySui): TW.Sui.Proto.PaySui;
+
+                /**
+                 * Encodes the specified PaySui message. Does not implicitly {@link TW.Sui.Proto.PaySui.verify|verify} messages.
+                 * @param message PaySui message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IPaySui, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a PaySui message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns PaySui
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.PaySui;
+
+                /**
+                 * Gets the default type url for PaySui
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a PayAllSui. */
+            interface IPayAllSui {
+
+                /** PayAllSui inputCoins */
+                inputCoins?: (TW.Sui.Proto.IObjectRef[]|null);
+
+                /** PayAllSui recipient */
+                recipient?: (string|null);
+            }
+
+            /** Represents a PayAllSui. */
+            class PayAllSui implements IPayAllSui {
+
+                /**
+                 * Constructs a new PayAllSui.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IPayAllSui);
+
+                /** PayAllSui inputCoins. */
+                public inputCoins: TW.Sui.Proto.IObjectRef[];
+
+                /** PayAllSui recipient. */
+                public recipient: string;
+
+                /**
+                 * Creates a new PayAllSui instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns PayAllSui instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IPayAllSui): TW.Sui.Proto.PayAllSui;
+
+                /**
+                 * Encodes the specified PayAllSui message. Does not implicitly {@link TW.Sui.Proto.PayAllSui.verify|verify} messages.
+                 * @param message PayAllSui message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IPayAllSui, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a PayAllSui message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns PayAllSui
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.PayAllSui;
+
+                /**
+                 * Gets the default type url for PayAllSui
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a RequestAddStake. */
+            interface IRequestAddStake {
+
+                /** RequestAddStake coins */
+                coins?: (TW.Sui.Proto.IObjectRef[]|null);
+
+                /** RequestAddStake amount */
+                amount?: (TW.Sui.Proto.IAmount|null);
+
+                /** RequestAddStake validator */
+                validator?: (string|null);
+
+                /** RequestAddStake gas */
+                gas?: (TW.Sui.Proto.IObjectRef|null);
+            }
+
+            /** Represents a RequestAddStake. */
+            class RequestAddStake implements IRequestAddStake {
+
+                /**
+                 * Constructs a new RequestAddStake.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IRequestAddStake);
+
+                /** RequestAddStake coins. */
+                public coins: TW.Sui.Proto.IObjectRef[];
+
+                /** RequestAddStake amount. */
+                public amount?: (TW.Sui.Proto.IAmount|null);
+
+                /** RequestAddStake validator. */
+                public validator: string;
+
+                /** RequestAddStake gas. */
+                public gas?: (TW.Sui.Proto.IObjectRef|null);
+
+                /**
+                 * Creates a new RequestAddStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns RequestAddStake instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IRequestAddStake): TW.Sui.Proto.RequestAddStake;
+
+                /**
+                 * Encodes the specified RequestAddStake message. Does not implicitly {@link TW.Sui.Proto.RequestAddStake.verify|verify} messages.
+                 * @param message RequestAddStake message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IRequestAddStake, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a RequestAddStake message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns RequestAddStake
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.RequestAddStake;
+
+                /**
+                 * Gets the default type url for RequestAddStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a RequestWithdrawStake. */
+            interface IRequestWithdrawStake {
+
+                /** RequestWithdrawStake stakedSui */
+                stakedSui?: (TW.Sui.Proto.IObjectRef|null);
+
+                /** RequestWithdrawStake gas */
+                gas?: (TW.Sui.Proto.IObjectRef|null);
+            }
+
+            /** Represents a RequestWithdrawStake. */
+            class RequestWithdrawStake implements IRequestWithdrawStake {
+
+                /**
+                 * Constructs a new RequestWithdrawStake.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IRequestWithdrawStake);
+
+                /** RequestWithdrawStake stakedSui. */
+                public stakedSui?: (TW.Sui.Proto.IObjectRef|null);
+
+                /** RequestWithdrawStake gas. */
+                public gas?: (TW.Sui.Proto.IObjectRef|null);
+
+                /**
+                 * Creates a new RequestWithdrawStake instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns RequestWithdrawStake instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IRequestWithdrawStake): TW.Sui.Proto.RequestWithdrawStake;
+
+                /**
+                 * Encodes the specified RequestWithdrawStake message. Does not implicitly {@link TW.Sui.Proto.RequestWithdrawStake.verify|verify} messages.
+                 * @param message RequestWithdrawStake message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IRequestWithdrawStake, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a RequestWithdrawStake message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns RequestWithdrawStake
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.RequestWithdrawStake;
+
+                /**
+                 * Gets the default type url for RequestWithdrawStake
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a TransferObject. */
+            interface ITransferObject {
+
+                /** TransferObject object */
+                object?: (TW.Sui.Proto.IObjectRef|null);
+
+                /** TransferObject recipient */
+                recipient?: (string|null);
+
+                /** TransferObject gas */
+                gas?: (TW.Sui.Proto.IObjectRef|null);
+            }
+
+            /** https://docs.sui.io/sui-api-ref#unsafe_transferobject */
+            class TransferObject implements ITransferObject {
+
+                /**
+                 * Constructs a new TransferObject.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.ITransferObject);
+
+                /** TransferObject object. */
+                public object?: (TW.Sui.Proto.IObjectRef|null);
+
+                /** TransferObject recipient. */
+                public recipient: string;
+
+                /** TransferObject gas. */
+                public gas?: (TW.Sui.Proto.IObjectRef|null);
+
+                /**
+                 * Creates a new TransferObject instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns TransferObject instance
+                 */
+                public static create(properties?: TW.Sui.Proto.ITransferObject): TW.Sui.Proto.TransferObject;
+
+                /**
+                 * Encodes the specified TransferObject message. Does not implicitly {@link TW.Sui.Proto.TransferObject.verify|verify} messages.
+                 * @param message TransferObject message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.ITransferObject, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a TransferObject message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns TransferObject
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.TransferObject;
+
+                /**
+                 * Gets the default type url for TransferObject
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput signer */
+                signer?: (string|null);
+
+                /** SigningInput signDirectMessage */
+                signDirectMessage?: (TW.Sui.Proto.ISignDirect|null);
+
+                /** SigningInput pay */
+                pay?: (TW.Sui.Proto.IPay|null);
+
+                /** SigningInput paySui */
+                paySui?: (TW.Sui.Proto.IPaySui|null);
+
+                /** SigningInput payAllSui */
+                payAllSui?: (TW.Sui.Proto.IPayAllSui|null);
+
+                /** SigningInput requestAddStake */
+                requestAddStake?: (TW.Sui.Proto.IRequestAddStake|null);
+
+                /** SigningInput requestWithdrawStake */
+                requestWithdrawStake?: (TW.Sui.Proto.IRequestWithdrawStake|null);
+
+                /** SigningInput transferObject */
+                transferObject?: (TW.Sui.Proto.ITransferObject|null);
+
+                /** SigningInput rawJson */
+                rawJson?: (string|null);
+
+                /** SigningInput gasBudget */
+                gasBudget?: (number|null);
+
+                /** SigningInput referenceGasPrice */
+                referenceGasPrice?: (number|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.ISigningInput);
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput signer. */
+                public signer: string;
+
+                /** SigningInput signDirectMessage. */
+                public signDirectMessage?: (TW.Sui.Proto.ISignDirect|null);
+
+                /** SigningInput pay. */
+                public pay?: (TW.Sui.Proto.IPay|null);
+
+                /** SigningInput paySui. */
+                public paySui?: (TW.Sui.Proto.IPaySui|null);
+
+                /** SigningInput payAllSui. */
+                public payAllSui?: (TW.Sui.Proto.IPayAllSui|null);
+
+                /** SigningInput requestAddStake. */
+                public requestAddStake?: (TW.Sui.Proto.IRequestAddStake|null);
+
+                /** SigningInput requestWithdrawStake. */
+                public requestWithdrawStake?: (TW.Sui.Proto.IRequestWithdrawStake|null);
+
+                /** SigningInput transferObject. */
+                public transferObject?: (TW.Sui.Proto.ITransferObject|null);
+
+                /** SigningInput rawJson. */
+                public rawJson?: (string|null);
+
+                /** SigningInput gasBudget. */
+                public gasBudget: number;
+
+                /** SigningInput referenceGasPrice. */
+                public referenceGasPrice: number;
+
+                /** SigningInput transactionPayload. */
+                public transactionPayload?: ("signDirectMessage"|"pay"|"paySui"|"payAllSui"|"requestAddStake"|"requestWithdrawStake"|"transferObject"|"rawJson");
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Sui.Proto.ISigningInput): TW.Sui.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Sui.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** The raw transaction without indent in base64 */
+                unsignedTx?: (string|null);
+
+                /** The signature encoded in base64 */
+                signature?: (string|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.ISigningOutput);
+
+                /** The raw transaction without indent in base64 */
+                public unsignedTx: string;
+
+                /** The signature encoded in base64 */
+                public signature: string;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Sui.Proto.ISigningOutput): TW.Sui.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Sui.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MessageSigningInput. */
+            interface IMessageSigningInput {
+
+                /** MessageSigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** MessageSigningInput message */
+                message?: (string|null);
+            }
+
+            /** Represents a MessageSigningInput. */
+            class MessageSigningInput implements IMessageSigningInput {
+
+                /**
+                 * Constructs a new MessageSigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IMessageSigningInput);
+
+                /** MessageSigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** MessageSigningInput message. */
+                public message: string;
+
+                /**
+                 * Creates a new MessageSigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageSigningInput instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IMessageSigningInput): TW.Sui.Proto.MessageSigningInput;
+
+                /**
+                 * Encodes the specified MessageSigningInput message. Does not implicitly {@link TW.Sui.Proto.MessageSigningInput.verify|verify} messages.
+                 * @param message MessageSigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IMessageSigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MessageSigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MessageSigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.MessageSigningInput;
+
+                /**
+                 * Gets the default type url for MessageSigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MessageSigningOutput. */
+            interface IMessageSigningOutput {
+
+                /** MessageSigningOutput signature */
+                signature?: (string|null);
+
+                /** MessageSigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** MessageSigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a MessageSigningOutput. */
+            class MessageSigningOutput implements IMessageSigningOutput {
+
+                /**
+                 * Constructs a new MessageSigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IMessageSigningOutput);
+
+                /** MessageSigningOutput signature. */
+                public signature: string;
+
+                /** MessageSigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** MessageSigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new MessageSigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageSigningOutput instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IMessageSigningOutput): TW.Sui.Proto.MessageSigningOutput;
+
+                /**
+                 * Encodes the specified MessageSigningOutput message. Does not implicitly {@link TW.Sui.Proto.MessageSigningOutput.verify|verify} messages.
+                 * @param message MessageSigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IMessageSigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MessageSigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MessageSigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.MessageSigningOutput;
+
+                /**
+                 * Gets the default type url for MessageSigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a MessageVerifyingInput. */
+            interface IMessageVerifyingInput {
+
+                /** MessageVerifyingInput message */
+                message?: (string|null);
+
+                /** MessageVerifyingInput publicKey */
+                publicKey?: (Uint8Array|null);
+
+                /** MessageVerifyingInput signature */
+                signature?: (string|null);
+            }
+
+            /** Represents a MessageVerifyingInput. */
+            class MessageVerifyingInput implements IMessageVerifyingInput {
+
+                /**
+                 * Constructs a new MessageVerifyingInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Sui.Proto.IMessageVerifyingInput);
+
+                /** MessageVerifyingInput message. */
+                public message: string;
+
+                /** MessageVerifyingInput publicKey. */
+                public publicKey: Uint8Array;
+
+                /** MessageVerifyingInput signature. */
+                public signature: string;
+
+                /**
+                 * Creates a new MessageVerifyingInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns MessageVerifyingInput instance
+                 */
+                public static create(properties?: TW.Sui.Proto.IMessageVerifyingInput): TW.Sui.Proto.MessageVerifyingInput;
+
+                /**
+                 * Encodes the specified MessageVerifyingInput message. Does not implicitly {@link TW.Sui.Proto.MessageVerifyingInput.verify|verify} messages.
+                 * @param message MessageVerifyingInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Sui.Proto.IMessageVerifyingInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a MessageVerifyingInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns MessageVerifyingInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Sui.Proto.MessageVerifyingInput;
+
+                /**
+                 * Gets the default type url for MessageVerifyingInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
+    /** Namespace TheOpenNetwork. */
+    namespace TheOpenNetwork {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** WalletVersion enum. */
+            enum WalletVersion {
+                WALLET_V3_R1 = 0,
+                WALLET_V3_R2 = 1,
+                WALLET_V4_R2 = 2,
+                WALLET_V5_R1 = 3
+            }
+
+            /** SendMode enum. */
+            enum SendMode {
+                DEFAULT = 0,
+                PAY_FEES_SEPARATELY = 1,
+                IGNORE_ACTION_PHASE_ERRORS = 2,
+                DESTROY_ON_ZERO_BALANCE = 32,
+                ATTACH_ALL_INBOUND_MESSAGE_VALUE = 64,
+                ATTACH_ALL_CONTRACT_BALANCE = 128
+            }
+
+            /** Properties of a Transfer. */
+            interface ITransfer {
+
+                /** Transfer dest */
+                dest?: (string|null);
+
+                /** Transfer amount */
+                amount?: (Uint8Array|null);
+
+                /** Transfer mode */
+                mode?: (number|null);
+
+                /** Transfer comment */
+                comment?: (string|null);
+
+                /** Transfer bounceable */
+                bounceable?: (boolean|null);
+
+                /** Transfer stateInit */
+                stateInit?: (string|null);
+
+                /** Transfer jettonTransfer */
+                jettonTransfer?: (TW.TheOpenNetwork.Proto.IJettonTransfer|null);
+
+                /** Transfer customPayload */
+                customPayload?: (string|null);
+            }
+
+            /** Represents a Transfer. */
+            class Transfer implements ITransfer {
+
+                /**
+                 * Constructs a new Transfer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.TheOpenNetwork.Proto.ITransfer);
+
+                /** Transfer dest. */
+                public dest: string;
+
+                /** Transfer amount. */
+                public amount: Uint8Array;
+
+                /** Transfer mode. */
+                public mode: number;
+
+                /** Transfer comment. */
+                public comment: string;
+
+                /** Transfer bounceable. */
+                public bounceable: boolean;
+
+                /** Transfer stateInit. */
+                public stateInit: string;
+
+                /** Transfer jettonTransfer. */
+                public jettonTransfer?: (TW.TheOpenNetwork.Proto.IJettonTransfer|null);
+
+                /** Transfer customPayload. */
+                public customPayload?: (string|null);
+
+                /** Transfer payload. */
+                public payload?: ("jettonTransfer"|"customPayload");
+
+                /**
+                 * Creates a new Transfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Transfer instance
+                 */
+                public static create(properties?: TW.TheOpenNetwork.Proto.ITransfer): TW.TheOpenNetwork.Proto.Transfer;
+
+                /**
+                 * Encodes the specified Transfer message. Does not implicitly {@link TW.TheOpenNetwork.Proto.Transfer.verify|verify} messages.
+                 * @param message Transfer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.TheOpenNetwork.Proto.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Transfer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Transfer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.TheOpenNetwork.Proto.Transfer;
+
+                /**
+                 * Gets the default type url for Transfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a JettonTransfer. */
+            interface IJettonTransfer {
+
+                /** JettonTransfer queryId */
+                queryId?: (number|null);
+
+                /** JettonTransfer jettonAmount */
+                jettonAmount?: (Uint8Array|null);
+
+                /** JettonTransfer toOwner */
+                toOwner?: (string|null);
+
+                /** JettonTransfer responseAddress */
+                responseAddress?: (string|null);
+
+                /** JettonTransfer forwardAmount */
+                forwardAmount?: (Uint8Array|null);
+
+                /** JettonTransfer customPayload */
+                customPayload?: (string|null);
+            }
+
+            /** Represents a JettonTransfer. */
+            class JettonTransfer implements IJettonTransfer {
+
+                /**
+                 * Constructs a new JettonTransfer.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.TheOpenNetwork.Proto.IJettonTransfer);
+
+                /** JettonTransfer queryId. */
+                public queryId: number;
+
+                /** JettonTransfer jettonAmount. */
+                public jettonAmount: Uint8Array;
+
+                /** JettonTransfer toOwner. */
+                public toOwner: string;
+
+                /** JettonTransfer responseAddress. */
+                public responseAddress: string;
+
+                /** JettonTransfer forwardAmount. */
+                public forwardAmount: Uint8Array;
+
+                /** JettonTransfer customPayload. */
+                public customPayload: string;
+
+                /**
+                 * Creates a new JettonTransfer instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns JettonTransfer instance
+                 */
+                public static create(properties?: TW.TheOpenNetwork.Proto.IJettonTransfer): TW.TheOpenNetwork.Proto.JettonTransfer;
+
+                /**
+                 * Encodes the specified JettonTransfer message. Does not implicitly {@link TW.TheOpenNetwork.Proto.JettonTransfer.verify|verify} messages.
+                 * @param message JettonTransfer message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.TheOpenNetwork.Proto.IJettonTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a JettonTransfer message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns JettonTransfer
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.TheOpenNetwork.Proto.JettonTransfer;
+
+                /**
+                 * Gets the default type url for JettonTransfer
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput publicKey */
+                publicKey?: (Uint8Array|null);
+
+                /** SigningInput messages */
+                messages?: (TW.TheOpenNetwork.Proto.ITransfer[]|null);
+
+                /** SigningInput sequenceNumber */
+                sequenceNumber?: (number|null);
+
+                /** SigningInput expireAt */
+                expireAt?: (number|null);
+
+                /** SigningInput walletVersion */
+                walletVersion?: (TW.TheOpenNetwork.Proto.WalletVersion|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.TheOpenNetwork.Proto.ISigningInput);
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput publicKey. */
+                public publicKey: Uint8Array;
+
+                /** SigningInput messages. */
+                public messages: TW.TheOpenNetwork.Proto.ITransfer[];
+
+                /** SigningInput sequenceNumber. */
+                public sequenceNumber: number;
+
+                /** SigningInput expireAt. */
+                public expireAt: number;
+
+                /** SigningInput walletVersion. */
+                public walletVersion: TW.TheOpenNetwork.Proto.WalletVersion;
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.TheOpenNetwork.Proto.ISigningInput): TW.TheOpenNetwork.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.TheOpenNetwork.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.TheOpenNetwork.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.TheOpenNetwork.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput encoded */
+                encoded?: (string|null);
+
+                /** SigningOutput hash */
+                hash?: (Uint8Array|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.TheOpenNetwork.Proto.ISigningOutput);
+
+                /** SigningOutput encoded. */
+                public encoded: string;
+
+                /** SigningOutput hash. */
+                public hash: Uint8Array;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.TheOpenNetwork.Proto.ISigningOutput): TW.TheOpenNetwork.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.TheOpenNetwork.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.TheOpenNetwork.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.TheOpenNetwork.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
                  * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
                  * @returns The default type url
                  */

@@ -702,6 +702,113 @@ final class WalletStore {
     }
   }
 
+  // MARK: Network group 2 (XRP, Stellar, Polkadot, NEAR, TON, Aptos, Sui, Cardano)
+
+  static let networkCoins: Set<CoinType> = [.xrp, .stellar, .polkadot, .near, .ton, .aptos, .sui, .cardano]
+
+  /// A plain transfer on a group-2 network (and USDT-style jettons on TON). The
+  /// shape is checked before Face ID; the sender is checked and the wallet's
+  /// public key (and Cardano's change address) filled in here, below the app
+  /// layer, so a changed app can't sign anything else with one prompt (SPEC §7).
+  func signNetwork(id: String, coin raw: UInt32, inputBase64: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    guard let coin = CoinType(rawValue: raw), Self.networkCoins.contains(coin) else { throw WalletError.invalid("this network can't be signed here") }
+    guard let data = Data(base64Encoded: inputBase64) else { throw WalletError.invalid("bad input") }
+    _ = try Self.networkInput(data, coin: coin, own: nil, publicKey: nil)
+    return try withSecrets([id], reason: "Confirm the transaction") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      let own = coin.deriveAddress(privateKey: key)
+      let ready = try Self.networkInput(data, coin: coin, own: own, publicKey: key.getPublicKey(coinType: coin).data)
+      return try Self.signOne(ready, key: key, coin: coin)
+    }
+  }
+
+  /// Checks a group-2 input. With `own` (after Face ID) also checks the sender and
+  /// returns the input completed with the wallet's public key, ready to sign.
+  static func networkInput(_ data: Data, coin: CoinType, own: String?, publicKey: Data?) throws -> Data {
+    let unsupported = WalletError.invalid("not a transfer this wallet can sign")
+    let notOwn = WalletError.invalid("this transaction is not from this wallet")
+    switch coin {
+    case .xrp:
+      var i = try RippleSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty, i.publicKey.isEmpty else { throw unsupported }
+      if !i.rawJson.isEmpty {
+        // Payments with a memo (THORChain swaps): XRP only, no flags, no other fields.
+        guard i.operationOneof == nil, let json = i.rawJson.data(using: .utf8),
+              let tx = try JSONSerialization.jsonObject(with: json) as? [String: Any] else { throw unsupported }
+        let allowed: Set<String> = ["TransactionType", "Account", "Destination", "Amount", "Fee", "Sequence", "LastLedgerSequence", "Flags", "Memos", "DestinationTag"]
+        guard Set(tx.keys).isSubset(of: allowed), tx["TransactionType"] as? String == "Payment", tx["Amount"] is String,
+              (tx["Flags"] as? Int ?? 0) == 0 else { throw unsupported }
+        if let own, tx["Account"] as? String != own { throw notOwn }
+      } else {
+        guard case .opPayment(let pay)? = i.operationOneof, case .amount? = pay.amountOneof else { throw unsupported }
+        if let own, i.account != own { throw notOwn }
+      }
+      guard let publicKey else { return data }
+      i.publicKey = publicKey
+      return try i.serializedData()
+    case .stellar:
+      let i = try StellarSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty else { throw unsupported }
+      switch i.operationOneof {
+      case .opCreateAccount?: break
+      case .opPayment(let pay)?: guard !pay.hasAsset || (pay.asset.issuer.isEmpty && pay.asset.alphanum4.isEmpty) else { throw unsupported }
+      default: throw unsupported
+      }
+      if let own, i.account != own { throw notOwn }
+      return data
+    case .polkadot:
+      // No sender field: the signature itself names the wallet.
+      let i = try PolkadotSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty, case .balanceCall(let b)? = i.messageOneof, case .transfer? = b.messageOneof else { throw unsupported }
+      return data
+    case .near:
+      var i = try NEARSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty, i.publicKey.isEmpty, i.actions.count == 1, case .transfer? = i.actions[0].payload else { throw unsupported }
+      if let own, i.signerID != own { throw notOwn }
+      guard let publicKey else { return data }
+      i.publicKey = publicKey
+      return try i.serializedData()
+    case .ton:
+      // The wallet contract is derived from the public key, so it is always this wallet's.
+      var i = try TheOpenNetworkSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty, i.publicKey.isEmpty, i.walletVersion == .walletV4R2, i.messages.count == 1, i.messages[0].stateInit.isEmpty else { throw unsupported }
+      switch i.messages[0].payload {
+      case nil: break
+      case .jettonTransfer(let j)?: guard j.customPayload.isEmpty else { throw unsupported }
+      default: throw unsupported
+      }
+      guard let publicKey else { return data }
+      i.publicKey = publicKey
+      return try i.serializedData()
+    case .aptos:
+      let i = try AptosSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty, i.anyEncoded.isEmpty, case .transfer? = i.transactionPayload else { throw unsupported }
+      if let own, i.sender.lowercased() != own.lowercased() { throw notOwn }
+      return data
+    case .sui:
+      let i = try SuiSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty else { throw unsupported }
+      switch i.transactionPayload {
+      case .paySui?, .payAllSui?: break
+      default: throw unsupported
+      }
+      if let own, i.signer.lowercased() != own.lowercased() { throw notOwn }
+      return data
+    case .cardano:
+      // Like Bitcoin: change and every input are forced to the wallet's own address.
+      var i = try CardanoSigningInput(serializedBytes: data)
+      guard i.privateKey.isEmpty, i.hasTransferMessage, !i.hasPlan, !i.hasRegisterStakingKey, !i.hasDelegate, !i.hasWithdraw,
+            !i.hasDeregisterStakingKey, !i.hasVoteDelegation, i.extraOutputs.isEmpty, i.auxiliaryData.isEmpty, !i.utxos.isEmpty else { throw unsupported }
+      guard let own else { return data }
+      i.transferMessage.changeAddress = own
+      for n in i.utxos.indices { i.utxos[n].address = own }
+      return try i.serializedData()
+    default:
+      throw WalletError.invalid("this network can't be signed here")
+    }
+  }
+
   // MARK: EVM gasless (EIP-7702 + EntryPoint 0.8)
 
   /// Foxsafe's EVM fee rule, compiled in on purpose: an app update can't change it.
@@ -904,9 +1011,9 @@ final class WalletStore {
     if coin.blockchain == .bitcoin || coin.blockchain == .bitcoinCash { return try signBitcoin(input, key: key, coin: coin) }
     let pre = try TxCompilerPreSigningOutput(serializedBytes: TransactionCompiler.preImageHashes(coinType: coin, txInputData: input))
     guard pre.error == .ok else { throw WalletError.invalid("cannot sign: \(pre.errorMessage)") }
-    // Solana signs the whole message (pre.data); its pre-image output has a different layout,
-    // so the generic dataHash field would hold the signer's key instead (SPEC §7).
-    let digest = coin.blockchain == .solana ? pre.data : pre.dataHash
+    // Solana, TON and Aptos sign the whole message (pre.data); their pre-image output has a
+    // different layout, so the generic dataHash field is not the thing to sign (SPEC §7).
+    let digest = [Blockchain.solana, .theOpenNetwork, .aptos].contains(coin.blockchain) ? pre.data : pre.dataHash
     guard let signature = key.sign(digest: digest, curve: coin.curve) else { throw WalletError.crypto("signing failed") }
     let output = TransactionCompiler.compileWithSignatures(
       coinType: coin, txInputData: input,

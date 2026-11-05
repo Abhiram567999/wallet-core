@@ -2,9 +2,10 @@
 // signTransaction (pre-image hash → sign in secure hardware → compile), and
 // reads the SigningOutputs back. docs/SPEC.md §7.
 
-import { sha256 } from '@noble/hashes/sha2.js';
+import { blake2b } from '@noble/hashes/blake2.js';
+import { sha256, sha512 } from '@noble/hashes/sha2.js';
 import { TW } from './proto/tw.js';
-import { fromBase64, toBase64, toHex } from './encoding.ts';
+import { concat, fromBase64, toBase64, toHex } from './encoding.ts';
 
 /** bigint → minimal big-endian bytes (0 → empty), as Trust Wallet Core expects for amounts. */
 export function bigToBytes(v: bigint): Uint8Array {
@@ -463,4 +464,382 @@ export function cosmosOutput(b64: string): { txBytes: string; txid: string } {
   }
   if (typeof txBytes !== 'string' || !txBytes) throw new Error('cosmos signing output has no tx_bytes');
   return { txBytes, txid: toHex(sha256(fromBase64(txBytes))).toUpperCase() };
+}
+
+// MARK: Network group 2 (Nov 2026): XRP, Stellar, Polkadot, NEAR, TON, Aptos, Sui, Cardano.
+// The native signer fills in the wallet's public key and checks the sender
+// where a chain has one (build 12). Stellar, Polkadot, Sui and Cardano also
+// sign on older builds (checked: same bytes as Trust Wallet's own signer).
+
+const signingError = (out: { error?: number | null; errorMessage?: string | null }, chain: string) => {
+  if (out.error || out.errorMessage) throw new Error(out.errorMessage || `${chain} signing error ${out.error}`);
+};
+
+/** Little-endian bytes of a fixed width (NEAR amounts are u128 LE). */
+function leBytes(v: bigint, width: number): Uint8Array {
+  if (v < 0n || v >= 1n << BigInt(width * 8)) throw new RangeError('amount out of range');
+  const out = new Uint8Array(width);
+  for (let i = 0; i < width; i++) out[i] = Number((v >> BigInt(i * 8)) & 0xffn);
+  return out;
+}
+
+// XRP Ledger
+
+export interface XrpPayment {
+  account: string; // sender r-address (the native signer checks it is the wallet's own)
+  to: string;
+  amount: bigint; // drops
+  fee: bigint; // drops
+  sequence: number;
+  lastLedgerSequence: number;
+  destinationTag?: number;
+  /** THORChain swap memo; sent as Memos[0].MemoData (hex). */
+  memo?: string;
+}
+
+export function xrpPaymentInput(p: XrpPayment): string {
+  const P = TW.Ripple.Proto;
+  if (p.memo !== undefined) {
+    // Trust Wallet's Payment operation has no memo field, so a payment with a memo is raw JSON.
+    const tx: Record<string, unknown> = {
+      TransactionType: 'Payment',
+      Account: p.account,
+      Destination: p.to,
+      Amount: amountString(p.amount),
+      Fee: amountString(p.fee),
+      Sequence: p.sequence,
+      LastLedgerSequence: p.lastLedgerSequence,
+      Flags: 0,
+      Memos: [{ Memo: { MemoData: toHex(new TextEncoder().encode(p.memo)).toUpperCase() } }],
+    };
+    if (p.destinationTag !== undefined) tx.DestinationTag = p.destinationTag;
+    return enc(P.SigningInput.encode(P.SigningInput.create({ rawJson: JSON.stringify(tx) })));
+  }
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        account: p.account,
+        fee: u64(p.fee, 'fee'),
+        sequence: p.sequence,
+        lastLedgerSequence: p.lastLedgerSequence,
+        opPayment: {
+          destination: p.to,
+          amount: u64(p.amount, 'amount'),
+          ...(p.destinationTag !== undefined ? { destinationTag: p.destinationTag } : {}),
+        },
+      }),
+    ),
+  );
+}
+
+/** Signed blob (upper-case hex, for `submit`) and its hash (SHA-512Half of "TXN\0" + blob). */
+export function xrpOutput(b64: string): { blob: string; txid: string } {
+  const out = TW.Ripple.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'xrp');
+  const txid = toHex(sha512(concat(new Uint8Array([0x54, 0x58, 0x4e, 0x00]), out.encoded)).slice(0, 32)).toUpperCase();
+  return { blob: toHex(out.encoded).toUpperCase(), txid };
+}
+
+// Stellar
+
+export const STELLAR_PUBLIC = 'Public Global Stellar Network ; September 2015';
+
+export interface StellarPayment {
+  account: string; // sender G-address
+  to: string;
+  amount: bigint; // stroops
+  fee: number; // stroops per operation
+  sequence: bigint; // the account's current sequence + 1
+  /** The receiver has no account yet: create it (amount must cover the 1 XLM minimum). */
+  createAccount: boolean;
+  memo?: { text: string } | { id: bigint };
+  /** Unix seconds after which the network refuses the transaction. */
+  validUntil?: number;
+}
+
+export function stellarPaymentInput(p: StellarPayment): string {
+  const P = TW.Stellar.Proto;
+  const memo = !p.memo ? {} : 'text' in p.memo ? { memoText: { text: p.memo.text } } : { memoId: { id: u64(p.memo.id, 'memo id') } };
+  const op = p.createAccount
+    ? { opCreateAccount: { destination: p.to, amount: u64(p.amount, 'amount') } }
+    : { opPayment: { destination: p.to, amount: u64(p.amount, 'amount') } };
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        account: p.account,
+        fee: p.fee,
+        sequence: u64(p.sequence, 'sequence'),
+        passphrase: STELLAR_PUBLIC,
+        ...op,
+        ...memo,
+        ...(p.validUntil ? { timeBounds: p.validUntil } : {}),
+      }),
+    ),
+  );
+}
+
+/** Signed transaction envelope (base64 XDR) for Horizon POST /transactions. */
+export function stellarOutput(b64: string): { xdr: string } {
+  const out = TW.Stellar.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'stellar');
+  if (!out.signature) throw new Error('stellar signing output is empty');
+  return { xdr: out.signature };
+}
+
+// Polkadot (DOT on Polkadot Asset Hub since the Nov 2025 migration)
+
+export interface PolkadotTransfer {
+  to: string;
+  amount: bigint; // planck (10 decimals)
+  nonce: number | bigint;
+  genesisHash: string; // 0x…
+  /** Checkpoint block for the era (mortal transaction). */
+  blockHash: string;
+  blockNumber: number;
+  specVersion: number;
+  transactionVersion: number;
+  /** Balances pallet and transfer_keep_alive call on the runtime (read from metadata). */
+  callIndex: { module: number; method: number };
+  /** Asset Hub charges fees with ChargeAssetTxPayment. */
+  assetTxPayment: boolean;
+}
+
+export function polkadotTransferInput(p: PolkadotTransfer): string {
+  const P = TW.Polkadot.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        genesisHash: hexToBytes(p.genesisHash),
+        blockHash: hexToBytes(p.blockHash),
+        era: { blockNumber: u64(p.blockNumber, 'block number'), period: 64 },
+        nonce: u64(p.nonce, 'nonce'),
+        specVersion: p.specVersion,
+        transactionVersion: p.transactionVersion,
+        network: 0,
+        multiAddress: true,
+        chargeNativeAsAssetTxPayment: p.assetTxPayment,
+        balanceCall: {
+          transfer: {
+            toAddress: p.to,
+            value: bigToBytes(p.amount),
+            callIndices: { custom: { moduleIndex: p.callIndex.module, methodIndex: p.callIndex.method } },
+          },
+        },
+      }),
+    ),
+  );
+}
+
+/** Signed extrinsic (0x hex, for author_submitExtrinsic) and its hash (BLAKE2b-256). */
+export function polkadotOutput(b64: string): { extrinsic: string; txid: string } {
+  const out = TW.Polkadot.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'polkadot');
+  return { extrinsic: `0x${toHex(out.encoded)}`, txid: `0x${toHex(blake2b(out.encoded, { dkLen: 32 }))}` };
+}
+
+// NEAR
+
+export interface NearTransfer {
+  signer: string; // the wallet's implicit account (64 hex)
+  to: string; // implicit or named account
+  amount: bigint; // yoctoNEAR
+  nonce: bigint; // access key nonce + 1
+  blockHash: Uint8Array; // recent block hash (32 bytes, base58-decoded)
+}
+
+export function nearTransferInput(p: NearTransfer): string {
+  const P = TW.NEAR.Proto;
+  if (p.blockHash.length !== 32) throw new Error('bad block hash');
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        signerId: p.signer,
+        receiverId: p.to,
+        nonce: u64(p.nonce, 'nonce'),
+        blockHash: p.blockHash,
+        actions: [{ transfer: { deposit: leBytes(p.amount, 16) } }],
+      }),
+    ),
+  );
+}
+
+/** Signed transaction (base64, for send_tx). The native path has no hash; send_tx returns it. */
+export function nearOutput(b64: string): { tx: string } {
+  const out = TW.NEAR.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'near');
+  if (!out.signedTransaction.length) throw new Error('near signing output is empty');
+  return { tx: toBase64(out.signedTransaction) };
+}
+
+// TON (coin: Gram)
+
+export interface TonTransfer {
+  to: string; // user-friendly address
+  amount: bigint; // nanoton; for a jetton: the GRAM attached to pay the jetton wallet's fees
+  seqno: number; // 0 = first send (the native signer deploys the wallet)
+  expireAt: number; // unix seconds
+  comment?: string;
+  /** The receiver is a wallet that already exists (bounce back if it doesn't). */
+  bounceable: boolean;
+  /** Send a jetton (e.g. USDT): `to` is OUR jetton wallet, `owner` the receiver's main address. */
+  jetton?: { amount: bigint; owner: string; responseAddress: string; queryId?: bigint };
+  /** 2 = send everything (mode 128 + ignore errors). */
+  sendAll?: boolean;
+}
+
+export function tonTransferInput(p: TonTransfer): string {
+  const P = TW.TheOpenNetwork.Proto;
+  const message = {
+    dest: p.to,
+    amount: bigToBytes(p.amount),
+    // 3 = pay fees separately + ignore errors; 128 + 2 = carry the whole balance.
+    mode: p.sendAll ? 130 : 3,
+    bounceable: p.bounceable,
+    ...(p.comment && !p.jetton ? { comment: p.comment } : {}),
+    ...(p.jetton
+      ? {
+          jettonTransfer: {
+            queryId: u64(p.jetton.queryId ?? 0n, 'query id'),
+            jettonAmount: bigToBytes(p.jetton.amount),
+            toOwner: p.jetton.owner,
+            responseAddress: p.jetton.responseAddress,
+            forwardAmount: bigToBytes(1n), // 1 nanoton: the receiver gets a "transfer notification"
+          },
+        }
+      : {}),
+  };
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        messages: [message],
+        sequenceNumber: p.seqno,
+        expireAt: p.expireAt,
+        walletVersion: P.WalletVersion.WALLET_V4_R2, // the address Trust Wallet Core derives
+      }),
+    ),
+  );
+}
+
+/** Signed external message (base64 BOC, for sendBoc) and the message hash. */
+export function tonOutput(b64: string): { boc: string; hash: string } {
+  const out = TW.TheOpenNetwork.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'ton');
+  return { boc: out.encoded, hash: toHex(out.hash) };
+}
+
+// Aptos
+
+export interface AptosTransfer {
+  sender: string;
+  to: string;
+  amount: bigint; // octas
+  sequenceNumber: bigint;
+  maxGasAmount: bigint;
+  gasUnitPrice: bigint;
+  expireAt: number; // unix seconds
+}
+
+export function aptosTransferInput(p: AptosTransfer): string {
+  const P = TW.Aptos.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        sender: p.sender,
+        sequenceNumber: u64(p.sequenceNumber, 'sequence'),
+        maxGasAmount: u64(p.maxGasAmount, 'gas'),
+        gasUnitPrice: u64(p.gasUnitPrice, 'gas price'),
+        expirationTimestampSecs: p.expireAt,
+        chainId: 1,
+        transfer: { to: p.to, amount: u64(p.amount, 'amount') },
+      }),
+    ),
+  );
+}
+
+/** Signed transaction (BCS bytes, POST as application/x.aptos.signed_transaction+bcs). */
+export function aptosOutput(b64: string): { bcs: Uint8Array } {
+  const out = TW.Aptos.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'aptos');
+  return { bcs: out.encoded };
+}
+
+// Sui
+
+export interface SuiCoinRef {
+  objectId: string;
+  version: bigint;
+  digest: string; // base58
+}
+
+export interface SuiTransfer {
+  signer: string;
+  to: string;
+  amount: bigint; // MIST
+  /** The wallet's SUI coins; the first also pays gas. */
+  coins: SuiCoinRef[];
+  gasBudget: bigint;
+  gasPrice: bigint;
+  /** Send all SUI (amount ignored). */
+  sendAll?: boolean;
+}
+
+export function suiTransferInput(p: SuiTransfer): string {
+  const P = TW.Sui.Proto;
+  if (p.coins.length === 0) throw new Error('no SUI coins');
+  const refs = p.coins.map((c) => ({ objectId: c.objectId, version: u64(c.version, 'version'), objectDigest: c.digest }));
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        signer: p.signer,
+        ...(p.sendAll ? { payAllSui: { inputCoins: refs, recipient: p.to } } : { paySui: { inputCoins: refs, recipients: [p.to], amounts: [u64(p.amount, 'amount')] } }),
+        gasBudget: u64(p.gasBudget, 'gas budget'),
+        referenceGasPrice: u64(p.gasPrice, 'gas price'),
+      }),
+    ),
+  );
+}
+
+/** Transaction bytes and signature (both base64) for executeTransaction. */
+export function suiOutput(b64: string): { txBytes: string; signature: string } {
+  const out = TW.Sui.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'sui');
+  return { txBytes: out.unsignedTx, signature: out.signature };
+}
+
+// Cardano
+
+export interface CardanoUtxo {
+  txHash: string; // hex
+  index: number;
+  amount: bigint; // lovelace (UTXOs holding native tokens are left out by the app)
+}
+
+export interface CardanoTransfer {
+  from: string; // the wallet's base address (also change; the native signer forces it)
+  to: string;
+  amount: bigint; // lovelace
+  utxos: CardanoUtxo[];
+  ttl: number; // absolute slot
+  sendAll?: boolean;
+}
+
+export function cardanoTransferInput(p: CardanoTransfer): string {
+  const P = TW.Cardano.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        utxos: p.utxos.map((u) => ({ outPoint: { txHash: hexToBytes(u.txHash), outputIndex: u.index }, address: p.from, amount: u64(u.amount, 'utxo amount') })),
+        transferMessage: { toAddress: p.to, changeAddress: p.from, amount: u64(p.amount, 'amount'), useMaxAmount: !!p.sendAll },
+        ttl: p.ttl,
+      }),
+    ),
+  );
+}
+
+/** Signed transaction (CBOR hex, for submittx). The native path has no id; submittx returns it. */
+export function cardanoOutput(b64: string): { cbor: string } {
+  const out = TW.Cardano.Proto.SigningOutput.decode(fromBase64(b64));
+  signingError(out, 'cardano');
+  if (!out.encoded.length) throw new Error('cardano signing output is empty');
+  return { cbor: toHex(out.encoded) };
 }

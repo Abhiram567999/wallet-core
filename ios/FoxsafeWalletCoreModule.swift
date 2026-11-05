@@ -172,6 +172,9 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("signCosmos") { (id: String, coin: Int, input: String, account: Int?) in
       try run { try self.store.signCosmos(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account)) }
     }
+    AsyncFunction("signNetwork") { (id: String, coin: Int, input: String, account: Int?) in
+      try run { try self.store.signNetwork(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account)) }
+    }
     AsyncFunction("signGaslessEvm") { (id: String, coin: Int, typedData: String, request: String, account: Int?) in
       try run { try self.store.signGaslessEvm(id: id, coin: try u32(coin), typedData: typedData, request: request, account: try idx(account)) }
     }

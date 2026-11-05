@@ -348,3 +348,36 @@ runs this path on all 14 supported Cosmos-family chains and must equal Trust
 Wallet Core's own signer byte for byte; it also reproduces Trust Wallet
 Core's THORChain Protobuf test transaction. Builds without `signCosmos`
 (`canSignCosmos()` is false) can show balances and receive, but not send.
+
+### 7.6 XRP, Stellar, Polkadot, NEAR, TON, Aptos, Sui, Cardano
+
+These networks go through `signNetwork(id, coin, input, account?)` (build 12
+on). The app builds the input with the builders in `src/tx.ts`
+(`xrpPaymentInput`, `stellarPaymentInput`, `polkadotTransferInput`,
+`nearTransferInput`, `tonTransferInput`, `aptosTransferInput`,
+`suiTransferInput`, `cardanoTransferInput`), with no key and no public key.
+The native module:
+
+1. refuses anything but one plain transfer of the network's own coin — on
+   XRP a Payment of XRP drops (a memo payment is raw JSON limited to the
+   Payment fields, no flags); on Stellar a native payment or create-account;
+   on Polkadot a balances transfer; on NEAR one Transfer action; on TON one
+   message (plain, or a jetton transfer) with no state-init or custom
+   payload, wallet v4R2; on Aptos an APT transfer; on Sui paySui / payAllSui;
+   on Cardano a transfer with no plan, staking, extra outputs or metadata —
+   checked before Face ID,
+2. asks for Face ID and derives the coin's key,
+3. checks the sender is this wallet where the chain names one (XRP
+   `Account`, Stellar `account`, NEAR `signer_id`, Aptos `sender`, Sui
+   `signer`); Polkadot and TON have no sender field (the key itself decides
+   the account),
+4. fills in what the app can't: the public key (XRP, NEAR and TON need it in
+   the pre-image) and, on Cardano, the change address and every input's
+   address, forced to the wallet's own (like Bitcoin, §7.1),
+5. runs steps 3–5 of §7. TON and Aptos sign the whole message (`data`), like
+   Solana; the others sign `dataHash`.
+
+`test/network.test.ts` runs every builder through this path and must equal
+Trust Wallet Core's own signer byte for byte. Stellar, Polkadot and Sui also
+sign correctly through the older `signTransaction` (no sender check), so the
+app may use it on build 11; XRP, NEAR, TON, Aptos and Cardano need build 12.

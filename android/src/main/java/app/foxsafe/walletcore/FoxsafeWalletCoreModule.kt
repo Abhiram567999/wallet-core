@@ -152,6 +152,9 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("signCosmos") { id: String, coin: Int, input: String, account: Int? ->
       call { store.signCosmos(id, coin, input, account ?: 0, activity) }
     }
+    AsyncFunction("signNetwork") { id: String, coin: Int, input: String, account: Int? ->
+      call { store.signNetwork(id, coin, input, account ?: 0, activity) }
+    }
     AsyncFunction("signGaslessEvm") { id: String, coin: Int, typedData: String, request: String, account: Int? ->
       call { store.signGaslessEvm(id, coin, typedData, request, account ?: 0, activity) }
     }

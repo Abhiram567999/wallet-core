@@ -115,6 +115,11 @@ export interface NativeWalletCore {
    * Builds from 2026-11 (build 11) on.
    */
   signCosmos?(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
+  /**
+   * XRP, Stellar, Polkadot, NEAR, TON, Aptos, Sui, Cardano: one plain transfer, checked
+   * and completed (public key, sender, Cardano change) natively. Build 12 on.
+   */
+  signNetwork?(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
@@ -244,6 +249,14 @@ export const canSignCosmos = () => typeof native?.signCosmos === 'function';
 export async function signCosmos(id: string, coin: CoinType, input: string, account?: number): Promise<string> {
   if (!native?.signCosmos) throw new Error('UNAVAILABLE: this app build cannot sign on this network yet');
   return native.signCosmos(id, coin, input, account);
+}
+
+/** True when this build signs XRP, Stellar, Polkadot, NEAR, TON, Aptos, Sui and Cardano natively (build 12). */
+export const canSignNetwork = () => typeof native?.signNetwork === 'function';
+
+export async function signNetwork(id: string, coin: CoinType, input: string, account?: number): Promise<string> {
+  if (!native?.signNetwork) throw new Error('UNAVAILABLE: this app build cannot sign on this network yet');
+  return native.signNetwork(id, coin, input, account);
 }
 
 /** True when this build has the backup password (backup file, later cloud backup). */
