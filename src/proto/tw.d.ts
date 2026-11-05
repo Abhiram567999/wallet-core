@@ -4125,6 +4125,2572 @@ export namespace TW {
         }
     }
 
+    /** Namespace Cosmos. */
+    namespace Cosmos {
+
+        /** Namespace Proto. */
+        namespace Proto {
+
+            /** Properties of an Amount. */
+            interface IAmount {
+
+                /** Amount denom */
+                denom?: (string|null);
+
+                /** Amount amount */
+                amount?: (string|null);
+            }
+
+            /** Represents an Amount. */
+            class Amount implements IAmount {
+
+                /**
+                 * Constructs a new Amount.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.IAmount);
+
+                /** Amount denom. */
+                public denom: string;
+
+                /** Amount amount. */
+                public amount: string;
+
+                /**
+                 * Creates a new Amount instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Amount instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.IAmount): TW.Cosmos.Proto.Amount;
+
+                /**
+                 * Encodes the specified Amount message. Does not implicitly {@link TW.Cosmos.Proto.Amount.verify|verify} messages.
+                 * @param message Amount message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.IAmount, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an Amount message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Amount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Amount;
+
+                /**
+                 * Gets the default type url for Amount
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Fee. */
+            interface IFee {
+
+                /** Fee amounts */
+                amounts?: (TW.Cosmos.Proto.IAmount[]|null);
+
+                /** Fee gas */
+                gas?: (number|null);
+            }
+
+            /** Represents a Fee. */
+            class Fee implements IFee {
+
+                /**
+                 * Constructs a new Fee.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.IFee);
+
+                /** Fee amounts. */
+                public amounts: TW.Cosmos.Proto.IAmount[];
+
+                /** Fee gas. */
+                public gas: number;
+
+                /**
+                 * Creates a new Fee instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Fee instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.IFee): TW.Cosmos.Proto.Fee;
+
+                /**
+                 * Encodes the specified Fee message. Does not implicitly {@link TW.Cosmos.Proto.Fee.verify|verify} messages.
+                 * @param message Fee message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.IFee, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Fee message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Fee
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Fee;
+
+                /**
+                 * Gets the default type url for Fee
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of an Height. */
+            interface IHeight {
+
+                /** Height revisionNumber */
+                revisionNumber?: (number|null);
+
+                /** Height revisionHeight */
+                revisionHeight?: (number|null);
+            }
+
+            /** Represents an Height. */
+            class Height implements IHeight {
+
+                /**
+                 * Constructs a new Height.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.IHeight);
+
+                /** Height revisionNumber. */
+                public revisionNumber: number;
+
+                /** Height revisionHeight. */
+                public revisionHeight: number;
+
+                /**
+                 * Creates a new Height instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Height instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.IHeight): TW.Cosmos.Proto.Height;
+
+                /**
+                 * Encodes the specified Height message. Does not implicitly {@link TW.Cosmos.Proto.Height.verify|verify} messages.
+                 * @param message Height message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.IHeight, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an Height message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Height
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Height;
+
+                /**
+                 * Gets the default type url for Height
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** BroadcastMode enum. */
+            enum BroadcastMode {
+                BLOCK = 0,
+                SYNC = 1,
+                ASYNC = 2
+            }
+
+            /** Properties of a THORChainAsset. */
+            interface ITHORChainAsset {
+
+                /** THORChainAsset chain */
+                chain?: (string|null);
+
+                /** THORChainAsset symbol */
+                symbol?: (string|null);
+
+                /** THORChainAsset ticker */
+                ticker?: (string|null);
+
+                /** THORChainAsset synth */
+                synth?: (boolean|null);
+
+                /** THORChainAsset trade */
+                trade?: (boolean|null);
+
+                /** THORChainAsset secured */
+                secured?: (boolean|null);
+            }
+
+            /** Represents a THORChainAsset. */
+            class THORChainAsset implements ITHORChainAsset {
+
+                /**
+                 * Constructs a new THORChainAsset.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.ITHORChainAsset);
+
+                /** THORChainAsset chain. */
+                public chain: string;
+
+                /** THORChainAsset symbol. */
+                public symbol: string;
+
+                /** THORChainAsset ticker. */
+                public ticker: string;
+
+                /** THORChainAsset synth. */
+                public synth: boolean;
+
+                /** THORChainAsset trade. */
+                public trade: boolean;
+
+                /** THORChainAsset secured. */
+                public secured: boolean;
+
+                /**
+                 * Creates a new THORChainAsset instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns THORChainAsset instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.ITHORChainAsset): TW.Cosmos.Proto.THORChainAsset;
+
+                /**
+                 * Encodes the specified THORChainAsset message. Does not implicitly {@link TW.Cosmos.Proto.THORChainAsset.verify|verify} messages.
+                 * @param message THORChainAsset message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.ITHORChainAsset, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a THORChainAsset message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns THORChainAsset
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.THORChainAsset;
+
+                /**
+                 * Gets the default type url for THORChainAsset
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a THORChainCoin. */
+            interface ITHORChainCoin {
+
+                /** THORChainCoin asset */
+                asset?: (TW.Cosmos.Proto.ITHORChainAsset|null);
+
+                /** THORChainCoin amount */
+                amount?: (string|null);
+
+                /** THORChainCoin decimals */
+                decimals?: (number|null);
+            }
+
+            /** Represents a THORChainCoin. */
+            class THORChainCoin implements ITHORChainCoin {
+
+                /**
+                 * Constructs a new THORChainCoin.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.ITHORChainCoin);
+
+                /** THORChainCoin asset. */
+                public asset?: (TW.Cosmos.Proto.ITHORChainAsset|null);
+
+                /** THORChainCoin amount. */
+                public amount: string;
+
+                /** THORChainCoin decimals. */
+                public decimals: number;
+
+                /**
+                 * Creates a new THORChainCoin instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns THORChainCoin instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.ITHORChainCoin): TW.Cosmos.Proto.THORChainCoin;
+
+                /**
+                 * Encodes the specified THORChainCoin message. Does not implicitly {@link TW.Cosmos.Proto.THORChainCoin.verify|verify} messages.
+                 * @param message THORChainCoin message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.ITHORChainCoin, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a THORChainCoin message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns THORChainCoin
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.THORChainCoin;
+
+                /**
+                 * Gets the default type url for THORChainCoin
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a Message. */
+            interface IMessage {
+
+                /** Message sendCoinsMessage */
+                sendCoinsMessage?: (TW.Cosmos.Proto.Message.ISend|null);
+
+                /** Message transferTokensMessage */
+                transferTokensMessage?: (TW.Cosmos.Proto.Message.ITransfer|null);
+
+                /** Message stakeMessage */
+                stakeMessage?: (TW.Cosmos.Proto.Message.IDelegate|null);
+
+                /** Message unstakeMessage */
+                unstakeMessage?: (TW.Cosmos.Proto.Message.IUndelegate|null);
+
+                /** Message restakeMessage */
+                restakeMessage?: (TW.Cosmos.Proto.Message.IBeginRedelegate|null);
+
+                /** Message withdrawStakeRewardMessage */
+                withdrawStakeRewardMessage?: (TW.Cosmos.Proto.Message.IWithdrawDelegationReward|null);
+
+                /** Message rawJsonMessage */
+                rawJsonMessage?: (TW.Cosmos.Proto.Message.IRawJSON|null);
+
+                /** Message wasmTerraExecuteContractTransferMessage */
+                wasmTerraExecuteContractTransferMessage?: (TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer|null);
+
+                /** Message wasmTerraExecuteContractSendMessage */
+                wasmTerraExecuteContractSendMessage?: (TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend|null);
+
+                /** Message thorchainSendMessage */
+                thorchainSendMessage?: (TW.Cosmos.Proto.Message.ITHORChainSend|null);
+
+                /** Message wasmTerraExecuteContractGeneric */
+                wasmTerraExecuteContractGeneric?: (TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric|null);
+
+                /** Message wasmExecuteContractTransferMessage */
+                wasmExecuteContractTransferMessage?: (TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer|null);
+
+                /** Message wasmExecuteContractSendMessage */
+                wasmExecuteContractSendMessage?: (TW.Cosmos.Proto.Message.IWasmExecuteContractSend|null);
+
+                /** Message wasmExecuteContractGeneric */
+                wasmExecuteContractGeneric?: (TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric|null);
+
+                /** Message signDirectMessage */
+                signDirectMessage?: (TW.Cosmos.Proto.Message.ISignDirect|null);
+
+                /** Message authGrant */
+                authGrant?: (TW.Cosmos.Proto.Message.IAuthGrant|null);
+
+                /** Message authRevoke */
+                authRevoke?: (TW.Cosmos.Proto.Message.IAuthRevoke|null);
+
+                /** Message setWithdrawAddressMessage */
+                setWithdrawAddressMessage?: (TW.Cosmos.Proto.Message.ISetWithdrawAddress|null);
+
+                /** Message msgVote */
+                msgVote?: (TW.Cosmos.Proto.Message.IMsgVote|null);
+
+                /** Message msgStrideLiquidStakingStake */
+                msgStrideLiquidStakingStake?: (TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake|null);
+
+                /** Message msgStrideLiquidStakingRedeem */
+                msgStrideLiquidStakingRedeem?: (TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem|null);
+
+                /** Message thorchainDepositMessage */
+                thorchainDepositMessage?: (TW.Cosmos.Proto.Message.ITHORChainDeposit|null);
+
+                /** Message wasmInstantiateContractMessage */
+                wasmInstantiateContractMessage?: (TW.Cosmos.Proto.Message.IWasmInstantiateContract|null);
+            }
+
+            /** Represents a Message. */
+            class Message implements IMessage {
+
+                /**
+                 * Constructs a new Message.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.IMessage);
+
+                /** Message sendCoinsMessage. */
+                public sendCoinsMessage?: (TW.Cosmos.Proto.Message.ISend|null);
+
+                /** Message transferTokensMessage. */
+                public transferTokensMessage?: (TW.Cosmos.Proto.Message.ITransfer|null);
+
+                /** Message stakeMessage. */
+                public stakeMessage?: (TW.Cosmos.Proto.Message.IDelegate|null);
+
+                /** Message unstakeMessage. */
+                public unstakeMessage?: (TW.Cosmos.Proto.Message.IUndelegate|null);
+
+                /** Message restakeMessage. */
+                public restakeMessage?: (TW.Cosmos.Proto.Message.IBeginRedelegate|null);
+
+                /** Message withdrawStakeRewardMessage. */
+                public withdrawStakeRewardMessage?: (TW.Cosmos.Proto.Message.IWithdrawDelegationReward|null);
+
+                /** Message rawJsonMessage. */
+                public rawJsonMessage?: (TW.Cosmos.Proto.Message.IRawJSON|null);
+
+                /** Message wasmTerraExecuteContractTransferMessage. */
+                public wasmTerraExecuteContractTransferMessage?: (TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer|null);
+
+                /** Message wasmTerraExecuteContractSendMessage. */
+                public wasmTerraExecuteContractSendMessage?: (TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend|null);
+
+                /** Message thorchainSendMessage. */
+                public thorchainSendMessage?: (TW.Cosmos.Proto.Message.ITHORChainSend|null);
+
+                /** Message wasmTerraExecuteContractGeneric. */
+                public wasmTerraExecuteContractGeneric?: (TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric|null);
+
+                /** Message wasmExecuteContractTransferMessage. */
+                public wasmExecuteContractTransferMessage?: (TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer|null);
+
+                /** Message wasmExecuteContractSendMessage. */
+                public wasmExecuteContractSendMessage?: (TW.Cosmos.Proto.Message.IWasmExecuteContractSend|null);
+
+                /** Message wasmExecuteContractGeneric. */
+                public wasmExecuteContractGeneric?: (TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric|null);
+
+                /** Message signDirectMessage. */
+                public signDirectMessage?: (TW.Cosmos.Proto.Message.ISignDirect|null);
+
+                /** Message authGrant. */
+                public authGrant?: (TW.Cosmos.Proto.Message.IAuthGrant|null);
+
+                /** Message authRevoke. */
+                public authRevoke?: (TW.Cosmos.Proto.Message.IAuthRevoke|null);
+
+                /** Message setWithdrawAddressMessage. */
+                public setWithdrawAddressMessage?: (TW.Cosmos.Proto.Message.ISetWithdrawAddress|null);
+
+                /** Message msgVote. */
+                public msgVote?: (TW.Cosmos.Proto.Message.IMsgVote|null);
+
+                /** Message msgStrideLiquidStakingStake. */
+                public msgStrideLiquidStakingStake?: (TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake|null);
+
+                /** Message msgStrideLiquidStakingRedeem. */
+                public msgStrideLiquidStakingRedeem?: (TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem|null);
+
+                /** Message thorchainDepositMessage. */
+                public thorchainDepositMessage?: (TW.Cosmos.Proto.Message.ITHORChainDeposit|null);
+
+                /** Message wasmInstantiateContractMessage. */
+                public wasmInstantiateContractMessage?: (TW.Cosmos.Proto.Message.IWasmInstantiateContract|null);
+
+                /** Message messageOneof. */
+                public messageOneof?: ("sendCoinsMessage"|"transferTokensMessage"|"stakeMessage"|"unstakeMessage"|"restakeMessage"|"withdrawStakeRewardMessage"|"rawJsonMessage"|"wasmTerraExecuteContractTransferMessage"|"wasmTerraExecuteContractSendMessage"|"thorchainSendMessage"|"wasmTerraExecuteContractGeneric"|"wasmExecuteContractTransferMessage"|"wasmExecuteContractSendMessage"|"wasmExecuteContractGeneric"|"signDirectMessage"|"authGrant"|"authRevoke"|"setWithdrawAddressMessage"|"msgVote"|"msgStrideLiquidStakingStake"|"msgStrideLiquidStakingRedeem"|"thorchainDepositMessage"|"wasmInstantiateContractMessage");
+
+                /**
+                 * Creates a new Message instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns Message instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.IMessage): TW.Cosmos.Proto.Message;
+
+                /**
+                 * Encodes the specified Message message. Does not implicitly {@link TW.Cosmos.Proto.Message.verify|verify} messages.
+                 * @param message Message message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.IMessage, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Message message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Message
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message;
+
+                /**
+                 * Gets the default type url for Message
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            namespace Message {
+
+                /** Properties of a Send. */
+                interface ISend {
+
+                    /** Send fromAddress */
+                    fromAddress?: (string|null);
+
+                    /** Send toAddress */
+                    toAddress?: (string|null);
+
+                    /** Send amounts */
+                    amounts?: (TW.Cosmos.Proto.IAmount[]|null);
+
+                    /** Send typePrefix */
+                    typePrefix?: (string|null);
+                }
+
+                /** Represents a Send. */
+                class Send implements ISend {
+
+                    /**
+                     * Constructs a new Send.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.ISend);
+
+                    /** Send fromAddress. */
+                    public fromAddress: string;
+
+                    /** Send toAddress. */
+                    public toAddress: string;
+
+                    /** Send amounts. */
+                    public amounts: TW.Cosmos.Proto.IAmount[];
+
+                    /** Send typePrefix. */
+                    public typePrefix: string;
+
+                    /**
+                     * Creates a new Send instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Send instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.ISend): TW.Cosmos.Proto.Message.Send;
+
+                    /**
+                     * Encodes the specified Send message. Does not implicitly {@link TW.Cosmos.Proto.Message.Send.verify|verify} messages.
+                     * @param message Send message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.ISend, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Send message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Send
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.Send;
+
+                    /**
+                     * Gets the default type url for Send
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a Transfer. */
+                interface ITransfer {
+
+                    /** Transfer sourcePort */
+                    sourcePort?: (string|null);
+
+                    /** Transfer sourceChannel */
+                    sourceChannel?: (string|null);
+
+                    /** Transfer token */
+                    token?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** Transfer sender */
+                    sender?: (string|null);
+
+                    /** Transfer receiver */
+                    receiver?: (string|null);
+
+                    /** Transfer timeoutHeight */
+                    timeoutHeight?: (TW.Cosmos.Proto.IHeight|null);
+
+                    /** Transfer timeoutTimestamp */
+                    timeoutTimestamp?: (number|null);
+                }
+
+                /** Represents a Transfer. */
+                class Transfer implements ITransfer {
+
+                    /**
+                     * Constructs a new Transfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.ITransfer);
+
+                    /** Transfer sourcePort. */
+                    public sourcePort: string;
+
+                    /** Transfer sourceChannel. */
+                    public sourceChannel: string;
+
+                    /** Transfer token. */
+                    public token?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** Transfer sender. */
+                    public sender: string;
+
+                    /** Transfer receiver. */
+                    public receiver: string;
+
+                    /** Transfer timeoutHeight. */
+                    public timeoutHeight?: (TW.Cosmos.Proto.IHeight|null);
+
+                    /** Transfer timeoutTimestamp. */
+                    public timeoutTimestamp: number;
+
+                    /**
+                     * Creates a new Transfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Transfer instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.ITransfer): TW.Cosmos.Proto.Message.Transfer;
+
+                    /**
+                     * Encodes the specified Transfer message. Does not implicitly {@link TW.Cosmos.Proto.Message.Transfer.verify|verify} messages.
+                     * @param message Transfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.ITransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Transfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Transfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.Transfer;
+
+                    /**
+                     * Gets the default type url for Transfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a Delegate. */
+                interface IDelegate {
+
+                    /** Delegate delegatorAddress */
+                    delegatorAddress?: (string|null);
+
+                    /** Delegate validatorAddress */
+                    validatorAddress?: (string|null);
+
+                    /** Delegate amount */
+                    amount?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** Delegate typePrefix */
+                    typePrefix?: (string|null);
+                }
+
+                /** Represents a Delegate. */
+                class Delegate implements IDelegate {
+
+                    /**
+                     * Constructs a new Delegate.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IDelegate);
+
+                    /** Delegate delegatorAddress. */
+                    public delegatorAddress: string;
+
+                    /** Delegate validatorAddress. */
+                    public validatorAddress: string;
+
+                    /** Delegate amount. */
+                    public amount?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** Delegate typePrefix. */
+                    public typePrefix: string;
+
+                    /**
+                     * Creates a new Delegate instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Delegate instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IDelegate): TW.Cosmos.Proto.Message.Delegate;
+
+                    /**
+                     * Encodes the specified Delegate message. Does not implicitly {@link TW.Cosmos.Proto.Message.Delegate.verify|verify} messages.
+                     * @param message Delegate message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IDelegate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a Delegate message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Delegate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.Delegate;
+
+                    /**
+                     * Gets the default type url for Delegate
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of an Undelegate. */
+                interface IUndelegate {
+
+                    /** Undelegate delegatorAddress */
+                    delegatorAddress?: (string|null);
+
+                    /** Undelegate validatorAddress */
+                    validatorAddress?: (string|null);
+
+                    /** Undelegate amount */
+                    amount?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** Undelegate typePrefix */
+                    typePrefix?: (string|null);
+                }
+
+                /** Represents an Undelegate. */
+                class Undelegate implements IUndelegate {
+
+                    /**
+                     * Constructs a new Undelegate.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IUndelegate);
+
+                    /** Undelegate delegatorAddress. */
+                    public delegatorAddress: string;
+
+                    /** Undelegate validatorAddress. */
+                    public validatorAddress: string;
+
+                    /** Undelegate amount. */
+                    public amount?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** Undelegate typePrefix. */
+                    public typePrefix: string;
+
+                    /**
+                     * Creates a new Undelegate instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns Undelegate instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IUndelegate): TW.Cosmos.Proto.Message.Undelegate;
+
+                    /**
+                     * Encodes the specified Undelegate message. Does not implicitly {@link TW.Cosmos.Proto.Message.Undelegate.verify|verify} messages.
+                     * @param message Undelegate message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IUndelegate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes an Undelegate message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns Undelegate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.Undelegate;
+
+                    /**
+                     * Gets the default type url for Undelegate
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a BeginRedelegate. */
+                interface IBeginRedelegate {
+
+                    /** BeginRedelegate delegatorAddress */
+                    delegatorAddress?: (string|null);
+
+                    /** BeginRedelegate validatorSrcAddress */
+                    validatorSrcAddress?: (string|null);
+
+                    /** BeginRedelegate validatorDstAddress */
+                    validatorDstAddress?: (string|null);
+
+                    /** BeginRedelegate amount */
+                    amount?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** BeginRedelegate typePrefix */
+                    typePrefix?: (string|null);
+                }
+
+                /** Represents a BeginRedelegate. */
+                class BeginRedelegate implements IBeginRedelegate {
+
+                    /**
+                     * Constructs a new BeginRedelegate.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IBeginRedelegate);
+
+                    /** BeginRedelegate delegatorAddress. */
+                    public delegatorAddress: string;
+
+                    /** BeginRedelegate validatorSrcAddress. */
+                    public validatorSrcAddress: string;
+
+                    /** BeginRedelegate validatorDstAddress. */
+                    public validatorDstAddress: string;
+
+                    /** BeginRedelegate amount. */
+                    public amount?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** BeginRedelegate typePrefix. */
+                    public typePrefix: string;
+
+                    /**
+                     * Creates a new BeginRedelegate instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns BeginRedelegate instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IBeginRedelegate): TW.Cosmos.Proto.Message.BeginRedelegate;
+
+                    /**
+                     * Encodes the specified BeginRedelegate message. Does not implicitly {@link TW.Cosmos.Proto.Message.BeginRedelegate.verify|verify} messages.
+                     * @param message BeginRedelegate message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IBeginRedelegate, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a BeginRedelegate message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns BeginRedelegate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.BeginRedelegate;
+
+                    /**
+                     * Gets the default type url for BeginRedelegate
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a SetWithdrawAddress. */
+                interface ISetWithdrawAddress {
+
+                    /** SetWithdrawAddress delegatorAddress */
+                    delegatorAddress?: (string|null);
+
+                    /** SetWithdrawAddress withdrawAddress */
+                    withdrawAddress?: (string|null);
+
+                    /** SetWithdrawAddress typePrefix */
+                    typePrefix?: (string|null);
+                }
+
+                /** Represents a SetWithdrawAddress. */
+                class SetWithdrawAddress implements ISetWithdrawAddress {
+
+                    /**
+                     * Constructs a new SetWithdrawAddress.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.ISetWithdrawAddress);
+
+                    /** SetWithdrawAddress delegatorAddress. */
+                    public delegatorAddress: string;
+
+                    /** SetWithdrawAddress withdrawAddress. */
+                    public withdrawAddress: string;
+
+                    /** SetWithdrawAddress typePrefix. */
+                    public typePrefix: string;
+
+                    /**
+                     * Creates a new SetWithdrawAddress instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns SetWithdrawAddress instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.ISetWithdrawAddress): TW.Cosmos.Proto.Message.SetWithdrawAddress;
+
+                    /**
+                     * Encodes the specified SetWithdrawAddress message. Does not implicitly {@link TW.Cosmos.Proto.Message.SetWithdrawAddress.verify|verify} messages.
+                     * @param message SetWithdrawAddress message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.ISetWithdrawAddress, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a SetWithdrawAddress message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns SetWithdrawAddress
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.SetWithdrawAddress;
+
+                    /**
+                     * Gets the default type url for SetWithdrawAddress
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WithdrawDelegationReward. */
+                interface IWithdrawDelegationReward {
+
+                    /** WithdrawDelegationReward delegatorAddress */
+                    delegatorAddress?: (string|null);
+
+                    /** WithdrawDelegationReward validatorAddress */
+                    validatorAddress?: (string|null);
+
+                    /** WithdrawDelegationReward typePrefix */
+                    typePrefix?: (string|null);
+                }
+
+                /** Represents a WithdrawDelegationReward. */
+                class WithdrawDelegationReward implements IWithdrawDelegationReward {
+
+                    /**
+                     * Constructs a new WithdrawDelegationReward.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWithdrawDelegationReward);
+
+                    /** WithdrawDelegationReward delegatorAddress. */
+                    public delegatorAddress: string;
+
+                    /** WithdrawDelegationReward validatorAddress. */
+                    public validatorAddress: string;
+
+                    /** WithdrawDelegationReward typePrefix. */
+                    public typePrefix: string;
+
+                    /**
+                     * Creates a new WithdrawDelegationReward instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WithdrawDelegationReward instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWithdrawDelegationReward): TW.Cosmos.Proto.Message.WithdrawDelegationReward;
+
+                    /**
+                     * Encodes the specified WithdrawDelegationReward message. Does not implicitly {@link TW.Cosmos.Proto.Message.WithdrawDelegationReward.verify|verify} messages.
+                     * @param message WithdrawDelegationReward message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWithdrawDelegationReward, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WithdrawDelegationReward message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WithdrawDelegationReward
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WithdrawDelegationReward;
+
+                    /**
+                     * Gets the default type url for WithdrawDelegationReward
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmTerraExecuteContractTransfer. */
+                interface IWasmTerraExecuteContractTransfer {
+
+                    /** WasmTerraExecuteContractTransfer senderAddress */
+                    senderAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractTransfer contractAddress */
+                    contractAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractTransfer amount */
+                    amount?: (Uint8Array|null);
+
+                    /** WasmTerraExecuteContractTransfer recipientAddress */
+                    recipientAddress?: (string|null);
+                }
+
+                /** Represents a WasmTerraExecuteContractTransfer. */
+                class WasmTerraExecuteContractTransfer implements IWasmTerraExecuteContractTransfer {
+
+                    /**
+                     * Constructs a new WasmTerraExecuteContractTransfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer);
+
+                    /** WasmTerraExecuteContractTransfer senderAddress. */
+                    public senderAddress: string;
+
+                    /** WasmTerraExecuteContractTransfer contractAddress. */
+                    public contractAddress: string;
+
+                    /** WasmTerraExecuteContractTransfer amount. */
+                    public amount: Uint8Array;
+
+                    /** WasmTerraExecuteContractTransfer recipientAddress. */
+                    public recipientAddress: string;
+
+                    /**
+                     * Creates a new WasmTerraExecuteContractTransfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmTerraExecuteContractTransfer instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer): TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer;
+
+                    /**
+                     * Encodes the specified WasmTerraExecuteContractTransfer message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer.verify|verify} messages.
+                     * @param message WasmTerraExecuteContractTransfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmTerraExecuteContractTransfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmTerraExecuteContractTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer;
+
+                    /**
+                     * Gets the default type url for WasmTerraExecuteContractTransfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmTerraExecuteContractSend. */
+                interface IWasmTerraExecuteContractSend {
+
+                    /** WasmTerraExecuteContractSend senderAddress */
+                    senderAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractSend contractAddress */
+                    contractAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractSend amount */
+                    amount?: (Uint8Array|null);
+
+                    /** WasmTerraExecuteContractSend recipientContractAddress */
+                    recipientContractAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractSend msg */
+                    msg?: (string|null);
+
+                    /** WasmTerraExecuteContractSend coin */
+                    coin?: (string[]|null);
+                }
+
+                /** Represents a WasmTerraExecuteContractSend. */
+                class WasmTerraExecuteContractSend implements IWasmTerraExecuteContractSend {
+
+                    /**
+                     * Constructs a new WasmTerraExecuteContractSend.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend);
+
+                    /** WasmTerraExecuteContractSend senderAddress. */
+                    public senderAddress: string;
+
+                    /** WasmTerraExecuteContractSend contractAddress. */
+                    public contractAddress: string;
+
+                    /** WasmTerraExecuteContractSend amount. */
+                    public amount: Uint8Array;
+
+                    /** WasmTerraExecuteContractSend recipientContractAddress. */
+                    public recipientContractAddress: string;
+
+                    /** WasmTerraExecuteContractSend msg. */
+                    public msg: string;
+
+                    /** WasmTerraExecuteContractSend coin. */
+                    public coin: string[];
+
+                    /**
+                     * Creates a new WasmTerraExecuteContractSend instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmTerraExecuteContractSend instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend): TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend;
+
+                    /**
+                     * Encodes the specified WasmTerraExecuteContractSend message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend.verify|verify} messages.
+                     * @param message WasmTerraExecuteContractSend message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmTerraExecuteContractSend message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmTerraExecuteContractSend
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend;
+
+                    /**
+                     * Gets the default type url for WasmTerraExecuteContractSend
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a THORChainSend. */
+                interface ITHORChainSend {
+
+                    /** THORChainSend fromAddress */
+                    fromAddress?: (Uint8Array|null);
+
+                    /** THORChainSend toAddress */
+                    toAddress?: (Uint8Array|null);
+
+                    /** THORChainSend amounts */
+                    amounts?: (TW.Cosmos.Proto.IAmount[]|null);
+                }
+
+                /** Represents a THORChainSend. */
+                class THORChainSend implements ITHORChainSend {
+
+                    /**
+                     * Constructs a new THORChainSend.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.ITHORChainSend);
+
+                    /** THORChainSend fromAddress. */
+                    public fromAddress: Uint8Array;
+
+                    /** THORChainSend toAddress. */
+                    public toAddress: Uint8Array;
+
+                    /** THORChainSend amounts. */
+                    public amounts: TW.Cosmos.Proto.IAmount[];
+
+                    /**
+                     * Creates a new THORChainSend instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns THORChainSend instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.ITHORChainSend): TW.Cosmos.Proto.Message.THORChainSend;
+
+                    /**
+                     * Encodes the specified THORChainSend message. Does not implicitly {@link TW.Cosmos.Proto.Message.THORChainSend.verify|verify} messages.
+                     * @param message THORChainSend message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.ITHORChainSend, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a THORChainSend message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns THORChainSend
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.THORChainSend;
+
+                    /**
+                     * Gets the default type url for THORChainSend
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a THORChainDeposit. */
+                interface ITHORChainDeposit {
+
+                    /** THORChainDeposit coins */
+                    coins?: (TW.Cosmos.Proto.ITHORChainCoin[]|null);
+
+                    /** THORChainDeposit memo */
+                    memo?: (string|null);
+
+                    /** THORChainDeposit signer */
+                    signer?: (Uint8Array|null);
+                }
+
+                /** Represents a THORChainDeposit. */
+                class THORChainDeposit implements ITHORChainDeposit {
+
+                    /**
+                     * Constructs a new THORChainDeposit.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.ITHORChainDeposit);
+
+                    /** THORChainDeposit coins. */
+                    public coins: TW.Cosmos.Proto.ITHORChainCoin[];
+
+                    /** THORChainDeposit memo. */
+                    public memo: string;
+
+                    /** THORChainDeposit signer. */
+                    public signer: Uint8Array;
+
+                    /**
+                     * Creates a new THORChainDeposit instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns THORChainDeposit instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.ITHORChainDeposit): TW.Cosmos.Proto.Message.THORChainDeposit;
+
+                    /**
+                     * Encodes the specified THORChainDeposit message. Does not implicitly {@link TW.Cosmos.Proto.Message.THORChainDeposit.verify|verify} messages.
+                     * @param message THORChainDeposit message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.ITHORChainDeposit, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a THORChainDeposit message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns THORChainDeposit
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.THORChainDeposit;
+
+                    /**
+                     * Gets the default type url for THORChainDeposit
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmTerraExecuteContractGeneric. */
+                interface IWasmTerraExecuteContractGeneric {
+
+                    /** WasmTerraExecuteContractGeneric senderAddress */
+                    senderAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractGeneric contractAddress */
+                    contractAddress?: (string|null);
+
+                    /** WasmTerraExecuteContractGeneric executeMsg */
+                    executeMsg?: (string|null);
+
+                    /** WasmTerraExecuteContractGeneric coins */
+                    coins?: (TW.Cosmos.Proto.IAmount[]|null);
+                }
+
+                /** Represents a WasmTerraExecuteContractGeneric. */
+                class WasmTerraExecuteContractGeneric implements IWasmTerraExecuteContractGeneric {
+
+                    /**
+                     * Constructs a new WasmTerraExecuteContractGeneric.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric);
+
+                    /** WasmTerraExecuteContractGeneric senderAddress. */
+                    public senderAddress: string;
+
+                    /** WasmTerraExecuteContractGeneric contractAddress. */
+                    public contractAddress: string;
+
+                    /** WasmTerraExecuteContractGeneric executeMsg. */
+                    public executeMsg: string;
+
+                    /** WasmTerraExecuteContractGeneric coins. */
+                    public coins: TW.Cosmos.Proto.IAmount[];
+
+                    /**
+                     * Creates a new WasmTerraExecuteContractGeneric instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmTerraExecuteContractGeneric instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric): TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric;
+
+                    /**
+                     * Encodes the specified WasmTerraExecuteContractGeneric message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric.verify|verify} messages.
+                     * @param message WasmTerraExecuteContractGeneric message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmTerraExecuteContractGeneric message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmTerraExecuteContractGeneric
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric;
+
+                    /**
+                     * Gets the default type url for WasmTerraExecuteContractGeneric
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmExecuteContractTransfer. */
+                interface IWasmExecuteContractTransfer {
+
+                    /** WasmExecuteContractTransfer senderAddress */
+                    senderAddress?: (string|null);
+
+                    /** WasmExecuteContractTransfer contractAddress */
+                    contractAddress?: (string|null);
+
+                    /** WasmExecuteContractTransfer amount */
+                    amount?: (Uint8Array|null);
+
+                    /** WasmExecuteContractTransfer recipientAddress */
+                    recipientAddress?: (string|null);
+                }
+
+                /** Represents a WasmExecuteContractTransfer. */
+                class WasmExecuteContractTransfer implements IWasmExecuteContractTransfer {
+
+                    /**
+                     * Constructs a new WasmExecuteContractTransfer.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer);
+
+                    /** WasmExecuteContractTransfer senderAddress. */
+                    public senderAddress: string;
+
+                    /** WasmExecuteContractTransfer contractAddress. */
+                    public contractAddress: string;
+
+                    /** WasmExecuteContractTransfer amount. */
+                    public amount: Uint8Array;
+
+                    /** WasmExecuteContractTransfer recipientAddress. */
+                    public recipientAddress: string;
+
+                    /**
+                     * Creates a new WasmExecuteContractTransfer instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmExecuteContractTransfer instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer): TW.Cosmos.Proto.Message.WasmExecuteContractTransfer;
+
+                    /**
+                     * Encodes the specified WasmExecuteContractTransfer message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmExecuteContractTransfer.verify|verify} messages.
+                     * @param message WasmExecuteContractTransfer message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmExecuteContractTransfer message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmExecuteContractTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmExecuteContractTransfer;
+
+                    /**
+                     * Gets the default type url for WasmExecuteContractTransfer
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmExecuteContractSend. */
+                interface IWasmExecuteContractSend {
+
+                    /** WasmExecuteContractSend senderAddress */
+                    senderAddress?: (string|null);
+
+                    /** WasmExecuteContractSend contractAddress */
+                    contractAddress?: (string|null);
+
+                    /** WasmExecuteContractSend amount */
+                    amount?: (Uint8Array|null);
+
+                    /** WasmExecuteContractSend recipientContractAddress */
+                    recipientContractAddress?: (string|null);
+
+                    /** WasmExecuteContractSend msg */
+                    msg?: (string|null);
+
+                    /** WasmExecuteContractSend coin */
+                    coin?: (string[]|null);
+                }
+
+                /** Represents a WasmExecuteContractSend. */
+                class WasmExecuteContractSend implements IWasmExecuteContractSend {
+
+                    /**
+                     * Constructs a new WasmExecuteContractSend.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmExecuteContractSend);
+
+                    /** WasmExecuteContractSend senderAddress. */
+                    public senderAddress: string;
+
+                    /** WasmExecuteContractSend contractAddress. */
+                    public contractAddress: string;
+
+                    /** WasmExecuteContractSend amount. */
+                    public amount: Uint8Array;
+
+                    /** WasmExecuteContractSend recipientContractAddress. */
+                    public recipientContractAddress: string;
+
+                    /** WasmExecuteContractSend msg. */
+                    public msg: string;
+
+                    /** WasmExecuteContractSend coin. */
+                    public coin: string[];
+
+                    /**
+                     * Creates a new WasmExecuteContractSend instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmExecuteContractSend instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmExecuteContractSend): TW.Cosmos.Proto.Message.WasmExecuteContractSend;
+
+                    /**
+                     * Encodes the specified WasmExecuteContractSend message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmExecuteContractSend.verify|verify} messages.
+                     * @param message WasmExecuteContractSend message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmExecuteContractSend, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmExecuteContractSend message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmExecuteContractSend
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmExecuteContractSend;
+
+                    /**
+                     * Gets the default type url for WasmExecuteContractSend
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmExecuteContractGeneric. */
+                interface IWasmExecuteContractGeneric {
+
+                    /** WasmExecuteContractGeneric senderAddress */
+                    senderAddress?: (string|null);
+
+                    /** WasmExecuteContractGeneric contractAddress */
+                    contractAddress?: (string|null);
+
+                    /** WasmExecuteContractGeneric executeMsg */
+                    executeMsg?: (string|null);
+
+                    /** WasmExecuteContractGeneric coins */
+                    coins?: (TW.Cosmos.Proto.IAmount[]|null);
+                }
+
+                /** Represents a WasmExecuteContractGeneric. */
+                class WasmExecuteContractGeneric implements IWasmExecuteContractGeneric {
+
+                    /**
+                     * Constructs a new WasmExecuteContractGeneric.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric);
+
+                    /** WasmExecuteContractGeneric senderAddress. */
+                    public senderAddress: string;
+
+                    /** WasmExecuteContractGeneric contractAddress. */
+                    public contractAddress: string;
+
+                    /** WasmExecuteContractGeneric executeMsg. */
+                    public executeMsg: string;
+
+                    /** WasmExecuteContractGeneric coins. */
+                    public coins: TW.Cosmos.Proto.IAmount[];
+
+                    /**
+                     * Creates a new WasmExecuteContractGeneric instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmExecuteContractGeneric instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric): TW.Cosmos.Proto.Message.WasmExecuteContractGeneric;
+
+                    /**
+                     * Encodes the specified WasmExecuteContractGeneric message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmExecuteContractGeneric.verify|verify} messages.
+                     * @param message WasmExecuteContractGeneric message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmExecuteContractGeneric message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmExecuteContractGeneric
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmExecuteContractGeneric;
+
+                    /**
+                     * Gets the default type url for WasmExecuteContractGeneric
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a WasmInstantiateContract. */
+                interface IWasmInstantiateContract {
+
+                    /** WasmInstantiateContract sender */
+                    sender?: (string|null);
+
+                    /** WasmInstantiateContract admin */
+                    admin?: (string|null);
+
+                    /** WasmInstantiateContract codeId */
+                    codeId?: (number|null);
+
+                    /** WasmInstantiateContract label */
+                    label?: (string|null);
+
+                    /** WasmInstantiateContract msg */
+                    msg?: (Uint8Array|null);
+
+                    /** WasmInstantiateContract initFunds */
+                    initFunds?: (TW.Cosmos.Proto.IAmount[]|null);
+                }
+
+                /** Represents a WasmInstantiateContract. */
+                class WasmInstantiateContract implements IWasmInstantiateContract {
+
+                    /**
+                     * Constructs a new WasmInstantiateContract.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IWasmInstantiateContract);
+
+                    /** WasmInstantiateContract sender. */
+                    public sender: string;
+
+                    /** WasmInstantiateContract admin. */
+                    public admin: string;
+
+                    /** WasmInstantiateContract codeId. */
+                    public codeId: number;
+
+                    /** WasmInstantiateContract label. */
+                    public label: string;
+
+                    /** WasmInstantiateContract msg. */
+                    public msg: Uint8Array;
+
+                    /** WasmInstantiateContract initFunds. */
+                    public initFunds: TW.Cosmos.Proto.IAmount[];
+
+                    /**
+                     * Creates a new WasmInstantiateContract instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns WasmInstantiateContract instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IWasmInstantiateContract): TW.Cosmos.Proto.Message.WasmInstantiateContract;
+
+                    /**
+                     * Encodes the specified WasmInstantiateContract message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmInstantiateContract.verify|verify} messages.
+                     * @param message WasmInstantiateContract message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IWasmInstantiateContract, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a WasmInstantiateContract message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns WasmInstantiateContract
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.WasmInstantiateContract;
+
+                    /**
+                     * Gets the default type url for WasmInstantiateContract
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a RawJSON. */
+                interface IRawJSON {
+
+                    /** RawJSON type */
+                    type?: (string|null);
+
+                    /** RawJSON value */
+                    value?: (string|null);
+                }
+
+                /** Represents a RawJSON. */
+                class RawJSON implements IRawJSON {
+
+                    /**
+                     * Constructs a new RawJSON.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IRawJSON);
+
+                    /** RawJSON type. */
+                    public type: string;
+
+                    /** RawJSON value. */
+                    public value: string;
+
+                    /**
+                     * Creates a new RawJSON instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns RawJSON instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IRawJSON): TW.Cosmos.Proto.Message.RawJSON;
+
+                    /**
+                     * Encodes the specified RawJSON message. Does not implicitly {@link TW.Cosmos.Proto.Message.RawJSON.verify|verify} messages.
+                     * @param message RawJSON message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IRawJSON, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a RawJSON message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns RawJSON
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.RawJSON;
+
+                    /**
+                     * Gets the default type url for RawJSON
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a SignDirect. */
+                interface ISignDirect {
+
+                    /** SignDirect bodyBytes */
+                    bodyBytes?: (Uint8Array|null);
+
+                    /** SignDirect authInfoBytes */
+                    authInfoBytes?: (Uint8Array|null);
+                }
+
+                /** Represents a SignDirect. */
+                class SignDirect implements ISignDirect {
+
+                    /**
+                     * Constructs a new SignDirect.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.ISignDirect);
+
+                    /** SignDirect bodyBytes. */
+                    public bodyBytes: Uint8Array;
+
+                    /** SignDirect authInfoBytes. */
+                    public authInfoBytes: Uint8Array;
+
+                    /**
+                     * Creates a new SignDirect instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns SignDirect instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.ISignDirect): TW.Cosmos.Proto.Message.SignDirect;
+
+                    /**
+                     * Encodes the specified SignDirect message. Does not implicitly {@link TW.Cosmos.Proto.Message.SignDirect.verify|verify} messages.
+                     * @param message SignDirect message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.ISignDirect, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a SignDirect message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns SignDirect
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.SignDirect;
+
+                    /**
+                     * Gets the default type url for SignDirect
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a StakeAuthorization. */
+                interface IStakeAuthorization {
+
+                    /** StakeAuthorization maxTokens */
+                    maxTokens?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** StakeAuthorization allowList */
+                    allowList?: (TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null);
+
+                    /** StakeAuthorization denyList */
+                    denyList?: (TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null);
+
+                    /** StakeAuthorization authorizationType */
+                    authorizationType?: (TW.Cosmos.Proto.Message.AuthorizationType|null);
+                }
+
+                /** Represents a StakeAuthorization. */
+                class StakeAuthorization implements IStakeAuthorization {
+
+                    /**
+                     * Constructs a new StakeAuthorization.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IStakeAuthorization);
+
+                    /** StakeAuthorization maxTokens. */
+                    public maxTokens?: (TW.Cosmos.Proto.IAmount|null);
+
+                    /** StakeAuthorization allowList. */
+                    public allowList?: (TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null);
+
+                    /** StakeAuthorization denyList. */
+                    public denyList?: (TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null);
+
+                    /** StakeAuthorization authorizationType. */
+                    public authorizationType: TW.Cosmos.Proto.Message.AuthorizationType;
+
+                    /** StakeAuthorization validators. */
+                    public validators?: ("allowList"|"denyList");
+
+                    /**
+                     * Creates a new StakeAuthorization instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns StakeAuthorization instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IStakeAuthorization): TW.Cosmos.Proto.Message.StakeAuthorization;
+
+                    /**
+                     * Encodes the specified StakeAuthorization message. Does not implicitly {@link TW.Cosmos.Proto.Message.StakeAuthorization.verify|verify} messages.
+                     * @param message StakeAuthorization message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IStakeAuthorization, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a StakeAuthorization message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns StakeAuthorization
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.StakeAuthorization;
+
+                    /**
+                     * Gets the default type url for StakeAuthorization
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                namespace StakeAuthorization {
+
+                    /** Properties of a Validators. */
+                    interface IValidators {
+
+                        /** Validators address */
+                        address?: (string[]|null);
+                    }
+
+                    /** Represents a Validators. */
+                    class Validators implements IValidators {
+
+                        /**
+                         * Constructs a new Validators.
+                         * @param [properties] Properties to set
+                         */
+                        constructor(properties?: TW.Cosmos.Proto.Message.StakeAuthorization.IValidators);
+
+                        /** Validators address. */
+                        public address: string[];
+
+                        /**
+                         * Creates a new Validators instance using the specified properties.
+                         * @param [properties] Properties to set
+                         * @returns Validators instance
+                         */
+                        public static create(properties?: TW.Cosmos.Proto.Message.StakeAuthorization.IValidators): TW.Cosmos.Proto.Message.StakeAuthorization.Validators;
+
+                        /**
+                         * Encodes the specified Validators message. Does not implicitly {@link TW.Cosmos.Proto.Message.StakeAuthorization.Validators.verify|verify} messages.
+                         * @param message Validators message or plain object to encode
+                         * @param [writer] Writer to encode to
+                         * @returns Writer
+                         */
+                        public static encode(message: TW.Cosmos.Proto.Message.StakeAuthorization.IValidators, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                        /**
+                         * Decodes a Validators message from the specified reader or buffer.
+                         * @param reader Reader or buffer to decode from
+                         * @param [length] Message length if known beforehand
+                         * @returns Validators
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.StakeAuthorization.Validators;
+
+                        /**
+                         * Gets the default type url for Validators
+                         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns The default type url
+                         */
+                        public static getTypeUrl(typeUrlPrefix?: string): string;
+                    }
+                }
+
+                /** AuthorizationType enum. */
+                enum AuthorizationType {
+                    UNSPECIFIED = 0,
+                    DELEGATE = 1,
+                    UNDELEGATE = 2,
+                    REDELEGATE = 3
+                }
+
+                /** Properties of an AuthGrant. */
+                interface IAuthGrant {
+
+                    /** AuthGrant granter */
+                    granter?: (string|null);
+
+                    /** AuthGrant grantee */
+                    grantee?: (string|null);
+
+                    /** AuthGrant grantStake */
+                    grantStake?: (TW.Cosmos.Proto.Message.IStakeAuthorization|null);
+
+                    /** AuthGrant expiration */
+                    expiration?: (number|null);
+                }
+
+                /** Represents an AuthGrant. */
+                class AuthGrant implements IAuthGrant {
+
+                    /**
+                     * Constructs a new AuthGrant.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IAuthGrant);
+
+                    /** AuthGrant granter. */
+                    public granter: string;
+
+                    /** AuthGrant grantee. */
+                    public grantee: string;
+
+                    /** AuthGrant grantStake. */
+                    public grantStake?: (TW.Cosmos.Proto.Message.IStakeAuthorization|null);
+
+                    /** AuthGrant expiration. */
+                    public expiration: number;
+
+                    /** AuthGrant grantType. */
+                    public grantType?: "grantStake";
+
+                    /**
+                     * Creates a new AuthGrant instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns AuthGrant instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IAuthGrant): TW.Cosmos.Proto.Message.AuthGrant;
+
+                    /**
+                     * Encodes the specified AuthGrant message. Does not implicitly {@link TW.Cosmos.Proto.Message.AuthGrant.verify|verify} messages.
+                     * @param message AuthGrant message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IAuthGrant, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes an AuthGrant message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns AuthGrant
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.AuthGrant;
+
+                    /**
+                     * Gets the default type url for AuthGrant
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of an AuthRevoke. */
+                interface IAuthRevoke {
+
+                    /** AuthRevoke granter */
+                    granter?: (string|null);
+
+                    /** AuthRevoke grantee */
+                    grantee?: (string|null);
+
+                    /** AuthRevoke msgTypeUrl */
+                    msgTypeUrl?: (string|null);
+                }
+
+                /** Represents an AuthRevoke. */
+                class AuthRevoke implements IAuthRevoke {
+
+                    /**
+                     * Constructs a new AuthRevoke.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IAuthRevoke);
+
+                    /** AuthRevoke granter. */
+                    public granter: string;
+
+                    /** AuthRevoke grantee. */
+                    public grantee: string;
+
+                    /** AuthRevoke msgTypeUrl. */
+                    public msgTypeUrl: string;
+
+                    /**
+                     * Creates a new AuthRevoke instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns AuthRevoke instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IAuthRevoke): TW.Cosmos.Proto.Message.AuthRevoke;
+
+                    /**
+                     * Encodes the specified AuthRevoke message. Does not implicitly {@link TW.Cosmos.Proto.Message.AuthRevoke.verify|verify} messages.
+                     * @param message AuthRevoke message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IAuthRevoke, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes an AuthRevoke message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns AuthRevoke
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.AuthRevoke;
+
+                    /**
+                     * Gets the default type url for AuthRevoke
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** VoteOption enum. */
+                enum VoteOption {
+                    _UNSPECIFIED = 0,
+                    YES = 1,
+                    ABSTAIN = 2,
+                    NO = 3,
+                    NO_WITH_VETO = 4
+                }
+
+                /** Properties of a MsgVote. */
+                interface IMsgVote {
+
+                    /** MsgVote proposalId */
+                    proposalId?: (number|null);
+
+                    /** MsgVote voter */
+                    voter?: (string|null);
+
+                    /** MsgVote option */
+                    option?: (TW.Cosmos.Proto.Message.VoteOption|null);
+                }
+
+                /** Represents a MsgVote. */
+                class MsgVote implements IMsgVote {
+
+                    /**
+                     * Constructs a new MsgVote.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IMsgVote);
+
+                    /** MsgVote proposalId. */
+                    public proposalId: number;
+
+                    /** MsgVote voter. */
+                    public voter: string;
+
+                    /** MsgVote option. */
+                    public option: TW.Cosmos.Proto.Message.VoteOption;
+
+                    /**
+                     * Creates a new MsgVote instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MsgVote instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IMsgVote): TW.Cosmos.Proto.Message.MsgVote;
+
+                    /**
+                     * Encodes the specified MsgVote message. Does not implicitly {@link TW.Cosmos.Proto.Message.MsgVote.verify|verify} messages.
+                     * @param message MsgVote message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IMsgVote, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a MsgVote message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns MsgVote
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.MsgVote;
+
+                    /**
+                     * Gets the default type url for MsgVote
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a MsgStrideLiquidStakingStake. */
+                interface IMsgStrideLiquidStakingStake {
+
+                    /** MsgStrideLiquidStakingStake creator */
+                    creator?: (string|null);
+
+                    /** MsgStrideLiquidStakingStake amount */
+                    amount?: (string|null);
+
+                    /** MsgStrideLiquidStakingStake hostDenom */
+                    hostDenom?: (string|null);
+                }
+
+                /** Represents a MsgStrideLiquidStakingStake. */
+                class MsgStrideLiquidStakingStake implements IMsgStrideLiquidStakingStake {
+
+                    /**
+                     * Constructs a new MsgStrideLiquidStakingStake.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake);
+
+                    /** MsgStrideLiquidStakingStake creator. */
+                    public creator: string;
+
+                    /** MsgStrideLiquidStakingStake amount. */
+                    public amount: string;
+
+                    /** MsgStrideLiquidStakingStake hostDenom. */
+                    public hostDenom: string;
+
+                    /**
+                     * Creates a new MsgStrideLiquidStakingStake instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MsgStrideLiquidStakingStake instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake): TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake;
+
+                    /**
+                     * Encodes the specified MsgStrideLiquidStakingStake message. Does not implicitly {@link TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake.verify|verify} messages.
+                     * @param message MsgStrideLiquidStakingStake message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a MsgStrideLiquidStakingStake message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns MsgStrideLiquidStakingStake
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake;
+
+                    /**
+                     * Gets the default type url for MsgStrideLiquidStakingStake
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+
+                /** Properties of a MsgStrideLiquidStakingRedeem. */
+                interface IMsgStrideLiquidStakingRedeem {
+
+                    /** MsgStrideLiquidStakingRedeem creator */
+                    creator?: (string|null);
+
+                    /** MsgStrideLiquidStakingRedeem amount */
+                    amount?: (string|null);
+
+                    /** MsgStrideLiquidStakingRedeem hostZone */
+                    hostZone?: (string|null);
+
+                    /** MsgStrideLiquidStakingRedeem receiver */
+                    receiver?: (string|null);
+                }
+
+                /** Represents a MsgStrideLiquidStakingRedeem. */
+                class MsgStrideLiquidStakingRedeem implements IMsgStrideLiquidStakingRedeem {
+
+                    /**
+                     * Constructs a new MsgStrideLiquidStakingRedeem.
+                     * @param [properties] Properties to set
+                     */
+                    constructor(properties?: TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem);
+
+                    /** MsgStrideLiquidStakingRedeem creator. */
+                    public creator: string;
+
+                    /** MsgStrideLiquidStakingRedeem amount. */
+                    public amount: string;
+
+                    /** MsgStrideLiquidStakingRedeem hostZone. */
+                    public hostZone: string;
+
+                    /** MsgStrideLiquidStakingRedeem receiver. */
+                    public receiver: string;
+
+                    /**
+                     * Creates a new MsgStrideLiquidStakingRedeem instance using the specified properties.
+                     * @param [properties] Properties to set
+                     * @returns MsgStrideLiquidStakingRedeem instance
+                     */
+                    public static create(properties?: TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem): TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem;
+
+                    /**
+                     * Encodes the specified MsgStrideLiquidStakingRedeem message. Does not implicitly {@link TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem.verify|verify} messages.
+                     * @param message MsgStrideLiquidStakingRedeem message or plain object to encode
+                     * @param [writer] Writer to encode to
+                     * @returns Writer
+                     */
+                    public static encode(message: TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                    /**
+                     * Decodes a MsgStrideLiquidStakingRedeem message from the specified reader or buffer.
+                     * @param reader Reader or buffer to decode from
+                     * @param [length] Message length if known beforehand
+                     * @returns MsgStrideLiquidStakingRedeem
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem;
+
+                    /**
+                     * Gets the default type url for MsgStrideLiquidStakingRedeem
+                     * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns The default type url
+                     */
+                    public static getTypeUrl(typeUrlPrefix?: string): string;
+                }
+            }
+
+            /** SigningMode enum. */
+            enum SigningMode {
+                JSON = 0,
+                Protobuf = 1
+            }
+
+            /** TxHasher enum. */
+            enum TxHasher {
+                UseDefault = 0,
+                Sha256 = 1,
+                Keccak256 = 2
+            }
+
+            /** SignerPublicKeyType enum. */
+            enum SignerPublicKeyType {
+                Secp256k1 = 0,
+                Secp256k1Extended = 1
+            }
+
+            /** Properties of a SignerInfo. */
+            interface ISignerInfo {
+
+                /** SignerInfo publicKeyType */
+                publicKeyType?: (TW.Cosmos.Proto.SignerPublicKeyType|null);
+
+                /** SignerInfo jsonType */
+                jsonType?: (string|null);
+
+                /** SignerInfo protobufType */
+                protobufType?: (string|null);
+            }
+
+            /** Represents a SignerInfo. */
+            class SignerInfo implements ISignerInfo {
+
+                /**
+                 * Constructs a new SignerInfo.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.ISignerInfo);
+
+                /** SignerInfo publicKeyType. */
+                public publicKeyType: TW.Cosmos.Proto.SignerPublicKeyType;
+
+                /** SignerInfo jsonType. */
+                public jsonType: string;
+
+                /** SignerInfo protobufType. */
+                public protobufType: string;
+
+                /**
+                 * Creates a new SignerInfo instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SignerInfo instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.ISignerInfo): TW.Cosmos.Proto.SignerInfo;
+
+                /**
+                 * Encodes the specified SignerInfo message. Does not implicitly {@link TW.Cosmos.Proto.SignerInfo.verify|verify} messages.
+                 * @param message SignerInfo message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.ISignerInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SignerInfo message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SignerInfo
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.SignerInfo;
+
+                /**
+                 * Gets the default type url for SignerInfo
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningInput. */
+            interface ISigningInput {
+
+                /** SigningInput signingMode */
+                signingMode?: (TW.Cosmos.Proto.SigningMode|null);
+
+                /** SigningInput accountNumber */
+                accountNumber?: (number|null);
+
+                /** SigningInput chainId */
+                chainId?: (string|null);
+
+                /** SigningInput fee */
+                fee?: (TW.Cosmos.Proto.IFee|null);
+
+                /** SigningInput memo */
+                memo?: (string|null);
+
+                /** SigningInput sequence */
+                sequence?: (number|null);
+
+                /** SigningInput privateKey */
+                privateKey?: (Uint8Array|null);
+
+                /** SigningInput messages */
+                messages?: (TW.Cosmos.Proto.IMessage[]|null);
+
+                /** SigningInput mode */
+                mode?: (TW.Cosmos.Proto.BroadcastMode|null);
+
+                /** SigningInput publicKey */
+                publicKey?: (Uint8Array|null);
+
+                /** SigningInput txHasher */
+                txHasher?: (TW.Cosmos.Proto.TxHasher|null);
+
+                /** SigningInput signerInfo */
+                signerInfo?: (TW.Cosmos.Proto.ISignerInfo|null);
+
+                /** SigningInput timeoutHeight */
+                timeoutHeight?: (number|null);
+            }
+
+            /** Represents a SigningInput. */
+            class SigningInput implements ISigningInput {
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.ISigningInput);
+
+                /** SigningInput signingMode. */
+                public signingMode: TW.Cosmos.Proto.SigningMode;
+
+                /** SigningInput accountNumber. */
+                public accountNumber: number;
+
+                /** SigningInput chainId. */
+                public chainId: string;
+
+                /** SigningInput fee. */
+                public fee?: (TW.Cosmos.Proto.IFee|null);
+
+                /** SigningInput memo. */
+                public memo: string;
+
+                /** SigningInput sequence. */
+                public sequence: number;
+
+                /** SigningInput privateKey. */
+                public privateKey: Uint8Array;
+
+                /** SigningInput messages. */
+                public messages: TW.Cosmos.Proto.IMessage[];
+
+                /** SigningInput mode. */
+                public mode: TW.Cosmos.Proto.BroadcastMode;
+
+                /** SigningInput publicKey. */
+                public publicKey: Uint8Array;
+
+                /** SigningInput txHasher. */
+                public txHasher: TW.Cosmos.Proto.TxHasher;
+
+                /** SigningInput signerInfo. */
+                public signerInfo?: (TW.Cosmos.Proto.ISignerInfo|null);
+
+                /** SigningInput timeoutHeight. */
+                public timeoutHeight: number;
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningInput instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.ISigningInput): TW.Cosmos.Proto.SigningInput;
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Cosmos.Proto.SigningInput.verify|verify} messages.
+                 * @param message SigningInput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.ISigningInput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.SigningInput;
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+
+            /** Properties of a SigningOutput. */
+            interface ISigningOutput {
+
+                /** SigningOutput signature */
+                signature?: (Uint8Array|null);
+
+                /** SigningOutput json */
+                json?: (string|null);
+
+                /** SigningOutput serialized */
+                serialized?: (string|null);
+
+                /** SigningOutput signatureJson */
+                signatureJson?: (string|null);
+
+                /** SigningOutput errorMessage */
+                errorMessage?: (string|null);
+
+                /** SigningOutput error */
+                error?: (TW.Common.Proto.SigningError|null);
+            }
+
+            /** Represents a SigningOutput. */
+            class SigningOutput implements ISigningOutput {
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: TW.Cosmos.Proto.ISigningOutput);
+
+                /** SigningOutput signature. */
+                public signature: Uint8Array;
+
+                /** SigningOutput json. */
+                public json: string;
+
+                /** SigningOutput serialized. */
+                public serialized: string;
+
+                /** SigningOutput signatureJson. */
+                public signatureJson: string;
+
+                /** SigningOutput errorMessage. */
+                public errorMessage: string;
+
+                /** SigningOutput error. */
+                public error: TW.Common.Proto.SigningError;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @param [properties] Properties to set
+                 * @returns SigningOutput instance
+                 */
+                public static create(properties?: TW.Cosmos.Proto.ISigningOutput): TW.Cosmos.Proto.SigningOutput;
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Cosmos.Proto.SigningOutput.verify|verify} messages.
+                 * @param message SigningOutput message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: TW.Cosmos.Proto.ISigningOutput, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): TW.Cosmos.Proto.SigningOutput;
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns The default type url
+                 */
+                public static getTypeUrl(typeUrlPrefix?: string): string;
+            }
+        }
+    }
+
     /** Namespace Ethereum. */
     namespace Ethereum {
 

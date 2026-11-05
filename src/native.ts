@@ -108,6 +108,13 @@ export interface NativeWalletCore {
    * Builds from 2026-10-24 on.
    */
   signGaslessSolana?(id: string, message: string, request: string, account?: number): Promise<string>;
+  /**
+   * Cosmos-family send or THORChain deposit (Protobuf mode, built by cosmosSendInput /
+   * thorchainDepositInput without any key). Native code checks every message is from this
+   * wallet, adds its public key and signs. Returns the Cosmos SigningOutput (base64).
+   * Builds from 2026-11 (build 11) on.
+   */
+  signCosmos?(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
@@ -229,6 +236,14 @@ export const canSignGaslessSolana = () => typeof native?.signGaslessSolana === '
 export async function signGaslessSolana(id: string, messageBase64: string, request: GaslessSolanaRequest, account?: number): Promise<string> {
   if (!native?.signGaslessSolana) throw new Error('UNAVAILABLE: this app build cannot sign fee-free Solana transfers yet');
   return native.signGaslessSolana(id, messageBase64, JSON.stringify(request), account);
+}
+
+/** True when this build can sign on Cosmos-family networks (THORChain, Cosmos Hub, Osmosis …). */
+export const canSignCosmos = () => typeof native?.signCosmos === 'function';
+
+export async function signCosmos(id: string, coin: CoinType, input: string, account?: number): Promise<string> {
+  if (!native?.signCosmos) throw new Error('UNAVAILABLE: this app build cannot sign on this network yet');
+  return native.signCosmos(id, coin, input, account);
 }
 
 /** True when this build has the backup password (backup file, later cloud backup). */

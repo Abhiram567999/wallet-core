@@ -657,6 +657,51 @@ final class WalletStore {
     return t.ownerAddress
   }
 
+  // MARK: Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)
+
+  /// Signs a Cosmos SigningInput built without any key (src/tx.ts cosmosSendInput /
+  /// thorchainDepositInput). Protobuf mode needs the signer's public key, which the app never
+  /// has: it is added here after checking every message is sent by this wallet (SPEC §7.5).
+  func signCosmos(id: String, coin raw: UInt32, inputBase64: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    guard let coin = CoinType(rawValue: raw), [Blockchain.cosmos, .thorchain, .nativeInjective].contains(coin.blockchain) else {
+      throw WalletError.invalid("this network is not a Cosmos network")
+    }
+    guard let data = Data(base64Encoded: inputBase64), let input = try? CosmosSigningInput(serializedBytes: data) else {
+      throw WalletError.invalid("bad input")
+    }
+    guard input.signingMode == .protobuf, input.publicKey.isEmpty, input.privateKey.isEmpty, !input.messages.isEmpty else {
+      throw WalletError.invalid("not a Cosmos transaction this wallet can sign")
+    }
+    // Only plain sends and THORChain sends / deposits. Checked before Face ID.
+    for m in input.messages {
+      switch m.messageOneof {
+      case .sendCoinsMessage?: continue
+      case .thorchainSendMessage?, .thorchainDepositMessage?:
+        guard coin.blockchain == .thorchain else { throw WalletError.invalid("this kind of Cosmos message is not supported") }
+      default: throw WalletError.invalid("this kind of Cosmos message is not supported")
+      }
+    }
+    return try withSecrets([id], reason: "Confirm the transaction") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      let own = coin.deriveAddress(privateKey: key)
+      guard let ownData = AnyAddress(string: own, coin: coin)?.data else { throw WalletError.crypto("could not read the wallet address") }
+      for m in input.messages {
+        let fromWallet: Bool
+        switch m.messageOneof {
+        case .sendCoinsMessage(let send)?: fromWallet = send.fromAddress == own
+        case .thorchainSendMessage(let send)?: fromWallet = send.fromAddress == ownData
+        case .thorchainDepositMessage(let deposit)?: fromWallet = deposit.signer == ownData
+        default: fromWallet = false
+        }
+        guard fromWallet else { throw WalletError.invalid("this transaction is not from this wallet") }
+      }
+      var signed = input
+      signed.publicKey = key.getPublicKey(coinType: coin).data
+      return try Self.signOne(try signed.serializedData(), key: key, coin: coin)
+    }
+  }
+
   // MARK: EVM gasless (EIP-7702 + EntryPoint 0.8)
 
   /// Foxsafe's EVM fee rule, compiled in on purpose: an app update can't change it.

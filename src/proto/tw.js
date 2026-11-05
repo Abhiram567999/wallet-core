@@ -10704,6 +10704,6600 @@ export const TW = $root.TW = (() => {
         return Zcash;
     })();
 
+    TW.Cosmos = (function() {
+
+        /**
+         * Namespace Cosmos.
+         * @memberof TW
+         * @namespace
+         */
+        const Cosmos = {};
+
+        Cosmos.Proto = (function() {
+
+            /**
+             * Namespace Proto.
+             * @memberof TW.Cosmos
+             * @namespace
+             */
+            const Proto = {};
+
+            Proto.Amount = (function() {
+
+                /**
+                 * Properties of an Amount.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface IAmount
+                 * @property {string|null} [denom] Amount denom
+                 * @property {string|null} [amount] Amount amount
+                 */
+
+                /**
+                 * Constructs a new Amount.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents an Amount.
+                 * @implements IAmount
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.IAmount=} [properties] Properties to set
+                 */
+                function Amount(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Amount denom.
+                 * @member {string} denom
+                 * @memberof TW.Cosmos.Proto.Amount
+                 * @instance
+                 */
+                Amount.prototype.denom = "";
+
+                /**
+                 * Amount amount.
+                 * @member {string} amount
+                 * @memberof TW.Cosmos.Proto.Amount
+                 * @instance
+                 */
+                Amount.prototype.amount = "";
+
+                /**
+                 * Creates a new Amount instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.Amount
+                 * @static
+                 * @param {TW.Cosmos.Proto.IAmount=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.Amount} Amount instance
+                 */
+                Amount.create = function create(properties) {
+                    return new Amount(properties);
+                };
+
+                /**
+                 * Encodes the specified Amount message. Does not implicitly {@link TW.Cosmos.Proto.Amount.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.Amount
+                 * @static
+                 * @param {TW.Cosmos.Proto.IAmount} message Amount message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Amount.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.denom != null && Object.hasOwnProperty.call(message, "denom"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.denom);
+                    if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.amount);
+                    return writer;
+                };
+
+                /**
+                 * Decodes an Amount message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.Amount
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.Amount} Amount
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Amount.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.Amount();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.denom = reader.string();
+                                break;
+                            }
+                        case 2: {
+                                message.amount = reader.string();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for Amount
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.Amount
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                Amount.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.Amount";
+                };
+
+                return Amount;
+            })();
+
+            Proto.Fee = (function() {
+
+                /**
+                 * Properties of a Fee.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface IFee
+                 * @property {Array.<TW.Cosmos.Proto.IAmount>|null} [amounts] Fee amounts
+                 * @property {number|null} [gas] Fee gas
+                 */
+
+                /**
+                 * Constructs a new Fee.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a Fee.
+                 * @implements IFee
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.IFee=} [properties] Properties to set
+                 */
+                function Fee(properties) {
+                    this.amounts = [];
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Fee amounts.
+                 * @member {Array.<TW.Cosmos.Proto.IAmount>} amounts
+                 * @memberof TW.Cosmos.Proto.Fee
+                 * @instance
+                 */
+                Fee.prototype.amounts = $util.emptyArray;
+
+                /**
+                 * Fee gas.
+                 * @member {number} gas
+                 * @memberof TW.Cosmos.Proto.Fee
+                 * @instance
+                 */
+                Fee.prototype.gas = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                /**
+                 * Creates a new Fee instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.Fee
+                 * @static
+                 * @param {TW.Cosmos.Proto.IFee=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.Fee} Fee instance
+                 */
+                Fee.create = function create(properties) {
+                    return new Fee(properties);
+                };
+
+                /**
+                 * Encodes the specified Fee message. Does not implicitly {@link TW.Cosmos.Proto.Fee.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.Fee
+                 * @static
+                 * @param {TW.Cosmos.Proto.IFee} message Fee message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Fee.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.amounts != null && message.amounts.length)
+                        for (let i = 0; i < message.amounts.length; ++i)
+                            $root.TW.Cosmos.Proto.Amount.encode(message.amounts[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), q + 1).ldelim();
+                    if (message.gas != null && Object.hasOwnProperty.call(message, "gas"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.gas);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a Fee message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.Fee
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.Fee} Fee
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Fee.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.Fee();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                if (!(message.amounts && message.amounts.length))
+                                    message.amounts = [];
+                                message.amounts.push($root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1));
+                                break;
+                            }
+                        case 2: {
+                                message.gas = reader.uint64();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for Fee
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.Fee
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                Fee.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.Fee";
+                };
+
+                return Fee;
+            })();
+
+            Proto.Height = (function() {
+
+                /**
+                 * Properties of an Height.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface IHeight
+                 * @property {number|null} [revisionNumber] Height revisionNumber
+                 * @property {number|null} [revisionHeight] Height revisionHeight
+                 */
+
+                /**
+                 * Constructs a new Height.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents an Height.
+                 * @implements IHeight
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.IHeight=} [properties] Properties to set
+                 */
+                function Height(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Height revisionNumber.
+                 * @member {number} revisionNumber
+                 * @memberof TW.Cosmos.Proto.Height
+                 * @instance
+                 */
+                Height.prototype.revisionNumber = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                /**
+                 * Height revisionHeight.
+                 * @member {number} revisionHeight
+                 * @memberof TW.Cosmos.Proto.Height
+                 * @instance
+                 */
+                Height.prototype.revisionHeight = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                /**
+                 * Creates a new Height instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.Height
+                 * @static
+                 * @param {TW.Cosmos.Proto.IHeight=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.Height} Height instance
+                 */
+                Height.create = function create(properties) {
+                    return new Height(properties);
+                };
+
+                /**
+                 * Encodes the specified Height message. Does not implicitly {@link TW.Cosmos.Proto.Height.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.Height
+                 * @static
+                 * @param {TW.Cosmos.Proto.IHeight} message Height message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Height.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.revisionNumber != null && Object.hasOwnProperty.call(message, "revisionNumber"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.revisionNumber);
+                    if (message.revisionHeight != null && Object.hasOwnProperty.call(message, "revisionHeight"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.revisionHeight);
+                    return writer;
+                };
+
+                /**
+                 * Decodes an Height message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.Height
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.Height} Height
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Height.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.Height();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.revisionNumber = reader.uint64();
+                                break;
+                            }
+                        case 2: {
+                                message.revisionHeight = reader.uint64();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for Height
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.Height
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                Height.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.Height";
+                };
+
+                return Height;
+            })();
+
+            /**
+             * BroadcastMode enum.
+             * @name TW.Cosmos.Proto.BroadcastMode
+             * @enum {number}
+             * @property {number} BLOCK=0 BLOCK value
+             * @property {number} SYNC=1 SYNC value
+             * @property {number} ASYNC=2 ASYNC value
+             */
+            Proto.BroadcastMode = (function() {
+                const valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "BLOCK"] = 0;
+                values[valuesById[1] = "SYNC"] = 1;
+                values[valuesById[2] = "ASYNC"] = 2;
+                return values;
+            })();
+
+            Proto.THORChainAsset = (function() {
+
+                /**
+                 * Properties of a THORChainAsset.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface ITHORChainAsset
+                 * @property {string|null} [chain] THORChainAsset chain
+                 * @property {string|null} [symbol] THORChainAsset symbol
+                 * @property {string|null} [ticker] THORChainAsset ticker
+                 * @property {boolean|null} [synth] THORChainAsset synth
+                 * @property {boolean|null} [trade] THORChainAsset trade
+                 * @property {boolean|null} [secured] THORChainAsset secured
+                 */
+
+                /**
+                 * Constructs a new THORChainAsset.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a THORChainAsset.
+                 * @implements ITHORChainAsset
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.ITHORChainAsset=} [properties] Properties to set
+                 */
+                function THORChainAsset(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * THORChainAsset chain.
+                 * @member {string} chain
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @instance
+                 */
+                THORChainAsset.prototype.chain = "";
+
+                /**
+                 * THORChainAsset symbol.
+                 * @member {string} symbol
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @instance
+                 */
+                THORChainAsset.prototype.symbol = "";
+
+                /**
+                 * THORChainAsset ticker.
+                 * @member {string} ticker
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @instance
+                 */
+                THORChainAsset.prototype.ticker = "";
+
+                /**
+                 * THORChainAsset synth.
+                 * @member {boolean} synth
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @instance
+                 */
+                THORChainAsset.prototype.synth = false;
+
+                /**
+                 * THORChainAsset trade.
+                 * @member {boolean} trade
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @instance
+                 */
+                THORChainAsset.prototype.trade = false;
+
+                /**
+                 * THORChainAsset secured.
+                 * @member {boolean} secured
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @instance
+                 */
+                THORChainAsset.prototype.secured = false;
+
+                /**
+                 * Creates a new THORChainAsset instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @static
+                 * @param {TW.Cosmos.Proto.ITHORChainAsset=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.THORChainAsset} THORChainAsset instance
+                 */
+                THORChainAsset.create = function create(properties) {
+                    return new THORChainAsset(properties);
+                };
+
+                /**
+                 * Encodes the specified THORChainAsset message. Does not implicitly {@link TW.Cosmos.Proto.THORChainAsset.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @static
+                 * @param {TW.Cosmos.Proto.ITHORChainAsset} message THORChainAsset message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                THORChainAsset.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.chain != null && Object.hasOwnProperty.call(message, "chain"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.chain);
+                    if (message.symbol != null && Object.hasOwnProperty.call(message, "symbol"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.symbol);
+                    if (message.ticker != null && Object.hasOwnProperty.call(message, "ticker"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.ticker);
+                    if (message.synth != null && Object.hasOwnProperty.call(message, "synth"))
+                        writer.uint32(/* id 4, wireType 0 =*/32).bool(message.synth);
+                    if (message.trade != null && Object.hasOwnProperty.call(message, "trade"))
+                        writer.uint32(/* id 5, wireType 0 =*/40).bool(message.trade);
+                    if (message.secured != null && Object.hasOwnProperty.call(message, "secured"))
+                        writer.uint32(/* id 6, wireType 0 =*/48).bool(message.secured);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a THORChainAsset message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.THORChainAsset} THORChainAsset
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                THORChainAsset.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.THORChainAsset();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.chain = reader.string();
+                                break;
+                            }
+                        case 2: {
+                                message.symbol = reader.string();
+                                break;
+                            }
+                        case 3: {
+                                message.ticker = reader.string();
+                                break;
+                            }
+                        case 4: {
+                                message.synth = reader.bool();
+                                break;
+                            }
+                        case 5: {
+                                message.trade = reader.bool();
+                                break;
+                            }
+                        case 6: {
+                                message.secured = reader.bool();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for THORChainAsset
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.THORChainAsset
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                THORChainAsset.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.THORChainAsset";
+                };
+
+                return THORChainAsset;
+            })();
+
+            Proto.THORChainCoin = (function() {
+
+                /**
+                 * Properties of a THORChainCoin.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface ITHORChainCoin
+                 * @property {TW.Cosmos.Proto.ITHORChainAsset|null} [asset] THORChainCoin asset
+                 * @property {string|null} [amount] THORChainCoin amount
+                 * @property {number|null} [decimals] THORChainCoin decimals
+                 */
+
+                /**
+                 * Constructs a new THORChainCoin.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a THORChainCoin.
+                 * @implements ITHORChainCoin
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.ITHORChainCoin=} [properties] Properties to set
+                 */
+                function THORChainCoin(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * THORChainCoin asset.
+                 * @member {TW.Cosmos.Proto.ITHORChainAsset|null|undefined} asset
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @instance
+                 */
+                THORChainCoin.prototype.asset = null;
+
+                /**
+                 * THORChainCoin amount.
+                 * @member {string} amount
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @instance
+                 */
+                THORChainCoin.prototype.amount = "";
+
+                /**
+                 * THORChainCoin decimals.
+                 * @member {number} decimals
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @instance
+                 */
+                THORChainCoin.prototype.decimals = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                /**
+                 * Creates a new THORChainCoin instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @static
+                 * @param {TW.Cosmos.Proto.ITHORChainCoin=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.THORChainCoin} THORChainCoin instance
+                 */
+                THORChainCoin.create = function create(properties) {
+                    return new THORChainCoin(properties);
+                };
+
+                /**
+                 * Encodes the specified THORChainCoin message. Does not implicitly {@link TW.Cosmos.Proto.THORChainCoin.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @static
+                 * @param {TW.Cosmos.Proto.ITHORChainCoin} message THORChainCoin message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                THORChainCoin.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.asset != null && Object.hasOwnProperty.call(message, "asset"))
+                        $root.TW.Cosmos.Proto.THORChainAsset.encode(message.asset, writer.uint32(/* id 1, wireType 2 =*/10).fork(), q + 1).ldelim();
+                    if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.amount);
+                    if (message.decimals != null && Object.hasOwnProperty.call(message, "decimals"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).int64(message.decimals);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a THORChainCoin message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.THORChainCoin} THORChainCoin
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                THORChainCoin.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.THORChainCoin();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.asset = $root.TW.Cosmos.Proto.THORChainAsset.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 2: {
+                                message.amount = reader.string();
+                                break;
+                            }
+                        case 3: {
+                                message.decimals = reader.int64();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for THORChainCoin
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.THORChainCoin
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                THORChainCoin.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.THORChainCoin";
+                };
+
+                return THORChainCoin;
+            })();
+
+            Proto.Message = (function() {
+
+                /**
+                 * Properties of a Message.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface IMessage
+                 * @property {TW.Cosmos.Proto.Message.ISend|null} [sendCoinsMessage] Message sendCoinsMessage
+                 * @property {TW.Cosmos.Proto.Message.ITransfer|null} [transferTokensMessage] Message transferTokensMessage
+                 * @property {TW.Cosmos.Proto.Message.IDelegate|null} [stakeMessage] Message stakeMessage
+                 * @property {TW.Cosmos.Proto.Message.IUndelegate|null} [unstakeMessage] Message unstakeMessage
+                 * @property {TW.Cosmos.Proto.Message.IBeginRedelegate|null} [restakeMessage] Message restakeMessage
+                 * @property {TW.Cosmos.Proto.Message.IWithdrawDelegationReward|null} [withdrawStakeRewardMessage] Message withdrawStakeRewardMessage
+                 * @property {TW.Cosmos.Proto.Message.IRawJSON|null} [rawJsonMessage] Message rawJsonMessage
+                 * @property {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer|null} [wasmTerraExecuteContractTransferMessage] Message wasmTerraExecuteContractTransferMessage
+                 * @property {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend|null} [wasmTerraExecuteContractSendMessage] Message wasmTerraExecuteContractSendMessage
+                 * @property {TW.Cosmos.Proto.Message.ITHORChainSend|null} [thorchainSendMessage] Message thorchainSendMessage
+                 * @property {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric|null} [wasmTerraExecuteContractGeneric] Message wasmTerraExecuteContractGeneric
+                 * @property {TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer|null} [wasmExecuteContractTransferMessage] Message wasmExecuteContractTransferMessage
+                 * @property {TW.Cosmos.Proto.Message.IWasmExecuteContractSend|null} [wasmExecuteContractSendMessage] Message wasmExecuteContractSendMessage
+                 * @property {TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric|null} [wasmExecuteContractGeneric] Message wasmExecuteContractGeneric
+                 * @property {TW.Cosmos.Proto.Message.ISignDirect|null} [signDirectMessage] Message signDirectMessage
+                 * @property {TW.Cosmos.Proto.Message.IAuthGrant|null} [authGrant] Message authGrant
+                 * @property {TW.Cosmos.Proto.Message.IAuthRevoke|null} [authRevoke] Message authRevoke
+                 * @property {TW.Cosmos.Proto.Message.ISetWithdrawAddress|null} [setWithdrawAddressMessage] Message setWithdrawAddressMessage
+                 * @property {TW.Cosmos.Proto.Message.IMsgVote|null} [msgVote] Message msgVote
+                 * @property {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake|null} [msgStrideLiquidStakingStake] Message msgStrideLiquidStakingStake
+                 * @property {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem|null} [msgStrideLiquidStakingRedeem] Message msgStrideLiquidStakingRedeem
+                 * @property {TW.Cosmos.Proto.Message.ITHORChainDeposit|null} [thorchainDepositMessage] Message thorchainDepositMessage
+                 * @property {TW.Cosmos.Proto.Message.IWasmInstantiateContract|null} [wasmInstantiateContractMessage] Message wasmInstantiateContractMessage
+                 */
+
+                /**
+                 * Constructs a new Message.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a Message.
+                 * @implements IMessage
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.IMessage=} [properties] Properties to set
+                 */
+                function Message(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Message sendCoinsMessage.
+                 * @member {TW.Cosmos.Proto.Message.ISend|null|undefined} sendCoinsMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.sendCoinsMessage = null;
+
+                /**
+                 * Message transferTokensMessage.
+                 * @member {TW.Cosmos.Proto.Message.ITransfer|null|undefined} transferTokensMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.transferTokensMessage = null;
+
+                /**
+                 * Message stakeMessage.
+                 * @member {TW.Cosmos.Proto.Message.IDelegate|null|undefined} stakeMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.stakeMessage = null;
+
+                /**
+                 * Message unstakeMessage.
+                 * @member {TW.Cosmos.Proto.Message.IUndelegate|null|undefined} unstakeMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.unstakeMessage = null;
+
+                /**
+                 * Message restakeMessage.
+                 * @member {TW.Cosmos.Proto.Message.IBeginRedelegate|null|undefined} restakeMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.restakeMessage = null;
+
+                /**
+                 * Message withdrawStakeRewardMessage.
+                 * @member {TW.Cosmos.Proto.Message.IWithdrawDelegationReward|null|undefined} withdrawStakeRewardMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.withdrawStakeRewardMessage = null;
+
+                /**
+                 * Message rawJsonMessage.
+                 * @member {TW.Cosmos.Proto.Message.IRawJSON|null|undefined} rawJsonMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.rawJsonMessage = null;
+
+                /**
+                 * Message wasmTerraExecuteContractTransferMessage.
+                 * @member {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer|null|undefined} wasmTerraExecuteContractTransferMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmTerraExecuteContractTransferMessage = null;
+
+                /**
+                 * Message wasmTerraExecuteContractSendMessage.
+                 * @member {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend|null|undefined} wasmTerraExecuteContractSendMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmTerraExecuteContractSendMessage = null;
+
+                /**
+                 * Message thorchainSendMessage.
+                 * @member {TW.Cosmos.Proto.Message.ITHORChainSend|null|undefined} thorchainSendMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.thorchainSendMessage = null;
+
+                /**
+                 * Message wasmTerraExecuteContractGeneric.
+                 * @member {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric|null|undefined} wasmTerraExecuteContractGeneric
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmTerraExecuteContractGeneric = null;
+
+                /**
+                 * Message wasmExecuteContractTransferMessage.
+                 * @member {TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer|null|undefined} wasmExecuteContractTransferMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmExecuteContractTransferMessage = null;
+
+                /**
+                 * Message wasmExecuteContractSendMessage.
+                 * @member {TW.Cosmos.Proto.Message.IWasmExecuteContractSend|null|undefined} wasmExecuteContractSendMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmExecuteContractSendMessage = null;
+
+                /**
+                 * Message wasmExecuteContractGeneric.
+                 * @member {TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric|null|undefined} wasmExecuteContractGeneric
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmExecuteContractGeneric = null;
+
+                /**
+                 * Message signDirectMessage.
+                 * @member {TW.Cosmos.Proto.Message.ISignDirect|null|undefined} signDirectMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.signDirectMessage = null;
+
+                /**
+                 * Message authGrant.
+                 * @member {TW.Cosmos.Proto.Message.IAuthGrant|null|undefined} authGrant
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.authGrant = null;
+
+                /**
+                 * Message authRevoke.
+                 * @member {TW.Cosmos.Proto.Message.IAuthRevoke|null|undefined} authRevoke
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.authRevoke = null;
+
+                /**
+                 * Message setWithdrawAddressMessage.
+                 * @member {TW.Cosmos.Proto.Message.ISetWithdrawAddress|null|undefined} setWithdrawAddressMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.setWithdrawAddressMessage = null;
+
+                /**
+                 * Message msgVote.
+                 * @member {TW.Cosmos.Proto.Message.IMsgVote|null|undefined} msgVote
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.msgVote = null;
+
+                /**
+                 * Message msgStrideLiquidStakingStake.
+                 * @member {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake|null|undefined} msgStrideLiquidStakingStake
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.msgStrideLiquidStakingStake = null;
+
+                /**
+                 * Message msgStrideLiquidStakingRedeem.
+                 * @member {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem|null|undefined} msgStrideLiquidStakingRedeem
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.msgStrideLiquidStakingRedeem = null;
+
+                /**
+                 * Message thorchainDepositMessage.
+                 * @member {TW.Cosmos.Proto.Message.ITHORChainDeposit|null|undefined} thorchainDepositMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.thorchainDepositMessage = null;
+
+                /**
+                 * Message wasmInstantiateContractMessage.
+                 * @member {TW.Cosmos.Proto.Message.IWasmInstantiateContract|null|undefined} wasmInstantiateContractMessage
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Message.prototype.wasmInstantiateContractMessage = null;
+
+                // OneOf field names bound to virtual getters and setters
+                let $oneOfFields;
+
+                /**
+                 * Message messageOneof.
+                 * @member {"sendCoinsMessage"|"transferTokensMessage"|"stakeMessage"|"unstakeMessage"|"restakeMessage"|"withdrawStakeRewardMessage"|"rawJsonMessage"|"wasmTerraExecuteContractTransferMessage"|"wasmTerraExecuteContractSendMessage"|"thorchainSendMessage"|"wasmTerraExecuteContractGeneric"|"wasmExecuteContractTransferMessage"|"wasmExecuteContractSendMessage"|"wasmExecuteContractGeneric"|"signDirectMessage"|"authGrant"|"authRevoke"|"setWithdrawAddressMessage"|"msgVote"|"msgStrideLiquidStakingStake"|"msgStrideLiquidStakingRedeem"|"thorchainDepositMessage"|"wasmInstantiateContractMessage"|undefined} messageOneof
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @instance
+                 */
+                Object.defineProperty(Message.prototype, "messageOneof", {
+                    get: $util.oneOfGetter($oneOfFields = ["sendCoinsMessage", "transferTokensMessage", "stakeMessage", "unstakeMessage", "restakeMessage", "withdrawStakeRewardMessage", "rawJsonMessage", "wasmTerraExecuteContractTransferMessage", "wasmTerraExecuteContractSendMessage", "thorchainSendMessage", "wasmTerraExecuteContractGeneric", "wasmExecuteContractTransferMessage", "wasmExecuteContractSendMessage", "wasmExecuteContractGeneric", "signDirectMessage", "authGrant", "authRevoke", "setWithdrawAddressMessage", "msgVote", "msgStrideLiquidStakingStake", "msgStrideLiquidStakingRedeem", "thorchainDepositMessage", "wasmInstantiateContractMessage"]),
+                    set: $util.oneOfSetter($oneOfFields)
+                });
+
+                /**
+                 * Creates a new Message instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @static
+                 * @param {TW.Cosmos.Proto.IMessage=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.Message} Message instance
+                 */
+                Message.create = function create(properties) {
+                    return new Message(properties);
+                };
+
+                /**
+                 * Encodes the specified Message message. Does not implicitly {@link TW.Cosmos.Proto.Message.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @static
+                 * @param {TW.Cosmos.Proto.IMessage} message Message message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Message.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.sendCoinsMessage != null && Object.hasOwnProperty.call(message, "sendCoinsMessage"))
+                        $root.TW.Cosmos.Proto.Message.Send.encode(message.sendCoinsMessage, writer.uint32(/* id 1, wireType 2 =*/10).fork(), q + 1).ldelim();
+                    if (message.transferTokensMessage != null && Object.hasOwnProperty.call(message, "transferTokensMessage"))
+                        $root.TW.Cosmos.Proto.Message.Transfer.encode(message.transferTokensMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork(), q + 1).ldelim();
+                    if (message.stakeMessage != null && Object.hasOwnProperty.call(message, "stakeMessage"))
+                        $root.TW.Cosmos.Proto.Message.Delegate.encode(message.stakeMessage, writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                    if (message.unstakeMessage != null && Object.hasOwnProperty.call(message, "unstakeMessage"))
+                        $root.TW.Cosmos.Proto.Message.Undelegate.encode(message.unstakeMessage, writer.uint32(/* id 4, wireType 2 =*/34).fork(), q + 1).ldelim();
+                    if (message.restakeMessage != null && Object.hasOwnProperty.call(message, "restakeMessage"))
+                        $root.TW.Cosmos.Proto.Message.BeginRedelegate.encode(message.restakeMessage, writer.uint32(/* id 5, wireType 2 =*/42).fork(), q + 1).ldelim();
+                    if (message.withdrawStakeRewardMessage != null && Object.hasOwnProperty.call(message, "withdrawStakeRewardMessage"))
+                        $root.TW.Cosmos.Proto.Message.WithdrawDelegationReward.encode(message.withdrawStakeRewardMessage, writer.uint32(/* id 6, wireType 2 =*/50).fork(), q + 1).ldelim();
+                    if (message.rawJsonMessage != null && Object.hasOwnProperty.call(message, "rawJsonMessage"))
+                        $root.TW.Cosmos.Proto.Message.RawJSON.encode(message.rawJsonMessage, writer.uint32(/* id 7, wireType 2 =*/58).fork(), q + 1).ldelim();
+                    if (message.wasmTerraExecuteContractTransferMessage != null && Object.hasOwnProperty.call(message, "wasmTerraExecuteContractTransferMessage"))
+                        $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer.encode(message.wasmTerraExecuteContractTransferMessage, writer.uint32(/* id 8, wireType 2 =*/66).fork(), q + 1).ldelim();
+                    if (message.wasmTerraExecuteContractSendMessage != null && Object.hasOwnProperty.call(message, "wasmTerraExecuteContractSendMessage"))
+                        $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend.encode(message.wasmTerraExecuteContractSendMessage, writer.uint32(/* id 9, wireType 2 =*/74).fork(), q + 1).ldelim();
+                    if (message.thorchainSendMessage != null && Object.hasOwnProperty.call(message, "thorchainSendMessage"))
+                        $root.TW.Cosmos.Proto.Message.THORChainSend.encode(message.thorchainSendMessage, writer.uint32(/* id 10, wireType 2 =*/82).fork(), q + 1).ldelim();
+                    if (message.wasmTerraExecuteContractGeneric != null && Object.hasOwnProperty.call(message, "wasmTerraExecuteContractGeneric"))
+                        $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric.encode(message.wasmTerraExecuteContractGeneric, writer.uint32(/* id 12, wireType 2 =*/98).fork(), q + 1).ldelim();
+                    if (message.wasmExecuteContractTransferMessage != null && Object.hasOwnProperty.call(message, "wasmExecuteContractTransferMessage"))
+                        $root.TW.Cosmos.Proto.Message.WasmExecuteContractTransfer.encode(message.wasmExecuteContractTransferMessage, writer.uint32(/* id 13, wireType 2 =*/106).fork(), q + 1).ldelim();
+                    if (message.wasmExecuteContractSendMessage != null && Object.hasOwnProperty.call(message, "wasmExecuteContractSendMessage"))
+                        $root.TW.Cosmos.Proto.Message.WasmExecuteContractSend.encode(message.wasmExecuteContractSendMessage, writer.uint32(/* id 14, wireType 2 =*/114).fork(), q + 1).ldelim();
+                    if (message.wasmExecuteContractGeneric != null && Object.hasOwnProperty.call(message, "wasmExecuteContractGeneric"))
+                        $root.TW.Cosmos.Proto.Message.WasmExecuteContractGeneric.encode(message.wasmExecuteContractGeneric, writer.uint32(/* id 15, wireType 2 =*/122).fork(), q + 1).ldelim();
+                    if (message.signDirectMessage != null && Object.hasOwnProperty.call(message, "signDirectMessage"))
+                        $root.TW.Cosmos.Proto.Message.SignDirect.encode(message.signDirectMessage, writer.uint32(/* id 16, wireType 2 =*/130).fork(), q + 1).ldelim();
+                    if (message.authGrant != null && Object.hasOwnProperty.call(message, "authGrant"))
+                        $root.TW.Cosmos.Proto.Message.AuthGrant.encode(message.authGrant, writer.uint32(/* id 17, wireType 2 =*/138).fork(), q + 1).ldelim();
+                    if (message.authRevoke != null && Object.hasOwnProperty.call(message, "authRevoke"))
+                        $root.TW.Cosmos.Proto.Message.AuthRevoke.encode(message.authRevoke, writer.uint32(/* id 18, wireType 2 =*/146).fork(), q + 1).ldelim();
+                    if (message.setWithdrawAddressMessage != null && Object.hasOwnProperty.call(message, "setWithdrawAddressMessage"))
+                        $root.TW.Cosmos.Proto.Message.SetWithdrawAddress.encode(message.setWithdrawAddressMessage, writer.uint32(/* id 19, wireType 2 =*/154).fork(), q + 1).ldelim();
+                    if (message.msgVote != null && Object.hasOwnProperty.call(message, "msgVote"))
+                        $root.TW.Cosmos.Proto.Message.MsgVote.encode(message.msgVote, writer.uint32(/* id 20, wireType 2 =*/162).fork(), q + 1).ldelim();
+                    if (message.msgStrideLiquidStakingStake != null && Object.hasOwnProperty.call(message, "msgStrideLiquidStakingStake"))
+                        $root.TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake.encode(message.msgStrideLiquidStakingStake, writer.uint32(/* id 21, wireType 2 =*/170).fork(), q + 1).ldelim();
+                    if (message.msgStrideLiquidStakingRedeem != null && Object.hasOwnProperty.call(message, "msgStrideLiquidStakingRedeem"))
+                        $root.TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem.encode(message.msgStrideLiquidStakingRedeem, writer.uint32(/* id 22, wireType 2 =*/178).fork(), q + 1).ldelim();
+                    if (message.thorchainDepositMessage != null && Object.hasOwnProperty.call(message, "thorchainDepositMessage"))
+                        $root.TW.Cosmos.Proto.Message.THORChainDeposit.encode(message.thorchainDepositMessage, writer.uint32(/* id 23, wireType 2 =*/186).fork(), q + 1).ldelim();
+                    if (message.wasmInstantiateContractMessage != null && Object.hasOwnProperty.call(message, "wasmInstantiateContractMessage"))
+                        $root.TW.Cosmos.Proto.Message.WasmInstantiateContract.encode(message.wasmInstantiateContractMessage, writer.uint32(/* id 24, wireType 2 =*/194).fork(), q + 1).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Decodes a Message message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.Message} Message
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Message.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.Message();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.sendCoinsMessage = $root.TW.Cosmos.Proto.Message.Send.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 2: {
+                                message.transferTokensMessage = $root.TW.Cosmos.Proto.Message.Transfer.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 3: {
+                                message.stakeMessage = $root.TW.Cosmos.Proto.Message.Delegate.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 4: {
+                                message.unstakeMessage = $root.TW.Cosmos.Proto.Message.Undelegate.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 5: {
+                                message.restakeMessage = $root.TW.Cosmos.Proto.Message.BeginRedelegate.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 6: {
+                                message.withdrawStakeRewardMessage = $root.TW.Cosmos.Proto.Message.WithdrawDelegationReward.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 7: {
+                                message.rawJsonMessage = $root.TW.Cosmos.Proto.Message.RawJSON.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 8: {
+                                message.wasmTerraExecuteContractTransferMessage = $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 9: {
+                                message.wasmTerraExecuteContractSendMessage = $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 10: {
+                                message.thorchainSendMessage = $root.TW.Cosmos.Proto.Message.THORChainSend.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 12: {
+                                message.wasmTerraExecuteContractGeneric = $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 13: {
+                                message.wasmExecuteContractTransferMessage = $root.TW.Cosmos.Proto.Message.WasmExecuteContractTransfer.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 14: {
+                                message.wasmExecuteContractSendMessage = $root.TW.Cosmos.Proto.Message.WasmExecuteContractSend.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 15: {
+                                message.wasmExecuteContractGeneric = $root.TW.Cosmos.Proto.Message.WasmExecuteContractGeneric.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 16: {
+                                message.signDirectMessage = $root.TW.Cosmos.Proto.Message.SignDirect.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 17: {
+                                message.authGrant = $root.TW.Cosmos.Proto.Message.AuthGrant.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 18: {
+                                message.authRevoke = $root.TW.Cosmos.Proto.Message.AuthRevoke.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 19: {
+                                message.setWithdrawAddressMessage = $root.TW.Cosmos.Proto.Message.SetWithdrawAddress.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 20: {
+                                message.msgVote = $root.TW.Cosmos.Proto.Message.MsgVote.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 21: {
+                                message.msgStrideLiquidStakingStake = $root.TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 22: {
+                                message.msgStrideLiquidStakingRedeem = $root.TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 23: {
+                                message.thorchainDepositMessage = $root.TW.Cosmos.Proto.Message.THORChainDeposit.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 24: {
+                                message.wasmInstantiateContractMessage = $root.TW.Cosmos.Proto.Message.WasmInstantiateContract.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for Message
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.Message
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                Message.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.Message";
+                };
+
+                Message.Send = (function() {
+
+                    /**
+                     * Properties of a Send.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface ISend
+                     * @property {string|null} [fromAddress] Send fromAddress
+                     * @property {string|null} [toAddress] Send toAddress
+                     * @property {Array.<TW.Cosmos.Proto.IAmount>|null} [amounts] Send amounts
+                     * @property {string|null} [typePrefix] Send typePrefix
+                     */
+
+                    /**
+                     * Constructs a new Send.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a Send.
+                     * @implements ISend
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.ISend=} [properties] Properties to set
+                     */
+                    function Send(properties) {
+                        this.amounts = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Send fromAddress.
+                     * @member {string} fromAddress
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @instance
+                     */
+                    Send.prototype.fromAddress = "";
+
+                    /**
+                     * Send toAddress.
+                     * @member {string} toAddress
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @instance
+                     */
+                    Send.prototype.toAddress = "";
+
+                    /**
+                     * Send amounts.
+                     * @member {Array.<TW.Cosmos.Proto.IAmount>} amounts
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @instance
+                     */
+                    Send.prototype.amounts = $util.emptyArray;
+
+                    /**
+                     * Send typePrefix.
+                     * @member {string} typePrefix
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @instance
+                     */
+                    Send.prototype.typePrefix = "";
+
+                    /**
+                     * Creates a new Send instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ISend=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.Send} Send instance
+                     */
+                    Send.create = function create(properties) {
+                        return new Send(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Send message. Does not implicitly {@link TW.Cosmos.Proto.Message.Send.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ISend} message Send message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Send.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.fromAddress != null && Object.hasOwnProperty.call(message, "fromAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.fromAddress);
+                        if (message.toAddress != null && Object.hasOwnProperty.call(message, "toAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.toAddress);
+                        if (message.amounts != null && message.amounts.length)
+                            for (let i = 0; i < message.amounts.length; ++i)
+                                $root.TW.Cosmos.Proto.Amount.encode(message.amounts[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        if (message.typePrefix != null && Object.hasOwnProperty.call(message, "typePrefix"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.typePrefix);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a Send message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.Send} Send
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Send.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.Send();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.fromAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.toAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.amounts && message.amounts.length))
+                                        message.amounts = [];
+                                    message.amounts.push($root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1));
+                                    break;
+                                }
+                            case 4: {
+                                    message.typePrefix = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for Send
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.Send
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    Send.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.Send";
+                    };
+
+                    return Send;
+                })();
+
+                Message.Transfer = (function() {
+
+                    /**
+                     * Properties of a Transfer.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface ITransfer
+                     * @property {string|null} [sourcePort] Transfer sourcePort
+                     * @property {string|null} [sourceChannel] Transfer sourceChannel
+                     * @property {TW.Cosmos.Proto.IAmount|null} [token] Transfer token
+                     * @property {string|null} [sender] Transfer sender
+                     * @property {string|null} [receiver] Transfer receiver
+                     * @property {TW.Cosmos.Proto.IHeight|null} [timeoutHeight] Transfer timeoutHeight
+                     * @property {number|null} [timeoutTimestamp] Transfer timeoutTimestamp
+                     */
+
+                    /**
+                     * Constructs a new Transfer.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a Transfer.
+                     * @implements ITransfer
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.ITransfer=} [properties] Properties to set
+                     */
+                    function Transfer(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Transfer sourcePort.
+                     * @member {string} sourcePort
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.sourcePort = "";
+
+                    /**
+                     * Transfer sourceChannel.
+                     * @member {string} sourceChannel
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.sourceChannel = "";
+
+                    /**
+                     * Transfer token.
+                     * @member {TW.Cosmos.Proto.IAmount|null|undefined} token
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.token = null;
+
+                    /**
+                     * Transfer sender.
+                     * @member {string} sender
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.sender = "";
+
+                    /**
+                     * Transfer receiver.
+                     * @member {string} receiver
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.receiver = "";
+
+                    /**
+                     * Transfer timeoutHeight.
+                     * @member {TW.Cosmos.Proto.IHeight|null|undefined} timeoutHeight
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.timeoutHeight = null;
+
+                    /**
+                     * Transfer timeoutTimestamp.
+                     * @member {number} timeoutTimestamp
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @instance
+                     */
+                    Transfer.prototype.timeoutTimestamp = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                    /**
+                     * Creates a new Transfer instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ITransfer=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.Transfer} Transfer instance
+                     */
+                    Transfer.create = function create(properties) {
+                        return new Transfer(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Transfer message. Does not implicitly {@link TW.Cosmos.Proto.Message.Transfer.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ITransfer} message Transfer message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Transfer.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.sourcePort != null && Object.hasOwnProperty.call(message, "sourcePort"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.sourcePort);
+                        if (message.sourceChannel != null && Object.hasOwnProperty.call(message, "sourceChannel"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.sourceChannel);
+                        if (message.token != null && Object.hasOwnProperty.call(message, "token"))
+                            $root.TW.Cosmos.Proto.Amount.encode(message.token, writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        if (message.sender != null && Object.hasOwnProperty.call(message, "sender"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.sender);
+                        if (message.receiver != null && Object.hasOwnProperty.call(message, "receiver"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.receiver);
+                        if (message.timeoutHeight != null && Object.hasOwnProperty.call(message, "timeoutHeight"))
+                            $root.TW.Cosmos.Proto.Height.encode(message.timeoutHeight, writer.uint32(/* id 6, wireType 2 =*/50).fork(), q + 1).ldelim();
+                        if (message.timeoutTimestamp != null && Object.hasOwnProperty.call(message, "timeoutTimestamp"))
+                            writer.uint32(/* id 7, wireType 0 =*/56).uint64(message.timeoutTimestamp);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a Transfer message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.Transfer} Transfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Transfer.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.Transfer();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.sourcePort = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.sourceChannel = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.token = $root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 4: {
+                                    message.sender = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    message.receiver = reader.string();
+                                    break;
+                                }
+                            case 6: {
+                                    message.timeoutHeight = $root.TW.Cosmos.Proto.Height.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 7: {
+                                    message.timeoutTimestamp = reader.uint64();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for Transfer
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.Transfer
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    Transfer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.Transfer";
+                    };
+
+                    return Transfer;
+                })();
+
+                Message.Delegate = (function() {
+
+                    /**
+                     * Properties of a Delegate.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IDelegate
+                     * @property {string|null} [delegatorAddress] Delegate delegatorAddress
+                     * @property {string|null} [validatorAddress] Delegate validatorAddress
+                     * @property {TW.Cosmos.Proto.IAmount|null} [amount] Delegate amount
+                     * @property {string|null} [typePrefix] Delegate typePrefix
+                     */
+
+                    /**
+                     * Constructs a new Delegate.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a Delegate.
+                     * @implements IDelegate
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IDelegate=} [properties] Properties to set
+                     */
+                    function Delegate(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Delegate delegatorAddress.
+                     * @member {string} delegatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @instance
+                     */
+                    Delegate.prototype.delegatorAddress = "";
+
+                    /**
+                     * Delegate validatorAddress.
+                     * @member {string} validatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @instance
+                     */
+                    Delegate.prototype.validatorAddress = "";
+
+                    /**
+                     * Delegate amount.
+                     * @member {TW.Cosmos.Proto.IAmount|null|undefined} amount
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @instance
+                     */
+                    Delegate.prototype.amount = null;
+
+                    /**
+                     * Delegate typePrefix.
+                     * @member {string} typePrefix
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @instance
+                     */
+                    Delegate.prototype.typePrefix = "";
+
+                    /**
+                     * Creates a new Delegate instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IDelegate=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.Delegate} Delegate instance
+                     */
+                    Delegate.create = function create(properties) {
+                        return new Delegate(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Delegate message. Does not implicitly {@link TW.Cosmos.Proto.Message.Delegate.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IDelegate} message Delegate message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Delegate.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.delegatorAddress != null && Object.hasOwnProperty.call(message, "delegatorAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.delegatorAddress);
+                        if (message.validatorAddress != null && Object.hasOwnProperty.call(message, "validatorAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.validatorAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            $root.TW.Cosmos.Proto.Amount.encode(message.amount, writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        if (message.typePrefix != null && Object.hasOwnProperty.call(message, "typePrefix"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.typePrefix);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a Delegate message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.Delegate} Delegate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Delegate.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.Delegate();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.delegatorAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.validatorAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.amount = $root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 4: {
+                                    message.typePrefix = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for Delegate
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.Delegate
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    Delegate.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.Delegate";
+                    };
+
+                    return Delegate;
+                })();
+
+                Message.Undelegate = (function() {
+
+                    /**
+                     * Properties of an Undelegate.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IUndelegate
+                     * @property {string|null} [delegatorAddress] Undelegate delegatorAddress
+                     * @property {string|null} [validatorAddress] Undelegate validatorAddress
+                     * @property {TW.Cosmos.Proto.IAmount|null} [amount] Undelegate amount
+                     * @property {string|null} [typePrefix] Undelegate typePrefix
+                     */
+
+                    /**
+                     * Constructs a new Undelegate.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents an Undelegate.
+                     * @implements IUndelegate
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IUndelegate=} [properties] Properties to set
+                     */
+                    function Undelegate(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * Undelegate delegatorAddress.
+                     * @member {string} delegatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @instance
+                     */
+                    Undelegate.prototype.delegatorAddress = "";
+
+                    /**
+                     * Undelegate validatorAddress.
+                     * @member {string} validatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @instance
+                     */
+                    Undelegate.prototype.validatorAddress = "";
+
+                    /**
+                     * Undelegate amount.
+                     * @member {TW.Cosmos.Proto.IAmount|null|undefined} amount
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @instance
+                     */
+                    Undelegate.prototype.amount = null;
+
+                    /**
+                     * Undelegate typePrefix.
+                     * @member {string} typePrefix
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @instance
+                     */
+                    Undelegate.prototype.typePrefix = "";
+
+                    /**
+                     * Creates a new Undelegate instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IUndelegate=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.Undelegate} Undelegate instance
+                     */
+                    Undelegate.create = function create(properties) {
+                        return new Undelegate(properties);
+                    };
+
+                    /**
+                     * Encodes the specified Undelegate message. Does not implicitly {@link TW.Cosmos.Proto.Message.Undelegate.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IUndelegate} message Undelegate message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    Undelegate.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.delegatorAddress != null && Object.hasOwnProperty.call(message, "delegatorAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.delegatorAddress);
+                        if (message.validatorAddress != null && Object.hasOwnProperty.call(message, "validatorAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.validatorAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            $root.TW.Cosmos.Proto.Amount.encode(message.amount, writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        if (message.typePrefix != null && Object.hasOwnProperty.call(message, "typePrefix"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.typePrefix);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes an Undelegate message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.Undelegate} Undelegate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    Undelegate.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.Undelegate();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.delegatorAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.validatorAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.amount = $root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 4: {
+                                    message.typePrefix = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for Undelegate
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.Undelegate
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    Undelegate.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.Undelegate";
+                    };
+
+                    return Undelegate;
+                })();
+
+                Message.BeginRedelegate = (function() {
+
+                    /**
+                     * Properties of a BeginRedelegate.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IBeginRedelegate
+                     * @property {string|null} [delegatorAddress] BeginRedelegate delegatorAddress
+                     * @property {string|null} [validatorSrcAddress] BeginRedelegate validatorSrcAddress
+                     * @property {string|null} [validatorDstAddress] BeginRedelegate validatorDstAddress
+                     * @property {TW.Cosmos.Proto.IAmount|null} [amount] BeginRedelegate amount
+                     * @property {string|null} [typePrefix] BeginRedelegate typePrefix
+                     */
+
+                    /**
+                     * Constructs a new BeginRedelegate.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a BeginRedelegate.
+                     * @implements IBeginRedelegate
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IBeginRedelegate=} [properties] Properties to set
+                     */
+                    function BeginRedelegate(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * BeginRedelegate delegatorAddress.
+                     * @member {string} delegatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @instance
+                     */
+                    BeginRedelegate.prototype.delegatorAddress = "";
+
+                    /**
+                     * BeginRedelegate validatorSrcAddress.
+                     * @member {string} validatorSrcAddress
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @instance
+                     */
+                    BeginRedelegate.prototype.validatorSrcAddress = "";
+
+                    /**
+                     * BeginRedelegate validatorDstAddress.
+                     * @member {string} validatorDstAddress
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @instance
+                     */
+                    BeginRedelegate.prototype.validatorDstAddress = "";
+
+                    /**
+                     * BeginRedelegate amount.
+                     * @member {TW.Cosmos.Proto.IAmount|null|undefined} amount
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @instance
+                     */
+                    BeginRedelegate.prototype.amount = null;
+
+                    /**
+                     * BeginRedelegate typePrefix.
+                     * @member {string} typePrefix
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @instance
+                     */
+                    BeginRedelegate.prototype.typePrefix = "";
+
+                    /**
+                     * Creates a new BeginRedelegate instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IBeginRedelegate=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.BeginRedelegate} BeginRedelegate instance
+                     */
+                    BeginRedelegate.create = function create(properties) {
+                        return new BeginRedelegate(properties);
+                    };
+
+                    /**
+                     * Encodes the specified BeginRedelegate message. Does not implicitly {@link TW.Cosmos.Proto.Message.BeginRedelegate.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IBeginRedelegate} message BeginRedelegate message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    BeginRedelegate.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.delegatorAddress != null && Object.hasOwnProperty.call(message, "delegatorAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.delegatorAddress);
+                        if (message.validatorSrcAddress != null && Object.hasOwnProperty.call(message, "validatorSrcAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.validatorSrcAddress);
+                        if (message.validatorDstAddress != null && Object.hasOwnProperty.call(message, "validatorDstAddress"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.validatorDstAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            $root.TW.Cosmos.Proto.Amount.encode(message.amount, writer.uint32(/* id 4, wireType 2 =*/34).fork(), q + 1).ldelim();
+                        if (message.typePrefix != null && Object.hasOwnProperty.call(message, "typePrefix"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.typePrefix);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a BeginRedelegate message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.BeginRedelegate} BeginRedelegate
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    BeginRedelegate.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.BeginRedelegate();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.delegatorAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.validatorSrcAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.validatorDstAddress = reader.string();
+                                    break;
+                                }
+                            case 4: {
+                                    message.amount = $root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 5: {
+                                    message.typePrefix = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for BeginRedelegate
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.BeginRedelegate
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    BeginRedelegate.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.BeginRedelegate";
+                    };
+
+                    return BeginRedelegate;
+                })();
+
+                Message.SetWithdrawAddress = (function() {
+
+                    /**
+                     * Properties of a SetWithdrawAddress.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface ISetWithdrawAddress
+                     * @property {string|null} [delegatorAddress] SetWithdrawAddress delegatorAddress
+                     * @property {string|null} [withdrawAddress] SetWithdrawAddress withdrawAddress
+                     * @property {string|null} [typePrefix] SetWithdrawAddress typePrefix
+                     */
+
+                    /**
+                     * Constructs a new SetWithdrawAddress.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a SetWithdrawAddress.
+                     * @implements ISetWithdrawAddress
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.ISetWithdrawAddress=} [properties] Properties to set
+                     */
+                    function SetWithdrawAddress(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * SetWithdrawAddress delegatorAddress.
+                     * @member {string} delegatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @instance
+                     */
+                    SetWithdrawAddress.prototype.delegatorAddress = "";
+
+                    /**
+                     * SetWithdrawAddress withdrawAddress.
+                     * @member {string} withdrawAddress
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @instance
+                     */
+                    SetWithdrawAddress.prototype.withdrawAddress = "";
+
+                    /**
+                     * SetWithdrawAddress typePrefix.
+                     * @member {string} typePrefix
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @instance
+                     */
+                    SetWithdrawAddress.prototype.typePrefix = "";
+
+                    /**
+                     * Creates a new SetWithdrawAddress instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ISetWithdrawAddress=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.SetWithdrawAddress} SetWithdrawAddress instance
+                     */
+                    SetWithdrawAddress.create = function create(properties) {
+                        return new SetWithdrawAddress(properties);
+                    };
+
+                    /**
+                     * Encodes the specified SetWithdrawAddress message. Does not implicitly {@link TW.Cosmos.Proto.Message.SetWithdrawAddress.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ISetWithdrawAddress} message SetWithdrawAddress message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    SetWithdrawAddress.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.delegatorAddress != null && Object.hasOwnProperty.call(message, "delegatorAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.delegatorAddress);
+                        if (message.withdrawAddress != null && Object.hasOwnProperty.call(message, "withdrawAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.withdrawAddress);
+                        if (message.typePrefix != null && Object.hasOwnProperty.call(message, "typePrefix"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.typePrefix);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a SetWithdrawAddress message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.SetWithdrawAddress} SetWithdrawAddress
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    SetWithdrawAddress.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.SetWithdrawAddress();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.delegatorAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.withdrawAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.typePrefix = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for SetWithdrawAddress
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.SetWithdrawAddress
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    SetWithdrawAddress.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.SetWithdrawAddress";
+                    };
+
+                    return SetWithdrawAddress;
+                })();
+
+                Message.WithdrawDelegationReward = (function() {
+
+                    /**
+                     * Properties of a WithdrawDelegationReward.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWithdrawDelegationReward
+                     * @property {string|null} [delegatorAddress] WithdrawDelegationReward delegatorAddress
+                     * @property {string|null} [validatorAddress] WithdrawDelegationReward validatorAddress
+                     * @property {string|null} [typePrefix] WithdrawDelegationReward typePrefix
+                     */
+
+                    /**
+                     * Constructs a new WithdrawDelegationReward.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WithdrawDelegationReward.
+                     * @implements IWithdrawDelegationReward
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWithdrawDelegationReward=} [properties] Properties to set
+                     */
+                    function WithdrawDelegationReward(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WithdrawDelegationReward delegatorAddress.
+                     * @member {string} delegatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @instance
+                     */
+                    WithdrawDelegationReward.prototype.delegatorAddress = "";
+
+                    /**
+                     * WithdrawDelegationReward validatorAddress.
+                     * @member {string} validatorAddress
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @instance
+                     */
+                    WithdrawDelegationReward.prototype.validatorAddress = "";
+
+                    /**
+                     * WithdrawDelegationReward typePrefix.
+                     * @member {string} typePrefix
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @instance
+                     */
+                    WithdrawDelegationReward.prototype.typePrefix = "";
+
+                    /**
+                     * Creates a new WithdrawDelegationReward instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWithdrawDelegationReward=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WithdrawDelegationReward} WithdrawDelegationReward instance
+                     */
+                    WithdrawDelegationReward.create = function create(properties) {
+                        return new WithdrawDelegationReward(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WithdrawDelegationReward message. Does not implicitly {@link TW.Cosmos.Proto.Message.WithdrawDelegationReward.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWithdrawDelegationReward} message WithdrawDelegationReward message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WithdrawDelegationReward.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.delegatorAddress != null && Object.hasOwnProperty.call(message, "delegatorAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.delegatorAddress);
+                        if (message.validatorAddress != null && Object.hasOwnProperty.call(message, "validatorAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.validatorAddress);
+                        if (message.typePrefix != null && Object.hasOwnProperty.call(message, "typePrefix"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.typePrefix);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WithdrawDelegationReward message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WithdrawDelegationReward} WithdrawDelegationReward
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WithdrawDelegationReward.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WithdrawDelegationReward();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.delegatorAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.validatorAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.typePrefix = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WithdrawDelegationReward
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WithdrawDelegationReward
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WithdrawDelegationReward.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WithdrawDelegationReward";
+                    };
+
+                    return WithdrawDelegationReward;
+                })();
+
+                Message.WasmTerraExecuteContractTransfer = (function() {
+
+                    /**
+                     * Properties of a WasmTerraExecuteContractTransfer.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmTerraExecuteContractTransfer
+                     * @property {string|null} [senderAddress] WasmTerraExecuteContractTransfer senderAddress
+                     * @property {string|null} [contractAddress] WasmTerraExecuteContractTransfer contractAddress
+                     * @property {Uint8Array|null} [amount] WasmTerraExecuteContractTransfer amount
+                     * @property {string|null} [recipientAddress] WasmTerraExecuteContractTransfer recipientAddress
+                     */
+
+                    /**
+                     * Constructs a new WasmTerraExecuteContractTransfer.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmTerraExecuteContractTransfer.
+                     * @implements IWasmTerraExecuteContractTransfer
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer=} [properties] Properties to set
+                     */
+                    function WasmTerraExecuteContractTransfer(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmTerraExecuteContractTransfer senderAddress.
+                     * @member {string} senderAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmTerraExecuteContractTransfer.prototype.senderAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractTransfer contractAddress.
+                     * @member {string} contractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmTerraExecuteContractTransfer.prototype.contractAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractTransfer amount.
+                     * @member {Uint8Array} amount
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmTerraExecuteContractTransfer.prototype.amount = $util.newBuffer([]);
+
+                    /**
+                     * WasmTerraExecuteContractTransfer recipientAddress.
+                     * @member {string} recipientAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmTerraExecuteContractTransfer.prototype.recipientAddress = "";
+
+                    /**
+                     * Creates a new WasmTerraExecuteContractTransfer instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer} WasmTerraExecuteContractTransfer instance
+                     */
+                    WasmTerraExecuteContractTransfer.create = function create(properties) {
+                        return new WasmTerraExecuteContractTransfer(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmTerraExecuteContractTransfer message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractTransfer} message WasmTerraExecuteContractTransfer message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmTerraExecuteContractTransfer.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.senderAddress != null && Object.hasOwnProperty.call(message, "senderAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.senderAddress);
+                        if (message.contractAddress != null && Object.hasOwnProperty.call(message, "contractAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.contractAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.amount);
+                        if (message.recipientAddress != null && Object.hasOwnProperty.call(message, "recipientAddress"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.recipientAddress);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmTerraExecuteContractTransfer message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer} WasmTerraExecuteContractTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmTerraExecuteContractTransfer.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.senderAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.contractAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.amount = reader.bytes();
+                                    break;
+                                }
+                            case 4: {
+                                    message.recipientAddress = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmTerraExecuteContractTransfer
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmTerraExecuteContractTransfer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmTerraExecuteContractTransfer";
+                    };
+
+                    return WasmTerraExecuteContractTransfer;
+                })();
+
+                Message.WasmTerraExecuteContractSend = (function() {
+
+                    /**
+                     * Properties of a WasmTerraExecuteContractSend.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmTerraExecuteContractSend
+                     * @property {string|null} [senderAddress] WasmTerraExecuteContractSend senderAddress
+                     * @property {string|null} [contractAddress] WasmTerraExecuteContractSend contractAddress
+                     * @property {Uint8Array|null} [amount] WasmTerraExecuteContractSend amount
+                     * @property {string|null} [recipientContractAddress] WasmTerraExecuteContractSend recipientContractAddress
+                     * @property {string|null} [msg] WasmTerraExecuteContractSend msg
+                     * @property {Array.<string>|null} [coin] WasmTerraExecuteContractSend coin
+                     */
+
+                    /**
+                     * Constructs a new WasmTerraExecuteContractSend.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmTerraExecuteContractSend.
+                     * @implements IWasmTerraExecuteContractSend
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend=} [properties] Properties to set
+                     */
+                    function WasmTerraExecuteContractSend(properties) {
+                        this.coin = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmTerraExecuteContractSend senderAddress.
+                     * @member {string} senderAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @instance
+                     */
+                    WasmTerraExecuteContractSend.prototype.senderAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractSend contractAddress.
+                     * @member {string} contractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @instance
+                     */
+                    WasmTerraExecuteContractSend.prototype.contractAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractSend amount.
+                     * @member {Uint8Array} amount
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @instance
+                     */
+                    WasmTerraExecuteContractSend.prototype.amount = $util.newBuffer([]);
+
+                    /**
+                     * WasmTerraExecuteContractSend recipientContractAddress.
+                     * @member {string} recipientContractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @instance
+                     */
+                    WasmTerraExecuteContractSend.prototype.recipientContractAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractSend msg.
+                     * @member {string} msg
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @instance
+                     */
+                    WasmTerraExecuteContractSend.prototype.msg = "";
+
+                    /**
+                     * WasmTerraExecuteContractSend coin.
+                     * @member {Array.<string>} coin
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @instance
+                     */
+                    WasmTerraExecuteContractSend.prototype.coin = $util.emptyArray;
+
+                    /**
+                     * Creates a new WasmTerraExecuteContractSend instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend} WasmTerraExecuteContractSend instance
+                     */
+                    WasmTerraExecuteContractSend.create = function create(properties) {
+                        return new WasmTerraExecuteContractSend(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmTerraExecuteContractSend message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractSend} message WasmTerraExecuteContractSend message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmTerraExecuteContractSend.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.senderAddress != null && Object.hasOwnProperty.call(message, "senderAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.senderAddress);
+                        if (message.contractAddress != null && Object.hasOwnProperty.call(message, "contractAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.contractAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.amount);
+                        if (message.recipientContractAddress != null && Object.hasOwnProperty.call(message, "recipientContractAddress"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.recipientContractAddress);
+                        if (message.msg != null && Object.hasOwnProperty.call(message, "msg"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.msg);
+                        if (message.coin != null && message.coin.length)
+                            for (let i = 0; i < message.coin.length; ++i)
+                                writer.uint32(/* id 6, wireType 2 =*/50).string(message.coin[i]);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmTerraExecuteContractSend message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend} WasmTerraExecuteContractSend
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmTerraExecuteContractSend.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.senderAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.contractAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.amount = reader.bytes();
+                                    break;
+                                }
+                            case 4: {
+                                    message.recipientContractAddress = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    message.msg = reader.string();
+                                    break;
+                                }
+                            case 6: {
+                                    if (!(message.coin && message.coin.length))
+                                        message.coin = [];
+                                    message.coin.push(reader.string());
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmTerraExecuteContractSend
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmTerraExecuteContractSend.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmTerraExecuteContractSend";
+                    };
+
+                    return WasmTerraExecuteContractSend;
+                })();
+
+                Message.THORChainSend = (function() {
+
+                    /**
+                     * Properties of a THORChainSend.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface ITHORChainSend
+                     * @property {Uint8Array|null} [fromAddress] THORChainSend fromAddress
+                     * @property {Uint8Array|null} [toAddress] THORChainSend toAddress
+                     * @property {Array.<TW.Cosmos.Proto.IAmount>|null} [amounts] THORChainSend amounts
+                     */
+
+                    /**
+                     * Constructs a new THORChainSend.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a THORChainSend.
+                     * @implements ITHORChainSend
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.ITHORChainSend=} [properties] Properties to set
+                     */
+                    function THORChainSend(properties) {
+                        this.amounts = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * THORChainSend fromAddress.
+                     * @member {Uint8Array} fromAddress
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @instance
+                     */
+                    THORChainSend.prototype.fromAddress = $util.newBuffer([]);
+
+                    /**
+                     * THORChainSend toAddress.
+                     * @member {Uint8Array} toAddress
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @instance
+                     */
+                    THORChainSend.prototype.toAddress = $util.newBuffer([]);
+
+                    /**
+                     * THORChainSend amounts.
+                     * @member {Array.<TW.Cosmos.Proto.IAmount>} amounts
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @instance
+                     */
+                    THORChainSend.prototype.amounts = $util.emptyArray;
+
+                    /**
+                     * Creates a new THORChainSend instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ITHORChainSend=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.THORChainSend} THORChainSend instance
+                     */
+                    THORChainSend.create = function create(properties) {
+                        return new THORChainSend(properties);
+                    };
+
+                    /**
+                     * Encodes the specified THORChainSend message. Does not implicitly {@link TW.Cosmos.Proto.Message.THORChainSend.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ITHORChainSend} message THORChainSend message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    THORChainSend.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.fromAddress != null && Object.hasOwnProperty.call(message, "fromAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.fromAddress);
+                        if (message.toAddress != null && Object.hasOwnProperty.call(message, "toAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.toAddress);
+                        if (message.amounts != null && message.amounts.length)
+                            for (let i = 0; i < message.amounts.length; ++i)
+                                $root.TW.Cosmos.Proto.Amount.encode(message.amounts[i], writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a THORChainSend message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.THORChainSend} THORChainSend
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    THORChainSend.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.THORChainSend();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.fromAddress = reader.bytes();
+                                    break;
+                                }
+                            case 2: {
+                                    message.toAddress = reader.bytes();
+                                    break;
+                                }
+                            case 3: {
+                                    if (!(message.amounts && message.amounts.length))
+                                        message.amounts = [];
+                                    message.amounts.push($root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1));
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for THORChainSend
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.THORChainSend
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    THORChainSend.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.THORChainSend";
+                    };
+
+                    return THORChainSend;
+                })();
+
+                Message.THORChainDeposit = (function() {
+
+                    /**
+                     * Properties of a THORChainDeposit.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface ITHORChainDeposit
+                     * @property {Array.<TW.Cosmos.Proto.ITHORChainCoin>|null} [coins] THORChainDeposit coins
+                     * @property {string|null} [memo] THORChainDeposit memo
+                     * @property {Uint8Array|null} [signer] THORChainDeposit signer
+                     */
+
+                    /**
+                     * Constructs a new THORChainDeposit.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a THORChainDeposit.
+                     * @implements ITHORChainDeposit
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.ITHORChainDeposit=} [properties] Properties to set
+                     */
+                    function THORChainDeposit(properties) {
+                        this.coins = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * THORChainDeposit coins.
+                     * @member {Array.<TW.Cosmos.Proto.ITHORChainCoin>} coins
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @instance
+                     */
+                    THORChainDeposit.prototype.coins = $util.emptyArray;
+
+                    /**
+                     * THORChainDeposit memo.
+                     * @member {string} memo
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @instance
+                     */
+                    THORChainDeposit.prototype.memo = "";
+
+                    /**
+                     * THORChainDeposit signer.
+                     * @member {Uint8Array} signer
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @instance
+                     */
+                    THORChainDeposit.prototype.signer = $util.newBuffer([]);
+
+                    /**
+                     * Creates a new THORChainDeposit instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ITHORChainDeposit=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.THORChainDeposit} THORChainDeposit instance
+                     */
+                    THORChainDeposit.create = function create(properties) {
+                        return new THORChainDeposit(properties);
+                    };
+
+                    /**
+                     * Encodes the specified THORChainDeposit message. Does not implicitly {@link TW.Cosmos.Proto.Message.THORChainDeposit.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ITHORChainDeposit} message THORChainDeposit message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    THORChainDeposit.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.coins != null && message.coins.length)
+                            for (let i = 0; i < message.coins.length; ++i)
+                                $root.TW.Cosmos.Proto.THORChainCoin.encode(message.coins[i], writer.uint32(/* id 1, wireType 2 =*/10).fork(), q + 1).ldelim();
+                        if (message.memo != null && Object.hasOwnProperty.call(message, "memo"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.memo);
+                        if (message.signer != null && Object.hasOwnProperty.call(message, "signer"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.signer);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a THORChainDeposit message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.THORChainDeposit} THORChainDeposit
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    THORChainDeposit.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.THORChainDeposit();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    if (!(message.coins && message.coins.length))
+                                        message.coins = [];
+                                    message.coins.push($root.TW.Cosmos.Proto.THORChainCoin.decode(reader, reader.uint32(), undefined, long + 1));
+                                    break;
+                                }
+                            case 2: {
+                                    message.memo = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.signer = reader.bytes();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for THORChainDeposit
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.THORChainDeposit
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    THORChainDeposit.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.THORChainDeposit";
+                    };
+
+                    return THORChainDeposit;
+                })();
+
+                Message.WasmTerraExecuteContractGeneric = (function() {
+
+                    /**
+                     * Properties of a WasmTerraExecuteContractGeneric.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmTerraExecuteContractGeneric
+                     * @property {string|null} [senderAddress] WasmTerraExecuteContractGeneric senderAddress
+                     * @property {string|null} [contractAddress] WasmTerraExecuteContractGeneric contractAddress
+                     * @property {string|null} [executeMsg] WasmTerraExecuteContractGeneric executeMsg
+                     * @property {Array.<TW.Cosmos.Proto.IAmount>|null} [coins] WasmTerraExecuteContractGeneric coins
+                     */
+
+                    /**
+                     * Constructs a new WasmTerraExecuteContractGeneric.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmTerraExecuteContractGeneric.
+                     * @implements IWasmTerraExecuteContractGeneric
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric=} [properties] Properties to set
+                     */
+                    function WasmTerraExecuteContractGeneric(properties) {
+                        this.coins = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmTerraExecuteContractGeneric senderAddress.
+                     * @member {string} senderAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmTerraExecuteContractGeneric.prototype.senderAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractGeneric contractAddress.
+                     * @member {string} contractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmTerraExecuteContractGeneric.prototype.contractAddress = "";
+
+                    /**
+                     * WasmTerraExecuteContractGeneric executeMsg.
+                     * @member {string} executeMsg
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmTerraExecuteContractGeneric.prototype.executeMsg = "";
+
+                    /**
+                     * WasmTerraExecuteContractGeneric coins.
+                     * @member {Array.<TW.Cosmos.Proto.IAmount>} coins
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmTerraExecuteContractGeneric.prototype.coins = $util.emptyArray;
+
+                    /**
+                     * Creates a new WasmTerraExecuteContractGeneric instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric} WasmTerraExecuteContractGeneric instance
+                     */
+                    WasmTerraExecuteContractGeneric.create = function create(properties) {
+                        return new WasmTerraExecuteContractGeneric(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmTerraExecuteContractGeneric message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmTerraExecuteContractGeneric} message WasmTerraExecuteContractGeneric message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmTerraExecuteContractGeneric.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.senderAddress != null && Object.hasOwnProperty.call(message, "senderAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.senderAddress);
+                        if (message.contractAddress != null && Object.hasOwnProperty.call(message, "contractAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.contractAddress);
+                        if (message.executeMsg != null && Object.hasOwnProperty.call(message, "executeMsg"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.executeMsg);
+                        if (message.coins != null && message.coins.length)
+                            for (let i = 0; i < message.coins.length; ++i)
+                                $root.TW.Cosmos.Proto.Amount.encode(message.coins[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), q + 1).ldelim();
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmTerraExecuteContractGeneric message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric} WasmTerraExecuteContractGeneric
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmTerraExecuteContractGeneric.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.senderAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.contractAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.executeMsg = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    if (!(message.coins && message.coins.length))
+                                        message.coins = [];
+                                    message.coins.push($root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1));
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmTerraExecuteContractGeneric
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmTerraExecuteContractGeneric.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmTerraExecuteContractGeneric";
+                    };
+
+                    return WasmTerraExecuteContractGeneric;
+                })();
+
+                Message.WasmExecuteContractTransfer = (function() {
+
+                    /**
+                     * Properties of a WasmExecuteContractTransfer.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmExecuteContractTransfer
+                     * @property {string|null} [senderAddress] WasmExecuteContractTransfer senderAddress
+                     * @property {string|null} [contractAddress] WasmExecuteContractTransfer contractAddress
+                     * @property {Uint8Array|null} [amount] WasmExecuteContractTransfer amount
+                     * @property {string|null} [recipientAddress] WasmExecuteContractTransfer recipientAddress
+                     */
+
+                    /**
+                     * Constructs a new WasmExecuteContractTransfer.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmExecuteContractTransfer.
+                     * @implements IWasmExecuteContractTransfer
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer=} [properties] Properties to set
+                     */
+                    function WasmExecuteContractTransfer(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmExecuteContractTransfer senderAddress.
+                     * @member {string} senderAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmExecuteContractTransfer.prototype.senderAddress = "";
+
+                    /**
+                     * WasmExecuteContractTransfer contractAddress.
+                     * @member {string} contractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmExecuteContractTransfer.prototype.contractAddress = "";
+
+                    /**
+                     * WasmExecuteContractTransfer amount.
+                     * @member {Uint8Array} amount
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmExecuteContractTransfer.prototype.amount = $util.newBuffer([]);
+
+                    /**
+                     * WasmExecuteContractTransfer recipientAddress.
+                     * @member {string} recipientAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @instance
+                     */
+                    WasmExecuteContractTransfer.prototype.recipientAddress = "";
+
+                    /**
+                     * Creates a new WasmExecuteContractTransfer instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmExecuteContractTransfer} WasmExecuteContractTransfer instance
+                     */
+                    WasmExecuteContractTransfer.create = function create(properties) {
+                        return new WasmExecuteContractTransfer(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmExecuteContractTransfer message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmExecuteContractTransfer.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractTransfer} message WasmExecuteContractTransfer message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmExecuteContractTransfer.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.senderAddress != null && Object.hasOwnProperty.call(message, "senderAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.senderAddress);
+                        if (message.contractAddress != null && Object.hasOwnProperty.call(message, "contractAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.contractAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.amount);
+                        if (message.recipientAddress != null && Object.hasOwnProperty.call(message, "recipientAddress"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.recipientAddress);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmExecuteContractTransfer message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmExecuteContractTransfer} WasmExecuteContractTransfer
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmExecuteContractTransfer.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmExecuteContractTransfer();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.senderAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.contractAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.amount = reader.bytes();
+                                    break;
+                                }
+                            case 4: {
+                                    message.recipientAddress = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmExecuteContractTransfer
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractTransfer
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmExecuteContractTransfer.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmExecuteContractTransfer";
+                    };
+
+                    return WasmExecuteContractTransfer;
+                })();
+
+                Message.WasmExecuteContractSend = (function() {
+
+                    /**
+                     * Properties of a WasmExecuteContractSend.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmExecuteContractSend
+                     * @property {string|null} [senderAddress] WasmExecuteContractSend senderAddress
+                     * @property {string|null} [contractAddress] WasmExecuteContractSend contractAddress
+                     * @property {Uint8Array|null} [amount] WasmExecuteContractSend amount
+                     * @property {string|null} [recipientContractAddress] WasmExecuteContractSend recipientContractAddress
+                     * @property {string|null} [msg] WasmExecuteContractSend msg
+                     * @property {Array.<string>|null} [coin] WasmExecuteContractSend coin
+                     */
+
+                    /**
+                     * Constructs a new WasmExecuteContractSend.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmExecuteContractSend.
+                     * @implements IWasmExecuteContractSend
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractSend=} [properties] Properties to set
+                     */
+                    function WasmExecuteContractSend(properties) {
+                        this.coin = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmExecuteContractSend senderAddress.
+                     * @member {string} senderAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @instance
+                     */
+                    WasmExecuteContractSend.prototype.senderAddress = "";
+
+                    /**
+                     * WasmExecuteContractSend contractAddress.
+                     * @member {string} contractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @instance
+                     */
+                    WasmExecuteContractSend.prototype.contractAddress = "";
+
+                    /**
+                     * WasmExecuteContractSend amount.
+                     * @member {Uint8Array} amount
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @instance
+                     */
+                    WasmExecuteContractSend.prototype.amount = $util.newBuffer([]);
+
+                    /**
+                     * WasmExecuteContractSend recipientContractAddress.
+                     * @member {string} recipientContractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @instance
+                     */
+                    WasmExecuteContractSend.prototype.recipientContractAddress = "";
+
+                    /**
+                     * WasmExecuteContractSend msg.
+                     * @member {string} msg
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @instance
+                     */
+                    WasmExecuteContractSend.prototype.msg = "";
+
+                    /**
+                     * WasmExecuteContractSend coin.
+                     * @member {Array.<string>} coin
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @instance
+                     */
+                    WasmExecuteContractSend.prototype.coin = $util.emptyArray;
+
+                    /**
+                     * Creates a new WasmExecuteContractSend instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractSend=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmExecuteContractSend} WasmExecuteContractSend instance
+                     */
+                    WasmExecuteContractSend.create = function create(properties) {
+                        return new WasmExecuteContractSend(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmExecuteContractSend message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmExecuteContractSend.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractSend} message WasmExecuteContractSend message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmExecuteContractSend.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.senderAddress != null && Object.hasOwnProperty.call(message, "senderAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.senderAddress);
+                        if (message.contractAddress != null && Object.hasOwnProperty.call(message, "contractAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.contractAddress);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.amount);
+                        if (message.recipientContractAddress != null && Object.hasOwnProperty.call(message, "recipientContractAddress"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.recipientContractAddress);
+                        if (message.msg != null && Object.hasOwnProperty.call(message, "msg"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).string(message.msg);
+                        if (message.coin != null && message.coin.length)
+                            for (let i = 0; i < message.coin.length; ++i)
+                                writer.uint32(/* id 6, wireType 2 =*/50).string(message.coin[i]);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmExecuteContractSend message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmExecuteContractSend} WasmExecuteContractSend
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmExecuteContractSend.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmExecuteContractSend();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.senderAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.contractAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.amount = reader.bytes();
+                                    break;
+                                }
+                            case 4: {
+                                    message.recipientContractAddress = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    message.msg = reader.string();
+                                    break;
+                                }
+                            case 6: {
+                                    if (!(message.coin && message.coin.length))
+                                        message.coin = [];
+                                    message.coin.push(reader.string());
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmExecuteContractSend
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractSend
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmExecuteContractSend.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmExecuteContractSend";
+                    };
+
+                    return WasmExecuteContractSend;
+                })();
+
+                Message.WasmExecuteContractGeneric = (function() {
+
+                    /**
+                     * Properties of a WasmExecuteContractGeneric.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmExecuteContractGeneric
+                     * @property {string|null} [senderAddress] WasmExecuteContractGeneric senderAddress
+                     * @property {string|null} [contractAddress] WasmExecuteContractGeneric contractAddress
+                     * @property {string|null} [executeMsg] WasmExecuteContractGeneric executeMsg
+                     * @property {Array.<TW.Cosmos.Proto.IAmount>|null} [coins] WasmExecuteContractGeneric coins
+                     */
+
+                    /**
+                     * Constructs a new WasmExecuteContractGeneric.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmExecuteContractGeneric.
+                     * @implements IWasmExecuteContractGeneric
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric=} [properties] Properties to set
+                     */
+                    function WasmExecuteContractGeneric(properties) {
+                        this.coins = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmExecuteContractGeneric senderAddress.
+                     * @member {string} senderAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmExecuteContractGeneric.prototype.senderAddress = "";
+
+                    /**
+                     * WasmExecuteContractGeneric contractAddress.
+                     * @member {string} contractAddress
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmExecuteContractGeneric.prototype.contractAddress = "";
+
+                    /**
+                     * WasmExecuteContractGeneric executeMsg.
+                     * @member {string} executeMsg
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmExecuteContractGeneric.prototype.executeMsg = "";
+
+                    /**
+                     * WasmExecuteContractGeneric coins.
+                     * @member {Array.<TW.Cosmos.Proto.IAmount>} coins
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @instance
+                     */
+                    WasmExecuteContractGeneric.prototype.coins = $util.emptyArray;
+
+                    /**
+                     * Creates a new WasmExecuteContractGeneric instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmExecuteContractGeneric} WasmExecuteContractGeneric instance
+                     */
+                    WasmExecuteContractGeneric.create = function create(properties) {
+                        return new WasmExecuteContractGeneric(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmExecuteContractGeneric message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmExecuteContractGeneric.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmExecuteContractGeneric} message WasmExecuteContractGeneric message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmExecuteContractGeneric.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.senderAddress != null && Object.hasOwnProperty.call(message, "senderAddress"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.senderAddress);
+                        if (message.contractAddress != null && Object.hasOwnProperty.call(message, "contractAddress"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.contractAddress);
+                        if (message.executeMsg != null && Object.hasOwnProperty.call(message, "executeMsg"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.executeMsg);
+                        if (message.coins != null && message.coins.length)
+                            for (let i = 0; i < message.coins.length; ++i)
+                                $root.TW.Cosmos.Proto.Amount.encode(message.coins[i], writer.uint32(/* id 5, wireType 2 =*/42).fork(), q + 1).ldelim();
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmExecuteContractGeneric message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmExecuteContractGeneric} WasmExecuteContractGeneric
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmExecuteContractGeneric.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmExecuteContractGeneric();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.senderAddress = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.contractAddress = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.executeMsg = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    if (!(message.coins && message.coins.length))
+                                        message.coins = [];
+                                    message.coins.push($root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1));
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmExecuteContractGeneric
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmExecuteContractGeneric
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmExecuteContractGeneric.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmExecuteContractGeneric";
+                    };
+
+                    return WasmExecuteContractGeneric;
+                })();
+
+                Message.WasmInstantiateContract = (function() {
+
+                    /**
+                     * Properties of a WasmInstantiateContract.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IWasmInstantiateContract
+                     * @property {string|null} [sender] WasmInstantiateContract sender
+                     * @property {string|null} [admin] WasmInstantiateContract admin
+                     * @property {number|null} [codeId] WasmInstantiateContract codeId
+                     * @property {string|null} [label] WasmInstantiateContract label
+                     * @property {Uint8Array|null} [msg] WasmInstantiateContract msg
+                     * @property {Array.<TW.Cosmos.Proto.IAmount>|null} [initFunds] WasmInstantiateContract initFunds
+                     */
+
+                    /**
+                     * Constructs a new WasmInstantiateContract.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a WasmInstantiateContract.
+                     * @implements IWasmInstantiateContract
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IWasmInstantiateContract=} [properties] Properties to set
+                     */
+                    function WasmInstantiateContract(properties) {
+                        this.initFunds = [];
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * WasmInstantiateContract sender.
+                     * @member {string} sender
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @instance
+                     */
+                    WasmInstantiateContract.prototype.sender = "";
+
+                    /**
+                     * WasmInstantiateContract admin.
+                     * @member {string} admin
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @instance
+                     */
+                    WasmInstantiateContract.prototype.admin = "";
+
+                    /**
+                     * WasmInstantiateContract codeId.
+                     * @member {number} codeId
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @instance
+                     */
+                    WasmInstantiateContract.prototype.codeId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                    /**
+                     * WasmInstantiateContract label.
+                     * @member {string} label
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @instance
+                     */
+                    WasmInstantiateContract.prototype.label = "";
+
+                    /**
+                     * WasmInstantiateContract msg.
+                     * @member {Uint8Array} msg
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @instance
+                     */
+                    WasmInstantiateContract.prototype.msg = $util.newBuffer([]);
+
+                    /**
+                     * WasmInstantiateContract initFunds.
+                     * @member {Array.<TW.Cosmos.Proto.IAmount>} initFunds
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @instance
+                     */
+                    WasmInstantiateContract.prototype.initFunds = $util.emptyArray;
+
+                    /**
+                     * Creates a new WasmInstantiateContract instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmInstantiateContract=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.WasmInstantiateContract} WasmInstantiateContract instance
+                     */
+                    WasmInstantiateContract.create = function create(properties) {
+                        return new WasmInstantiateContract(properties);
+                    };
+
+                    /**
+                     * Encodes the specified WasmInstantiateContract message. Does not implicitly {@link TW.Cosmos.Proto.Message.WasmInstantiateContract.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IWasmInstantiateContract} message WasmInstantiateContract message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    WasmInstantiateContract.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.sender != null && Object.hasOwnProperty.call(message, "sender"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.sender);
+                        if (message.admin != null && Object.hasOwnProperty.call(message, "admin"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.admin);
+                        if (message.codeId != null && Object.hasOwnProperty.call(message, "codeId"))
+                            writer.uint32(/* id 3, wireType 0 =*/24).uint64(message.codeId);
+                        if (message.label != null && Object.hasOwnProperty.call(message, "label"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.label);
+                        if (message.msg != null && Object.hasOwnProperty.call(message, "msg"))
+                            writer.uint32(/* id 5, wireType 2 =*/42).bytes(message.msg);
+                        if (message.initFunds != null && message.initFunds.length)
+                            for (let i = 0; i < message.initFunds.length; ++i)
+                                $root.TW.Cosmos.Proto.Amount.encode(message.initFunds[i], writer.uint32(/* id 6, wireType 2 =*/50).fork(), q + 1).ldelim();
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a WasmInstantiateContract message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.WasmInstantiateContract} WasmInstantiateContract
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    WasmInstantiateContract.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.WasmInstantiateContract();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.sender = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.admin = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.codeId = reader.uint64();
+                                    break;
+                                }
+                            case 4: {
+                                    message.label = reader.string();
+                                    break;
+                                }
+                            case 5: {
+                                    message.msg = reader.bytes();
+                                    break;
+                                }
+                            case 6: {
+                                    if (!(message.initFunds && message.initFunds.length))
+                                        message.initFunds = [];
+                                    message.initFunds.push($root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1));
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for WasmInstantiateContract
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.WasmInstantiateContract
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    WasmInstantiateContract.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.WasmInstantiateContract";
+                    };
+
+                    return WasmInstantiateContract;
+                })();
+
+                Message.RawJSON = (function() {
+
+                    /**
+                     * Properties of a RawJSON.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IRawJSON
+                     * @property {string|null} [type] RawJSON type
+                     * @property {string|null} [value] RawJSON value
+                     */
+
+                    /**
+                     * Constructs a new RawJSON.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a RawJSON.
+                     * @implements IRawJSON
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IRawJSON=} [properties] Properties to set
+                     */
+                    function RawJSON(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * RawJSON type.
+                     * @member {string} type
+                     * @memberof TW.Cosmos.Proto.Message.RawJSON
+                     * @instance
+                     */
+                    RawJSON.prototype.type = "";
+
+                    /**
+                     * RawJSON value.
+                     * @member {string} value
+                     * @memberof TW.Cosmos.Proto.Message.RawJSON
+                     * @instance
+                     */
+                    RawJSON.prototype.value = "";
+
+                    /**
+                     * Creates a new RawJSON instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.RawJSON
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IRawJSON=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.RawJSON} RawJSON instance
+                     */
+                    RawJSON.create = function create(properties) {
+                        return new RawJSON(properties);
+                    };
+
+                    /**
+                     * Encodes the specified RawJSON message. Does not implicitly {@link TW.Cosmos.Proto.Message.RawJSON.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.RawJSON
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IRawJSON} message RawJSON message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    RawJSON.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.type != null && Object.hasOwnProperty.call(message, "type"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.type);
+                        if (message.value != null && Object.hasOwnProperty.call(message, "value"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.value);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a RawJSON message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.RawJSON
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.RawJSON} RawJSON
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    RawJSON.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.RawJSON();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.type = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.value = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for RawJSON
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.RawJSON
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    RawJSON.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.RawJSON";
+                    };
+
+                    return RawJSON;
+                })();
+
+                Message.SignDirect = (function() {
+
+                    /**
+                     * Properties of a SignDirect.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface ISignDirect
+                     * @property {Uint8Array|null} [bodyBytes] SignDirect bodyBytes
+                     * @property {Uint8Array|null} [authInfoBytes] SignDirect authInfoBytes
+                     */
+
+                    /**
+                     * Constructs a new SignDirect.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a SignDirect.
+                     * @implements ISignDirect
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.ISignDirect=} [properties] Properties to set
+                     */
+                    function SignDirect(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * SignDirect bodyBytes.
+                     * @member {Uint8Array} bodyBytes
+                     * @memberof TW.Cosmos.Proto.Message.SignDirect
+                     * @instance
+                     */
+                    SignDirect.prototype.bodyBytes = $util.newBuffer([]);
+
+                    /**
+                     * SignDirect authInfoBytes.
+                     * @member {Uint8Array} authInfoBytes
+                     * @memberof TW.Cosmos.Proto.Message.SignDirect
+                     * @instance
+                     */
+                    SignDirect.prototype.authInfoBytes = $util.newBuffer([]);
+
+                    /**
+                     * Creates a new SignDirect instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.SignDirect
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ISignDirect=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.SignDirect} SignDirect instance
+                     */
+                    SignDirect.create = function create(properties) {
+                        return new SignDirect(properties);
+                    };
+
+                    /**
+                     * Encodes the specified SignDirect message. Does not implicitly {@link TW.Cosmos.Proto.Message.SignDirect.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.SignDirect
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.ISignDirect} message SignDirect message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    SignDirect.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.bodyBytes != null && Object.hasOwnProperty.call(message, "bodyBytes"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.bodyBytes);
+                        if (message.authInfoBytes != null && Object.hasOwnProperty.call(message, "authInfoBytes"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).bytes(message.authInfoBytes);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a SignDirect message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.SignDirect
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.SignDirect} SignDirect
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    SignDirect.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.SignDirect();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.bodyBytes = reader.bytes();
+                                    break;
+                                }
+                            case 2: {
+                                    message.authInfoBytes = reader.bytes();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for SignDirect
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.SignDirect
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    SignDirect.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.SignDirect";
+                    };
+
+                    return SignDirect;
+                })();
+
+                Message.StakeAuthorization = (function() {
+
+                    /**
+                     * Properties of a StakeAuthorization.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IStakeAuthorization
+                     * @property {TW.Cosmos.Proto.IAmount|null} [maxTokens] StakeAuthorization maxTokens
+                     * @property {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null} [allowList] StakeAuthorization allowList
+                     * @property {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null} [denyList] StakeAuthorization denyList
+                     * @property {TW.Cosmos.Proto.Message.AuthorizationType|null} [authorizationType] StakeAuthorization authorizationType
+                     */
+
+                    /**
+                     * Constructs a new StakeAuthorization.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a StakeAuthorization.
+                     * @implements IStakeAuthorization
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IStakeAuthorization=} [properties] Properties to set
+                     */
+                    function StakeAuthorization(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * StakeAuthorization maxTokens.
+                     * @member {TW.Cosmos.Proto.IAmount|null|undefined} maxTokens
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @instance
+                     */
+                    StakeAuthorization.prototype.maxTokens = null;
+
+                    /**
+                     * StakeAuthorization allowList.
+                     * @member {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null|undefined} allowList
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @instance
+                     */
+                    StakeAuthorization.prototype.allowList = null;
+
+                    /**
+                     * StakeAuthorization denyList.
+                     * @member {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators|null|undefined} denyList
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @instance
+                     */
+                    StakeAuthorization.prototype.denyList = null;
+
+                    /**
+                     * StakeAuthorization authorizationType.
+                     * @member {TW.Cosmos.Proto.Message.AuthorizationType} authorizationType
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @instance
+                     */
+                    StakeAuthorization.prototype.authorizationType = 0;
+
+                    // OneOf field names bound to virtual getters and setters
+                    let $oneOfFields;
+
+                    /**
+                     * StakeAuthorization validators.
+                     * @member {"allowList"|"denyList"|undefined} validators
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @instance
+                     */
+                    Object.defineProperty(StakeAuthorization.prototype, "validators", {
+                        get: $util.oneOfGetter($oneOfFields = ["allowList", "denyList"]),
+                        set: $util.oneOfSetter($oneOfFields)
+                    });
+
+                    /**
+                     * Creates a new StakeAuthorization instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IStakeAuthorization=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.StakeAuthorization} StakeAuthorization instance
+                     */
+                    StakeAuthorization.create = function create(properties) {
+                        return new StakeAuthorization(properties);
+                    };
+
+                    /**
+                     * Encodes the specified StakeAuthorization message. Does not implicitly {@link TW.Cosmos.Proto.Message.StakeAuthorization.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IStakeAuthorization} message StakeAuthorization message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    StakeAuthorization.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.maxTokens != null && Object.hasOwnProperty.call(message, "maxTokens"))
+                            $root.TW.Cosmos.Proto.Amount.encode(message.maxTokens, writer.uint32(/* id 1, wireType 2 =*/10).fork(), q + 1).ldelim();
+                        if (message.allowList != null && Object.hasOwnProperty.call(message, "allowList"))
+                            $root.TW.Cosmos.Proto.Message.StakeAuthorization.Validators.encode(message.allowList, writer.uint32(/* id 2, wireType 2 =*/18).fork(), q + 1).ldelim();
+                        if (message.denyList != null && Object.hasOwnProperty.call(message, "denyList"))
+                            $root.TW.Cosmos.Proto.Message.StakeAuthorization.Validators.encode(message.denyList, writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        if (message.authorizationType != null && Object.hasOwnProperty.call(message, "authorizationType"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).int32(message.authorizationType);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a StakeAuthorization message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.StakeAuthorization} StakeAuthorization
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    StakeAuthorization.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.StakeAuthorization();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.maxTokens = $root.TW.Cosmos.Proto.Amount.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 2: {
+                                    message.allowList = $root.TW.Cosmos.Proto.Message.StakeAuthorization.Validators.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 3: {
+                                    message.denyList = $root.TW.Cosmos.Proto.Message.StakeAuthorization.Validators.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 4: {
+                                    message.authorizationType = reader.int32();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for StakeAuthorization
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    StakeAuthorization.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.StakeAuthorization";
+                    };
+
+                    StakeAuthorization.Validators = (function() {
+
+                        /**
+                         * Properties of a Validators.
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                         * @interface IValidators
+                         * @property {Array.<string>|null} [address] Validators address
+                         */
+
+                        /**
+                         * Constructs a new Validators.
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization
+                         * @classdesc Represents a Validators.
+                         * @implements IValidators
+                         * @constructor
+                         * @param {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators=} [properties] Properties to set
+                         */
+                        function Validators(properties) {
+                            this.address = [];
+                            if (properties)
+                                for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                    if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                        this[keys[i]] = properties[keys[i]];
+                        }
+
+                        /**
+                         * Validators address.
+                         * @member {Array.<string>} address
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization.Validators
+                         * @instance
+                         */
+                        Validators.prototype.address = $util.emptyArray;
+
+                        /**
+                         * Creates a new Validators instance using the specified properties.
+                         * @function create
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization.Validators
+                         * @static
+                         * @param {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators=} [properties] Properties to set
+                         * @returns {TW.Cosmos.Proto.Message.StakeAuthorization.Validators} Validators instance
+                         */
+                        Validators.create = function create(properties) {
+                            return new Validators(properties);
+                        };
+
+                        /**
+                         * Encodes the specified Validators message. Does not implicitly {@link TW.Cosmos.Proto.Message.StakeAuthorization.Validators.verify|verify} messages.
+                         * @function encode
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization.Validators
+                         * @static
+                         * @param {TW.Cosmos.Proto.Message.StakeAuthorization.IValidators} message Validators message or plain object to encode
+                         * @param {$protobuf.Writer} [writer] Writer to encode to
+                         * @returns {$protobuf.Writer} Writer
+                         */
+                        Validators.encode = function encode(message, writer, q) {
+                            if (!writer)
+                                writer = $Writer.create();
+                            if (q === undefined)
+                                q = 0;
+                            if (q > $util.recursionLimit)
+                                throw Error("max depth exceeded");
+                            if (message.address != null && message.address.length)
+                                for (let i = 0; i < message.address.length; ++i)
+                                    writer.uint32(/* id 1, wireType 2 =*/10).string(message.address[i]);
+                            return writer;
+                        };
+
+                        /**
+                         * Decodes a Validators message from the specified reader or buffer.
+                         * @function decode
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization.Validators
+                         * @static
+                         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                         * @param {number} [length] Message length if known beforehand
+                         * @returns {TW.Cosmos.Proto.Message.StakeAuthorization.Validators} Validators
+                         * @throws {Error} If the payload is not a reader or valid buffer
+                         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                         */
+                        Validators.decode = function decode(reader, length, error, long) {
+                            if (!(reader instanceof $Reader))
+                                reader = $Reader.create(reader);
+                            if (long === undefined)
+                                long = 0;
+                            if (long > $Reader.recursionLimit)
+                                throw Error("maximum nesting depth exceeded");
+                            let end, message;
+                            if (length === undefined)
+                                end = reader.len;
+                            else {
+                                end = reader.pos + length;
+                                if (end > reader.len)
+                                    throw RangeError("index out of range");
+                                length = reader.len;
+                                reader.len = end;
+                            }
+                            message = new $root.TW.Cosmos.Proto.Message.StakeAuthorization.Validators();
+                            while (reader.pos < end) {
+                                let tag = reader.uint32();
+                                if (tag === error)
+                                    break;
+                                switch (tag >>> 3) {
+                                case 1: {
+                                        if (!(message.address && message.address.length))
+                                            message.address = [];
+                                        message.address.push(reader.string());
+                                        break;
+                                    }
+                                default:
+                                    reader.skipType(tag & 7, long);
+                                    break;
+                                }
+                            }
+                            if (length !== undefined) {
+                                if (reader.pos !== end)
+                                    throw RangeError("index out of range");
+                                reader.len = length;
+                            }
+                            return message;
+                        };
+
+                        /**
+                         * Gets the default type url for Validators
+                         * @function getTypeUrl
+                         * @memberof TW.Cosmos.Proto.Message.StakeAuthorization.Validators
+                         * @static
+                         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                         * @returns {string} The default type url
+                         */
+                        Validators.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                            if (typeUrlPrefix === undefined) {
+                                typeUrlPrefix = "type.googleapis.com";
+                            }
+                            return typeUrlPrefix + "/TW.Cosmos.Proto.Message.StakeAuthorization.Validators";
+                        };
+
+                        return Validators;
+                    })();
+
+                    return StakeAuthorization;
+                })();
+
+                /**
+                 * AuthorizationType enum.
+                 * @name TW.Cosmos.Proto.Message.AuthorizationType
+                 * @enum {number}
+                 * @property {number} UNSPECIFIED=0 UNSPECIFIED value
+                 * @property {number} DELEGATE=1 DELEGATE value
+                 * @property {number} UNDELEGATE=2 UNDELEGATE value
+                 * @property {number} REDELEGATE=3 REDELEGATE value
+                 */
+                Message.AuthorizationType = (function() {
+                    const valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "UNSPECIFIED"] = 0;
+                    values[valuesById[1] = "DELEGATE"] = 1;
+                    values[valuesById[2] = "UNDELEGATE"] = 2;
+                    values[valuesById[3] = "REDELEGATE"] = 3;
+                    return values;
+                })();
+
+                Message.AuthGrant = (function() {
+
+                    /**
+                     * Properties of an AuthGrant.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IAuthGrant
+                     * @property {string|null} [granter] AuthGrant granter
+                     * @property {string|null} [grantee] AuthGrant grantee
+                     * @property {TW.Cosmos.Proto.Message.IStakeAuthorization|null} [grantStake] AuthGrant grantStake
+                     * @property {number|null} [expiration] AuthGrant expiration
+                     */
+
+                    /**
+                     * Constructs a new AuthGrant.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents an AuthGrant.
+                     * @implements IAuthGrant
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IAuthGrant=} [properties] Properties to set
+                     */
+                    function AuthGrant(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * AuthGrant granter.
+                     * @member {string} granter
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @instance
+                     */
+                    AuthGrant.prototype.granter = "";
+
+                    /**
+                     * AuthGrant grantee.
+                     * @member {string} grantee
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @instance
+                     */
+                    AuthGrant.prototype.grantee = "";
+
+                    /**
+                     * AuthGrant grantStake.
+                     * @member {TW.Cosmos.Proto.Message.IStakeAuthorization|null|undefined} grantStake
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @instance
+                     */
+                    AuthGrant.prototype.grantStake = null;
+
+                    /**
+                     * AuthGrant expiration.
+                     * @member {number} expiration
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @instance
+                     */
+                    AuthGrant.prototype.expiration = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+                    // OneOf field names bound to virtual getters and setters
+                    let $oneOfFields;
+
+                    /**
+                     * AuthGrant grantType.
+                     * @member {"grantStake"|undefined} grantType
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @instance
+                     */
+                    Object.defineProperty(AuthGrant.prototype, "grantType", {
+                        get: $util.oneOfGetter($oneOfFields = ["grantStake"]),
+                        set: $util.oneOfSetter($oneOfFields)
+                    });
+
+                    /**
+                     * Creates a new AuthGrant instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IAuthGrant=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.AuthGrant} AuthGrant instance
+                     */
+                    AuthGrant.create = function create(properties) {
+                        return new AuthGrant(properties);
+                    };
+
+                    /**
+                     * Encodes the specified AuthGrant message. Does not implicitly {@link TW.Cosmos.Proto.Message.AuthGrant.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IAuthGrant} message AuthGrant message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    AuthGrant.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.granter != null && Object.hasOwnProperty.call(message, "granter"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.granter);
+                        if (message.grantee != null && Object.hasOwnProperty.call(message, "grantee"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.grantee);
+                        if (message.grantStake != null && Object.hasOwnProperty.call(message, "grantStake"))
+                            $root.TW.Cosmos.Proto.Message.StakeAuthorization.encode(message.grantStake, writer.uint32(/* id 3, wireType 2 =*/26).fork(), q + 1).ldelim();
+                        if (message.expiration != null && Object.hasOwnProperty.call(message, "expiration"))
+                            writer.uint32(/* id 4, wireType 0 =*/32).int64(message.expiration);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes an AuthGrant message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.AuthGrant} AuthGrant
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    AuthGrant.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.AuthGrant();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.granter = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.grantee = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.grantStake = $root.TW.Cosmos.Proto.Message.StakeAuthorization.decode(reader, reader.uint32(), undefined, long + 1);
+                                    break;
+                                }
+                            case 4: {
+                                    message.expiration = reader.int64();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for AuthGrant
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.AuthGrant
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    AuthGrant.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.AuthGrant";
+                    };
+
+                    return AuthGrant;
+                })();
+
+                Message.AuthRevoke = (function() {
+
+                    /**
+                     * Properties of an AuthRevoke.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IAuthRevoke
+                     * @property {string|null} [granter] AuthRevoke granter
+                     * @property {string|null} [grantee] AuthRevoke grantee
+                     * @property {string|null} [msgTypeUrl] AuthRevoke msgTypeUrl
+                     */
+
+                    /**
+                     * Constructs a new AuthRevoke.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents an AuthRevoke.
+                     * @implements IAuthRevoke
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IAuthRevoke=} [properties] Properties to set
+                     */
+                    function AuthRevoke(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * AuthRevoke granter.
+                     * @member {string} granter
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @instance
+                     */
+                    AuthRevoke.prototype.granter = "";
+
+                    /**
+                     * AuthRevoke grantee.
+                     * @member {string} grantee
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @instance
+                     */
+                    AuthRevoke.prototype.grantee = "";
+
+                    /**
+                     * AuthRevoke msgTypeUrl.
+                     * @member {string} msgTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @instance
+                     */
+                    AuthRevoke.prototype.msgTypeUrl = "";
+
+                    /**
+                     * Creates a new AuthRevoke instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IAuthRevoke=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.AuthRevoke} AuthRevoke instance
+                     */
+                    AuthRevoke.create = function create(properties) {
+                        return new AuthRevoke(properties);
+                    };
+
+                    /**
+                     * Encodes the specified AuthRevoke message. Does not implicitly {@link TW.Cosmos.Proto.Message.AuthRevoke.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IAuthRevoke} message AuthRevoke message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    AuthRevoke.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.granter != null && Object.hasOwnProperty.call(message, "granter"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.granter);
+                        if (message.grantee != null && Object.hasOwnProperty.call(message, "grantee"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.grantee);
+                        if (message.msgTypeUrl != null && Object.hasOwnProperty.call(message, "msgTypeUrl"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.msgTypeUrl);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes an AuthRevoke message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.AuthRevoke} AuthRevoke
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    AuthRevoke.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.AuthRevoke();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.granter = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.grantee = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.msgTypeUrl = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for AuthRevoke
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.AuthRevoke
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    AuthRevoke.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.AuthRevoke";
+                    };
+
+                    return AuthRevoke;
+                })();
+
+                /**
+                 * VoteOption enum.
+                 * @name TW.Cosmos.Proto.Message.VoteOption
+                 * @enum {number}
+                 * @property {number} _UNSPECIFIED=0 _UNSPECIFIED value
+                 * @property {number} YES=1 YES value
+                 * @property {number} ABSTAIN=2 ABSTAIN value
+                 * @property {number} NO=3 NO value
+                 * @property {number} NO_WITH_VETO=4 NO_WITH_VETO value
+                 */
+                Message.VoteOption = (function() {
+                    const valuesById = {}, values = Object.create(valuesById);
+                    values[valuesById[0] = "_UNSPECIFIED"] = 0;
+                    values[valuesById[1] = "YES"] = 1;
+                    values[valuesById[2] = "ABSTAIN"] = 2;
+                    values[valuesById[3] = "NO"] = 3;
+                    values[valuesById[4] = "NO_WITH_VETO"] = 4;
+                    return values;
+                })();
+
+                Message.MsgVote = (function() {
+
+                    /**
+                     * Properties of a MsgVote.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IMsgVote
+                     * @property {number|null} [proposalId] MsgVote proposalId
+                     * @property {string|null} [voter] MsgVote voter
+                     * @property {TW.Cosmos.Proto.Message.VoteOption|null} [option] MsgVote option
+                     */
+
+                    /**
+                     * Constructs a new MsgVote.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a MsgVote.
+                     * @implements IMsgVote
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IMsgVote=} [properties] Properties to set
+                     */
+                    function MsgVote(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * MsgVote proposalId.
+                     * @member {number} proposalId
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @instance
+                     */
+                    MsgVote.prototype.proposalId = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                    /**
+                     * MsgVote voter.
+                     * @member {string} voter
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @instance
+                     */
+                    MsgVote.prototype.voter = "";
+
+                    /**
+                     * MsgVote option.
+                     * @member {TW.Cosmos.Proto.Message.VoteOption} option
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @instance
+                     */
+                    MsgVote.prototype.option = 0;
+
+                    /**
+                     * Creates a new MsgVote instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IMsgVote=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.MsgVote} MsgVote instance
+                     */
+                    MsgVote.create = function create(properties) {
+                        return new MsgVote(properties);
+                    };
+
+                    /**
+                     * Encodes the specified MsgVote message. Does not implicitly {@link TW.Cosmos.Proto.Message.MsgVote.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IMsgVote} message MsgVote message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    MsgVote.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.proposalId != null && Object.hasOwnProperty.call(message, "proposalId"))
+                            writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.proposalId);
+                        if (message.voter != null && Object.hasOwnProperty.call(message, "voter"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.voter);
+                        if (message.option != null && Object.hasOwnProperty.call(message, "option"))
+                            writer.uint32(/* id 3, wireType 0 =*/24).int32(message.option);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a MsgVote message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.MsgVote} MsgVote
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    MsgVote.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.MsgVote();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.proposalId = reader.uint64();
+                                    break;
+                                }
+                            case 2: {
+                                    message.voter = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.option = reader.int32();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for MsgVote
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.MsgVote
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    MsgVote.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.MsgVote";
+                    };
+
+                    return MsgVote;
+                })();
+
+                Message.MsgStrideLiquidStakingStake = (function() {
+
+                    /**
+                     * Properties of a MsgStrideLiquidStakingStake.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IMsgStrideLiquidStakingStake
+                     * @property {string|null} [creator] MsgStrideLiquidStakingStake creator
+                     * @property {string|null} [amount] MsgStrideLiquidStakingStake amount
+                     * @property {string|null} [hostDenom] MsgStrideLiquidStakingStake hostDenom
+                     */
+
+                    /**
+                     * Constructs a new MsgStrideLiquidStakingStake.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a MsgStrideLiquidStakingStake.
+                     * @implements IMsgStrideLiquidStakingStake
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake=} [properties] Properties to set
+                     */
+                    function MsgStrideLiquidStakingStake(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * MsgStrideLiquidStakingStake creator.
+                     * @member {string} creator
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingStake.prototype.creator = "";
+
+                    /**
+                     * MsgStrideLiquidStakingStake amount.
+                     * @member {string} amount
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingStake.prototype.amount = "";
+
+                    /**
+                     * MsgStrideLiquidStakingStake hostDenom.
+                     * @member {string} hostDenom
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingStake.prototype.hostDenom = "";
+
+                    /**
+                     * Creates a new MsgStrideLiquidStakingStake instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake} MsgStrideLiquidStakingStake instance
+                     */
+                    MsgStrideLiquidStakingStake.create = function create(properties) {
+                        return new MsgStrideLiquidStakingStake(properties);
+                    };
+
+                    /**
+                     * Encodes the specified MsgStrideLiquidStakingStake message. Does not implicitly {@link TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingStake} message MsgStrideLiquidStakingStake message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    MsgStrideLiquidStakingStake.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.creator != null && Object.hasOwnProperty.call(message, "creator"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.creator);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.amount);
+                        if (message.hostDenom != null && Object.hasOwnProperty.call(message, "hostDenom"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.hostDenom);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a MsgStrideLiquidStakingStake message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake} MsgStrideLiquidStakingStake
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    MsgStrideLiquidStakingStake.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.creator = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.amount = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.hostDenom = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for MsgStrideLiquidStakingStake
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    MsgStrideLiquidStakingStake.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.MsgStrideLiquidStakingStake";
+                    };
+
+                    return MsgStrideLiquidStakingStake;
+                })();
+
+                Message.MsgStrideLiquidStakingRedeem = (function() {
+
+                    /**
+                     * Properties of a MsgStrideLiquidStakingRedeem.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @interface IMsgStrideLiquidStakingRedeem
+                     * @property {string|null} [creator] MsgStrideLiquidStakingRedeem creator
+                     * @property {string|null} [amount] MsgStrideLiquidStakingRedeem amount
+                     * @property {string|null} [hostZone] MsgStrideLiquidStakingRedeem hostZone
+                     * @property {string|null} [receiver] MsgStrideLiquidStakingRedeem receiver
+                     */
+
+                    /**
+                     * Constructs a new MsgStrideLiquidStakingRedeem.
+                     * @memberof TW.Cosmos.Proto.Message
+                     * @classdesc Represents a MsgStrideLiquidStakingRedeem.
+                     * @implements IMsgStrideLiquidStakingRedeem
+                     * @constructor
+                     * @param {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem=} [properties] Properties to set
+                     */
+                    function MsgStrideLiquidStakingRedeem(properties) {
+                        if (properties)
+                            for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                                if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                    this[keys[i]] = properties[keys[i]];
+                    }
+
+                    /**
+                     * MsgStrideLiquidStakingRedeem creator.
+                     * @member {string} creator
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingRedeem.prototype.creator = "";
+
+                    /**
+                     * MsgStrideLiquidStakingRedeem amount.
+                     * @member {string} amount
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingRedeem.prototype.amount = "";
+
+                    /**
+                     * MsgStrideLiquidStakingRedeem hostZone.
+                     * @member {string} hostZone
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingRedeem.prototype.hostZone = "";
+
+                    /**
+                     * MsgStrideLiquidStakingRedeem receiver.
+                     * @member {string} receiver
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @instance
+                     */
+                    MsgStrideLiquidStakingRedeem.prototype.receiver = "";
+
+                    /**
+                     * Creates a new MsgStrideLiquidStakingRedeem instance using the specified properties.
+                     * @function create
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem=} [properties] Properties to set
+                     * @returns {TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem} MsgStrideLiquidStakingRedeem instance
+                     */
+                    MsgStrideLiquidStakingRedeem.create = function create(properties) {
+                        return new MsgStrideLiquidStakingRedeem(properties);
+                    };
+
+                    /**
+                     * Encodes the specified MsgStrideLiquidStakingRedeem message. Does not implicitly {@link TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem.verify|verify} messages.
+                     * @function encode
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @static
+                     * @param {TW.Cosmos.Proto.Message.IMsgStrideLiquidStakingRedeem} message MsgStrideLiquidStakingRedeem message or plain object to encode
+                     * @param {$protobuf.Writer} [writer] Writer to encode to
+                     * @returns {$protobuf.Writer} Writer
+                     */
+                    MsgStrideLiquidStakingRedeem.encode = function encode(message, writer, q) {
+                        if (!writer)
+                            writer = $Writer.create();
+                        if (q === undefined)
+                            q = 0;
+                        if (q > $util.recursionLimit)
+                            throw Error("max depth exceeded");
+                        if (message.creator != null && Object.hasOwnProperty.call(message, "creator"))
+                            writer.uint32(/* id 1, wireType 2 =*/10).string(message.creator);
+                        if (message.amount != null && Object.hasOwnProperty.call(message, "amount"))
+                            writer.uint32(/* id 2, wireType 2 =*/18).string(message.amount);
+                        if (message.hostZone != null && Object.hasOwnProperty.call(message, "hostZone"))
+                            writer.uint32(/* id 3, wireType 2 =*/26).string(message.hostZone);
+                        if (message.receiver != null && Object.hasOwnProperty.call(message, "receiver"))
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.receiver);
+                        return writer;
+                    };
+
+                    /**
+                     * Decodes a MsgStrideLiquidStakingRedeem message from the specified reader or buffer.
+                     * @function decode
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @static
+                     * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                     * @param {number} [length] Message length if known beforehand
+                     * @returns {TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem} MsgStrideLiquidStakingRedeem
+                     * @throws {Error} If the payload is not a reader or valid buffer
+                     * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                     */
+                    MsgStrideLiquidStakingRedeem.decode = function decode(reader, length, error, long) {
+                        if (!(reader instanceof $Reader))
+                            reader = $Reader.create(reader);
+                        if (long === undefined)
+                            long = 0;
+                        if (long > $Reader.recursionLimit)
+                            throw Error("maximum nesting depth exceeded");
+                        let end, message;
+                        if (length === undefined)
+                            end = reader.len;
+                        else {
+                            end = reader.pos + length;
+                            if (end > reader.len)
+                                throw RangeError("index out of range");
+                            length = reader.len;
+                            reader.len = end;
+                        }
+                        message = new $root.TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem();
+                        while (reader.pos < end) {
+                            let tag = reader.uint32();
+                            if (tag === error)
+                                break;
+                            switch (tag >>> 3) {
+                            case 1: {
+                                    message.creator = reader.string();
+                                    break;
+                                }
+                            case 2: {
+                                    message.amount = reader.string();
+                                    break;
+                                }
+                            case 3: {
+                                    message.hostZone = reader.string();
+                                    break;
+                                }
+                            case 4: {
+                                    message.receiver = reader.string();
+                                    break;
+                                }
+                            default:
+                                reader.skipType(tag & 7, long);
+                                break;
+                            }
+                        }
+                        if (length !== undefined) {
+                            if (reader.pos !== end)
+                                throw RangeError("index out of range");
+                            reader.len = length;
+                        }
+                        return message;
+                    };
+
+                    /**
+                     * Gets the default type url for MsgStrideLiquidStakingRedeem
+                     * @function getTypeUrl
+                     * @memberof TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem
+                     * @static
+                     * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                     * @returns {string} The default type url
+                     */
+                    MsgStrideLiquidStakingRedeem.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                        if (typeUrlPrefix === undefined) {
+                            typeUrlPrefix = "type.googleapis.com";
+                        }
+                        return typeUrlPrefix + "/TW.Cosmos.Proto.Message.MsgStrideLiquidStakingRedeem";
+                    };
+
+                    return MsgStrideLiquidStakingRedeem;
+                })();
+
+                return Message;
+            })();
+
+            /**
+             * SigningMode enum.
+             * @name TW.Cosmos.Proto.SigningMode
+             * @enum {number}
+             * @property {number} JSON=0 JSON value
+             * @property {number} Protobuf=1 Protobuf value
+             */
+            Proto.SigningMode = (function() {
+                const valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "JSON"] = 0;
+                values[valuesById[1] = "Protobuf"] = 1;
+                return values;
+            })();
+
+            /**
+             * TxHasher enum.
+             * @name TW.Cosmos.Proto.TxHasher
+             * @enum {number}
+             * @property {number} UseDefault=0 UseDefault value
+             * @property {number} Sha256=1 Sha256 value
+             * @property {number} Keccak256=2 Keccak256 value
+             */
+            Proto.TxHasher = (function() {
+                const valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "UseDefault"] = 0;
+                values[valuesById[1] = "Sha256"] = 1;
+                values[valuesById[2] = "Keccak256"] = 2;
+                return values;
+            })();
+
+            /**
+             * SignerPublicKeyType enum.
+             * @name TW.Cosmos.Proto.SignerPublicKeyType
+             * @enum {number}
+             * @property {number} Secp256k1=0 Secp256k1 value
+             * @property {number} Secp256k1Extended=1 Secp256k1Extended value
+             */
+            Proto.SignerPublicKeyType = (function() {
+                const valuesById = {}, values = Object.create(valuesById);
+                values[valuesById[0] = "Secp256k1"] = 0;
+                values[valuesById[1] = "Secp256k1Extended"] = 1;
+                return values;
+            })();
+
+            Proto.SignerInfo = (function() {
+
+                /**
+                 * Properties of a SignerInfo.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface ISignerInfo
+                 * @property {TW.Cosmos.Proto.SignerPublicKeyType|null} [publicKeyType] SignerInfo publicKeyType
+                 * @property {string|null} [jsonType] SignerInfo jsonType
+                 * @property {string|null} [protobufType] SignerInfo protobufType
+                 */
+
+                /**
+                 * Constructs a new SignerInfo.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a SignerInfo.
+                 * @implements ISignerInfo
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.ISignerInfo=} [properties] Properties to set
+                 */
+                function SignerInfo(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * SignerInfo publicKeyType.
+                 * @member {TW.Cosmos.Proto.SignerPublicKeyType} publicKeyType
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @instance
+                 */
+                SignerInfo.prototype.publicKeyType = 0;
+
+                /**
+                 * SignerInfo jsonType.
+                 * @member {string} jsonType
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @instance
+                 */
+                SignerInfo.prototype.jsonType = "";
+
+                /**
+                 * SignerInfo protobufType.
+                 * @member {string} protobufType
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @instance
+                 */
+                SignerInfo.prototype.protobufType = "";
+
+                /**
+                 * Creates a new SignerInfo instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @static
+                 * @param {TW.Cosmos.Proto.ISignerInfo=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.SignerInfo} SignerInfo instance
+                 */
+                SignerInfo.create = function create(properties) {
+                    return new SignerInfo(properties);
+                };
+
+                /**
+                 * Encodes the specified SignerInfo message. Does not implicitly {@link TW.Cosmos.Proto.SignerInfo.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @static
+                 * @param {TW.Cosmos.Proto.ISignerInfo} message SignerInfo message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                SignerInfo.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.publicKeyType != null && Object.hasOwnProperty.call(message, "publicKeyType"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int32(message.publicKeyType);
+                    if (message.jsonType != null && Object.hasOwnProperty.call(message, "jsonType"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.jsonType);
+                    if (message.protobufType != null && Object.hasOwnProperty.call(message, "protobufType"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.protobufType);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a SignerInfo message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.SignerInfo} SignerInfo
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                SignerInfo.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.SignerInfo();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.publicKeyType = reader.int32();
+                                break;
+                            }
+                        case 2: {
+                                message.jsonType = reader.string();
+                                break;
+                            }
+                        case 3: {
+                                message.protobufType = reader.string();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for SignerInfo
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.SignerInfo
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                SignerInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.SignerInfo";
+                };
+
+                return SignerInfo;
+            })();
+
+            Proto.SigningInput = (function() {
+
+                /**
+                 * Properties of a SigningInput.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface ISigningInput
+                 * @property {TW.Cosmos.Proto.SigningMode|null} [signingMode] SigningInput signingMode
+                 * @property {number|null} [accountNumber] SigningInput accountNumber
+                 * @property {string|null} [chainId] SigningInput chainId
+                 * @property {TW.Cosmos.Proto.IFee|null} [fee] SigningInput fee
+                 * @property {string|null} [memo] SigningInput memo
+                 * @property {number|null} [sequence] SigningInput sequence
+                 * @property {Uint8Array|null} [privateKey] SigningInput privateKey
+                 * @property {Array.<TW.Cosmos.Proto.IMessage>|null} [messages] SigningInput messages
+                 * @property {TW.Cosmos.Proto.BroadcastMode|null} [mode] SigningInput mode
+                 * @property {Uint8Array|null} [publicKey] SigningInput publicKey
+                 * @property {TW.Cosmos.Proto.TxHasher|null} [txHasher] SigningInput txHasher
+                 * @property {TW.Cosmos.Proto.ISignerInfo|null} [signerInfo] SigningInput signerInfo
+                 * @property {number|null} [timeoutHeight] SigningInput timeoutHeight
+                 */
+
+                /**
+                 * Constructs a new SigningInput.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a SigningInput.
+                 * @implements ISigningInput
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.ISigningInput=} [properties] Properties to set
+                 */
+                function SigningInput(properties) {
+                    this.messages = [];
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * SigningInput signingMode.
+                 * @member {TW.Cosmos.Proto.SigningMode} signingMode
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.signingMode = 0;
+
+                /**
+                 * SigningInput accountNumber.
+                 * @member {number} accountNumber
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.accountNumber = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                /**
+                 * SigningInput chainId.
+                 * @member {string} chainId
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.chainId = "";
+
+                /**
+                 * SigningInput fee.
+                 * @member {TW.Cosmos.Proto.IFee|null|undefined} fee
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.fee = null;
+
+                /**
+                 * SigningInput memo.
+                 * @member {string} memo
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.memo = "";
+
+                /**
+                 * SigningInput sequence.
+                 * @member {number} sequence
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.sequence = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                /**
+                 * SigningInput privateKey.
+                 * @member {Uint8Array} privateKey
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.privateKey = $util.newBuffer([]);
+
+                /**
+                 * SigningInput messages.
+                 * @member {Array.<TW.Cosmos.Proto.IMessage>} messages
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.messages = $util.emptyArray;
+
+                /**
+                 * SigningInput mode.
+                 * @member {TW.Cosmos.Proto.BroadcastMode} mode
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.mode = 0;
+
+                /**
+                 * SigningInput publicKey.
+                 * @member {Uint8Array} publicKey
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.publicKey = $util.newBuffer([]);
+
+                /**
+                 * SigningInput txHasher.
+                 * @member {TW.Cosmos.Proto.TxHasher} txHasher
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.txHasher = 0;
+
+                /**
+                 * SigningInput signerInfo.
+                 * @member {TW.Cosmos.Proto.ISignerInfo|null|undefined} signerInfo
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.signerInfo = null;
+
+                /**
+                 * SigningInput timeoutHeight.
+                 * @member {number} timeoutHeight
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @instance
+                 */
+                SigningInput.prototype.timeoutHeight = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+
+                /**
+                 * Creates a new SigningInput instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @static
+                 * @param {TW.Cosmos.Proto.ISigningInput=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.SigningInput} SigningInput instance
+                 */
+                SigningInput.create = function create(properties) {
+                    return new SigningInput(properties);
+                };
+
+                /**
+                 * Encodes the specified SigningInput message. Does not implicitly {@link TW.Cosmos.Proto.SigningInput.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @static
+                 * @param {TW.Cosmos.Proto.ISigningInput} message SigningInput message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                SigningInput.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.signingMode != null && Object.hasOwnProperty.call(message, "signingMode"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int32(message.signingMode);
+                    if (message.accountNumber != null && Object.hasOwnProperty.call(message, "accountNumber"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).uint64(message.accountNumber);
+                    if (message.chainId != null && Object.hasOwnProperty.call(message, "chainId"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.chainId);
+                    if (message.fee != null && Object.hasOwnProperty.call(message, "fee"))
+                        $root.TW.Cosmos.Proto.Fee.encode(message.fee, writer.uint32(/* id 4, wireType 2 =*/34).fork(), q + 1).ldelim();
+                    if (message.memo != null && Object.hasOwnProperty.call(message, "memo"))
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.memo);
+                    if (message.sequence != null && Object.hasOwnProperty.call(message, "sequence"))
+                        writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.sequence);
+                    if (message.privateKey != null && Object.hasOwnProperty.call(message, "privateKey"))
+                        writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.privateKey);
+                    if (message.messages != null && message.messages.length)
+                        for (let i = 0; i < message.messages.length; ++i)
+                            $root.TW.Cosmos.Proto.Message.encode(message.messages[i], writer.uint32(/* id 8, wireType 2 =*/66).fork(), q + 1).ldelim();
+                    if (message.mode != null && Object.hasOwnProperty.call(message, "mode"))
+                        writer.uint32(/* id 9, wireType 0 =*/72).int32(message.mode);
+                    if (message.publicKey != null && Object.hasOwnProperty.call(message, "publicKey"))
+                        writer.uint32(/* id 10, wireType 2 =*/82).bytes(message.publicKey);
+                    if (message.txHasher != null && Object.hasOwnProperty.call(message, "txHasher"))
+                        writer.uint32(/* id 11, wireType 0 =*/88).int32(message.txHasher);
+                    if (message.signerInfo != null && Object.hasOwnProperty.call(message, "signerInfo"))
+                        $root.TW.Cosmos.Proto.SignerInfo.encode(message.signerInfo, writer.uint32(/* id 12, wireType 2 =*/98).fork(), q + 1).ldelim();
+                    if (message.timeoutHeight != null && Object.hasOwnProperty.call(message, "timeoutHeight"))
+                        writer.uint32(/* id 13, wireType 0 =*/104).uint64(message.timeoutHeight);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a SigningInput message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.SigningInput} SigningInput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                SigningInput.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.SigningInput();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.signingMode = reader.int32();
+                                break;
+                            }
+                        case 2: {
+                                message.accountNumber = reader.uint64();
+                                break;
+                            }
+                        case 3: {
+                                message.chainId = reader.string();
+                                break;
+                            }
+                        case 4: {
+                                message.fee = $root.TW.Cosmos.Proto.Fee.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 5: {
+                                message.memo = reader.string();
+                                break;
+                            }
+                        case 6: {
+                                message.sequence = reader.uint64();
+                                break;
+                            }
+                        case 7: {
+                                message.privateKey = reader.bytes();
+                                break;
+                            }
+                        case 8: {
+                                if (!(message.messages && message.messages.length))
+                                    message.messages = [];
+                                message.messages.push($root.TW.Cosmos.Proto.Message.decode(reader, reader.uint32(), undefined, long + 1));
+                                break;
+                            }
+                        case 9: {
+                                message.mode = reader.int32();
+                                break;
+                            }
+                        case 10: {
+                                message.publicKey = reader.bytes();
+                                break;
+                            }
+                        case 11: {
+                                message.txHasher = reader.int32();
+                                break;
+                            }
+                        case 12: {
+                                message.signerInfo = $root.TW.Cosmos.Proto.SignerInfo.decode(reader, reader.uint32(), undefined, long + 1);
+                                break;
+                            }
+                        case 13: {
+                                message.timeoutHeight = reader.uint64();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for SigningInput
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.SigningInput
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                SigningInput.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.SigningInput";
+                };
+
+                return SigningInput;
+            })();
+
+            Proto.SigningOutput = (function() {
+
+                /**
+                 * Properties of a SigningOutput.
+                 * @memberof TW.Cosmos.Proto
+                 * @interface ISigningOutput
+                 * @property {Uint8Array|null} [signature] SigningOutput signature
+                 * @property {string|null} [json] SigningOutput json
+                 * @property {string|null} [serialized] SigningOutput serialized
+                 * @property {string|null} [signatureJson] SigningOutput signatureJson
+                 * @property {string|null} [errorMessage] SigningOutput errorMessage
+                 * @property {TW.Common.Proto.SigningError|null} [error] SigningOutput error
+                 */
+
+                /**
+                 * Constructs a new SigningOutput.
+                 * @memberof TW.Cosmos.Proto
+                 * @classdesc Represents a SigningOutput.
+                 * @implements ISigningOutput
+                 * @constructor
+                 * @param {TW.Cosmos.Proto.ISigningOutput=} [properties] Properties to set
+                 */
+                function SigningOutput(properties) {
+                    if (properties)
+                        for (let keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null && keys[i] !== "__proto__")
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * SigningOutput signature.
+                 * @member {Uint8Array} signature
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @instance
+                 */
+                SigningOutput.prototype.signature = $util.newBuffer([]);
+
+                /**
+                 * SigningOutput json.
+                 * @member {string} json
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @instance
+                 */
+                SigningOutput.prototype.json = "";
+
+                /**
+                 * SigningOutput serialized.
+                 * @member {string} serialized
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @instance
+                 */
+                SigningOutput.prototype.serialized = "";
+
+                /**
+                 * SigningOutput signatureJson.
+                 * @member {string} signatureJson
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @instance
+                 */
+                SigningOutput.prototype.signatureJson = "";
+
+                /**
+                 * SigningOutput errorMessage.
+                 * @member {string} errorMessage
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @instance
+                 */
+                SigningOutput.prototype.errorMessage = "";
+
+                /**
+                 * SigningOutput error.
+                 * @member {TW.Common.Proto.SigningError} error
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @instance
+                 */
+                SigningOutput.prototype.error = 0;
+
+                /**
+                 * Creates a new SigningOutput instance using the specified properties.
+                 * @function create
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @static
+                 * @param {TW.Cosmos.Proto.ISigningOutput=} [properties] Properties to set
+                 * @returns {TW.Cosmos.Proto.SigningOutput} SigningOutput instance
+                 */
+                SigningOutput.create = function create(properties) {
+                    return new SigningOutput(properties);
+                };
+
+                /**
+                 * Encodes the specified SigningOutput message. Does not implicitly {@link TW.Cosmos.Proto.SigningOutput.verify|verify} messages.
+                 * @function encode
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @static
+                 * @param {TW.Cosmos.Proto.ISigningOutput} message SigningOutput message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                SigningOutput.encode = function encode(message, writer, q) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (q === undefined)
+                        q = 0;
+                    if (q > $util.recursionLimit)
+                        throw Error("max depth exceeded");
+                    if (message.signature != null && Object.hasOwnProperty.call(message, "signature"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.signature);
+                    if (message.json != null && Object.hasOwnProperty.call(message, "json"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.json);
+                    if (message.serialized != null && Object.hasOwnProperty.call(message, "serialized"))
+                        writer.uint32(/* id 3, wireType 2 =*/26).string(message.serialized);
+                    if (message.signatureJson != null && Object.hasOwnProperty.call(message, "signatureJson"))
+                        writer.uint32(/* id 4, wireType 2 =*/34).string(message.signatureJson);
+                    if (message.errorMessage != null && Object.hasOwnProperty.call(message, "errorMessage"))
+                        writer.uint32(/* id 5, wireType 2 =*/42).string(message.errorMessage);
+                    if (message.error != null && Object.hasOwnProperty.call(message, "error"))
+                        writer.uint32(/* id 6, wireType 0 =*/48).int32(message.error);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a SigningOutput message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {TW.Cosmos.Proto.SigningOutput} SigningOutput
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                SigningOutput.decode = function decode(reader, length, error, long) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    if (long === undefined)
+                        long = 0;
+                    if (long > $Reader.recursionLimit)
+                        throw Error("maximum nesting depth exceeded");
+                    let end, message;
+                    if (length === undefined)
+                        end = reader.len;
+                    else {
+                        end = reader.pos + length;
+                        if (end > reader.len)
+                            throw RangeError("index out of range");
+                        length = reader.len;
+                        reader.len = end;
+                    }
+                    message = new $root.TW.Cosmos.Proto.SigningOutput();
+                    while (reader.pos < end) {
+                        let tag = reader.uint32();
+                        if (tag === error)
+                            break;
+                        switch (tag >>> 3) {
+                        case 1: {
+                                message.signature = reader.bytes();
+                                break;
+                            }
+                        case 2: {
+                                message.json = reader.string();
+                                break;
+                            }
+                        case 3: {
+                                message.serialized = reader.string();
+                                break;
+                            }
+                        case 4: {
+                                message.signatureJson = reader.string();
+                                break;
+                            }
+                        case 5: {
+                                message.errorMessage = reader.string();
+                                break;
+                            }
+                        case 6: {
+                                message.error = reader.int32();
+                                break;
+                            }
+                        default:
+                            reader.skipType(tag & 7, long);
+                            break;
+                        }
+                    }
+                    if (length !== undefined) {
+                        if (reader.pos !== end)
+                            throw RangeError("index out of range");
+                        reader.len = length;
+                    }
+                    return message;
+                };
+
+                /**
+                 * Gets the default type url for SigningOutput
+                 * @function getTypeUrl
+                 * @memberof TW.Cosmos.Proto.SigningOutput
+                 * @static
+                 * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+                 * @returns {string} The default type url
+                 */
+                SigningOutput.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+                    if (typeUrlPrefix === undefined) {
+                        typeUrlPrefix = "type.googleapis.com";
+                    }
+                    return typeUrlPrefix + "/TW.Cosmos.Proto.SigningOutput";
+                };
+
+                return SigningOutput;
+            })();
+
+            return Proto;
+        })();
+
+        return Cosmos;
+    })();
+
     TW.Ethereum = (function() {
 
         /**

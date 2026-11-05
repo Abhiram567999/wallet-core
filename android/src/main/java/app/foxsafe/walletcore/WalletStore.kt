@@ -22,6 +22,7 @@ import wallet.core.jni.PrivateKey
 import wallet.core.jni.TransactionCompiler
 import wallet.core.jni.TronMessageSigner
 import wallet.core.jni.proto.Bitcoin
+import wallet.core.jni.proto.Cosmos
 import wallet.core.jni.proto.Tron
 import wallet.core.jni.proto.Common.SigningError
 import wallet.core.jni.proto.TransactionCompiler.PreSigningOutput
@@ -605,6 +606,49 @@ class WalletStore(context: Context) {
     val amount = BigInteger(1, t.amount.toByteArray())
     if (amount.signum() <= 0 || amount > FeePolicy.MAX_FEE) throw WalletException("INVALID", "the fee is above 5 USDT")
     return t.ownerAddress
+  }
+
+  // MARK: Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)
+
+  /**
+   * Signs a Cosmos SigningInput built without any key (src/tx.ts cosmosSendInput /
+   * thorchainDepositInput). Protobuf mode needs the signer's public key, which the app never
+   * has: it is added here after checking every message is sent by this wallet (SPEC §7.5).
+   */
+  fun signCosmos(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    val c = coin(coinValue)
+    if (c.blockchain() !in setOf(Blockchain.COSMOS, Blockchain.THORCHAIN, Blockchain.NATIVEINJECTIVE)) {
+      throw WalletException("INVALID", "this network is not a Cosmos network")
+    }
+    val input = runCatching { Cosmos.SigningInput.parseFrom(Envelope.unb64(inputB64)) }.getOrElse { throw WalletException("INVALID", "bad input") }
+    if (input.signingMode != Cosmos.SigningMode.Protobuf || !input.publicKey.isEmpty() || !input.privateKey.isEmpty() || input.messagesCount == 0) {
+      throw WalletException("INVALID", "not a Cosmos transaction this wallet can sign")
+    }
+    // Only plain sends and THORChain sends / deposits. Checked before the prompt.
+    for (m in input.messagesList) {
+      when (m.messageOneofCase) {
+        Cosmos.Message.MessageOneofCase.SEND_COINS_MESSAGE -> {}
+        Cosmos.Message.MessageOneofCase.THORCHAIN_SEND_MESSAGE, Cosmos.Message.MessageOneofCase.THORCHAIN_DEPOSIT_MESSAGE ->
+          if (c.blockchain() != Blockchain.THORCHAIN) throw WalletException("INVALID", "this kind of Cosmos message is not supported")
+        else -> throw WalletException("INVALID", "this kind of Cosmos message is not supported")
+      }
+    }
+    withSecret(id, activity, "Confirm the transaction") { r ->
+      val key = privateKey(r, c, account)
+      val own = c.deriveAddress(key)
+      val ownData = AnyAddress(own, c).data()
+      for (m in input.messagesList) {
+        val fromWallet = when (m.messageOneofCase) {
+          Cosmos.Message.MessageOneofCase.SEND_COINS_MESSAGE -> m.sendCoinsMessage.fromAddress == own
+          Cosmos.Message.MessageOneofCase.THORCHAIN_SEND_MESSAGE -> m.thorchainSendMessage.fromAddress.toByteArray().contentEquals(ownData)
+          Cosmos.Message.MessageOneofCase.THORCHAIN_DEPOSIT_MESSAGE -> m.thorchainDepositMessage.signer.toByteArray().contentEquals(ownData)
+          else -> false
+        }
+        if (!fromWallet) throw WalletException("INVALID", "this transaction is not from this wallet")
+      }
+      val signed = input.toBuilder().setPublicKey(ByteString.copyFrom(key.getPublicKey(c).data())).build()
+      signOne(signed.toByteArray(), key, c)
+    }
   }
 
   // MARK: EVM gasless (EIP-7702 + EntryPoint 0.8)

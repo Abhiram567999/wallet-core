@@ -2,6 +2,7 @@
 // signTransaction (pre-image hash → sign in secure hardware → compile), and
 // reads the SigningOutputs back. docs/SPEC.md §7.
 
+import { sha256 } from '@noble/hashes/sha2.js';
 import { TW } from './proto/tw.js';
 import { fromBase64, toBase64, toHex } from './encoding.ts';
 
@@ -310,4 +311,156 @@ export function solanaTokenTransferInput(p: SolanaTokenTransfer): string {
       }),
     ),
   );
+}
+
+// MARK: Cosmos family (Cosmos Hub, Osmosis, Injective, THORChain …)
+// Protobuf mode, no key and no public key: the native signCosmos adds the
+// wallet's own public key after checking the sender (SPEC §7.5).
+
+const THORCHAIN = 931;
+const BECH32 = 'qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+
+function bech32Polymod(values: number[]): number {
+  const G = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
+  let chk = 1;
+  for (const v of values) {
+    const top = chk >>> 25;
+    chk = ((chk & 0x1ffffff) << 5) ^ v;
+    for (let i = 0; i < 5; i++) if ((top >>> i) & 1) chk ^= G[i]!;
+  }
+  return chk >>> 0;
+}
+
+/** Raw data of a bech32 address with this prefix (checksum checked); throws on anything else. */
+export function bech32Data(address: string, prefix: string): Uint8Array {
+  const bad = () => new Error(`bad ${prefix} address`);
+  if (address.length > 90 || (address !== address.toLowerCase() && address !== address.toUpperCase())) throw bad();
+  const a = address.toLowerCase();
+  const sep = a.lastIndexOf('1');
+  if (sep < 1 || a.length - sep - 1 < 6 || a.slice(0, sep) !== prefix) throw bad();
+  const words: number[] = [];
+  for (const ch of a.slice(sep + 1)) {
+    const v = BECH32.indexOf(ch);
+    if (v < 0) throw bad();
+    words.push(v);
+  }
+  const hrp = [...prefix].map((c) => c.charCodeAt(0));
+  if (bech32Polymod([...hrp.map((c) => c >> 5), 0, ...hrp.map((c) => c & 31), ...words]) !== 1) throw bad();
+  // 5-bit groups → bytes; leftover bits must be zero padding.
+  const out: number[] = [];
+  let acc = 0;
+  let bits = 0;
+  for (const w of words.slice(0, -6)) {
+    acc = ((acc << 5) | w) & 0xfff;
+    bits += 5;
+    if (bits >= 8) {
+      bits -= 8;
+      out.push((acc >> bits) & 255);
+    }
+  }
+  if (bits >= 5 || (acc & ((1 << bits) - 1)) !== 0) throw bad();
+  if (out.length !== 20 && out.length !== 32) throw bad();
+  return Uint8Array.from(out);
+}
+
+const u64 = (v: number | bigint, what: string): number => {
+  const n = BigInt(v);
+  if (n < 0n || n > BigInt(Number.MAX_SAFE_INTEGER)) throw new RangeError(`bad ${what}`);
+  return Number(n);
+};
+
+const amountString = (v: bigint): string => {
+  if (v < 0n) throw new RangeError('negative amount');
+  return v.toString();
+};
+
+export interface CosmosSend {
+  coin: number; // CoinType (931 THORChain, 118 Cosmos Hub, 10000118 Osmosis …)
+  chainId: string;
+  accountNumber: number | bigint;
+  sequence: number | bigint;
+  from: string;
+  to: string;
+  denom: string;
+  amount: bigint; // base units
+  /** null: no fee coins (THORChain takes its fixed fee itself). */
+  fee: { denom: string; amount: bigint } | null;
+  gas: bigint;
+  memo?: string;
+}
+
+export function cosmosSendInput(p: CosmosSend): string {
+  const P = TW.Cosmos.Proto;
+  const amounts = [{ denom: p.denom, amount: amountString(p.amount) }];
+  const message =
+    p.coin === THORCHAIN
+      ? { thorchainSendMessage: { fromAddress: bech32Data(p.from, 'thor'), toAddress: bech32Data(p.to, 'thor'), amounts } }
+      : { sendCoinsMessage: { fromAddress: p.from, toAddress: p.to, amounts } };
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        signingMode: P.SigningMode.Protobuf,
+        accountNumber: u64(p.accountNumber, 'account number'),
+        chainId: p.chainId,
+        sequence: u64(p.sequence, 'sequence'),
+        mode: P.BroadcastMode.SYNC,
+        fee: {
+          gas: u64(p.gas, 'gas'),
+          amounts: p.fee ? [{ denom: p.fee.denom, amount: amountString(p.fee.amount) }] : [],
+        },
+        ...(p.memo ? { memo: p.memo } : {}),
+        messages: [message],
+      }),
+    ),
+  );
+}
+
+/** THORChain MsgDeposit of RUNE (swaps out of RUNE; the memo holds the swap instructions). */
+export interface ThorDeposit {
+  chainId: string;
+  accountNumber: number | bigint;
+  sequence: number | bigint;
+  signer: string; // thor1…
+  amount: bigint; // 1e8 units
+  memo: string;
+  gas: bigint;
+}
+
+export function thorchainDepositInput(p: ThorDeposit): string {
+  const P = TW.Cosmos.Proto;
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        signingMode: P.SigningMode.Protobuf,
+        accountNumber: u64(p.accountNumber, 'account number'),
+        chainId: p.chainId,
+        sequence: u64(p.sequence, 'sequence'),
+        mode: P.BroadcastMode.SYNC,
+        fee: { gas: u64(p.gas, 'gas'), amounts: [] },
+        messages: [
+          {
+            thorchainDepositMessage: {
+              coins: [{ asset: { chain: 'THOR', symbol: 'RUNE', ticker: 'RUNE' }, amount: amountString(p.amount), decimals: 8 }],
+              memo: p.memo,
+              signer: bech32Data(p.signer, 'thor'),
+            },
+          },
+        ],
+      }),
+    ),
+  );
+}
+
+/** Signed tx_bytes (base64) for POST /cosmos/tx/v1beta1/txs, and its hash (uppercase hex SHA-256). */
+export function cosmosOutput(b64: string): { txBytes: string; txid: string } {
+  const out = TW.Cosmos.Proto.SigningOutput.decode(fromBase64(b64));
+  if (out.error || out.errorMessage) throw new Error(out.errorMessage || `cosmos signing error ${out.error}`);
+  let txBytes: unknown;
+  try {
+    txBytes = (JSON.parse(out.serialized) as { tx_bytes?: unknown }).tx_bytes;
+  } catch {
+    throw new Error('cosmos signing output is not JSON');
+  }
+  if (typeof txBytes !== 'string' || !txBytes) throw new Error('cosmos signing output has no tx_bytes');
+  return { txBytes, txid: toHex(sha256(fromBase64(txBytes))).toUpperCase() };
 }

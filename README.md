@@ -42,7 +42,7 @@ Requires Node 24.
 
 ```sh
 npm ci --ignore-scripts
-npm test          # encryption, cross-library checks, 168-chain and signing vectors
+npm test          # encryption, cross-library checks, 168-chain, signing and Cosmos-family vectors
 npm run typecheck
 npm run vectors   # regenerate test vectors (only when the spec changes)
 ```

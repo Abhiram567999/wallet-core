@@ -318,3 +318,33 @@ Inputs use sequence `0xfffffffd`, so a stuck transaction can later be
 replaced with a higher fee (RBF). `test/vectors/bitcoin.json` deliberately
 names a wrong change address; the signed transaction must match byte for
 byte, paying the change to the wallet's own address.
+
+### 7.5 Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)
+
+Cosmos transactions are signed in Protobuf mode, and Trust Wallet Core's
+pre-image step needs the signer's public key inside the `SigningInput`. The
+app never holds keys, so these go through their own native function,
+`signCosmos(id, coin, input, account?)`, not `signTransaction`. The app
+builds the input with `cosmosSendInput` (a plain send; THORChain uses its own
+MsgSend with raw 20-byte addresses) or `thorchainDepositInput` (MsgDeposit of
+RUNE, for swaps), both in `src/tx.ts`, with no key and no public key. The
+native module:
+
+1. refuses unless the coin's blockchain is Cosmos, THORChain or Injective,
+   the input is Protobuf mode with an empty public key and private key, and
+   it has at least one message, each of them a send or (THORChain only) a
+   THORChain send or deposit — checked before Face ID,
+2. asks for Face ID ("Confirm the transaction") and derives the coin's key,
+3. checks every message is from this wallet: a send's `from_address` equals
+   the wallet's address; a THORChain send's `from_address` and a deposit's
+   `signer` equal the address's raw bytes. Otherwise: `INVALID: this
+   transaction is not from this wallet`,
+4. sets `public_key` to the key's public key for the coin and runs steps 3–5
+   above, returning the Cosmos `SigningOutput` (base64).
+
+`cosmosOutput` reads `tx_bytes` from the output's `serialized` JSON and the
+transaction id (uppercase hex SHA-256 of the bytes). `test/cosmos.test.ts`
+runs this path on all 14 supported Cosmos-family chains and must equal Trust
+Wallet Core's own signer byte for byte; it also reproduces Trust Wallet
+Core's THORChain Protobuf test transaction. Builds without `signCosmos`
+(`canSignCosmos()` is false) can show balances and receive, but not send.
