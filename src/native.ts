@@ -102,6 +102,8 @@ export interface NativeWalletCore {
    * Builds from 2026-10-24 on.
    */
   signGaslessEvm?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
+  /** Safe owner signature for one EIP-712 SafeTx, with Foxsafe's compiled-in Safe rule (SPEC §7.7). */
+  signSafe?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
   /**
    * Gasless Solana send with ONE Face ID: native code rebuilds the message from `request` and signs
    * only if it matches `message` (base64) byte for byte. Returns the base58 signature.
@@ -120,7 +122,9 @@ export interface NativeWalletCore {
    * and completed (public key, sender, Cardano change) natively. Build 12 on.
    */
   signNetwork?(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
+  /** Switched off in native code since 9 Nov 2026 (always refuses); use a dedicated signing function. */
   signMessage(id: string, coin: CoinType, message: string, account?: number): Promise<string>;
+  /** Switched off in native code since 9 Nov 2026 (always refuses); use a dedicated signing function. */
   signTypedData(id: string, coin: CoinType, json: string, account?: number): Promise<string>;
   revealSecret(id: string): Promise<string>;
 
@@ -220,6 +224,27 @@ export const canSignGaslessEvm = () => typeof native?.signGaslessEvm === 'functi
 export async function signGaslessEvm(id: string, coin: CoinType, typedData: string, request: GaslessEvmRequest, account?: number): Promise<GaslessEvmSignature> {
   if (!native?.signGaslessEvm) throw new Error('UNAVAILABLE: this app build cannot sign fee-free EVM transfers yet');
   return JSON.parse(await native.signGaslessEvm(id, coin, typedData, JSON.stringify(request), account)) as GaslessEvmSignature;
+}
+
+export interface SafeSignRequest {
+  /** The Safe's address (the EIP-712 verifyingContract). */
+  safe: string;
+  chainId: number;
+}
+
+export interface SafeSignature {
+  /** 65 bytes, v = 27/28, as Safe expects for an owner's ECDSA signature. */
+  signature: string;
+  /** The owner address that signed. */
+  signer: string;
+}
+
+/** True when this build can sign Safe transactions (native Safe rule included). */
+export const canSignSafe = () => typeof native?.signSafe === 'function';
+
+export async function signSafe(id: string, coin: CoinType, typedData: string, request: SafeSignRequest, account?: number): Promise<SafeSignature> {
+  if (!native?.signSafe) throw new Error('UNAVAILABLE: this app build cannot sign shared wallet transactions yet');
+  return JSON.parse(await native.signSafe(id, coin, typedData, JSON.stringify(request), account)) as SafeSignature;
 }
 
 export interface GaslessSolanaRequest {

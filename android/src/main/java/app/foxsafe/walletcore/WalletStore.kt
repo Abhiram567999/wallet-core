@@ -17,6 +17,7 @@ import wallet.core.jni.Eip7702
 import wallet.core.jni.SolanaAddress
 import wallet.core.jni.Curve
 import wallet.core.jni.HDWallet
+import wallet.core.jni.Hash
 import wallet.core.jni.Mnemonic
 import wallet.core.jni.PrivateKey
 import wallet.core.jni.TransactionCompiler
@@ -843,6 +844,127 @@ class WalletStore(context: Context) {
     }
   }
 
+  // MARK: Safe multi-sig owner signatures (EIP-712 SafeTx)
+
+  /** Foxsafe's Safe signing rule, compiled in on purpose: an app update can't loosen it (SPEC §7.7). */
+  private object SafePolicy {
+    /** App coin → chain ids where this phone signs for Safe accounts (Sepolia and Base Sepolia for tests). */
+    val CHAINS: Map<Int, List<Long>> = mapOf(
+      60 to listOf(1L, 11155111L), 8453 to listOf(8453L, 84532L), 10042221 to listOf(42161L), 10000070 to listOf(10L),
+      966 to listOf(137L), 20000714 to listOf(56L), 10009000 to listOf(43114L), 10000100 to listOf(100L),
+    )
+    /** The only contracts a Safe may delegatecall: Safe's official MultiSendCallOnly (1.4.1; 1.3.0 and its L2 address). */
+    val BATCH_CONTRACTS = setOf("0x9641d764fc13c8b624c04430c7356c1c7c8102e2", "0x40a2accbd92bca938b02010e17a5b8929b49130d", "0xa1dabef33b3b82c7814b6d82a79e50f4ac44102b")
+    /** Calls on the Safe itself that hand control of it to other code. */
+    val BLOCKED_SELF_CALLS = listOf(
+      "setGuard(address)", "setModuleGuard(address)", "enableModule(address)", "disableModule(address,address)",
+      "setFallbackHandler(address)", "changeMasterCopy(address)", "setup(address[],uint256,address,bytes,address,address,uint256,address)",
+    )
+    val SAFE_TX_FIELDS = listOf(
+      "to:address", "value:uint256", "data:bytes", "operation:uint8", "safeTxGas:uint256", "baseGas:uint256",
+      "gasPrice:uint256", "gasToken:address", "refundReceiver:address", "nonce:uint256",
+    )
+    const val ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+  }
+
+  /**
+   * Signs ONE Safe transaction as an owner (EIP-712 `SafeTx`), after the fingerprint prompt. Refuses first unless:
+   * the network is one Foxsafe supports for Safe, the domain is exactly {chainId, verifyingContract = this Safe},
+   * there is no gas refund (gasPrice, gasToken, refundReceiver all zero), delegatecall goes only to Safe's
+   * MultiSendCallOnly, and no call (also inside a batch) changes the Safe's guard, modules, fallback handler or
+   * singleton. [request] JSON: {safe, chainId}. Returns JSON {signature (v = 27/28), signer}.
+   */
+  fun signSafe(id: String, coinValue: Int, typedData: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "Safe signature refused: $why")
+    val c = coin(coinValue)
+    val allowedChains = SafePolicy.CHAINS[coinValue]
+    if (c.blockchain() != Blockchain.ETHEREUM || allowedChains == null) throw bad("network")
+    val td = try { JSONObject(typedData) } catch (e: Exception) { throw bad("unreadable") }
+    val req = try { JSONObject(request) } catch (e: Exception) { throw bad("unreadable") }
+    val types = td.optJSONObject("types") ?: throw bad("unreadable")
+    val domain = td.optJSONObject("domain") ?: throw bad("unreadable")
+    val message = td.optJSONObject("message") ?: throw bad("unreadable")
+    if (td.optString("primaryType") != "SafeTx") throw bad("not a Safe transaction")
+    fun fields(name: String): List<String> {
+      val a = types.optJSONArray(name) ?: return emptyList()
+      return (0 until a.length()).map { val f = a.getJSONObject(it); "${f.optString("name")}:${f.optString("type")}" }
+    }
+    if (fields("SafeTx") != SafePolicy.SAFE_TX_FIELDS || fields("EIP712Domain").toSet() != setOf("chainId:uint256", "verifyingContract:address") ||
+      types.keys().asSequence().toSet() != setOf("EIP712Domain", "SafeTx") || domain.keys().asSequence().toSet() != setOf("chainId", "verifyingContract")
+    ) throw bad("not a Safe transaction")
+    fun dec(o: JSONObject, k: String): String? {
+      val v = o.opt(k) ?: return null
+      val s = if (v is Number) BigInteger(v.toString()).toString() else v as? String ?: return null
+      return if (s.isNotEmpty() && s.all { it in '0'..'9' }) s else null
+    }
+    val safe = req.optString("safe").lowercase()
+    val chainId = dec(domain, "chainId")?.toLongOrNull()
+    if (chainId == null || chainId != dec(req, "chainId")?.toLongOrNull() || chainId !in allowedChains) throw bad("wrong network")
+    if (!isAddress(safe) || domain.optString("verifyingContract").lowercase() != safe) throw bad("not this Safe")
+    if (dec(message, "gasPrice") != "0" || message.optString("gasToken").lowercase() != SafePolicy.ZERO_ADDRESS ||
+      message.optString("refundReceiver").lowercase() != SafePolicy.ZERO_ADDRESS
+    ) throw bad("gas refunds are not allowed")
+    val to = message.optString("to").lowercase()
+    val op = dec(message, "operation")?.toIntOrNull()
+    if (!isAddress(to) || op == null || listOf("value", "nonce", "safeTxGas", "baseGas").any { dec(message, it) == null }) throw bad("unreadable")
+    val dataHex = message.optString("data", "0x").lowercase()
+    val data = if (dataHex == "0x") ByteArray(0) else if (dataHex.startsWith("0x")) unhex(dataHex.removePrefix("0x")) else null
+    if (data == null) throw bad("unreadable data")
+    safeCallProblem(to, op, data, safe, 0)?.let { throw bad(it) }
+
+    withSecret(id, activity, "Approve this shared wallet transaction") { r ->
+      val key = privateKey(r, c, account)
+      val sig = unhex(EthereumMessageSigner.signTypedMessage(key, typedData).removePrefix("0x"))
+      if (sig == null || sig.size != 65) throw WalletException("CRYPTO", "signing failed")
+      if ((sig[64].toInt() and 0xff) < 27) sig[64] = (sig[64] + 27).toByte()
+      JSONObject().put("signature", "0x" + hex(sig)).put("signer", c.deriveAddress(key)).toString()
+    }
+  }
+
+  private fun isAddress(a: String) = a.length == 42 && a.startsWith("0x") && a.drop(2).all { it in '0'..'9' || it in 'a'..'f' }
+
+  /** Why a call from a Safe is refused, or null when it may be signed. Batches (multiSend) are checked call by call. */
+  private fun safeCallProblem(to: String, operation: Int, data: ByteArray, safe: String, depth: Int): String? {
+    when (operation) {
+      0 -> {
+        if (to == safe && data.size >= 4) {
+          val selector = data.copyOfRange(0, 4)
+          for (sig in SafePolicy.BLOCKED_SELF_CALLS) {
+            if (Hash.keccak256(sig.toByteArray()).copyOfRange(0, 4).contentEquals(selector)) return "it would change who controls this Safe (${sig.substringBefore('(')})"
+          }
+        }
+        return null
+      }
+      1 -> {
+        if (depth != 0 || to !in SafePolicy.BATCH_CONTRACTS) return "it hands control to another contract (delegatecall)"
+        // multiSend(bytes): selector, offset, length, then packed [operation(1) to(20) value(32) length(32) data].
+        if (data.size < 68 || !data.copyOfRange(0, 4).contentEquals(byteArrayOf(0x8d.toByte(), 0x80.toByte(), 0xff.toByte(), 0x0a))) return "unreadable batch"
+        fun word(at: Int): Int? {
+          if (at < 0 || at + 32 > data.size || (at until at + 24).any { data[it] != 0.toByte() }) return null
+          var v = 0L
+          for (k in at + 24 until at + 32) v = (v shl 8) or (data[k].toLong() and 0xff)
+          return if (v > Int.MAX_VALUE) null else v.toInt()
+        }
+        val offset = word(4) ?: return "unreadable batch"
+        val length = word(4 + offset) ?: return "unreadable batch"
+        var i = 4 + offset + 32
+        val end = i + length
+        if (end > data.size) return "unreadable batch"
+        while (i < end) {
+          if (i + 85 > end) return "unreadable batch"
+          val n = word(i + 53) ?: return "unreadable batch"
+          if (i + 85 + n > end) return "unreadable batch"
+          if (data[i].toInt() != 0) return "a batch step hands control to another contract"
+          val innerTo = "0x" + hex(data.copyOfRange(i + 1, i + 21))
+          safeCallProblem(innerTo, 0, data.copyOfRange(i + 85, i + 85 + n), safe, depth + 1)?.let { return it }
+          i += 85 + n
+        }
+        return null
+      }
+      else -> return "unknown operation"
+    }
+  }
+
   // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
 
   /** Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it. */
@@ -992,18 +1114,15 @@ class WalletStore(context: Context) {
     return Envelope.b64(out.toByteArray())
   }
 
-  fun signMessage(id: String, coinValue: Int, message: String, typed: Boolean, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
-    val c = coin(coinValue)
-    withSecret(id, activity, "Confirm the signature") { r ->
-      val key = privateKey(r, c, account)
-      when {
-        c.blockchain() == Blockchain.ETHEREUM && !typed -> EthereumMessageSigner.signMessage(key, message)
-        c.blockchain() == Blockchain.ETHEREUM && typed -> EthereumMessageSigner.signTypedMessage(key, message)
-        c.blockchain() == Blockchain.TRON && !typed -> TronMessageSigner.signMessage(key, message)
-        else -> throw WalletException("INVALID", "message signing is not supported for this network yet")
-      }
-    }
-  }
+  /**
+   * Open message signing is switched off (9 Nov 2026): signing ANY text or EIP-712 data after one prompt is how
+   * drainer sites take tokens without a transaction (Permit, Permit2, NFT listings). Every signature now goes
+   * through a function with its own compiled-in rule (signGaslessEvm, signSafe, and the planned dApp / Polymarket
+   * ones). Kept so older JS keeps compiling; it never opens a key (SPEC §7.7).
+   */
+  @Suppress("UNUSED_PARAMETER")
+  fun signMessage(id: String, coinValue: Int, message: String, typed: Boolean, account: Int, activity: FragmentActivity?): String =
+    throw WalletException("INVALID", "open message signing is turned off: use a dedicated signing function")
 
   fun revealSecret(id: String, activity: FragmentActivity?): String = synchronized(lock) {
     withSecret(id, activity, "Show your secret phrase") { it.words ?: it.keyHex!! }

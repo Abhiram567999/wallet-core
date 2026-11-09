@@ -6,7 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignGaslessEvm, canSignGaslessSolana, signGaslessEvm, signGaslessSolana, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignGaslessEvm, canSignGaslessSolana, canSignSafe, signGaslessEvm, signGaslessSolana, signSafe, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
@@ -25,6 +25,8 @@ export interface Vectors {
   bitcoin: { inputBase64: string; rawHex: string; txid: string; ownAddress: string };
   utxo: Record<'litecoin' | 'dogecoin' | 'bitcoinCash', { coin: number; inputBase64: string; rawHex: string }>;
   gaslessEvm: { coin: number; sender: string; typedData: string; request: GaslessEvmRequest; signature: string; authorization: { r: string; s: string; yParity: number } };
+  /** Optional so older app builds without the vector still run the rest. */
+  safe?: { coin: number; signer: string; request: SafeSignRequest; allowed: { what: string; typedData: string; signature: string }[]; refused: { what: string; typedData: string }[] };
 }
 
 export interface CheckResult {
@@ -236,6 +238,26 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused(swap((t) => (t.message.sender = '0x000000000000000000000000000000000000bEEF')), g.request, 'an operation from another wallet');
     void td;
     return 'signatures equal viem; 7 tampered versions refused';
+  });
+
+  await check('Safe: owner signatures equal viem; tampered Safe transactions are refused', async () => {
+    if (!canSignSafe() || !v.safe) return 'this build has no Safe signing';
+    const sv = v.safe;
+    for (const a of sv.allowed) {
+      const out = await signSafe(importedId, sv.coin, a.typedData, sv.request);
+      expect(out.signature.toLowerCase() === a.signature.toLowerCase(), `${a.what}: signature differs from viem`);
+      expect(out.signer.toLowerCase() === sv.signer.toLowerCase(), `${a.what}: wrong signer`);
+    }
+    for (const r of sv.refused) {
+      const ok = await signSafe(importedId, sv.coin, r.typedData, sv.request).then(() => true, () => false);
+      expect(!ok, `${r.what} was signed`);
+    }
+    const wrongChain = await signSafe(importedId, sv.coin, sv.allowed[0]!.typedData, { ...sv.request, chainId: 1 }).then(() => true, () => false);
+    expect(!wrongChain, 'a request for another network was signed');
+    const openMessage = await WalletCore.signTypedData(importedId, 60, sv.allowed[0]!.typedData).then(() => true, () => false);
+    const openText = await WalletCore.signMessage(importedId, 60, 'hello').then(() => true, () => false);
+    expect(!openMessage && !openText, 'open message signing still works');
+    return `${sv.allowed.length} signatures equal viem; ${sv.refused.length + 1} tampered versions and open message signing refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

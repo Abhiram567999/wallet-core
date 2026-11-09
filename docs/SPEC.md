@@ -381,3 +381,38 @@ The native module:
 Trust Wallet Core's own signer byte for byte. Stellar, Polkadot and Sui also
 sign correctly through the older `signTransaction` (no sender check), so the
 app may use it on build 11; XRP, NEAR, TON, Aptos and Cardano need build 12.
+
+### 7.7 Safe multi-sig owner signatures, and no open message signing
+
+`signSafe(id, coin, typedData, request, account?)` (build 13 on) signs one EIP-712
+`SafeTx` as a Safe owner. `request` is `{safe, chainId}`. Before Face ID the
+native module refuses unless:
+
+1. the coin is an EVM network Foxsafe supports for Safe and `chainId` is that
+   network's (Ethereum, Base, Arbitrum, Optimism, Polygon, BNB Chain, Avalanche,
+   Gnosis; Sepolia and Base Sepolia for tests) and equals `domain.chainId`,
+2. the types are exactly Safe's (`EIP712Domain {chainId, verifyingContract}`,
+   `SafeTx` with its ten fields in order) and `domain.verifyingContract` is
+   `request.safe`,
+3. there is no gas refund: `gasPrice` 0, `gasToken` and `refundReceiver` the
+   zero address,
+4. `operation` is 0 (call), or 1 (delegatecall) only to Safe's official
+   `MultiSendCallOnly` (1.4.1 `0x9641…02e2`; 1.3.0 `0x40A2…130D` and
+   `0xA1da…102B`), whose batch steps are all calls,
+5. no call, also inside a batch, is to the Safe itself with `setGuard`,
+   `setModuleGuard`, `enableModule`, `disableModule`, `setFallbackHandler`,
+   `changeMasterCopy` or `setup` (the ways to take a Safe over without the
+   owners noticing). Owner and threshold changes are allowed; the app shows
+   them in red.
+
+It returns `{signature, signer}` with `v` = 27/28, as Safe expects. Whether
+the account is really an owner is checked by the app and by the Safe contract
+itself. `test/vectors/safe.json` (made with viem by
+`app/scripts/make-safe-vector.mjs`) holds signatures the native signer must
+reproduce and tampered requests it must refuse; `test/safe.test.ts` checks
+Trust Wallet Core against viem and the self-test checks the native rule.
+
+`signMessage` and `signTypedData` (sign any text or EIP-712 data after one
+Face ID) are switched off from the same build: they always refuse and never
+open a key. Every signature goes through a function with its own rule
+(`signGaslessEvm`, `signSafe`, and later the dApp and Polymarket ones).

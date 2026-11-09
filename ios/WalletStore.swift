@@ -881,6 +881,105 @@ final class WalletStore {
     }
   }
 
+  // MARK: Safe multi-sig owner signatures (EIP-712 SafeTx)
+
+  /// Foxsafe's Safe signing rule, compiled in on purpose: an app update can't loosen it (SPEC §7.7).
+  enum SafePolicy {
+    /// App coin → chain ids where this phone signs for Safe accounts (Sepolia and Base Sepolia for tests).
+    static let chains: [UInt32: [UInt64]] = [60: [1, 11155111], 8453: [8453, 84532], 10042221: [42161], 10000070: [10], 966: [137], 20000714: [56], 10009000: [43114], 10000100: [100]]
+    /// The only contracts a Safe may delegatecall: Safe's official MultiSendCallOnly (1.4.1; 1.3.0 and its L2 address).
+    static let batchContracts: Set<String> = ["0x9641d764fc13c8b624c04430c7356c1c7c8102e2", "0x40a2accbd92bca938b02010e17a5b8929b49130d", "0xa1dabef33b3b82c7814b6d82a79e50f4ac44102b"]
+    /// Calls on the Safe itself that hand control of it to other code.
+    static let blockedSelfCalls = ["setGuard(address)", "setModuleGuard(address)", "enableModule(address)", "disableModule(address,address)",
+                                   "setFallbackHandler(address)", "changeMasterCopy(address)", "setup(address[],uint256,address,bytes,address,address,uint256,address)"]
+    static let safeTxFields = ["to:address", "value:uint256", "data:bytes", "operation:uint8", "safeTxGas:uint256", "baseGas:uint256",
+                               "gasPrice:uint256", "gasToken:address", "refundReceiver:address", "nonce:uint256"]
+    static let zeroAddress = "0x0000000000000000000000000000000000000000"
+  }
+
+  /// Signs ONE Safe transaction as an owner (EIP-712 `SafeTx`), after Face ID. Refuses before Face ID unless:
+  /// the network is one Foxsafe supports for Safe, the domain is exactly {chainId, verifyingContract = this Safe},
+  /// there is no gas refund (gasPrice, gasToken, refundReceiver all zero), delegatecall goes only to Safe's
+  /// MultiSendCallOnly, and no call (also inside a batch) changes the Safe's guard, modules, fallback handler or
+  /// singleton. `request` JSON: {safe, chainId}. Returns JSON {signature (v = 27/28), signer}.
+  func signSafe(id: String, coin raw: UInt32, typedData: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("Safe signature refused: \(why)") }
+    guard let coin = CoinType(rawValue: raw), coin.blockchain == .ethereum, let allowedChains = SafePolicy.chains[raw] else { throw bad("network") }
+    guard let td = try JSONSerialization.jsonObject(with: Data(typedData.utf8)) as? [String: Any],
+          let types = td["types"] as? [String: Any], let domain = td["domain"] as? [String: Any], let message = td["message"] as? [String: Any],
+          td["primaryType"] as? String == "SafeTx",
+          let req = try JSONSerialization.jsonObject(with: Data(request.utf8)) as? [String: Any] else { throw bad("unreadable") }
+    func fields(_ name: String) -> [String] {
+      ((types[name] as? [[String: Any]]) ?? []).map { "\($0["name"] as? String ?? ""):\($0["type"] as? String ?? "")" }
+    }
+    guard fields("SafeTx") == SafePolicy.safeTxFields, Set(fields("EIP712Domain")) == ["chainId:uint256", "verifyingContract:address"],
+          Set(types.keys) == ["EIP712Domain", "SafeTx"], Set(domain.keys) == ["chainId", "verifyingContract"] else { throw bad("not a Safe transaction") }
+    func dec(_ v: Any?) -> String? {
+      if let n = v as? NSNumber { return n.stringValue }
+      if let s = v as? String, !s.isEmpty, s.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }) { return s }
+      return nil
+    }
+    let safe = (req["safe"] as? String ?? "").lowercased()
+    guard let chainId = dec(domain["chainId"]).flatMap({ UInt64($0) }), chainId == dec(req["chainId"]).flatMap({ UInt64($0) }),
+          allowedChains.contains(chainId) else { throw bad("wrong network") }
+    guard Self.addressWord(safe) != nil, (domain["verifyingContract"] as? String)?.lowercased() == safe else { throw bad("not this Safe") }
+    guard dec(message["gasPrice"]) == "0", (message["gasToken"] as? String)?.lowercased() == SafePolicy.zeroAddress,
+          (message["refundReceiver"] as? String)?.lowercased() == SafePolicy.zeroAddress else { throw bad("gas refunds are not allowed") }
+    guard let to = (message["to"] as? String)?.lowercased(), Self.addressWord(to) != nil, dec(message["value"]) != nil, dec(message["nonce"]) != nil,
+          dec(message["safeTxGas"]) != nil, dec(message["baseGas"]) != nil, let op = dec(message["operation"]).flatMap({ Int($0) }) else { throw bad("unreadable") }
+    let dataHex = (message["data"] as? String ?? "0x").lowercased()
+    guard dataHex.hasPrefix("0x"), let data = dataHex.count == 2 ? Data() : Data(hexString: String(dataHex.dropFirst(2))) else { throw bad("unreadable data") }
+    if let why = Self.safeCallProblem(to: to, operation: op, data: data, safe: safe, depth: 0) { throw bad(why) }
+
+    return try withSecrets([id], reason: "Approve this shared wallet transaction") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: typedData)
+      if sig.hasPrefix("0x") { sig = String(sig.dropFirst(2)) }
+      guard sig.count == 130, var bytes = Data(hexString: sig) else { throw WalletError.crypto("signing failed") }
+      if bytes[64] < 27 { bytes[64] += 27 }
+      let out: [String: Any] = ["signature": "0x" + bytes.hexString, "signer": coin.deriveAddress(privateKey: key)]
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
+  /// Why a call from a Safe is refused, or nil when it may be signed. Batches (multiSend) are checked call by call.
+  static func safeCallProblem(to: String, operation: Int, data: Data, safe: String, depth: Int) -> String? {
+    switch operation {
+    case 0:
+      if to == safe, data.count >= 4 {
+        let selector = data.prefix(4)
+        for sig in SafePolicy.blockedSelfCalls where Hash.keccak256(data: Data(sig.utf8)).prefix(4) == selector {
+          return "it would change who controls this Safe (\(sig.split(separator: "(")[0]))"
+        }
+      }
+      return nil
+    case 1:
+      guard depth == 0, SafePolicy.batchContracts.contains(to) else { return "it hands control to another contract (delegatecall)" }
+      // multiSend(bytes): selector, offset, length, then packed [operation(1) to(20) value(32) length(32) data].
+      guard data.count >= 68, data.prefix(4) == Data([0x8d, 0x80, 0xff, 0x0a]) else { return "unreadable batch" }
+      let b = [UInt8](data)
+      func word(_ at: Int) -> Int? {
+        guard at + 32 <= b.count, b[at..<(at + 24)].allSatisfy({ $0 == 0 }) else { return nil }
+        return b[(at + 24)..<(at + 32)].reduce(0) { $0 << 8 | Int($1) }
+      }
+      guard let offset = word(4), let length = word(4 + offset), 4 + offset + 32 + length <= b.count else { return "unreadable batch" }
+      var i = 4 + offset + 32
+      let end = i + length
+      while i < end {
+        guard i + 85 <= end, let n = word(i + 53), i + 85 + n <= end else { return "unreadable batch" }
+        let innerOp = Int(b[i])
+        let innerTo = "0x" + Data(b[(i + 1)..<(i + 21)]).hexString
+        if innerOp != 0 { return "a batch step hands control to another contract" }
+        if let why = safeCallProblem(to: innerTo, operation: 0, data: Data(b[(i + 85)..<(i + 85 + n)]), safe: safe, depth: depth + 1) { return why }
+        i += 85 + n
+      }
+      return nil
+    default:
+      return "unknown operation"
+    }
+  }
+
   // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
 
   /// Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it.
@@ -1040,18 +1139,12 @@ final class WalletStore {
     return try out.serializedData().base64EncodedString()
   }
 
+  /// Open message signing is switched off (9 Nov 2026): signing ANY text or EIP-712 data after one Face ID
+  /// is how drainer sites take tokens without a transaction (Permit, Permit2, NFT listings). Every signature
+  /// now goes through a function with its own compiled-in rule (signGaslessEvm, signSafe, and the planned
+  /// dApp / Polymarket ones). Kept so older JS keeps compiling; it never opens a key (SPEC §7.7).
   func signMessage(id: String, coin raw: UInt32, message: String, typed: Bool, account: UInt32) throws -> String {
-    lock.lock(); defer { lock.unlock() }
-    guard let coin = CoinType(rawValue: raw) else { throw WalletError.invalid("unsupported coin") }
-    return try withSecrets([id], reason: "Confirm the signature") { records in
-      let key = try Self.privateKey(records[0], coin: coin, account: account)
-      switch (coin.blockchain, typed) {
-      case (.ethereum, false): return EthereumMessageSigner.signMessage(privateKey: key, message: message)
-      case (.ethereum, true): return EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: message)
-      case (.tron, false): return TronMessageSigner.signMessage(privateKey: key, message: message)
-      default: throw WalletError.invalid("message signing is not supported for this network yet")
-      }
-    }
+    throw WalletError.invalid("open message signing is turned off: use a dedicated signing function")
   }
 
   func revealSecret(id: String) throws -> String {
