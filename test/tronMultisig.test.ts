@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { tronMultisigRaw, tronTxId, type TronMultisigAction } from '../src/tronMultisig.ts';
+import { readTronMultisigRaw, tronMultisigRaw, tronTxId, type TronMultisigAction } from '../src/tronMultisig.ts';
 
 const v = JSON.parse(readFileSync(new URL('./vectors/tron-multisig.json', import.meta.url), 'utf8'));
 
@@ -13,5 +13,19 @@ test('TRON multisig: our raw transactions equal the TRON node, and the txID is t
     const raw = tronMultisigRaw(a, c.permissionId, c.ref, c.feeLimit);
     assert.equal(raw, c.rawDataHex, c.action.type);
     assert.equal(tronTxId(raw), c.txID, c.action.type);
+  }
+});
+
+test('TRON multisig: reading a transaction back gives what was built', () => {
+  for (const c of v.cases) {
+    const r = readTronMultisigRaw(c.rawDataHex);
+    assert.equal(r.account, c.action.owner);
+    assert.equal(r.permissionId, c.permissionId);
+    assert.equal(r.action.type, c.action.type);
+    if (r.action.type !== 'setup' && r.action.type !== 'other') {
+      assert.equal(r.action.to, c.action.to);
+      assert.equal(r.action.amount, BigInt(c.action.amount));
+    }
+    if (r.action.type === 'token') assert.equal(r.action.token, c.action.token);
   }
 });
