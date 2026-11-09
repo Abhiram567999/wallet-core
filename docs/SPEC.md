@@ -416,3 +416,39 @@ Trust Wallet Core against viem and the self-test checks the native rule.
 Face ID) are switched off from the same build: they always refuse and never
 open a key. Every signature goes through a function with its own rule
 (`signGaslessEvm`, `signSafe`, and later the dApp and Polymarket ones).
+
+### 7.8 TRON multisig (account permissions)
+
+Trust Wallet Core's TRON signer has no `Permission_id` and no
+`AccountPermissionUpdateContract`, so Foxsafe builds the raw transaction
+itself (`src/tronMultisig.ts`, equal byte for byte to a TRON node:
+`test/vectors/tron-multisig.json`) and signs it with
+`signTronMultisig(id, rawDataHex, request, account?)` (build 13 on). The
+signature is over SHA-256 of `Transaction.raw` (the txID); each owner signs
+the same bytes. `request` is `{kind, account, permissionId, owners?, threshold?}`.
+
+Before Face ID the native module parses the protobuf and refuses unless:
+
+1. the raw transaction has only the usual fields (ref block, expiration,
+   one contract, timestamp, fee limit), no extra signers, scripts or memo,
+   and no field written twice (protobuf keeps the last copy);
+2. it expires in the future and at most 24 h (+10 min clock slack) away;
+3. the contract's owner is `account`;
+4. `kind = "send"`: a TRX `TransferContract`, or a `TriggerSmartContract`
+   that is exactly `transfer(to, amount)` on TRON USDT or USDC with fee limit
+   ≤ 100 TRX, with `Permission_id` = `permissionId` (2–9, an active
+   permission);
+5. `kind = "setup"`: an `AccountPermissionUpdateContract` with
+   `Permission_id` 0, an owner permission and exactly one active permission
+   (id 2), each with exactly `owners` (2–5, weight 1, in order) and
+   `threshold`; the active permission's operations allow only TRX transfers
+   (1) and contract calls (31), never permission changes (46); no witness.
+
+After Face ID a setup is also refused when this phone's own TRON address is
+not one of the owners (it would lock itself out). The network fees (100 TRX
+per permission update, 1 TRX per multi-signature transaction, chain
+parameters #22 and #23) are paid in TRX by the account. Nothing else changes:
+`signTransaction` still can't sign any permission update, and the gasless
+fee rule (§7.3/7.4) is unchanged. The self-test builds fresh transactions,
+checks each signature recovers to the wallet's TRON address, and checks 12
+tampered versions are refused.

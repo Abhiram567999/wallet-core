@@ -6,11 +6,15 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignGaslessEvm, canSignGaslessSolana, canSignSafe, signGaslessEvm, signGaslessSolana, signSafe, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignGaslessEvm, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
 import { decodeVault } from './vault.ts';
+import { secp256k1 } from '@noble/curves/secp256k1.js';
+import { keccak_256 } from '@noble/hashes/sha3.js';
+import { base58Encode } from './solana.ts';
+import { tronMultisigRaw, tronTxId, fromHex, type TronMultisigAction } from './tronMultisig.ts';
 
 export interface Vectors {
   hd: {
@@ -258,6 +262,55 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const openText = await WalletCore.signMessage(importedId, 60, 'hello').then(() => true, () => false);
     expect(!openMessage && !openText, 'open message signing still works');
     return `${sv.allowed.length} signatures equal viem; ${sv.refused.length + 1} tampered versions and open message signing refused`;
+  });
+
+  await check('TRON multisig: setup and sends sign (signature recovers to this account); tampering is refused', async () => {
+    if (!canSignTronMultisig()) return 'this build has no TRON multisig signing';
+    const me = (await WalletCore.getAddresses(importedId, [195]))[0]!.address;
+    const B = 'TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV';
+    const C = 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN';
+    const USDT = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+    const now = Date.now();
+    const ref = (expiresIn = 3_600_000) => ({ refBlockBytes: 'ab12', refBlockHash: '0011223344556677', timestamp: now, expiration: now + expiresIn });
+    const tronAddressOf = (sigHex: string, txID: string) => {
+      const sig = fromHex(sigHex);
+      const pub = secp256k1.Signature.fromBytes(sig.slice(0, 64), 'compact').addRecoveryBit(sig[64]! % 27).recoverPublicKey(fromHex(txID)).toBytes(false);
+      const body = new Uint8Array([0x41, ...keccak_256(pub.slice(1)).slice(12)]);
+      const { sha256: h } = { sha256 };
+      return base58Encode(new Uint8Array([...body, ...h(h(body)).slice(0, 4)]));
+    };
+    const ok = async (a: TronMultisigAction, req: Parameters<typeof signTronMultisig>[2], pid: number, fee = 0) => {
+      const raw = tronMultisigRaw(a, pid, ref(), fee);
+      const out = await signTronMultisig(importedId, raw, req);
+      expect(out.txID === tronTxId(raw), 'txID differs');
+      expect(out.signer === me && tronAddressOf(out.signature, out.txID) === me, 'signature does not recover to this account');
+    };
+    const refused = async (raw: string, req: Parameters<typeof signTronMultisig>[2], what: string) => {
+      const signed = await signTronMultisig(importedId, raw, req).then(() => true, () => false);
+      expect(!signed, `${what} was signed`);
+    };
+    const setup: TronMultisigAction = { type: 'setup', owner: me, owners: [me, B, C], threshold: 2 };
+    const setupReq = { kind: 'setup' as const, account: me, permissionId: 0 as const, owners: [me, B, C], threshold: 2 };
+    const sendReq = { kind: 'send' as const, account: me, permissionId: 2 };
+    await ok(setup, setupReq, 0);
+    await ok({ type: 'transfer', owner: me, to: B, amount: 1_000_000n }, sendReq, 2);
+    await ok({ type: 'token', owner: me, token: USDT, to: B, amount: 5_000_000n }, sendReq, 2, 30_000_000);
+
+    const raw = (a: TronMultisigAction, pid: number, expiresIn?: number, fee = 0) => tronMultisigRaw(a, pid, ref(expiresIn), fee);
+    await refused(raw({ type: 'setup', owner: me, owners: [B, C, 'TNXoiAJ3dct8Fjg4M9fkLFh9S2v9TXc32G'], threshold: 2 }, 0), { ...setupReq, owners: [B, C, 'TNXoiAJ3dct8Fjg4M9fkLFh9S2v9TXc32G'] }, 'a setup without this phone');
+    await refused(raw(setup, 0), { ...setupReq, owners: [me, B] }, 'a setup with other owners than confirmed');
+    await refused(raw(setup, 0), { ...setupReq, threshold: 3 }, 'a setup with another threshold than confirmed');
+    await refused(raw(setup, 0).replace('0200008000000000', '0200008000400000'), setupReq, 'an active permission that may change permissions');
+    await refused(raw({ type: 'transfer', owner: me, to: B, amount: 1n }, 0), { ...sendReq, permissionId: 0 }, 'a send with the owner permission');
+    await refused(raw({ type: 'transfer', owner: me, to: B, amount: 1n }, 3), sendReq, 'a send with another permission id');
+    await refused(raw({ type: 'token', owner: me, token: 'TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8', to: B, amount: 1n }, 2, undefined, 200_000_000), sendReq, 'a fee limit above 100 TRX');
+    await refused(raw({ type: 'token', owner: me, token: C, to: B, amount: 1n }, 2), sendReq, 'a token that is not USDT or USDC');
+    // Co-owners do sign sends FROM the shared account (not their own address); what must match is the account shown.
+    await refused(raw({ type: 'transfer', owner: B, to: C, amount: 1n }, 2), sendReq, 'a send from another account than the one shown');
+    await refused(raw({ type: 'transfer', owner: me, to: B, amount: 1n }, 2, 3 * 86_400_000), sendReq, 'an expiry 3 days away');
+    await refused(raw({ type: 'transfer', owner: me, to: B, amount: 1n }, 2, -60_000), sendReq, 'an expired transaction');
+    await refused(raw(setup, 0), { ...sendReq, permissionId: 2 }, 'a setup passed off as a send');
+    return '3 signatures recover to this account; 12 tampered versions refused';
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

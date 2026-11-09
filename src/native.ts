@@ -104,6 +104,8 @@ export interface NativeWalletCore {
   signGaslessEvm?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
   /** Safe owner signature for one EIP-712 SafeTx, with Foxsafe's compiled-in Safe rule (SPEC §7.7). */
   signSafe?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
+  /** TRON multisig: one Foxsafe-made permission setup or multisig send, with its compiled-in rule (SPEC §7.8). */
+  signTronMultisig?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /**
    * Gasless Solana send with ONE Face ID: native code rebuilds the message from `request` and signs
    * only if it matches `message` (base64) byte for byte. Returns the base58 signature.
@@ -245,6 +247,25 @@ export const canSignSafe = () => typeof native?.signSafe === 'function';
 export async function signSafe(id: string, coin: CoinType, typedData: string, request: SafeSignRequest, account?: number): Promise<SafeSignature> {
   if (!native?.signSafe) throw new Error('UNAVAILABLE: this app build cannot sign shared wallet transactions yet');
   return JSON.parse(await native.signSafe(id, coin, typedData, JSON.stringify(request), account)) as SafeSignature;
+}
+
+export type TronMultisigRequest =
+  | { kind: 'send'; account: string; permissionId: number }
+  | { kind: 'setup'; account: string; permissionId: 0; owners: string[]; threshold: number };
+
+export interface TronMultisigSignature {
+  /** 65 bytes hex (r, s, recovery id), as TRON transactions carry it. */
+  signature: string;
+  signer: string;
+  txID: string;
+}
+
+/** True when this build can sign TRON multisig (native rule included). */
+export const canSignTronMultisig = () => typeof native?.signTronMultisig === 'function';
+
+export async function signTronMultisig(id: string, rawDataHex: string, request: TronMultisigRequest, account?: number): Promise<TronMultisigSignature> {
+  if (!native?.signTronMultisig) throw new Error('UNAVAILABLE: this app build cannot sign shared TRON accounts yet');
+  return JSON.parse(await native.signTronMultisig(id, rawDataHex, JSON.stringify(request), account)) as TronMultisigSignature;
 }
 
 export interface GaslessSolanaRequest {

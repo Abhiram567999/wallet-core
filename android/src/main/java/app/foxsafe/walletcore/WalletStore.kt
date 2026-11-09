@@ -965,6 +965,159 @@ class WalletStore(context: Context) {
     }
   }
 
+  // MARK: TRON multisig (account permissions)
+
+  /** Foxsafe's TRON multisig rule, compiled in on purpose (SPEC §7.8). */
+  private object TronMultisigPolicy {
+    const val TRANSFER = 1L
+    const val TRIGGER = 31L
+    const val PERMISSION_UPDATE = 46L
+    /** USDT and USDC on TRON: the only tokens a multisig send may move. */
+    val TOKENS = setOf("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", "TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8")
+    /** The active permission may only send TRX (1) and call token contracts (31); never change permissions (46). */
+    val ACTIVE_OPERATIONS = ByteArray(32).also { it[0] = 0x02; it[3] = 0x80.toByte() }
+    const val MAX_FEE_LIMIT_SUN = 100_000_000L
+    const val MAX_EXPIRY_MS = 24L * 3_600_000 + 10 * 60_000
+  }
+
+  /** A minimal protobuf reader (varint and length-delimited fields only). Value: Long or ByteArray. */
+  private object PB {
+    fun read(d: ByteArray): List<Pair<Int, Any>>? {
+      var i = 0
+      val out = mutableListOf<Pair<Int, Any>>()
+      fun varint(): Long? {
+        var r = 0L
+        var shift = 0
+        while (i < d.size) {
+          val x = d[i].toInt() and 0xff
+          i++
+          if (shift > 63) return null
+          r = r or ((x and 0x7f).toLong() shl shift)
+          if (x and 0x80 == 0) return r
+          shift += 7
+        }
+        return null
+      }
+      while (i < d.size) {
+        val key = varint() ?: return null
+        val field = (key ushr 3).toInt()
+        when ((key and 7L).toInt()) {
+          0 -> out.add(field to (varint() ?: return null))
+          2 -> {
+            val n = varint() ?: return null
+            if (n < 0 || n > d.size - i) return null
+            out.add(field to d.copyOfRange(i, i + n.toInt()))
+            i += n.toInt()
+          }
+          else -> return null
+        }
+      }
+      return out
+    }
+    fun ints(f: List<Pair<Int, Any>>, n: Int): List<Long> = f.filter { it.first == n }.mapNotNull { it.second as? Long }
+    fun bytes(f: List<Pair<Int, Any>>, n: Int): List<ByteArray> = f.filter { it.first == n }.mapNotNull { it.second as? ByteArray }
+    /** Only these fields, each at most once unless repeated (protobuf keeps the LAST copy, which could hide what is signed). */
+    fun only(f: List<Pair<Int, Any>>, allowed: Set<Int>, repeated: Set<Int> = emptySet()): Boolean {
+      val seen = mutableSetOf<Int>()
+      for ((k, _) in f) {
+        if (k !in allowed) return false
+        if (k !in repeated && !seen.add(k)) return false
+      }
+      return true
+    }
+  }
+
+  /**
+   * Signs ONE TRON multisig transaction (SHA-256 of protobuf Transaction.raw, the txID) after the fingerprint prompt.
+   * Refused first unless it is exactly a "send" (TRX, or USDT/USDC transfer(to, amount), from `account`, Permission_id
+   * `permissionId` 2–9, fee limit ≤ 100 TRX) or a "setup" (AccountPermissionUpdate of `account`: owner and one active
+   * permission with exactly `owners`, weight 1, and `threshold`; active only allowed to send). A setup is also refused
+   * after the prompt if this phone's account is not an owner. Always one contract, no extra signers, expiry ≤ 24 h.
+   * [request] JSON: {kind, account, permissionId, owners?, threshold?}. Returns JSON {signature, signer, txID}.
+   */
+  fun signTronMultisig(id: String, rawDataHex: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "TRON multisig refused: $why")
+    val P = TronMultisigPolicy
+    val raw = unhex(rawDataHex.removePrefix("0x").lowercase()) ?: throw bad("unreadable")
+    val top = PB.read(raw) ?: throw bad("unreadable")
+    val req = try { JSONObject(request) } catch (e: Exception) { throw bad("unreadable") }
+    val kind = req.optString("kind")
+    val accountBytes = Base58.decode(req.optString("account"))
+    if (accountBytes == null || accountBytes.size != 21 || accountBytes[0] != 0x41.toByte()) throw bad("unreadable")
+    if (!PB.only(top, setOf(1, 3, 4, 8, 11, 14, 18), repeated = setOf(11))) throw bad("extra parts in the transaction")
+    val now = System.currentTimeMillis()
+    val exp = PB.ints(top, 8).firstOrNull() ?: throw bad("expired or expires too late")
+    if (exp <= now || exp > now + P.MAX_EXPIRY_MS) throw bad("expired or expires too late")
+    val contracts = PB.bytes(top, 11)
+    if (contracts.size != 1) throw bad("not one contract")
+    val c = PB.read(contracts[0]) ?: throw bad("not one contract")
+    val any = PB.bytes(c, 2).firstOrNull()?.let { PB.read(it) } ?: throw bad("not one contract")
+    if (!PB.only(c, setOf(1, 2, 5)) || !PB.only(any, setOf(1, 2))) throw bad("not one contract")
+    val type = PB.ints(c, 1).firstOrNull() ?: throw bad("not one contract")
+    val url = PB.bytes(any, 1).firstOrNull()?.let { String(it, Charsets.UTF_8) } ?: throw bad("not one contract")
+    val value = PB.bytes(any, 2).firstOrNull()?.let { PB.read(it) } ?: throw bad("not one contract")
+    val permissionId = PB.ints(c, 5).firstOrNull() ?: 0L
+    if (!(PB.bytes(value, 1).firstOrNull()?.contentEquals(accountBytes) ?: false)) throw bad("not from this account")
+    var setupOwners: List<String> = emptyList()
+
+    when (kind) {
+      "send" -> {
+        val want = req.optLong("permissionId", -1)
+        if (want !in 2..9 || permissionId != want) throw bad("wrong permission")
+        when (type) {
+          P.TRANSFER -> {
+            val to = PB.bytes(value, 2).firstOrNull()
+            val amount = PB.ints(value, 3).firstOrNull() ?: 0L
+            if (url != "type.googleapis.com/protocol.TransferContract" || !PB.only(value, setOf(1, 2, 3)) || to == null || to.size != 21 || to[0] != 0x41.toByte() || amount <= 0) throw bad("not a TRX transfer")
+          }
+          P.TRIGGER -> {
+            val token = PB.bytes(value, 2).firstOrNull()
+            val data = PB.bytes(value, 4).firstOrNull()
+            val ok = url == "type.googleapis.com/protocol.TriggerSmartContract" && PB.only(value, setOf(1, 2, 4)) && token != null && Base58.encode(token) in P.TOKENS &&
+              data != null && data.size == 68 && data.copyOfRange(0, 4).contentEquals(byteArrayOf(0xa9.toByte(), 0x05, 0x9c.toByte(), 0xbb.toByte())) &&
+              (4 until 16).all { data[it] == 0.toByte() } && (36 until 68).any { data[it] != 0.toByte() }
+            if (!ok) throw bad("not a USDT or USDC transfer")
+            if ((PB.ints(top, 18).firstOrNull() ?: 0L) > P.MAX_FEE_LIMIT_SUN) throw bad("fee limit above 100 TRX")
+          }
+          else -> throw bad("only sends are allowed")
+        }
+      }
+      "setup" -> {
+        if (type != P.PERMISSION_UPDATE || url != "type.googleapis.com/protocol.AccountPermissionUpdateContract" || permissionId != 0L || !PB.only(value, setOf(1, 2, 4), repeated = setOf(4))) throw bad("not a permission setup")
+        val arr = req.optJSONArray("owners") ?: throw bad("owners or approvals")
+        val owners = (0 until arr.length()).map { arr.getString(it) }
+        val threshold = req.optLong("threshold", 0)
+        if (owners.size !in 2..5 || owners.toSet().size != owners.size || threshold < 1 || threshold > owners.size) throw bad("owners or approvals")
+        val ownerBytes = owners.map { o -> Base58.decode(o)?.takeIf { it.size == 21 && it[0] == 0x41.toByte() } ?: throw bad("owner address") }
+        fun check(perm: ByteArray?, wantType: Long, wantId: Long, name: String, ops: ByteArray?): Boolean {
+          val p = perm?.let { PB.read(it) } ?: return false
+          if (!PB.only(p, setOf(1, 2, 3, 4, 6, 7), repeated = setOf(7))) return false
+          if ((PB.ints(p, 1).firstOrNull() ?: 0L) != wantType || (PB.ints(p, 2).firstOrNull() ?: 0L) != wantId) return false
+          if (!(PB.bytes(p, 3).firstOrNull()?.contentEquals(name.toByteArray()) ?: false) || PB.ints(p, 4).firstOrNull() != threshold) return false
+          val o = PB.bytes(p, 6).firstOrNull()
+          if (if (ops == null) o != null else o == null || !o.contentEquals(ops)) return false
+          val keys = PB.bytes(p, 7).map { PB.read(it) ?: return false }
+          if (keys.size != ownerBytes.size) return false
+          return keys.zip(ownerBytes).all { (k, want) -> PB.only(k, setOf(1, 2)) && (PB.bytes(k, 1).firstOrNull()?.contentEquals(want) ?: false) && PB.ints(k, 2).firstOrNull() == 1L }
+        }
+        val actives = PB.bytes(value, 4)
+        if (!check(PB.bytes(value, 2).firstOrNull(), 0, 0, "owner", null) || actives.size != 1 || !check(actives[0], 2, 2, "active", P.ACTIVE_OPERATIONS)) throw bad("the permissions are not the ones you confirmed")
+        setupOwners = owners
+      }
+      else -> throw bad("unknown kind")
+    }
+
+    withSecret(id, activity, if (kind == "setup") "Turn this TRON account into a shared account" else "Approve this shared TRON payment") { r ->
+      val key = privateKey(r, CoinType.TRON, account)
+      val me = CoinType.TRON.deriveAddress(key)
+      if (kind == "setup" && me !in setupOwners) throw bad("this phone's account is not an owner: it would lose control")
+      val digest = Hash.sha256(raw)
+      val sig = key.sign(digest, Curve.SECP256K1) ?: throw WalletException("CRYPTO", "signing failed")
+      if (sig.size != 65) throw WalletException("CRYPTO", "signing failed")
+      JSONObject().put("signature", hex(sig)).put("signer", me).put("txID", hex(digest)).toString()
+    }
+  }
+
   // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
 
   /** Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it. */

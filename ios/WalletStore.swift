@@ -980,6 +980,155 @@ final class WalletStore {
     }
   }
 
+  // MARK: TRON multisig (account permissions)
+
+  /// Foxsafe's TRON multisig rule, compiled in on purpose (SPEC §7.8).
+  enum TronMultisigPolicy {
+    static let transfer: UInt64 = 1, trigger: UInt64 = 31, permissionUpdate: UInt64 = 46
+    /// USDT and USDC on TRON: the only tokens a multisig send may move.
+    static let tokens: Set<String> = ["TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t", "TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8"]
+    /// The active permission may only send TRX (1) and call token contracts (31); never change permissions (46).
+    static let activeOperations: Data = { var b = Data(repeating: 0, count: 32); b[0] = 0x02; b[3] = 0x80; return b }()
+    static let maxFeeLimitSun: UInt64 = 100_000_000
+    static let maxExpiryMs: Int64 = 24 * 3_600_000 + 10 * 60_000
+  }
+
+  /// A minimal protobuf reader (varint and length-delimited fields only).
+  enum PB {
+    enum V { case int(UInt64), bytes(Data) }
+    static func read(_ d: Data) -> [(Int, V)]? {
+      let b = [UInt8](d)
+      var i = 0
+      var out: [(Int, V)] = []
+      func varint() -> UInt64? {
+        var r: UInt64 = 0
+        var shift: UInt64 = 0
+        while i < b.count {
+          let x = b[i]
+          i += 1
+          if shift > 63 { return nil }
+          r |= UInt64(x & 0x7f) << shift
+          if x & 0x80 == 0 { return r }
+          shift += 7
+        }
+        return nil
+      }
+      while i < b.count {
+        guard let key = varint() else { return nil }
+        let field = Int(key >> 3)
+        switch key & 7 {
+        case 0:
+          guard let v = varint() else { return nil }
+          out.append((field, .int(v)))
+        case 2:
+          guard let n = varint(), n <= UInt64(b.count - i) else { return nil }
+          out.append((field, .bytes(Data(b[i..<(i + Int(n))]))))
+          i += Int(n)
+        default:
+          return nil
+        }
+      }
+      return out
+    }
+    static func ints(_ f: [(Int, V)], _ n: Int) -> [UInt64] {
+      var r: [UInt64] = []
+      for (k, v) in f where k == n { if case let .int(x) = v { r.append(x) } }
+      return r
+    }
+    static func bytes(_ f: [(Int, V)], _ n: Int) -> [Data] {
+      var r: [Data] = []
+      for (k, v) in f where k == n { if case let .bytes(x) = v { r.append(x) } }
+      return r
+    }
+    /// Only these fields, and each at most once unless listed as repeated (protobuf keeps the LAST copy of a field,
+    /// so a second copy could hide what is really signed).
+    static func only(_ f: [(Int, V)], _ allowed: Set<Int>, repeated: Set<Int> = []) -> Bool {
+      var seen = Set<Int>()
+      for (k, _) in f {
+        guard allowed.contains(k) else { return false }
+        if !repeated.contains(k) { guard seen.insert(k).inserted else { return false } }
+      }
+      return true
+    }
+  }
+
+  /// Signs ONE TRON multisig transaction with Face ID. `rawDataHex` is protobuf Transaction.raw; the signature is over its
+  /// SHA-256 (the txID). Refused before Face ID unless it is exactly one of:
+  /// - kind "send": a TRX transfer, or a USDT/USDC transfer(to, amount), from `account`, with Permission_id `permissionId` (2–9),
+  ///   fee limit at most 100 TRX;
+  /// - kind "setup": an AccountPermissionUpdate of `account` made by Foxsafe: owner and one active permission with exactly
+  ///   `owners` (weight 1 each) and `threshold`, the active one only allowed to send (never to change permissions).
+  ///   After Face ID it is also refused if this phone's account is not one of the owners (it would lock itself out).
+  /// Always: no other contract, no extra signers or scripts, expiry in the future and at most 24 h away.
+  /// `request` JSON: {kind, account, permissionId, owners?, threshold?}. Returns JSON {signature, signer, txID}.
+  func signTronMultisig(id: String, rawDataHex: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("TRON multisig refused: \(why)") }
+    let P = TronMultisigPolicy.self
+    guard let raw = Data(hexString: rawDataHex.hasPrefix("0x") ? String(rawDataHex.dropFirst(2)) : rawDataHex), let top = PB.read(raw),
+          let req = try JSONSerialization.jsonObject(with: Data(request.utf8)) as? [String: Any],
+          let kind = req["kind"] as? String, let accountText = req["account"] as? String,
+          let accountBytes = Base58.decode(string: accountText), accountBytes.count == 21, accountBytes.first == 0x41 else { throw bad("unreadable") }
+    guard PB.only(top, [1, 3, 4, 8, 11, 14, 18], repeated: [11]) else { throw bad("extra parts in the transaction") }
+    let now = Int64(Date().timeIntervalSince1970 * 1000)
+    guard let exp = PB.ints(top, 8).first, Int64(exp) > now, Int64(exp) <= now + P.maxExpiryMs else { throw bad("expired or expires too late") }
+    let contracts = PB.bytes(top, 11)
+    guard contracts.count == 1, let c = PB.read(contracts[0]), PB.only(c, [1, 2, 5]),
+          let type = PB.ints(c, 1).first, let any = PB.bytes(c, 2).first.flatMap(PB.read),
+          PB.only(any, [1, 2]), let url = PB.bytes(any, 1).first.flatMap({ String(data: $0, encoding: .utf8) }), let value = PB.bytes(any, 2).first.flatMap(PB.read) else { throw bad("not one contract") }
+    let permissionId = PB.ints(c, 5).first ?? 0
+    guard PB.bytes(value, 1).first == accountBytes else { throw bad("not from this account") }
+    var setupOwners: [String] = []
+
+    switch kind {
+    case "send":
+      guard let want = (req["permissionId"] as? NSNumber)?.uint64Value, (2...9).contains(want), permissionId == want else { throw bad("wrong permission") }
+      if type == P.transfer {
+        guard url == "type.googleapis.com/protocol.TransferContract", PB.only(value, [1, 2, 3]), let to = PB.bytes(value, 2).first, to.count == 21, to.first == 0x41,
+              let amount = PB.ints(value, 3).first, amount > 0 else { throw bad("not a TRX transfer") }
+      } else if type == P.trigger {
+        guard url == "type.googleapis.com/protocol.TriggerSmartContract", PB.only(value, [1, 2, 4]), let token = PB.bytes(value, 2).first,
+              P.tokens.contains(Base58.encode(data: token)), let data = PB.bytes(value, 4).first, data.count == 68,
+              data.prefix(4) == Data([0xa9, 0x05, 0x9c, 0xbb]), data[4..<16].allSatisfy({ $0 == 0 }), data[36..<68].contains(where: { $0 != 0 }) else { throw bad("not a USDT or USDC transfer") }
+        guard (PB.ints(top, 18).first ?? 0) <= P.maxFeeLimitSun else { throw bad("fee limit above 100 TRX") }
+      } else { throw bad("only sends are allowed") }
+    case "setup":
+      guard type == P.permissionUpdate, url == "type.googleapis.com/protocol.AccountPermissionUpdateContract", permissionId == 0, PB.only(value, [1, 2, 4], repeated: [4]) else { throw bad("not a permission setup") }
+      guard let owners = req["owners"] as? [String], (2...5).contains(owners.count), Set(owners).count == owners.count,
+            let threshold = (req["threshold"] as? NSNumber)?.uint64Value, threshold >= 1, threshold <= UInt64(owners.count) else { throw bad("owners or approvals") }
+      var ownerBytes: [Data] = []
+      for o in owners {
+        guard let b = Base58.decode(string: o), b.count == 21, b.first == 0x41 else { throw bad("owner address") }
+        ownerBytes.append(b)
+      }
+      func check(_ perm: Data?, type wantType: UInt64, id wantId: UInt64, name: String, ops: Data?) -> Bool {
+        guard let perm, let p = PB.read(perm), PB.only(p, [1, 2, 3, 4, 6, 7], repeated: [7]),
+              (PB.ints(p, 1).first ?? 0) == wantType, (PB.ints(p, 2).first ?? 0) == wantId,
+              PB.bytes(p, 3).first == Data(name.utf8), PB.ints(p, 4).first == threshold, PB.bytes(p, 6).first == ops else { return false }
+        let keys = PB.bytes(p, 7).compactMap(PB.read)
+        guard keys.count == ownerBytes.count else { return false }
+        for (k, want) in zip(keys, ownerBytes) where !(PB.only(k, [1, 2]) && PB.bytes(k, 1).first == want && PB.ints(k, 2).first == 1) { return false }
+        return true
+      }
+      let actives = PB.bytes(value, 4)
+      guard check(PB.bytes(value, 2).first, type: 0, id: 0, name: "owner", ops: nil), actives.count == 1,
+            check(actives[0], type: 2, id: 2, name: "active", ops: P.activeOperations) else { throw bad("the permissions are not the ones you confirmed") }
+      setupOwners = owners
+    default:
+      throw bad("unknown kind")
+    }
+
+    return try withSecrets([id], reason: kind == "setup" ? "Turn this TRON account into a shared account" : "Approve this shared TRON payment") { records in
+      let key = try Self.privateKey(records[0], coin: .tron, account: account)
+      let me = CoinType.tron.deriveAddress(privateKey: key)
+      if kind == "setup" && !setupOwners.contains(me) { throw bad("this phone's account is not an owner: it would lose control") }
+      let digest = Hash.sha256(data: raw)
+      guard let sig = key.sign(digest: digest, curve: .secp256k1), sig.count == 65 else { throw WalletError.crypto("signing failed") }
+      let out: [String: Any] = ["signature": sig.hexString, "signer": me, "txID": digest.hexString]
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
   // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
 
   /// Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it.

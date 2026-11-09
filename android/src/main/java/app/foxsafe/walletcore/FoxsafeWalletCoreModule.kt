@@ -161,6 +161,9 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("signGaslessSolana") { id: String, message: String, request: String, account: Int? ->
       call { store.signGaslessSolana(id, message, request, account ?: 0, activity) }
     }
+    AsyncFunction("signTronMultisig") { id: String, rawDataHex: String, request: String, account: Int? ->
+      call { store.signTronMultisig(id, rawDataHex, request, account ?: 0, activity) }
+    }
     AsyncFunction("signSafe") { id: String, coin: Int, typedData: String, request: String, account: Int? ->
       call { store.signSafe(id, coin, typedData, request, account ?: 0, activity) }
     }

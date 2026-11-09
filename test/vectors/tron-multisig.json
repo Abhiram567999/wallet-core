@@ -1,0 +1,64 @@
+{
+  "note": "Built by a TRON node (api.trongrid.io) on 9 Nov 2026; tronMultisigRaw must give the same bytes.",
+  "cases": [
+    {
+      "action": {
+        "type": "setup",
+        "owner": "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+        "owners": [
+          "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+          "TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV",
+          "TCEezhePNTyie5gkrb77zAZLBx9RMffLuN"
+        ],
+        "threshold": 2
+      },
+      "permissionId": 0,
+      "ref": {
+        "refBlockBytes": "a163",
+        "refBlockHash": "891ba1d5bc4772d4",
+        "expiration": 1794252546000,
+        "timestamp": 1794252487558
+      },
+      "feeLimit": 0,
+      "rawDataHex": "0a02a1632208891ba1d5bc4772d440d0bfa48e9c345abd02082e12b8020a3c747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e4163636f756e745065726d697373696f6e557064617465436f6e747261637412f7010a1541c8599111f29c1e1e061265b4af93ea1f274ad78a125a1a056f776e657220023a190a1541c8599111f29c1e1e061265b4af93ea1f274ad78a10013a190a1541abcf91d7defd2b0222cb41bab6ea5dd244a1dd5210013a190a154118dc3086d4d7c9c27e81c24d68fb1844acce86101001228101080210021a066163746976652002322002000080000000000000000000000000000000000000000000000000000000003a190a1541c8599111f29c1e1e061265b4af93ea1f274ad78a10013a190a1541abcf91d7defd2b0222cb41bab6ea5dd244a1dd5210013a190a154118dc3086d4d7c9c27e81c24d68fb1844acce861010017086f7a08e9c34",
+      "txID": "cbaf70a3882a22d84b2987bd461d60d7073377ed7e273cf77832540bd8242889"
+    },
+    {
+      "action": {
+        "type": "transfer",
+        "owner": "TNXoiAJ3dct8Fjg4M9fkLFh9S2v9TXc32G",
+        "to": "TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV",
+        "amount": "1234567"
+      },
+      "permissionId": 2,
+      "ref": {
+        "refBlockBytes": "a163",
+        "refBlockHash": "891ba1d5bc4772d4",
+        "expiration": 1794252546000,
+        "timestamp": 1794252487768
+      },
+      "feeLimit": 0,
+      "rawDataHex": "0a02a1632208891ba1d5bc4772d440d0bfa48e9c345a69080112630a2d747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572436f6e747261637412320a154189cbcb2372e1c2fbc00f24895a406a0c722c89f3121541abcf91d7defd2b0222cb41bab6ea5dd244a1dd521887ad4b280270d8f8a08e9c34",
+      "txID": "70d6b5e4cc7dc987fbe8ea01dff4bccfe53912ea33abfeca75df7ab7a60162c0"
+    },
+    {
+      "action": {
+        "type": "token",
+        "owner": "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+        "token": "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",
+        "to": "TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV",
+        "amount": "5000000"
+      },
+      "permissionId": 2,
+      "ref": {
+        "refBlockBytes": "a163",
+        "refBlockHash": "891ba1d5bc4772d4",
+        "expiration": 1794252546000,
+        "timestamp": 1794252488245
+      },
+      "feeLimit": 30000000,
+      "rawDataHex": "0a02a1632208891ba1d5bc4772d440d0bfa48e9c345ab001081f12a9010a31747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e54726967676572536d617274436f6e747261637412740a1541c8599111f29c1e1e061265b4af93ea1f274ad78a121541a614f803b6fd780986a42c78ec9c7f77e6ded13c2244a9059cbb000000000000000000000000abcf91d7defd2b0222cb41bab6ea5dd244a1dd5200000000000000000000000000000000000000000000000000000000004c4b40280270b5fca08e9c3490018087a70e",
+      "txID": "d21279eef0e3b5f954d71be9d3c8006e0695e8e8ef3ed836be441be685e0c3e4"
+    }
+  ]
+}
