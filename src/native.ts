@@ -104,6 +104,12 @@ export interface NativeWalletCore {
   signGaslessEvm?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
   /** Safe owner signature for one EIP-712 SafeTx, with Foxsafe's compiled-in Safe rule (SPEC §7.7). */
   signSafe?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
+  /** dApp signatures with Foxsafe's compiled-in dApp rule (SPEC §7.9). Build 16 on. */
+  signDappMessage?(id: string, coin: CoinType, messageHex: string, request: string, account?: number): Promise<string>;
+  signDappTypedData?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
+  signDappEvm?(id: string, coin: CoinType, input: string, request: string, account?: number): Promise<string>;
+  signDappSolana?(id: string, kind: 'message' | 'transaction', payload: string, request: string, account?: number): Promise<string>;
+  signDappTron?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /** TRON multisig: one Foxsafe-made permission setup or multisig send, with its compiled-in rule (SPEC §7.8). */
   signTronMultisig?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /**
@@ -247,6 +253,62 @@ export const canSignSafe = () => typeof native?.signSafe === 'function';
 export async function signSafe(id: string, coin: CoinType, typedData: string, request: SafeSignRequest, account?: number): Promise<SafeSignature> {
   if (!native?.signSafe) throw new Error('UNAVAILABLE: this app build cannot sign shared wallet transactions yet');
   return JSON.parse(await native.signSafe(id, coin, typedData, JSON.stringify(request), account)) as SafeSignature;
+}
+
+/**
+ * Who is asking and for which account (SPEC §7.9). `origin` is the site's host (and port), as shown to the user:
+ * the in-app browser's real address, or the WalletConnect peer's verified URL. Sign-in messages must name it.
+ */
+export interface DappSignRequest {
+  origin: string;
+  /** The connected account: 0x… (EVM), base58 (Solana), T… (TRON). The native signer refuses any other. */
+  address: string;
+  /** EVM chain id (number or 0x hex). Typed data and transactions for another chain are refused. */
+  chainId?: number | string;
+  /** TRON only: the txID the user was shown (sha256 of raw data). */
+  txID?: string;
+}
+
+/** True when this build has the dApp signing functions (native dApp rule included). */
+export const canSignDapp = () => typeof native?.signDappMessage === 'function';
+
+const dappUnavailable = () => new Error('UNAVAILABLE: this app build cannot sign for apps yet');
+
+/** EVM personal_sign / TRON message: exact bytes as hex (readable text only). Returns 0x signature (v 27/28 on EVM). */
+export async function signDappMessage(id: string, coin: CoinType, messageHex: string, request: DappSignRequest, account?: number): Promise<string> {
+  if (!native?.signDappMessage) throw dappUnavailable();
+  return native.signDappMessage(id, coin, messageHex, JSON.stringify(request), account);
+}
+
+/** EIP-712 typed data (eth_signTypedData_v4) as the dApp sent it. Returns 0x signature (v 27/28). */
+export async function signDappTypedData(id: string, coin: CoinType, typedData: string, request: DappSignRequest, account?: number): Promise<string> {
+  if (!native?.signDappTypedData) throw dappUnavailable();
+  return native.signDappTypedData(id, coin, typedData, JSON.stringify(request), account);
+}
+
+/** EVM transaction (Trust Wallet Core SigningInput without a key, base64). Returns the SigningOutput (base64). */
+export async function signDappEvm(id: string, coin: CoinType, input: string, request: DappSignRequest, account?: number): Promise<string> {
+  if (!native?.signDappEvm) throw dappUnavailable();
+  return native.signDappEvm(id, coin, input, JSON.stringify(request), account);
+}
+
+export interface DappSolanaSignature {
+  /** base58 */
+  signature: string;
+  /** base64, only for kind 'transaction': the transaction with our signature filled in. */
+  transaction?: string;
+}
+
+/** Solana message (readable text, base64 bytes) or whole serialized transaction (base64). */
+export async function signDappSolana(id: string, kind: 'message' | 'transaction', payloadBase64: string, request: DappSignRequest, account?: number): Promise<DappSolanaSignature> {
+  if (!native?.signDappSolana) throw dappUnavailable();
+  return JSON.parse(await native.signDappSolana(id, kind, payloadBase64, JSON.stringify(request), account)) as DappSolanaSignature;
+}
+
+/** TRON transaction raw data (hex). Returns {signature (65 bytes hex), txID}. */
+export async function signDappTron(id: string, rawDataHex: string, request: DappSignRequest, account?: number): Promise<{ signature: string; txID: string }> {
+  if (!native?.signDappTron) throw dappUnavailable();
+  return JSON.parse(await native.signDappTron(id, rawDataHex, JSON.stringify(request), account)) as { signature: string; txID: string };
 }
 
 export type TronMultisigRequest =

@@ -452,3 +452,28 @@ parameters #22 and #23) are paid in TRX by the account. Nothing else changes:
 fee rule (§7.3/7.4) is unchanged. The self-test builds fresh transactions,
 checks each signature recovers to the wallet's TRON address, and checks 12
 tampered versions are refused.
+
+### 7.9 dApp signatures (in-app browser and WalletConnect)
+
+Every request from a dApp is signed by one of five functions with a compiled-in
+rule (build 16 on). Each takes `request` = `{origin, address, chainId?, txID?}`:
+`origin` is the site's host (and port) shown to the user, `address` the
+connected account. Before Face ID the native module refuses anything outside
+the rule; after Face ID it also refuses if the key's address is not `address`.
+
+| Function | Signs | Refused unless |
+|---|---|---|
+| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. |
+| `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch giving ≥ 2^159 of two or more tokens; not a Seaport `OrderComponents` where no consideration pays the offerer. |
+| `signDappEvm(id, coin, input, request)` | EVM transaction (SigningInput without a key, `evmDappInput`) | chain id equals `chainId`; legacy or EIP-1559 only (no user operation, no EIP-7702 authorization, no SetCode mode); a value transfer to an address, or a contract call / deployment; no key inside. |
+| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked. Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
+| `signDappTron(id, rawDataHex, request)` | TRON transaction raw data | exactly one contract of an allowed type (transfers, contract calls, staking, votes; never `AccountPermissionUpdate`), owner = `address`, permission id 0 (multisig is §7.8), no extra signers or scripts, expiry in the future and ≤ 24 h, and `txID` (if given) = sha256(raw). |
+
+Unlimited approvals (`approve`, `setApprovalForAll`, Permit, single Permit2),
+contract calls Foxsafe can't decode and other risks that a real dApp may need
+are not refused here: the app shows them in plain words with an extra tick
+first. `test/vectors/dapp.json` (viem and noble, `app/scripts/make-dapp-vector.mjs`)
+holds signatures the native signers must reproduce and requests they must
+refuse; `test/dapp.test.ts` checks Trust Wallet Core against them, and the
+on-device self-test checks every refusal, including TRON permission changes and
+Solana account takeovers built at run time.

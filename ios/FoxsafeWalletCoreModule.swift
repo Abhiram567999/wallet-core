@@ -181,6 +181,21 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("signSafe") { (id: String, coin: Int, typedData: String, request: String, account: Int?) in
       try run { try self.store.signSafe(id: id, coin: try u32(coin), typedData: typedData, request: request, account: try idx(account)) }
     }
+    AsyncFunction("signDappMessage") { (id: String, coin: Int, messageHex: String, request: String, account: Int?) in
+      try run { try self.store.signDappMessage(id: id, coin: try u32(coin), messageHex: messageHex, request: request, account: try idx(account)) }
+    }
+    AsyncFunction("signDappTypedData") { (id: String, coin: Int, typedData: String, request: String, account: Int?) in
+      try run { try self.store.signDappTypedData(id: id, coin: try u32(coin), typedData: typedData, request: request, account: try idx(account)) }
+    }
+    AsyncFunction("signDappEvm") { (id: String, coin: Int, input: String, request: String, account: Int?) in
+      try run { try self.store.signDappEvm(id: id, coin: try u32(coin), inputBase64: input, request: request, account: try idx(account)) }
+    }
+    AsyncFunction("signDappSolana") { (id: String, kind: String, payload: String, request: String, account: Int?) in
+      try run { try self.store.signDappSolana(id: id, kind: kind, payloadBase64: payload, request: request, account: try idx(account)) }
+    }
+    AsyncFunction("signDappTron") { (id: String, rawDataHex: String, request: String, account: Int?) in
+      try run { try self.store.signDappTron(id: id, rawDataHex: rawDataHex, request: request, account: try idx(account)) }
+    }
     AsyncFunction("signTronMultisig") { (id: String, rawDataHex: String, request: String, account: Int?) in
       try run { try self.store.signTronMultisig(id: id, rawDataHex: rawDataHex, request: request, account: try idx(account)) }
     }

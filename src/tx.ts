@@ -90,6 +90,46 @@ export function evmCallInput(p: EvmCall): string {
   );
 }
 
+/**
+ * A transaction a dApp asked to send (eth_sendTransaction), for the native signDappEvm (SPEC §7.9). `to` empty =
+ * contract deployment. EIP-1559 when `maxFeePerGas` is given, otherwise legacy with `gasPrice`.
+ */
+export interface EvmDappTx {
+  chainId: bigint;
+  nonce: bigint;
+  gasLimit: bigint;
+  maxFeePerGas?: bigint;
+  maxPriorityFeePerGas?: bigint;
+  gasPrice?: bigint;
+  to?: string;
+  value: bigint;
+  data?: string; // 0x… calldata
+}
+
+export function evmDappInput(p: EvmDappTx): string {
+  const P = TW.Ethereum.Proto;
+  const data = p.data && p.data !== '0x' ? hexToBytes(p.data) : new Uint8Array(0);
+  const eip1559 = p.maxFeePerGas !== undefined;
+  if (!eip1559 && p.gasPrice === undefined) throw new Error('no fee');
+  return enc(
+    P.SigningInput.encode(
+      P.SigningInput.create({
+        chainId: bigToBytes(p.chainId),
+        nonce: bigToBytes(p.nonce),
+        txMode: eip1559 ? P.TransactionMode.Enveloped : P.TransactionMode.Legacy,
+        ...(eip1559
+          ? { maxFeePerGas: bigToBytes(p.maxFeePerGas!), maxInclusionFeePerGas: bigToBytes(p.maxPriorityFeePerGas ?? 0n) }
+          : { gasPrice: bigToBytes(p.gasPrice!) }),
+        gasLimit: bigToBytes(p.gasLimit),
+        toAddress: p.to ?? '',
+        transaction: p.to && data.length === 0
+          ? { transfer: { amount: bigToBytes(p.value) } }
+          : { contractGeneric: { amount: bigToBytes(p.value), data } },
+      }),
+    ),
+  );
+}
+
 /** ERC-20 approve(spender, amount): lets a swap router take exactly `amount` of the token. */
 export interface EvmApprove {
   chainId: bigint;

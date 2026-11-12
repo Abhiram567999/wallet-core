@@ -6,10 +6,11 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignGaslessEvm, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
-import { bitcoinOutput, tronOutput, tronTransferInput } from './tx.ts';
+import { bitcoinOutput, evmDappInput, tronOutput, tronTransferInput } from './tx.ts';
+import { TW } from './proto/tw.js';
 import { decodeVault } from './vault.ts';
 import { secp256k1 } from '@noble/curves/secp256k1.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
@@ -31,6 +32,12 @@ export interface Vectors {
   gaslessEvm: { coin: number; sender: string; typedData: string; request: GaslessEvmRequest; signature: string; authorization: { r: string; s: string; yParity: number } };
   /** Optional so older app builds without the vector still run the rest. */
   safe?: { coin: number; signer: string; request: SafeSignRequest; allowed: { what: string; typedData: string; signature: string }[]; refused: { what: string; typedData: string }[] };
+  /** Optional so older app builds without the vector still run the rest (SPEC §7.9). */
+  dapp?: {
+    evm: { coin: number; address: string; request: DappSignRequest; messages: { allowed: { what: string; hex: string; signature: string }[]; refused: { what: string; hex: string }[] }; typedData: { allowed: { what: string; typedData: string; signature: string }[]; refused: { what: string; typedData: string }[] } };
+    tron: { coin: number; address: string; request: DappSignRequest; message: { hex: string; signature: string } };
+    solana: { address: string; request: DappSignRequest };
+  };
 }
 
 export interface CheckResult {
@@ -311,6 +318,94 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused(raw({ type: 'transfer', owner: me, to: B, amount: 1n }, 2, -60_000), sendReq, 'an expired transaction');
     await refused(raw(setup, 0), { ...sendReq, permissionId: 2 }, 'a setup passed off as a send');
     return '3 signatures recover to this account; 12 tampered versions refused';
+  });
+
+  await check('dApp signing: messages, typed data and transactions sign like viem; drainer patterns are refused', async () => {
+    if (!canSignDapp() || !v.dapp) return 'this build has no dApp signing';
+    const d = v.dapp;
+    let refusedCount = 0;
+    const refuses = async (p: Promise<unknown>, what: string) => {
+      const signed = await p.then(() => true, () => false);
+      expect(!signed, `${what} was signed`);
+      refusedCount++;
+    };
+    // EVM messages and typed data (signatures from viem)
+    for (const m of d.evm.messages.allowed) {
+      const sig = await signDappMessage(importedId, 60, m.hex, d.evm.request);
+      expect(sig.toLowerCase() === m.signature.toLowerCase(), `${m.what}: signature differs from viem`);
+    }
+    for (const m of d.evm.messages.refused) await refuses(signDappMessage(importedId, 60, m.hex, d.evm.request), m.what);
+    for (const t of d.evm.typedData.allowed) {
+      const sig = await signDappTypedData(importedId, 60, t.typedData, d.evm.request);
+      expect(sig.toLowerCase() === t.signature.toLowerCase(), `${t.what}: signature differs from viem`);
+    }
+    for (const t of d.evm.typedData.refused) await refuses(signDappTypedData(importedId, 60, t.typedData, d.evm.request), t.what);
+    await refuses(signDappTypedData(importedId, 60, d.evm.typedData.allowed[0]!.typedData, { ...d.evm.request, chainId: 137 }), 'typed data while connected to another network');
+    await refuses(signDappMessage(importedId, 60, d.evm.messages.allowed[0]!.hex, { ...d.evm.request, address: '0x000000000000000000000000000000000000bEEF' }), 'a message for another account');
+
+    // EVM transactions
+    const to = '0x000000000000000000000000000000000000bEEF';
+    const base = { chainId: 1n, nonce: 7n, gasLimit: 21000n, maxFeePerGas: 30_000_000_000n, maxPriorityFeePerGas: 1_000_000_000n };
+    const P = TW.Ethereum.Proto;
+    const raw = (m: Record<string, unknown>) => {
+      const b = P.SigningInput.encode(P.SigningInput.create({ chainId: new Uint8Array([1]), nonce: new Uint8Array([7]), gasLimit: new Uint8Array([0x52, 0x08]), toAddress: to, ...m })).finish();
+      let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x);
+    };
+    for (const input of [evmDappInput({ ...base, to, value: 1n }), evmDappInput({ ...base, to, value: 0n, data: '0xa9059cbb' + '00'.repeat(64) }), evmDappInput({ chainId: 1n, nonce: 7n, gasLimit: 21000n, gasPrice: 1n, to, value: 1n })]) {
+      const out = await signDappEvm(importedId, 60, input, d.evm.request);
+      expect(out.length > 80, 'EVM transaction not signed');
+    }
+    await refuses(signDappEvm(importedId, 60, evmDappInput({ ...base, chainId: 137n, to, value: 1n }), d.evm.request), 'a transaction for another network');
+    await refuses(signDappEvm(importedId, 60, raw({ txMode: P.TransactionMode.SetCode, eip7702Authorization: { address: to }, transaction: { transfer: { amount: new Uint8Array([1]) } } }), d.evm.request), 'an EIP-7702 delegation of the account');
+    await refuses(signDappEvm(importedId, 60, raw({ txMode: P.TransactionMode.Enveloped, transaction: { erc20Approve: { spender: to, amount: new Uint8Array([1]) } } }), d.evm.request), 'a prebuilt token approval');
+    await refuses(signDappEvm(importedId, 60, evmDappInput({ ...base, to, value: 1n }), { ...d.evm.request, address: to }), 'a transaction for another account');
+
+    // TRON message and transactions
+    const tsig = await signDappMessage(importedId, 195, d.tron.message.hex, d.tron.request);
+    expect(tsig.toLowerCase() === d.tron.message.signature.toLowerCase(), 'TRON message signature differs from noble');
+    const me = d.tron.address;
+    const B = 'TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV';
+    const now = Date.now();
+    const ref = (expiresIn = 600_000) => ({ refBlockBytes: 'ab12', refBlockHash: '0011223344556677', timestamp: now, expiration: now + expiresIn });
+    const send = (pid = 0, expiresIn?: number, owner = me) => tronMultisigRaw({ type: 'transfer', owner, to: B, amount: 1_000_000n }, pid, ref(expiresIn), 0);
+    const okRaw = send();
+    const tron = await signDappTron(importedId, okRaw, { ...d.tron.request, txID: tronTxId(okRaw) });
+    expect(tron.txID === tronTxId(okRaw) && tron.signature.length === 130, 'TRON transaction not signed');
+    await refuses(signDappTron(importedId, tronMultisigRaw({ type: 'setup', owner: me, owners: [me, B], threshold: 1 }, 0, ref(), 0), d.tron.request), 'a TRON permission change (account takeover)');
+    await refuses(signDappTron(importedId, send(2), d.tron.request), 'a TRON shared-account permission');
+    await refuses(signDappTron(importedId, send(0, -60_000), d.tron.request), 'an expired TRON transaction');
+    await refuses(signDappTron(importedId, send(0, 3 * 86_400_000), d.tron.request), 'a TRON expiry 3 days away');
+    await refuses(signDappTron(importedId, send(0, undefined, B), d.tron.request), 'a TRON transaction from another account');
+    await refuses(signDappTron(importedId, okRaw, { ...d.tron.request, txID: '00'.repeat(32) }), 'a TRON transaction that is not the one shown');
+
+    // Solana: legacy transactions built here, byte by byte
+    const mePk = base58Decode(d.solana.address);
+    const other = base58Decode('8kQ6nF3cWwfS1Lw5Yp6VQb2hZJg1pB4H8sTbKqfrbYxN');
+    const system = new Uint8Array(32);
+    const token = base58Decode('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+    const blockhash = base58Decode('A3znyaRYUvi7GbQv1pp9CqqiVo7anddU9rPKFH55V28R');
+    const solTx = (signers: Uint8Array[], readonly: Uint8Array[], ixs: { program: number; accounts: number[]; data: number[] }[]) => {
+      const keys = [...signers, ...readonly];
+      const bytes = [signers.length, ...new Uint8Array(64 * signers.length), signers.length, 0, readonly.length, keys.length];
+      for (const k of keys) bytes.push(...k);
+      bytes.push(...blockhash, ixs.length);
+      for (const ix of ixs) bytes.push(ix.program, ix.accounts.length, ...ix.accounts, ix.data.length, ...ix.data);
+      return new Uint8Array(bytes);
+    };
+    const b64 = (b: Uint8Array) => { let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x); };
+    const transfer = solTx([mePk], [other, system], [{ program: 2, accounts: [0, 1], data: [2, 0, 0, 0, 0x40, 0x42, 0x0f, 0, 0, 0, 0, 0] }]);
+    const sol = await signDappSolana(importedId, 'transaction', b64(transfer), d.solana.request);
+    const signedTx = Uint8Array.from(atob(sol.transaction!), (c) => c.charCodeAt(0));
+    expect(ed25519.verify(signedTx.slice(1, 65), transfer.slice(65), mePk), 'Solana signature does not verify');
+    const text = new TextEncoder().encode(`${d.solana.request.origin} wants you to sign in with your Solana account:\n${d.solana.address}\n\nNonce: 1`);
+    const msgSig = await signDappSolana(importedId, 'message', b64(text), d.solana.request);
+    expect(ed25519.verify(base58Decode(msgSig.signature), text, mePk), 'Solana message signature does not verify');
+    await refuses(signDappSolana(importedId, 'transaction', b64(solTx([mePk], [other, system], [{ program: 2, accounts: [0], data: [1, 0, 0, 0, ...other] }])), d.solana.request), 'a Solana Assign of this account to a program');
+    await refuses(signDappSolana(importedId, 'transaction', b64(solTx([mePk], [other, token], [{ program: 2, accounts: [1, 0], data: [6, 2, 1, ...other] }])), d.solana.request), 'a Solana token SetAuthority by this account');
+    await refuses(signDappSolana(importedId, 'transaction', b64(solTx([other], [mePk, system], [{ program: 2, accounts: [0, 1], data: [2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0] }])), d.solana.request), 'a Solana transaction this account does not sign');
+    await refuses(signDappSolana(importedId, 'message', b64(transfer.slice(65)), d.solana.request), 'a Solana transaction passed off as a message');
+    await refuses(signDappSolana(importedId, 'message', b64(new TextEncoder().encode(`evil.example wants you to sign in with your Solana account:\n${d.solana.address}`)), d.solana.request), 'a Solana sign-in for another site');
+    return `${d.evm.messages.allowed.length + d.evm.typedData.allowed.length + 1} signatures equal viem/noble, 3 EVM + 1 TRON + 2 Solana signed; ${refusedCount} drainer or tampered requests refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

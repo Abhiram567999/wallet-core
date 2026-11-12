@@ -1129,6 +1129,324 @@ final class WalletStore {
     }
   }
 
+  // MARK: dApp signatures (SPEC §7.9)
+
+  /// Foxsafe's dApp signing rule, compiled in on purpose: an app update can't loosen it (SPEC §7.9).
+  /// Every dApp request (in-app browser or WalletConnect) is signed by one of the five functions below,
+  /// never by an open "sign anything" call.
+  enum DappPolicy {
+    static let maxMessageBytes = 16_384
+    /// Characters that hide or reorder text on screen (bidi overrides, zero-width marks, BOM).
+    static let hiddenScalars: Set<UInt32> = [0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E,
+                                             0x2060, 0x2066, 0x2067, 0x2068, 0x2069, 0xFEFF]
+    /// TRON contract types a dApp may ask for. Never AccountPermissionUpdate (46): it hands the account to another key.
+    static let tronContracts: [UInt64: String] = [
+      1: "TransferContract", 2: "TransferAssetContract", 4: "VoteWitnessContract", 13: "WithdrawBalanceContract",
+      31: "TriggerSmartContract", 54: "FreezeBalanceV2Contract", 55: "UnfreezeBalanceV2Contract",
+      56: "WithdrawExpireUnfreezeContract", 57: "DelegateResourceContract", 58: "UnDelegateResourceContract",
+      59: "CancelAllUnfreezeV2Contract",
+    ]
+    static let maxTronExpiryMs: Int64 = 24 * 3_600_000 + 10 * 60_000
+    static let tokenPrograms = ["TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"]
+    /// Permit2 batch permits: several tokens at (near) the maximum amount is the classic one-signature drain.
+    static let permit2Batches: Set<String> = ["PermitBatch", "PermitBatchTransferFrom", "PermitBatchWitnessTransferFrom"]
+  }
+
+  struct DappRequest {
+    let origin: String
+    let address: String
+    let chainId: UInt64?
+    let txID: String?
+  }
+
+  static func dappRequest(_ json: String) -> DappRequest? {
+    guard let r = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any],
+          let origin = (r["origin"] as? String)?.lowercased(), !origin.isEmpty, !origin.contains("/"),
+          let address = r["address"] as? String, !address.isEmpty else { return nil }
+    return DappRequest(origin: origin, address: address, chainId: dappNumber(r["chainId"]), txID: (r["txID"] as? String)?.lowercased())
+  }
+
+  /// A number written as a JSON number, a decimal string or a 0x hex string.
+  static func dappNumber(_ v: Any?) -> UInt64? {
+    if let n = v as? NSNumber, CFGetTypeID(n) != CFBooleanGetTypeID() { return n.uint64Value }
+    guard let s = (v as? String)?.lowercased(), !s.isEmpty else { return nil }
+    return s.hasPrefix("0x") ? UInt64(s.dropFirst(2), radix: 16) : UInt64(s)
+  }
+
+  /// The bytes as readable text, or nil: valid UTF-8, at most 16 KB, no control characters except line breaks and tabs,
+  /// nothing that hides or reorders text. Hashes, transactions and other binary blobs are never "messages".
+  static func dappText(_ bytes: Data) -> String? {
+    guard !bytes.isEmpty, bytes.count <= DappPolicy.maxMessageBytes, let s = String(data: bytes, encoding: .utf8) else { return nil }
+    for u in s.unicodeScalars {
+      let v = u.value
+      if v < 0x20 && v != 0x0A && v != 0x0D && v != 0x09 { return nil }
+      if v == 0x7F || (0x80...0x9F).contains(v) || DappPolicy.hiddenScalars.contains(v) { return nil }
+    }
+    return s
+  }
+
+  /// EIP-4361 (Ethereum) / Sign-In With Solana text: "<domain> wants you to sign in with your … account:\n<address>".
+  /// If the text is one, its domain must be the site asking and its address the signing account.
+  static func signInProblem(_ text: String, req: DappRequest, caseSensitive: Bool) -> String? {
+    let lines = text.components(separatedBy: "\n").map { $0.trimmingCharacters(in: CharacterSet(charactersIn: "\r")) }
+    guard let first = lines.first, let r = first.range(of: " wants you to sign in with your ") else { return nil }
+    var domain = String(first[..<r.lowerBound]).lowercased()
+    for scheme in ["https://", "http://"] where domain.hasPrefix(scheme) { domain = String(domain.dropFirst(scheme.count)) }
+    guard domain == req.origin else { return "this sign-in is for \(domain), not the site asking (\(req.origin))" }
+    let address = lines.count > 1 ? lines[1].trimmingCharacters(in: .whitespaces) : ""
+    guard caseSensitive ? address == req.address : address.lowercased() == req.address.lowercased() else { return "this sign-in is for another account" }
+    if let line = lines.first(where: { $0.hasPrefix("Chain ID: ") }) {
+      guard let want = req.chainId, dappNumber(String(line.dropFirst(10)).trimmingCharacters(in: .whitespaces)) == want else { return "this sign-in is for another network" }
+    }
+    return nil
+  }
+
+  /// A uint value (number, decimal or hex string) at or above 2^159: an "unlimited" amount.
+  static func isHugeAmount(_ v: Any?) -> Bool {
+    var word: Data?
+    if let n = v as? NSNumber { word = uint256(n.stringValue) }
+    if let s = (v as? String)?.lowercased() {
+      if s.hasPrefix("0x") {
+        let hex = String(s.dropFirst(2))
+        if hex.count <= 64, let d = Data(hexString: String(repeating: "0", count: (64 - hex.count)) + hex) { word = d }
+      } else { word = uint256(s) }
+    }
+    guard let w = word, w.count == 32 else { return true }
+    return w.prefix(12).contains(where: { $0 != 0 }) || w[12] >= 0x80
+  }
+
+  /// Why typed data from a dApp is refused, or nil.
+  static func typedDataProblem(_ td: [String: Any], req: DappRequest) -> String? {
+    guard let primary = td["primaryType"] as? String, let types = td["types"] as? [String: Any], types[primary] != nil,
+          let domain = td["domain"] as? [String: Any], let message = td["message"] as? [String: Any] else { return "unreadable" }
+    if primary == "SafeTx" { return "a Safe transaction: open it in Foxsafe's shared wallet screen" }
+    if let c = domain["chainId"] {
+      guard let want = req.chainId, dappNumber(c) == want else { return "it is for another network" }
+    } else if domain["verifyingContract"] != nil {
+      return "it names a contract but no network"
+    }
+    if DappPolicy.permit2Batches.contains(primary) {
+      let items = (message["details"] as? [[String: Any]]) ?? (message["permitted"] as? [[String: Any]]) ?? []
+      if items.count >= 2 && items.contains(where: { isHugeAmount($0["amount"]) }) {
+        return "it gives unlimited use of several of your tokens at once"
+      }
+    }
+    if primary == "OrderComponents" {
+      let offerer = (message["offerer"] as? String ?? "").lowercased()
+      let consideration = (message["consideration"] as? [[String: Any]]) ?? []
+      if !consideration.contains(where: { ($0["recipient"] as? String)?.lowercased() == offerer }) {
+        return "it lists your items and you get nothing back"
+      }
+    }
+    return nil
+  }
+
+  private static func dappSignedOut(_ sig: String) throws -> String {
+    var hex = sig.hasPrefix("0x") ? String(sig.dropFirst(2)) : sig
+    guard hex.count == 130, var bytes = Data(hexString: hex) else { throw WalletError.crypto("signing failed") }
+    if bytes[64] < 27 { bytes[64] += 27 }
+    hex = bytes.hexString
+    return "0x" + hex
+  }
+
+  /// A readable message from a dApp: EVM `personal_sign` (EIP-191) or a TRON message (TRON's V2 prefix). `messageHex` is the
+  /// exact bytes. Refused before Face ID unless the bytes are readable text (dappText) and, for a sign-in message, the
+  /// domain is the site asking and the address this account. `request`: {origin, address, chainId?}. Returns the signature hex.
+  func signDappMessage(id: String, coin raw: UInt32, messageHex: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("signature refused: \(why)") }
+    guard let coin = CoinType(rawValue: raw), [.ethereum, .tron].contains(coin.blockchain) else { throw bad("network") }
+    let hex = messageHex.lowercased().hasPrefix("0x") ? String(messageHex.dropFirst(2)) : messageHex
+    guard let req = Self.dappRequest(request), let bytes = Data(hexString: hex) else { throw bad("unreadable") }
+    guard let text = Self.dappText(bytes) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
+    if let why = Self.signInProblem(text, req: req, caseSensitive: coin.blockchain == .tron) { throw bad(why) }
+    return try withSecrets([id], reason: "Sign a message for \(req.origin)") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      guard coin.deriveAddress(privateKey: key).lowercased() == req.address.lowercased() else { throw bad("not the connected account") }
+      if coin.blockchain == .tron { return try Self.dappSignedOut(TronMessageSigner.signMessage(privateKey: key, message: text)) }
+      return try Self.dappSignedOut(EthereumMessageSigner.signMessage(privateKey: key, message: "0x" + bytes.hexString))
+    }
+  }
+
+  /// EIP-712 typed data from a dApp (`eth_signTypedData_v4`). Refused before Face ID if it is for another network, names
+  /// a contract without a network, is a Safe transaction, or matches a known drainer pattern (typedDataProblem).
+  /// `request`: {origin, address, chainId}. Returns the signature hex (v = 27/28).
+  func signDappTypedData(id: String, coin raw: UInt32, typedData: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("signature refused: \(why)") }
+    guard let coin = CoinType(rawValue: raw), coin.blockchain == .ethereum else { throw bad("network") }
+    guard let req = Self.dappRequest(request), req.chainId != nil,
+          let td = try? JSONSerialization.jsonObject(with: Data(typedData.utf8)) as? [String: Any] else { throw bad("unreadable") }
+    if let why = Self.typedDataProblem(td, req: req) { throw bad(why) }
+    return try withSecrets([id], reason: "Sign for \(req.origin)") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      guard coin.deriveAddress(privateKey: key).lowercased() == req.address.lowercased() else { throw bad("not the connected account") }
+      return try Self.dappSignedOut(EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: typedData))
+    }
+  }
+
+  /// An EVM transaction a dApp asked to send, as a Trust Wallet Core SigningInput built without a key. Refused before
+  /// Face ID unless: the chain id is the connected network, it is a plain or EIP-1559 transaction (no account abstraction,
+  /// no EIP-7702 delegation of the account), and it is a value transfer or a contract call / deployment.
+  /// `request`: {origin, address, chainId}. Returns the SigningOutput (base64).
+  func signDappEvm(id: String, coin raw: UInt32, inputBase64: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("transaction refused: \(why)") }
+    guard let coin = CoinType(rawValue: raw), coin.blockchain == .ethereum else { throw bad("network") }
+    guard let req = Self.dappRequest(request), let want = req.chainId, let data = Data(base64Encoded: inputBase64),
+          let input = try? EthereumSigningInput(serializedBytes: data) else { throw bad("unreadable") }
+    guard input.chainID.count <= 8, input.chainID.reduce(UInt64(0), { $0 << 8 | UInt64($1) }) == want else { throw bad("it is for another network") }
+    guard input.txMode == .legacy || input.txMode == .enveloped, !input.hasEip7702Authorization, input.userOperationOneof == nil,
+          input.privateKey.isEmpty else { throw bad("it would turn your account into a smart account or use another signer") }
+    switch input.transaction.transactionOneof {
+    case .transfer?: guard !input.toAddress.isEmpty else { throw bad("no receiver") }
+    case .contractGeneric?: break
+    default: throw bad("unsupported transaction")
+    }
+    return try withSecrets([id], reason: "Confirm the transaction for \(req.origin)") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      guard coin.deriveAddress(privateKey: key).lowercased() == req.address.lowercased() else { throw bad("not the connected account") }
+      return try Self.signOne(data, key: key, coin: coin)
+    }
+  }
+
+  /// A Solana message or a transaction a dApp built. `kind` "message": readable text only (dappText), sign-in domain
+  /// checked; returns {signature}. `kind` "transaction": the whole serialized transaction (legacy or v0); refused before
+  /// Face ID unless this account is one of its required signers, and if any instruction hands this account to a program
+  /// (System Assign) or hands one of its token accounts to someone else (Token SetAuthority by this account).
+  /// `request`: {origin, address}. Returns {signature (base58), transaction (base64, our signature filled in)}.
+  func signDappSolana(id: String, kind: String, payloadBase64: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("Solana signature refused: \(why)") }
+    guard let req = Self.dappRequest(request), let me = Base58.decodeNoCheck(string: req.address), me.count == 32,
+          let payload = Data(base64Encoded: payloadBase64) else { throw bad("unreadable") }
+    var tx = [UInt8](payload)
+    var signAt: Int?
+    var message = payload
+    switch kind {
+    case "message":
+      guard let text = Self.dappText(payload) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
+      if let why = Self.signInProblem(text, req: req, caseSensitive: true) { throw bad(why) }
+    case "transaction":
+      guard let parsed = Self.solanaTransaction(tx) else { throw bad("unreadable transaction") }
+      guard let idx = parsed.keys.firstIndex(of: me), idx < parsed.requiredSigners else { throw bad("this account doesn't sign it") }
+      if let why = Self.solanaProblem(parsed, me: me) { throw bad(why) }
+      signAt = parsed.signaturesAt + idx * 64
+      message = Data(tx[parsed.messageAt...])
+    default:
+      throw bad("unknown kind")
+    }
+    return try withSecrets([id], reason: kind == "message" ? "Sign a message for \(req.origin)" : "Confirm the transaction for \(req.origin)") { records in
+      let key = try Self.privateKey(records[0], coin: .solana, account: account)
+      guard key.getPublicKeyEd25519().data == me else { throw bad("not the connected account") }
+      guard let sig = key.sign(digest: message, curve: .ed25519), sig.count == 64 else { throw WalletError.crypto("signing failed") }
+      var out: [String: Any] = ["signature": Base58.encodeNoCheck(data: sig)]
+      if let at = signAt {
+        tx.replaceSubrange(at..<(at + 64), with: [UInt8](sig))
+        out["transaction"] = Data(tx).base64EncodedString()
+      }
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
+  struct SolanaTx {
+    let signaturesAt: Int
+    let messageAt: Int
+    let requiredSigners: Int
+    let keys: [Data]
+    let instructions: [(program: Int, accounts: [Int], data: Data)]
+  }
+
+  /// Reads a serialized Solana transaction (legacy or v0): signature slots, header, static keys, instructions.
+  static func solanaTransaction(_ b: [UInt8]) -> SolanaTx? {
+    var i = 0
+    func compact() -> Int? {
+      var v = 0, shift = 0
+      while i < b.count, shift <= 14 {
+        let x = Int(b[i]); i += 1
+        v |= (x & 0x7f) << shift
+        if x & 0x80 == 0 { return v }
+        shift += 7
+      }
+      return nil
+    }
+    func take(_ n: Int) -> [UInt8]? {
+      guard n >= 0, i + n <= b.count else { return nil }
+      defer { i += n }
+      return Array(b[i..<(i + n)])
+    }
+    guard let sigCount = compact() else { return nil }
+    let signaturesAt = i
+    guard take(sigCount * 64) != nil else { return nil }
+    let messageAt = i
+    guard i < b.count else { return nil }
+    if b[i] & 0x80 != 0 {
+      guard b[i] & 0x7f == 0 else { return nil } // only v0
+      i += 1
+    }
+    guard let header = take(3), let n = compact(), n > 0 else { return nil }
+    var keys: [Data] = []
+    for _ in 0..<n { guard let k = take(32) else { return nil }; keys.append(Data(k)) }
+    guard Int(header[0]) == sigCount, sigCount <= n, take(32) != nil, let ixCount = compact() else { return nil }
+    var instructions: [(program: Int, accounts: [Int], data: Data)] = []
+    for _ in 0..<ixCount {
+      guard let p = take(1), let ac = compact(), let accounts = take(ac), let dl = compact(), let data = take(dl) else { return nil }
+      guard Int(p[0]) < n else { return nil } // a program id is always a static key
+      instructions.append((program: Int(p[0]), accounts: accounts.map { Int($0) }, data: Data(data)))
+    }
+    return SolanaTx(signaturesAt: signaturesAt, messageAt: messageAt, requiredSigners: sigCount, keys: keys, instructions: instructions)
+  }
+
+  /// Instructions that take control of this account or its tokens.
+  static func solanaProblem(_ tx: SolanaTx, me: Data) -> String? {
+    let system = Data(repeating: 0, count: 32)
+    let tokens = DappPolicy.tokenPrograms.compactMap { Base58.decodeNoCheck(string: $0) }
+    func key(_ idx: Int) -> Data? { idx < tx.keys.count ? tx.keys[idx] : nil }
+    for ix in tx.instructions {
+      let program = tx.keys[ix.program]
+      if program == system, ix.data.count >= 4 {
+        let kind = ix.data.prefix(4).enumerated().reduce(UInt32(0)) { $0 | UInt32($1.element) << (8 * UInt32($1.offset)) }
+        if (kind == 1 || kind == 10), let first = ix.accounts.first, key(first) == me { return "it hands your account to a program" }
+      }
+      if tokens.contains(program), ix.data.first == 6, ix.accounts.count >= 2, key(ix.accounts[1]) == me {
+        return "it hands one of your token accounts to someone else"
+      }
+    }
+    return nil
+  }
+
+  /// A TRON transaction a dApp built (`rawDataHex` = protobuf Transaction.raw; the signature is over its SHA-256, the txID).
+  /// Refused before Face ID unless it is exactly one contract of an allowed type (never a permission change), from this
+  /// account, with the normal permission (multisig goes through signTronMultisig), no extra signers or scripts, expiring
+  /// within 24 h, and — when `request.txID` is given — that txID. `request`: {origin, address, txID?}. Returns {signature, txID}.
+  func signDappTron(id: String, rawDataHex: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("TRON transaction refused: \(why)") }
+    guard let req = Self.dappRequest(request), let raw = Data(hexString: rawDataHex.hasPrefix("0x") ? String(rawDataHex.dropFirst(2)) : rawDataHex),
+          let top = PB.read(raw), let accountBytes = Base58.decode(string: req.address), accountBytes.count == 21, accountBytes.first == 0x41 else { throw bad("unreadable") }
+    guard PB.only(top, [1, 3, 4, 8, 10, 11, 14, 18], repeated: [11]) else { throw bad("extra signers or scripts in the transaction") }
+    let now = Int64(Date().timeIntervalSince1970 * 1000)
+    guard let exp = PB.ints(top, 8).first, Int64(exp) > now, Int64(exp) <= now + DappPolicy.maxTronExpiryMs else { throw bad("expired or expires too late") }
+    let contracts = PB.bytes(top, 11)
+    guard contracts.count == 1, let c = PB.read(contracts[0]), PB.only(c, [1, 2, 3, 4, 5]),
+          let type = PB.ints(c, 1).first, let any = PB.bytes(c, 2).first.flatMap(PB.read), PB.only(any, [1, 2]),
+          let url = PB.bytes(any, 1).first.flatMap({ String(data: $0, encoding: .utf8) }), let value = PB.bytes(any, 2).first.flatMap(PB.read) else { throw bad("not one contract") }
+    guard let name = DappPolicy.tronContracts[type], url == "type.googleapis.com/protocol.\(name)" else {
+      throw bad(type == 46 ? "it would hand control of your account to another key" : "this kind of TRON transaction isn't allowed")
+    }
+    guard (PB.ints(c, 5).first ?? 0) == 0 else { throw bad("it uses a shared-account permission") }
+    guard PB.bytes(value, 1).first == accountBytes else { throw bad("not from this account") }
+    let digest = Hash.sha256(data: raw)
+    if let want = req.txID, want != digest.hexString { throw bad("the transaction is not the one shown") }
+    return try withSecrets([id], reason: "Confirm the transaction for \(req.origin)") { records in
+      let key = try Self.privateKey(records[0], coin: .tron, account: account)
+      guard CoinType.tron.deriveAddress(privateKey: key) == req.address else { throw bad("not the connected account") }
+      guard let sig = key.sign(digest: digest, curve: .secp256k1), sig.count == 65 else { throw WalletError.crypto("signing failed") }
+      let out: [String: Any] = ["signature": sig.hexString, "txID": digest.hexString]
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
   // MARK: Solana gasless (Pimlico paymaster pays SOL fees and rent)
 
   /// Foxsafe's Solana fee rule, compiled in on purpose: an app update can't change it.

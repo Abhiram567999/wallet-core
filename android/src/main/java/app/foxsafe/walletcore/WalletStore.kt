@@ -24,6 +24,7 @@ import wallet.core.jni.TransactionCompiler
 import wallet.core.jni.TronMessageSigner
 import wallet.core.jni.proto.Bitcoin
 import wallet.core.jni.proto.Cosmos
+import wallet.core.jni.proto.Ethereum
 import wallet.core.jni.proto.Tron
 import wallet.core.jni.proto.Aptos
 import wallet.core.jni.proto.Cardano
@@ -1115,6 +1116,370 @@ class WalletStore(context: Context) {
       val sig = key.sign(digest, Curve.SECP256K1) ?: throw WalletException("CRYPTO", "signing failed")
       if (sig.size != 65) throw WalletException("CRYPTO", "signing failed")
       JSONObject().put("signature", hex(sig)).put("signer", me).put("txID", hex(digest)).toString()
+    }
+  }
+
+  // MARK: dApp signatures (SPEC §7.9)
+
+  /**
+   * Foxsafe's dApp signing rule, compiled in on purpose: an app update can't loosen it (SPEC §7.9). Every dApp
+   * request (in-app browser or WalletConnect) is signed by one of the five functions below, never by an open
+   * "sign anything" call. Mirrors ios/WalletStore.swift.
+   */
+  private object DappPolicy {
+    const val MAX_MESSAGE_BYTES = 16_384
+    /** Characters that hide or reorder text on screen (bidi overrides, zero-width marks, BOM). */
+    val HIDDEN = setOf(0x200B, 0x200C, 0x200D, 0x200E, 0x200F, 0x202A, 0x202B, 0x202C, 0x202D, 0x202E, 0x2060, 0x2066, 0x2067, 0x2068, 0x2069, 0xFEFF)
+    /** TRON contract types a dApp may ask for. Never AccountPermissionUpdate (46): it hands the account to another key. */
+    val TRON_CONTRACTS: Map<Long, String> = mapOf(
+      1L to "TransferContract", 2L to "TransferAssetContract", 4L to "VoteWitnessContract", 13L to "WithdrawBalanceContract",
+      31L to "TriggerSmartContract", 54L to "FreezeBalanceV2Contract", 55L to "UnfreezeBalanceV2Contract",
+      56L to "WithdrawExpireUnfreezeContract", 57L to "DelegateResourceContract", 58L to "UnDelegateResourceContract",
+      59L to "CancelAllUnfreezeV2Contract",
+    )
+    const val MAX_TRON_EXPIRY_MS = 24L * 3_600_000 + 10 * 60_000
+    val TOKEN_PROGRAMS = listOf("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb")
+    /** Permit2 batch permits: several tokens at (near) the maximum amount is the classic one-signature drain. */
+    val PERMIT2_BATCHES = setOf("PermitBatch", "PermitBatchTransferFrom", "PermitBatchWitnessTransferFrom")
+    val HUGE: BigInteger = BigInteger.ONE.shiftLeft(159)
+  }
+
+  private class DappRequest(val origin: String, val address: String, val chainId: Long?, val txID: String?)
+
+  private fun dappRequest(json: String): DappRequest? {
+    val r = try { JSONObject(json) } catch (e: Exception) { return null }
+    val origin = r.optString("origin").lowercase()
+    val address = r.optString("address")
+    if (origin.isEmpty() || origin.contains('/') || address.isEmpty()) return null
+    return DappRequest(origin, address, dappNumber(r.opt("chainId")), r.optString("txID").lowercase().ifEmpty { null })
+  }
+
+  /** A number written as a JSON number, a decimal string or a 0x hex string. */
+  private fun dappNumber(v: Any?): Long? {
+    if (v is Boolean) return null
+    if (v is Number) return v.toLong()
+    val s = (v as? String)?.lowercase()?.trim() ?: return null
+    if (s.isEmpty()) return null
+    return if (s.startsWith("0x")) s.drop(2).toLongOrNull(16) else s.toLongOrNull()
+  }
+
+  private fun dappBig(v: Any?): BigInteger? {
+    if (v is Boolean) return null
+    if (v is Number) return BigInteger(v.toString())
+    val s = (v as? String)?.lowercase()?.trim() ?: return null
+    return try { if (s.startsWith("0x")) BigInteger(s.drop(2), 16) else BigInteger(s) } catch (e: Exception) { null }
+  }
+
+  /**
+   * The bytes as readable text, or null: valid UTF-8, at most 16 KB, no control characters except line breaks and tabs,
+   * nothing that hides or reorders text. Hashes, transactions and other binary blobs are never "messages".
+   */
+  private fun dappText(bytes: ByteArray): String? {
+    if (bytes.isEmpty() || bytes.size > DappPolicy.MAX_MESSAGE_BYTES) return null
+    val s = try {
+      Charsets.UTF_8.newDecoder()
+        .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+        .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+        .decode(java.nio.ByteBuffer.wrap(bytes)).toString()
+    } catch (e: Exception) { return null }
+    var i = 0
+    while (i < s.length) {
+      val v = s.codePointAt(i)
+      if (v < 0x20 && v != 0x0A && v != 0x0D && v != 0x09) return null
+      if (v == 0x7F || v in 0x80..0x9F || v in DappPolicy.HIDDEN) return null
+      i += Character.charCount(v)
+    }
+    return s
+  }
+
+  /**
+   * EIP-4361 (Ethereum) / Sign-In With Solana text: "<domain> wants you to sign in with your … account:\n<address>".
+   * If the text is one, its domain must be the site asking and its address the signing account.
+   */
+  private fun signInProblem(text: String, req: DappRequest, caseSensitive: Boolean): String? {
+    val lines = text.split("\n").map { it.trimEnd('\r') }
+    val first = lines.firstOrNull() ?: return null
+    val at = first.indexOf(" wants you to sign in with your ")
+    if (at < 0) return null
+    var domain = first.substring(0, at).lowercase()
+    for (scheme in listOf("https://", "http://")) if (domain.startsWith(scheme)) domain = domain.removePrefix(scheme)
+    if (domain != req.origin) return "this sign-in is for $domain, not the site asking (${req.origin})"
+    val address = lines.getOrNull(1)?.trim() ?: ""
+    val same = if (caseSensitive) address == req.address else address.lowercase() == req.address.lowercase()
+    if (!same) return "this sign-in is for another account"
+    val chainLine = lines.firstOrNull { it.startsWith("Chain ID: ") }
+    if (chainLine != null && (req.chainId == null || dappNumber(chainLine.removePrefix("Chain ID: ").trim()) != req.chainId)) return "this sign-in is for another network"
+    return null
+  }
+
+  /** A uint value at or above 2^159: an "unlimited" amount. Unreadable counts as unlimited. */
+  private fun isHugeAmount(v: Any?): Boolean {
+    val n = dappBig(v) ?: return true
+    return n >= DappPolicy.HUGE
+  }
+
+  /** Why typed data from a dApp is refused, or null. */
+  private fun typedDataProblem(td: JSONObject, req: DappRequest): String? {
+    val primary = td.optString("primaryType")
+    val types = td.optJSONObject("types")
+    val domain = td.optJSONObject("domain")
+    val message = td.optJSONObject("message")
+    if (primary.isEmpty() || types == null || !types.has(primary) || domain == null || message == null) return "unreadable"
+    if (primary == "SafeTx") return "a Safe transaction: open it in Foxsafe's shared wallet screen"
+    if (domain.has("chainId")) {
+      if (req.chainId == null || dappNumber(domain.opt("chainId")) != req.chainId) return "it is for another network"
+    } else if (domain.has("verifyingContract")) {
+      return "it names a contract but no network"
+    }
+    if (primary in DappPolicy.PERMIT2_BATCHES) {
+      val items = message.optJSONArray("details") ?: message.optJSONArray("permitted") ?: JSONArray()
+      val huge = (0 until items.length()).any { isHugeAmount(items.optJSONObject(it)?.opt("amount")) }
+      if (items.length() >= 2 && huge) return "it gives unlimited use of several of your tokens at once"
+    }
+    if (primary == "OrderComponents") {
+      val offerer = message.optString("offerer").lowercase()
+      val consideration = message.optJSONArray("consideration") ?: JSONArray()
+      val paid = (0 until consideration.length()).any { consideration.optJSONObject(it)?.optString("recipient")?.lowercase() == offerer }
+      if (!paid) return "it lists your items and you get nothing back"
+    }
+    return null
+  }
+
+  private fun dappSignedOut(sig: String): String {
+    val bytes = unhex(sig.removePrefix("0x").lowercase())
+    if (bytes == null || bytes.size != 65) throw WalletException("CRYPTO", "signing failed")
+    if ((bytes[64].toInt() and 0xff) < 27) bytes[64] = (bytes[64] + 27).toByte()
+    return "0x" + hex(bytes)
+  }
+
+  /**
+   * A readable message from a dApp: EVM `personal_sign` (EIP-191) or a TRON message (TRON's V2 prefix). [messageHex] is
+   * the exact bytes. Refused before the prompt unless the bytes are readable text and, for a sign-in message, the
+   * domain is the site asking and the address this account. [request]: {origin, address, chainId?}. Returns the signature hex.
+   */
+  fun signDappMessage(id: String, coinValue: Int, messageHex: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "signature refused: $why")
+    val c = coin(coinValue)
+    if (c.blockchain() != Blockchain.ETHEREUM && c.blockchain() != Blockchain.TRON) throw bad("network")
+    val req = dappRequest(request) ?: throw bad("unreadable")
+    val bytes = unhex(messageHex.lowercase().removePrefix("0x")) ?: throw bad("unreadable")
+    val text = dappText(bytes) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
+    signInProblem(text, req, c.blockchain() == Blockchain.TRON)?.let { throw bad(it) }
+    withSecret(id, activity, "Sign a message for ${req.origin}") { r ->
+      val key = privateKey(r, c, account)
+      if (c.deriveAddress(key).lowercase() != req.address.lowercase()) throw bad("not the connected account")
+      if (c.blockchain() == Blockchain.TRON) dappSignedOut(TronMessageSigner.signMessage(key, text))
+      else dappSignedOut(EthereumMessageSigner.signMessage(key, "0x" + hex(bytes)))
+    }
+  }
+
+  /**
+   * EIP-712 typed data from a dApp (`eth_signTypedData_v4`). Refused before the prompt if it is for another network,
+   * names a contract without a network, is a Safe transaction, or matches a known drainer pattern (typedDataProblem).
+   * [request]: {origin, address, chainId}. Returns the signature hex (v = 27/28).
+   */
+  fun signDappTypedData(id: String, coinValue: Int, typedData: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "signature refused: $why")
+    val c = coin(coinValue)
+    if (c.blockchain() != Blockchain.ETHEREUM) throw bad("network")
+    val req = dappRequest(request)?.takeIf { it.chainId != null } ?: throw bad("unreadable")
+    val td = try { JSONObject(typedData) } catch (e: Exception) { throw bad("unreadable") }
+    typedDataProblem(td, req)?.let { throw bad(it) }
+    withSecret(id, activity, "Sign for ${req.origin}") { r ->
+      val key = privateKey(r, c, account)
+      if (c.deriveAddress(key).lowercase() != req.address.lowercase()) throw bad("not the connected account")
+      dappSignedOut(EthereumMessageSigner.signTypedMessage(key, typedData))
+    }
+  }
+
+  /**
+   * An EVM transaction a dApp asked to send, as a Trust Wallet Core SigningInput built without a key. Refused before
+   * the prompt unless: the chain id is the connected network, it is a plain or EIP-1559 transaction (no account
+   * abstraction, no EIP-7702 delegation of the account), and it is a value transfer or a contract call / deployment.
+   * [request]: {origin, address, chainId}. Returns the SigningOutput (base64).
+   */
+  fun signDappEvm(id: String, coinValue: Int, inputB64: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "transaction refused: $why")
+    val c = coin(coinValue)
+    if (c.blockchain() != Blockchain.ETHEREUM) throw bad("network")
+    val req = dappRequest(request) ?: throw bad("unreadable")
+    val want = req.chainId ?: throw bad("unreadable")
+    val data = try { Envelope.unb64(inputB64) } catch (e: Exception) { throw bad("unreadable") }
+    val input = try { Ethereum.SigningInput.parseFrom(data) } catch (e: Exception) { throw bad("unreadable") }
+    val chainBytes = input.chainId.toByteArray()
+    if (chainBytes.size > 8 || BigInteger(1, chainBytes).toLong() != want) throw bad("it is for another network")
+    val mode = input.txMode
+    if ((mode != Ethereum.TransactionMode.Legacy && mode != Ethereum.TransactionMode.Enveloped) || input.hasEip7702Authorization() ||
+      input.userOperationOneofCase != Ethereum.SigningInput.UserOperationOneofCase.USEROPERATIONONEOF_NOT_SET || !input.privateKey.isEmpty
+    ) throw bad("it would turn your account into a smart account or use another signer")
+    when (input.transaction.transactionOneofCase) {
+      Ethereum.Transaction.TransactionOneofCase.TRANSFER -> if (input.toAddress.isEmpty()) throw bad("no receiver")
+      Ethereum.Transaction.TransactionOneofCase.CONTRACT_GENERIC -> {}
+      else -> throw bad("unsupported transaction")
+    }
+    withSecret(id, activity, "Confirm the transaction for ${req.origin}") { r ->
+      val key = privateKey(r, c, account)
+      if (c.deriveAddress(key).lowercase() != req.address.lowercase()) throw bad("not the connected account")
+      signOne(data, key, c)
+    }
+  }
+
+  private class SolanaIx(val program: Int, val accounts: List<Int>, val data: ByteArray)
+  private class SolanaTx(val signaturesAt: Int, val messageAt: Int, val requiredSigners: Int, val keys: List<ByteArray>, val instructions: List<SolanaIx>)
+
+  /** Reads a serialized Solana transaction (legacy or v0): signature slots, header, static keys, instructions. */
+  private fun solanaTransaction(b: ByteArray): SolanaTx? {
+    var i = 0
+    fun compact(): Int? {
+      var v = 0
+      var shift = 0
+      while (i < b.size && shift <= 14) {
+        val x = b[i].toInt() and 0xff
+        i++
+        v = v or ((x and 0x7f) shl shift)
+        if (x and 0x80 == 0) return v
+        shift += 7
+      }
+      return null
+    }
+    fun take(n: Int): ByteArray? {
+      if (n < 0 || i + n > b.size) return null
+      val out = b.copyOfRange(i, i + n)
+      i += n
+      return out
+    }
+    val sigCount = compact() ?: return null
+    val signaturesAt = i
+    take(sigCount * 64) ?: return null
+    val messageAt = i
+    if (i >= b.size) return null
+    if (b[i].toInt() and 0x80 != 0) {
+      if (b[i].toInt() and 0x7f != 0) return null // only v0
+      i++
+    }
+    val header = take(3) ?: return null
+    val n = compact() ?: return null
+    if (n <= 0) return null
+    val keys = (0 until n).map { take(32) ?: return null }
+    if ((header[0].toInt() and 0xff) != sigCount || sigCount > n) return null
+    take(32) ?: return null
+    val ixCount = compact() ?: return null
+    val instructions = (0 until ixCount).map {
+      val p = take(1) ?: return null
+      val ac = compact() ?: return null
+      val accounts = take(ac) ?: return null
+      val dl = compact() ?: return null
+      val data = take(dl) ?: return null
+      val program = p[0].toInt() and 0xff
+      if (program >= n) return null // a program id is always a static key
+      SolanaIx(program, accounts.map { it.toInt() and 0xff }, data)
+    }
+    return SolanaTx(signaturesAt, messageAt, sigCount, keys, instructions)
+  }
+
+  /** Instructions that take control of this account or its tokens. */
+  private fun solanaProblem(tx: SolanaTx, me: ByteArray): String? {
+    val system = ByteArray(32)
+    val tokens = DappPolicy.TOKEN_PROGRAMS.mapNotNull { Base58.decodeNoCheck(it) }
+    fun key(idx: Int): ByteArray? = tx.keys.getOrNull(idx)
+    for (ix in tx.instructions) {
+      val program = tx.keys[ix.program]
+      if (program.contentEquals(system) && ix.data.size >= 4) {
+        val kind = (0 until 4).fold(0L) { acc, k -> acc or ((ix.data[k].toLong() and 0xff) shl (8 * k)) }
+        val first = ix.accounts.firstOrNull()
+        if ((kind == 1L || kind == 10L) && first != null && key(first)?.contentEquals(me) == true) return "it hands your account to a program"
+      }
+      if (tokens.any { it.contentEquals(program) } && ix.data.firstOrNull() == 6.toByte() && ix.accounts.size >= 2 && key(ix.accounts[1])?.contentEquals(me) == true) {
+        return "it hands one of your token accounts to someone else"
+      }
+    }
+    return null
+  }
+
+  /**
+   * A Solana message or a transaction a dApp built. [kind] "message": readable text only, sign-in domain checked;
+   * returns {signature}. [kind] "transaction": the whole serialized transaction (legacy or v0); refused before the
+   * prompt unless this account is one of its required signers, and if any instruction hands this account to a program
+   * (System Assign) or hands one of its token accounts to someone else (Token SetAuthority by this account).
+   * [request]: {origin, address}. Returns {signature (base58), transaction (base64, our signature filled in)}.
+   */
+  fun signDappSolana(id: String, kind: String, payloadB64: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "Solana signature refused: $why")
+    val req = dappRequest(request) ?: throw bad("unreadable")
+    val me = Base58.decodeNoCheck(req.address)?.takeIf { it.size == 32 } ?: throw bad("unreadable")
+    val payload = try { Envelope.unb64(payloadB64) } catch (e: Exception) { throw bad("unreadable") }
+    val tx = payload.copyOf()
+    var signAt: Int? = null
+    var message = payload
+    when (kind) {
+      "message" -> {
+        val text = dappText(payload) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
+        signInProblem(text, req, true)?.let { throw bad(it) }
+      }
+      "transaction" -> {
+        val parsed = solanaTransaction(tx) ?: throw bad("unreadable transaction")
+        val idx = parsed.keys.indexOfFirst { it.contentEquals(me) }
+        if (idx < 0 || idx >= parsed.requiredSigners) throw bad("this account doesn't sign it")
+        solanaProblem(parsed, me)?.let { throw bad(it) }
+        signAt = parsed.signaturesAt + idx * 64
+        message = tx.copyOfRange(parsed.messageAt, tx.size)
+      }
+      else -> throw bad("unknown kind")
+    }
+    withSecret(id, activity, if (kind == "message") "Sign a message for ${req.origin}" else "Confirm the transaction for ${req.origin}") { r ->
+      val key = privateKey(r, CoinType.SOLANA, account)
+      if (!key.publicKeyEd25519.data().contentEquals(me)) throw bad("not the connected account")
+      val sig = key.sign(message, Curve.ED25519) ?: throw WalletException("CRYPTO", "signing failed")
+      if (sig.size != 64) throw WalletException("CRYPTO", "signing failed")
+      val out = JSONObject().put("signature", Base58.encodeNoCheck(sig))
+      signAt?.let { at ->
+        System.arraycopy(sig, 0, tx, at, 64)
+        out.put("transaction", Envelope.b64(tx))
+      }
+      out.toString()
+    }
+  }
+
+  /**
+   * A TRON transaction a dApp built ([rawDataHex] = protobuf Transaction.raw; the signature is over its SHA-256, the
+   * txID). Refused before the prompt unless it is exactly one contract of an allowed type (never a permission change),
+   * from this account, with the normal permission (multisig goes through signTronMultisig), no extra signers or scripts,
+   * expiring within 24 h, and — when request.txID is given — that txID. [request]: {origin, address, txID?}.
+   * Returns {signature, txID}.
+   */
+  fun signDappTron(id: String, rawDataHex: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "TRON transaction refused: $why")
+    val req = dappRequest(request) ?: throw bad("unreadable")
+    val raw = unhex(rawDataHex.removePrefix("0x").lowercase()) ?: throw bad("unreadable")
+    val top = PB.read(raw) ?: throw bad("unreadable")
+    val accountBytes = Base58.decode(req.address)
+    if (accountBytes == null || accountBytes.size != 21 || accountBytes[0] != 0x41.toByte()) throw bad("unreadable")
+    if (!PB.only(top, setOf(1, 3, 4, 8, 10, 11, 14, 18), repeated = setOf(11))) throw bad("extra signers or scripts in the transaction")
+    val now = System.currentTimeMillis()
+    val exp = PB.ints(top, 8).firstOrNull() ?: throw bad("expired or expires too late")
+    if (exp <= now || exp > now + DappPolicy.MAX_TRON_EXPIRY_MS) throw bad("expired or expires too late")
+    val contracts = PB.bytes(top, 11)
+    if (contracts.size != 1) throw bad("not one contract")
+    val c = PB.read(contracts[0]) ?: throw bad("not one contract")
+    val any = PB.bytes(c, 2).firstOrNull()?.let { PB.read(it) } ?: throw bad("not one contract")
+    if (!PB.only(c, setOf(1, 2, 3, 4, 5)) || !PB.only(any, setOf(1, 2))) throw bad("not one contract")
+    val type = PB.ints(c, 1).firstOrNull() ?: throw bad("not one contract")
+    val url = PB.bytes(any, 1).firstOrNull()?.let { String(it, Charsets.UTF_8) } ?: throw bad("not one contract")
+    val value = PB.bytes(any, 2).firstOrNull()?.let { PB.read(it) } ?: throw bad("not one contract")
+    val name = DappPolicy.TRON_CONTRACTS[type]
+    if (name == null || url != "type.googleapis.com/protocol.$name") {
+      throw bad(if (type == 46L) "it would hand control of your account to another key" else "this kind of TRON transaction isn't allowed")
+    }
+    if ((PB.ints(c, 5).firstOrNull() ?: 0L) != 0L) throw bad("it uses a shared-account permission")
+    if (!(PB.bytes(value, 1).firstOrNull()?.contentEquals(accountBytes) ?: false)) throw bad("not from this account")
+    val digest = Hash.sha256(raw)
+    if (req.txID != null && req.txID != hex(digest)) throw bad("the transaction is not the one shown")
+    withSecret(id, activity, "Confirm the transaction for ${req.origin}") { r ->
+      val key = privateKey(r, CoinType.TRON, account)
+      if (CoinType.TRON.deriveAddress(key) != req.address) throw bad("not the connected account")
+      val sig = key.sign(digest, Curve.SECP256K1) ?: throw WalletException("CRYPTO", "signing failed")
+      if (sig.size != 65) throw WalletException("CRYPTO", "signing failed")
+      JSONObject().put("signature", hex(sig)).put("txID", hex(digest)).toString()
     }
   }
 

@@ -1,0 +1,149 @@
+{
+  "note": "Test phrase only; never fund it. Made with viem and noble by app/scripts/make-dapp-vector.mjs.",
+  "evm": {
+    "coin": 60,
+    "address": "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+    "request": {
+      "origin": "app.example.org",
+      "address": "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+      "chainId": 1
+    },
+    "messages": {
+      "allowed": [
+        {
+          "what": "plain text",
+          "hex": "0x57656c636f6d6520746f204578616d706c652120436c69636b20746f207369676e20696e2e204e6f6e63653a2038313232",
+          "signature": "0x38a19b24a110988fdfe5332301c0477124f112d64ffcdd7d1b4b8e08d2b7fad46507e9d921e5b76c2c2312336106a0527dbc8aac5114f3747c007e9c7029a0451b"
+        },
+        {
+          "what": "text that starts with 0x",
+          "hex": "0x307836383635366336633666206973206d79206e6f6e6365",
+          "signature": "0x401c1479f8acfd74c53323d0da2da2a308601453665afd659d4df0901c88c72f1d22824d411a509f1b9ba6f65c3f310ad53d6e8ef2deb3773890c97c0237f2561c"
+        },
+        {
+          "what": "sign-in (EIP-4361) for the site asking",
+          "hex": "0x6170702e6578616d706c652e6f72672077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078393835384566464432333242343033334534376439303030334434314543333445636145646139340a0a5369676e20696e20746f204578616d706c652e0a0a5552493a2068747470733a2f2f6170702e6578616d706c652e6f72670a56657273696f6e3a20310a436861696e2049443a20310a4e6f6e63653a2033323839313735360a4973737565642041743a20323032362d31312d31325431303a30303a30302e3030305a",
+          "signature": "0x2ec0a2d08df5655c4d3c6da3db37adb931638f7a8df82802f8f10262190e097b6f638f7eb01b3433cdf171f9ab44768ac1dc711063dd7f254beea2e2b675aaa91c"
+        },
+        {
+          "what": "sign-in with https:// before the domain",
+          "hex": "0x68747470733a2f2f6170702e6578616d706c652e6f72672077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078393835384566464432333242343033334534376439303030334434314543333445636145646139340a0a5369676e20696e20746f204578616d706c652e0a0a5552493a2068747470733a2f2f6170702e6578616d706c652e6f72670a56657273696f6e3a20310a436861696e2049443a20310a4e6f6e63653a2033323839313735360a4973737565642041743a20323032362d31312d31325431303a30303a30302e3030305a",
+          "signature": "0xf184f59c725c901162076a81903fdf618578ae8860143a4bb25bd7ecb8cd186a6d6c5f030c9b9254d63ea795ef765681967b6547f562ebbe32d699a9c45beef71b"
+        }
+      ],
+      "refused": [
+        {
+          "what": "a 32-byte hash (blind signature)",
+          "hex": "0x0e00d65a4982fc73030c0e1b8e37d698354c7e05d14c91a5d92f2be2a4f62732"
+        },
+        {
+          "what": "a raw transaction (RLP bytes)",
+          "hex": "0xf86c098504a817c800825208943535353535353535353535353535353535353535880de0b6b3a76400008025a0"
+        },
+        {
+          "what": "text with a hidden right-to-left mark",
+          "hex": "0x53656e6420312045544820746f20e280ae796f75"
+        },
+        {
+          "what": "text with a NUL byte",
+          "hex": "0x68656c6c6f00776f726c64"
+        },
+        {
+          "what": "invalid UTF-8",
+          "hex": "0xc328"
+        },
+        {
+          "what": "an empty message",
+          "hex": "0x"
+        },
+        {
+          "what": "a sign-in for another site",
+          "hex": "0x6576696c2e6578616d706c652077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078393835384566464432333242343033334534376439303030334434314543333445636145646139340a0a5369676e20696e20746f204578616d706c652e0a0a5552493a2068747470733a2f2f6576696c2e6578616d706c650a56657273696f6e3a20310a436861696e2049443a20310a4e6f6e63653a2033323839313735360a4973737565642041743a20323032362d31312d31325431303a30303a30302e3030305a"
+        },
+        {
+          "what": "a sign-in for another account",
+          "hex": "0x6170702e6578616d706c652e6f72672077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078303030303030303030303030303030303030303030303030303030303030303030303030624545460a0a5369676e20696e20746f204578616d706c652e0a0a5552493a2068747470733a2f2f6170702e6578616d706c652e6f72670a56657273696f6e3a20310a436861696e2049443a20310a4e6f6e63653a2033323839313735360a4973737565642041743a20323032362d31312d31325431303a30303a30302e3030305a"
+        },
+        {
+          "what": "a sign-in for another network",
+          "hex": "0x6170702e6578616d706c652e6f72672077616e747320796f7520746f207369676e20696e207769746820796f757220457468657265756d206163636f756e743a0a3078393835384566464432333242343033334534376439303030334434314543333445636145646139340a0a5369676e20696e20746f204578616d706c652e0a0a5552493a2068747470733a2f2f6170702e6578616d706c652e6f72670a56657273696f6e3a20310a436861696e2049443a203133370a4e6f6e63653a2033323839313735360a4973737565642041743a20323032362d31312d31325431303a30303a30302e3030305a"
+        }
+      ]
+    },
+    "typedData": {
+      "allowed": [
+        {
+          "what": "token permit (EIP-2612), exact amount",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Permit\":[{\"name\":\"owner\",\"type\":\"address\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"value\",\"type\":\"uint256\"},{\"name\":\"nonce\",\"type\":\"uint256\"},{\"name\":\"deadline\",\"type\":\"uint256\"}]},\"primaryType\":\"Permit\",\"domain\":{\"name\":\"USD Coin\",\"version\":\"2\",\"chainId\":1,\"verifyingContract\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\"},\"message\":{\"owner\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"value\":\"1000000\",\"nonce\":\"0\",\"deadline\":\"1893456000\"}}",
+          "signature": "0xdafa3290325754167e5e5a820884ba77848c91ba5faf1f261b6557c3c97424eb501fec4d8d677295a1affb49ad8dcc7300d88bd6e6aa16d758b3feda97c00dab1c"
+        },
+        {
+          "what": "token permit, unlimited (warned in the app, not refused)",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Permit\":[{\"name\":\"owner\",\"type\":\"address\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"value\",\"type\":\"uint256\"},{\"name\":\"nonce\",\"type\":\"uint256\"},{\"name\":\"deadline\",\"type\":\"uint256\"}]},\"primaryType\":\"Permit\",\"domain\":{\"name\":\"USD Coin\",\"version\":\"2\",\"chainId\":1,\"verifyingContract\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\"},\"message\":{\"owner\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"value\":\"115792089237316195423570985008687907853269984665640564039457584007913129639935\",\"nonce\":\"0\",\"deadline\":\"1893456000\"}}",
+          "signature": "0x75de05de8e5be1b4a342e147c9768f84d8ea0d595ff6ebd93a7943208529572b69107cf9f91a989f39813173bcb598f5e755d4546d373b8d58503cc9099541351b"
+        },
+        {
+          "what": "Snapshot vote (no network, no contract)",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"}],\"Vote\":[{\"name\":\"from\",\"type\":\"address\"},{\"name\":\"space\",\"type\":\"string\"},{\"name\":\"choice\",\"type\":\"uint32\"}]},\"primaryType\":\"Vote\",\"domain\":{\"name\":\"snapshot\",\"version\":\"0.1.4\"},\"message\":{\"from\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"space\":\"example.eth\",\"choice\":1}}",
+          "signature": "0x2d56f866d3ae3723e095c7207eeefef30fcb4cf8f6d39a34da286215573a735a7e32fca24d16837ac5e608acd80938521cddcdaa97b1deba283e822e3b600f981c"
+        },
+        {
+          "what": "Permit2 for one token, unlimited (warned in the app)",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"PermitDetails\":[{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint160\"},{\"name\":\"expiration\",\"type\":\"uint48\"},{\"name\":\"nonce\",\"type\":\"uint48\"}],\"PermitSingle\":[{\"name\":\"details\",\"type\":\"PermitDetails\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"sigDeadline\",\"type\":\"uint256\"}]},\"primaryType\":\"PermitSingle\",\"domain\":{\"name\":\"Permit2\",\"chainId\":1,\"verifyingContract\":\"0x000000000022D473030F116dDEE9F6B43aC78BA3\"},\"message\":{\"details\":{\"token\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\",\"amount\":\"1461501637330902918203684832716283019655932542975\",\"expiration\":\"1893456000\",\"nonce\":\"0\"},\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"sigDeadline\":\"1893456000\"}}",
+          "signature": "0x498cef24ab980555018bd3c19fa004aaa27e85c232c94f10295aa5eb1de58a2c1687b76cb6d8addde090093114fe01025cc79e9878cad00374990c41c949c4811c"
+        },
+        {
+          "what": "Permit2 batch with small amounts",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"PermitDetails\":[{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint160\"},{\"name\":\"expiration\",\"type\":\"uint48\"},{\"name\":\"nonce\",\"type\":\"uint48\"}],\"PermitBatch\":[{\"name\":\"details\",\"type\":\"PermitDetails[]\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"sigDeadline\",\"type\":\"uint256\"}]},\"primaryType\":\"PermitBatch\",\"domain\":{\"name\":\"Permit2\",\"chainId\":1,\"verifyingContract\":\"0x000000000022D473030F116dDEE9F6B43aC78BA3\"},\"message\":{\"details\":[{\"token\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\",\"amount\":\"1000000\",\"expiration\":\"1893456000\",\"nonce\":\"0\"},{\"token\":\"0xdAC17F958D2ee523a2206206994597C13D831ec7\",\"amount\":\"2000000\",\"expiration\":\"1893456000\",\"nonce\":\"0\"}],\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"sigDeadline\":\"1893456000\"}}",
+          "signature": "0x0afb22b40ee72dabb78a4a0c7cbec9b77a40cb9fa92254e19e49e40047fbda2153ae9290fcb1ad7199d9c14f58262e4aef3b1578a28a28ad879a33cf1556d9ec1c"
+        },
+        {
+          "what": "NFT listing that pays you",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"OrderComponents\":[{\"name\":\"offerer\",\"type\":\"address\"},{\"name\":\"zone\",\"type\":\"address\"},{\"name\":\"offer\",\"type\":\"OfferItem[]\"},{\"name\":\"consideration\",\"type\":\"ConsiderationItem[]\"},{\"name\":\"orderType\",\"type\":\"uint8\"},{\"name\":\"startTime\",\"type\":\"uint256\"},{\"name\":\"endTime\",\"type\":\"uint256\"},{\"name\":\"zoneHash\",\"type\":\"bytes32\"},{\"name\":\"salt\",\"type\":\"uint256\"},{\"name\":\"conduitKey\",\"type\":\"bytes32\"},{\"name\":\"counter\",\"type\":\"uint256\"}],\"OfferItem\":[{\"name\":\"itemType\",\"type\":\"uint8\"},{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"identifierOrCriteria\",\"type\":\"uint256\"},{\"name\":\"startAmount\",\"type\":\"uint256\"},{\"name\":\"endAmount\",\"type\":\"uint256\"}],\"ConsiderationItem\":[{\"name\":\"itemType\",\"type\":\"uint8\"},{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"identifierOrCriteria\",\"type\":\"uint256\"},{\"name\":\"startAmount\",\"type\":\"uint256\"},{\"name\":\"endAmount\",\"type\":\"uint256\"},{\"name\":\"recipient\",\"type\":\"address\"}]},\"primaryType\":\"OrderComponents\",\"domain\":{\"name\":\"Seaport\",\"version\":\"1.6\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000068F116a894984e2DB1123eB395\"},\"message\":{\"offerer\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"zone\":\"0x0000000000000000000000000000000000000000\",\"offer\":[{\"itemType\":\"2\",\"token\":\"0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D\",\"identifierOrCriteria\":\"1\",\"startAmount\":\"1\",\"endAmount\":\"1\"}],\"consideration\":[{\"itemType\":\"0\",\"token\":\"0x0000000000000000000000000000000000000000\",\"identifierOrCriteria\":\"0\",\"startAmount\":\"1000000000000000000\",\"endAmount\":\"1000000000000000000\",\"recipient\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\"}],\"orderType\":\"0\",\"startTime\":\"1762900000\",\"endTime\":\"1893456000\",\"zoneHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"salt\":\"1\",\"conduitKey\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"counter\":\"0\"}}",
+          "signature": "0x077d065fa16448ea4cc0b10c69de33297ce1c7aa7969d33e1e632b2d88d495954acf8acfb8a8bcef4c7e368830803fa0260498e1454401cc9ab52f5374fd494b1b"
+        }
+      ],
+      "refused": [
+        {
+          "what": "a permit for another network",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Permit\":[{\"name\":\"owner\",\"type\":\"address\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"value\",\"type\":\"uint256\"},{\"name\":\"nonce\",\"type\":\"uint256\"},{\"name\":\"deadline\",\"type\":\"uint256\"}]},\"primaryType\":\"Permit\",\"domain\":{\"name\":\"USD Coin\",\"version\":\"2\",\"chainId\":137,\"verifyingContract\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\"},\"message\":{\"owner\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"value\":\"1000000\",\"nonce\":\"0\",\"deadline\":\"1893456000\"}}"
+        },
+        {
+          "what": "a contract signature without a network",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Permit\":[{\"name\":\"owner\",\"type\":\"address\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"value\",\"type\":\"uint256\"},{\"name\":\"nonce\",\"type\":\"uint256\"},{\"name\":\"deadline\",\"type\":\"uint256\"}]},\"primaryType\":\"Permit\",\"domain\":{\"name\":\"USD Coin\",\"version\":\"2\",\"verifyingContract\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\"},\"message\":{\"owner\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"value\":\"1000000\",\"nonce\":\"0\",\"deadline\":\"1893456000\"}}"
+        },
+        {
+          "what": "a Safe transaction",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"SafeTx\":[{\"name\":\"to\",\"type\":\"address\"}]},\"primaryType\":\"SafeTx\",\"domain\":{\"chainId\":1,\"verifyingContract\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\"},\"message\":{\"to\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\"}}"
+        },
+        {
+          "what": "Permit2 batch: unlimited use of two tokens",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"PermitDetails\":[{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"amount\",\"type\":\"uint160\"},{\"name\":\"expiration\",\"type\":\"uint48\"},{\"name\":\"nonce\",\"type\":\"uint48\"}],\"PermitBatch\":[{\"name\":\"details\",\"type\":\"PermitDetails[]\"},{\"name\":\"spender\",\"type\":\"address\"},{\"name\":\"sigDeadline\",\"type\":\"uint256\"}]},\"primaryType\":\"PermitBatch\",\"domain\":{\"name\":\"Permit2\",\"chainId\":1,\"verifyingContract\":\"0x000000000022D473030F116dDEE9F6B43aC78BA3\"},\"message\":{\"details\":[{\"token\":\"0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48\",\"amount\":\"1461501637330902918203684832716283019655932542975\",\"expiration\":\"1893456000\",\"nonce\":\"0\"},{\"token\":\"0xdAC17F958D2ee523a2206206994597C13D831ec7\",\"amount\":\"1461501637330902918203684832716283019655932542975\",\"expiration\":\"1893456000\",\"nonce\":\"0\"}],\"spender\":\"0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD\",\"sigDeadline\":\"1893456000\"}}"
+        },
+        {
+          "what": "NFT listing where someone else gets the payment",
+          "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"OrderComponents\":[{\"name\":\"offerer\",\"type\":\"address\"},{\"name\":\"zone\",\"type\":\"address\"},{\"name\":\"offer\",\"type\":\"OfferItem[]\"},{\"name\":\"consideration\",\"type\":\"ConsiderationItem[]\"},{\"name\":\"orderType\",\"type\":\"uint8\"},{\"name\":\"startTime\",\"type\":\"uint256\"},{\"name\":\"endTime\",\"type\":\"uint256\"},{\"name\":\"zoneHash\",\"type\":\"bytes32\"},{\"name\":\"salt\",\"type\":\"uint256\"},{\"name\":\"conduitKey\",\"type\":\"bytes32\"},{\"name\":\"counter\",\"type\":\"uint256\"}],\"OfferItem\":[{\"name\":\"itemType\",\"type\":\"uint8\"},{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"identifierOrCriteria\",\"type\":\"uint256\"},{\"name\":\"startAmount\",\"type\":\"uint256\"},{\"name\":\"endAmount\",\"type\":\"uint256\"}],\"ConsiderationItem\":[{\"name\":\"itemType\",\"type\":\"uint8\"},{\"name\":\"token\",\"type\":\"address\"},{\"name\":\"identifierOrCriteria\",\"type\":\"uint256\"},{\"name\":\"startAmount\",\"type\":\"uint256\"},{\"name\":\"endAmount\",\"type\":\"uint256\"},{\"name\":\"recipient\",\"type\":\"address\"}]},\"primaryType\":\"OrderComponents\",\"domain\":{\"name\":\"Seaport\",\"version\":\"1.6\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000068F116a894984e2DB1123eB395\"},\"message\":{\"offerer\":\"0x9858EfFD232B4033E47d90003D41EC34EcaEda94\",\"zone\":\"0x0000000000000000000000000000000000000000\",\"offer\":[{\"itemType\":\"2\",\"token\":\"0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D\",\"identifierOrCriteria\":\"1\",\"startAmount\":\"1\",\"endAmount\":\"1\"}],\"consideration\":[{\"itemType\":\"0\",\"token\":\"0x0000000000000000000000000000000000000000\",\"identifierOrCriteria\":\"0\",\"startAmount\":\"1000000000000000000\",\"endAmount\":\"1000000000000000000\",\"recipient\":\"0x000000000000000000000000000000000000bEEF\"}],\"orderType\":\"0\",\"startTime\":\"1762900000\",\"endTime\":\"1893456000\",\"zoneHash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"salt\":\"1\",\"conduitKey\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"counter\":\"0\"}}"
+        }
+      ]
+    }
+  },
+  "tron": {
+    "coin": 195,
+    "address": "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+    "request": {
+      "origin": "app.example.org",
+      "address": "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH"
+    },
+    "message": {
+      "hex": "0x5369676e20696e20746f204578616d706c652054524f4e206170702e204e6f6e63653a203939",
+      "signature": "0x2238a20b351070c0f73eec39e4160caabc4cf0272977e38871d29717edf6f75f753d0492b47b480e6114db879e1000ae3a72c2744040c6738392670f7c0d1e8c1b"
+    }
+  },
+  "solana": {
+    "address": "GjJyeC1r2RgkuoCWMyPYkCWSGSGLcz266EaAkLA27AhL",
+    "request": {
+      "origin": "app.example.org",
+      "address": "GjJyeC1r2RgkuoCWMyPYkCWSGSGLcz266EaAkLA27AhL"
+    }
+  }
+}
