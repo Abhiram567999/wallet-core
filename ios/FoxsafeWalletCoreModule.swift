@@ -171,6 +171,11 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("signTransactions") { (id: String, coin: Int, inputs: [String], account: Int?) in
       try run { try self.store.signTransactions(id: id, coin: try u32(coin), inputsBase64: inputs, account: try idx(account)) }
     }
+    // Vault payouts, one Face ID (SPEC §7.10). `vaultAddress` is empty when this build has no Vault.
+    Function("vaultAddress") { () -> String in WalletStore.VaultPolicy.vault }
+    AsyncFunction("signVaultRound") { (id: String, coin: Int, inputs: [String], account: Int?) in
+      try run { try self.store.signVaultRound(id: id, coin: try u32(coin), inputsBase64: inputs, account: try idx(account)) }
+    }
     AsyncFunction("signCosmos") { (id: String, coin: Int, input: String, account: Int?) in
       try run { try self.store.signCosmos(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account)) }
     }

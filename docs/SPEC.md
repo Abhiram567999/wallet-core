@@ -497,3 +497,24 @@ holds signatures the native signers must reproduce and requests they must
 refuse; `test/dapp.test.ts` checks Trust Wallet Core against them, and the
 on-device self-test checks every refusal, including TRON permission changes and
 Solana account takeovers built at run time.
+
+
+### 7.10 Vault payouts (build 19 on)
+
+Foxsafe's network fees collect in the **Vault**: a normal TRON account on the
+founder's phone (seed-phrase backed). The server holds no Vault key; it only
+prepares refill rounds (swap, provider top-ups, profit) and the founder
+approves them on the phone (founder, 14 Nov 2026).
+
+- `FeePolicy` accepts USDT fees to the hardware wallet `TRmToSto…yEVJ` **or**
+  the Vault (`VaultPolicy.vault`, compiled in; empty = no Vault).
+- `signVaultRound(id, coin, inputs)` signs 1–8 TRON transactions with ONE
+  Face ID. Before Face ID: every input is a plain TRX transfer (any receiver,
+  at most 3,000 TRX in all) or a USDT `transfer` to the hardware wallet; no
+  notes; all from one sender, and that sender is the compiled Vault address.
+  After Face ID: the key's address must be the Vault.
+- The swap (USDT → TRX) is a separate, normal Swap with its own Face ID.
+
+Worst case with a fully compromised app and server: 3,000 TRX per round
+from the Vault, and only after the founder's Face ID; USDT can only go to
+his own hardware wallet.

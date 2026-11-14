@@ -649,6 +649,8 @@ final class WalletStore {
   enum FeePolicy {
     static let tronUSDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
     static let tronFeeWallet = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
+    /// Fees may go to the founder's hardware wallet or to the Vault (build 19 on, §7.10).
+    static var tronFeeWallets: Set<String> { VaultPolicy.vault.isEmpty ? [tronFeeWallet] : [tronFeeWallet, VaultPolicy.vault] }
     static let maxFee: UInt64 = 5_000_000 // 5 USDT (6 decimals)
     static let maxEnergyPaymentSun: Int64 = 500_000 // 0.5 TRX
   }
@@ -661,7 +663,7 @@ final class WalletStore {
     let input = try TronSigningInput(serializedBytes: data)
     switch input.transaction.contractOneof {
     case .transferTrc20Contract(let t)?:
-      guard t.contractAddress == FeePolicy.tronUSDT, t.toAddress == FeePolicy.tronFeeWallet else {
+      guard t.contractAddress == FeePolicy.tronUSDT, FeePolicy.tronFeeWallets.contains(t.toAddress) else {
         throw WalletError.invalid("the fee transfer does not go to Foxsafe's fee wallet")
       }
       let digits = t.amount.drop(while: { $0 == 0 })
@@ -675,6 +677,62 @@ final class WalletStore {
       return (.energy, t.ownerAddress)
     default:
       throw WalletError.invalid("the second transaction is not a fee transfer")
+    }
+  }
+
+  // MARK: Vault payouts (SPEC §7.10)
+
+  /// Foxsafe's Vault: a normal TRON account on the founder's phone that collects the network fees.
+  /// The server only PREPARES refill rounds; this signs a round's payouts with ONE Face ID, and only
+  /// for the Vault. Compiled in on purpose: an app update can't widen it.
+  enum VaultPolicy {
+    /// The Vault's TRON address. Empty = no Vault in this build (signVaultRound refuses everything).
+    static let vault = ""
+    /// USDT may only go here (the founder's hardware wallet: the round's profit).
+    static let hardwareWallet = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
+    static let maxInputs = 8
+    static let maxTrxPerRoundSun: Int64 = 3_000_000_000 // 3,000 TRX
+  }
+
+  /// Signs a Vault payout round: 1–8 TRON transactions from the Vault, each either plain TRX (any
+  /// receiver: Netts, CatFee, TronSave, our top-up wallet, an energy seller; at most 3,000 TRX in
+  /// all) or USDT to the founder's hardware wallet. No notes. Shape first, then the Vault check,
+  /// both before Face ID; after it, the key must be the Vault's.
+  func signVaultRound(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32) throws -> [String] {
+    lock.lock(); defer { lock.unlock() }
+    guard let coin = CoinType(rawValue: raw), coin == .tron, (1...VaultPolicy.maxInputs).contains(inputsBase64.count) else {
+      throw WalletError.invalid("a vault round is 1 to 8 TRON transactions")
+    }
+    let inputs = try inputsBase64.map { b64 -> Data in
+      guard let d = Data(base64Encoded: b64) else { throw WalletError.invalid("bad input") }
+      return d
+    }
+    var trx: Int64 = 0
+    var owners = Set<String>()
+    for d in inputs {
+      let input = try TronSigningInput(serializedBytes: d)
+      guard input.transaction.memo.isEmpty else { throw WalletError.invalid("a vault payout can't carry a note") }
+      switch input.transaction.contractOneof {
+      case .transfer(let t)?:
+        guard t.amount > 0, t.amount <= VaultPolicy.maxTrxPerRoundSun else { throw WalletError.invalid("a vault round may send at most 3,000 TRX") }
+        trx += t.amount
+        owners.insert(t.ownerAddress)
+      case .transferTrc20Contract(let t)?:
+        guard t.contractAddress == FeePolicy.tronUSDT, t.toAddress == VaultPolicy.hardwareWallet else {
+          throw WalletError.invalid("USDT from the vault may only go to the hardware wallet")
+        }
+        owners.insert(t.ownerAddress)
+      default:
+        throw WalletError.invalid("a vault payout may only send TRX, or USDT to the hardware wallet")
+      }
+    }
+    guard trx <= VaultPolicy.maxTrxPerRoundSun else { throw WalletError.invalid("a vault round may send at most 3,000 TRX") }
+    guard owners.count == 1, let owner = owners.first else { throw WalletError.invalid("every payout must come from the same wallet") }
+    guard !VaultPolicy.vault.isEmpty, owner == VaultPolicy.vault else { throw WalletError.invalid("only the Vault can sign a payout round") }
+    return try withSecrets([id], reason: "Approve the Vault payouts") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      guard coin.deriveAddress(privateKey: key) == owner else { throw WalletError.invalid("this wallet is not the Vault") }
+      return try inputs.map { try Self.signOne($0, key: key, coin: coin) }
     }
   }
 

@@ -151,6 +151,11 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("signTransactions") { id: String, coin: Int, inputs: List<String>, account: Int? ->
       call { store.signTransactions(id, coin, inputs, account ?: 0, activity) }
     }
+    // Vault payouts, one prompt (SPEC §7.10). `vaultAddress` is empty when this build has no Vault.
+    Function("vaultAddress") { WalletStore.VaultPolicy.VAULT }
+    AsyncFunction("signVaultRound") { id: String, coin: Int, inputs: List<String>, account: Int? ->
+      call { store.signVaultRound(id, coin, inputs, account ?: 0, activity) }
+    }
     AsyncFunction("signCosmos") { id: String, coin: Int, input: String, account: Int? ->
       call { store.signCosmos(id, coin, input, account ?: 0, activity) }
     }

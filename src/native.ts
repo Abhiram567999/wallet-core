@@ -97,6 +97,10 @@ export interface NativeWalletCore {
   signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
   /** Present (returns true) in builds whose signTransactions allows TRON energy payments (SPEC §7.2). */
   signsTronEnergyPayments?(): boolean;
+  /** The Vault's TRON address compiled into this build ('' = none). Build 19 on (SPEC §7.10). */
+  vaultAddress?(): string;
+  /** Vault payout round with ONE Face ID: 1–8 TRON transactions from the Vault, plain TRX (≤ 3,000 TRX in all) or USDT to the hardware wallet (SPEC §7.10). */
+  signVaultRound?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
   /**
    * Gasless EVM send with ONE Face ID: signs the EntryPoint 0.8 operation (EIP-712 JSON) and, when
    * `request.upgradeNonce` ≥ 0, the EIP-7702 upgrade to the built-in Simple7702Account. Native code
@@ -208,6 +212,15 @@ export const WalletCore: NativeWalletCore =
  * Signs a payment and its fee transfer with one Face ID. Builds without the
  * batch function ask once per transaction.
  */
+/** The Vault address compiled into this build, or '' (older builds and builds without a Vault). */
+export const vaultAddress = (): string => (typeof native?.vaultAddress === 'function' ? native.vaultAddress() : '');
+export const canSignVaultRound = () => typeof native?.signVaultRound === 'function';
+/** Signs a Vault payout round with one Face ID; refused natively unless every transaction fits SPEC §7.10. */
+export function signVaultRound(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]> {
+  if (!native?.signVaultRound) return Promise.reject(new Error('this build cannot sign Vault payouts'));
+  return native.signVaultRound(id, coin, inputs, account);
+}
+
 export async function signTransactions(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]> {
   if (typeof native?.signTransactions === 'function') return native.signTransactions(id, coin, inputs, account);
   const out: string[] = [];

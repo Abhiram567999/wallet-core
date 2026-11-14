@@ -6,7 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, evmDappInput, tronOutput, tronTransferInput } from './tx.ts';
@@ -240,6 +240,37 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused([payment, energy, trx(seller, 100_000n, 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN')], 'an energy payment from another wallet');
     await refused([payment, trx(seller, 100_000n, from, 'hi')], 'an energy payment with a note');
     return 'one unlock for both, same signatures; 4 bad batches refused; energy payments: 4 signed, 4 bad refused';
+  });
+
+  await check('Vault payouts: only the Vault, only TRX or USDT to the hardware wallet (SPEC 7.10)', async () => {
+    if (!canSignVaultRound()) return 'this build has no Vault signing';
+    const from = (await WalletCore.getAddresses(importedId, [195]))[0]!.address;
+    const block = { number: 70_000_000, timestamp: 1_760_000_000_000, txTrieRoot: '00'.repeat(32), parentHash: '00'.repeat(32), witnessAddress: `41${'00'.repeat(20)}`, version: 30 };
+    const usdt = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+    const hardware = 'TRmToStoTAxU414feHAS67w33Qzi4VyEVJ';
+    const base = { block, now: 1_760_000_001_000, expiresInMs: 120_000 };
+    const trx = (to: string, sun: bigint, owner = from, memo?: string) => tronTransferInput({ from: owner, to, amount: sun, ...base, ...(memo ? { memo } : {}) });
+    const usd = (to: string, amount: bigint, owner = from) => tronTransferInput({ from: owner, to, amount, token: usdt, feeLimit: 30_000_000n, ...base });
+    // The reason shows which rule refused it; shape rules are checked before the Vault check.
+    const why = (inputs: string[]) => signVaultRound(importedId, 195, inputs).then(() => 'signed', (e: Error) => String(e?.message ?? e));
+    const netts = 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN';
+    const cases: [string[], RegExp, string][] = [
+      [[usd('TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV', 1_000_000n)], /hardware wallet/, 'USDT to someone else'],
+      [[trx(netts, 2_000_000_000n), trx(netts, 1_500_000_000n)], /3,000 TRX/, 'more than 3,000 TRX'],
+      [[trx(netts, 1_000_000n, from, 'hi')], /note/, 'a payout with a note'],
+      [Array.from({ length: 9 }, () => trx(netts, 1_000_000n)), /1 to 8/, 'nine transactions'],
+      [[trx(netts, 1_000_000n), trx(netts, 1_000_000n, 'TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV')], /same wallet/, 'payouts from two wallets'],
+    ];
+    for (const [inputs, rule, what] of cases) {
+      const r = await why(inputs);
+      expect(r !== 'signed' && rule.test(r), `${what}: expected a refusal (${rule}), got "${r}"`);
+    }
+    // A good round from this (test) wallet is still refused: it isn't the Vault.
+    const good = [trx(netts, 100_000_000n), usd(hardware, 5_000_000n)];
+    const r = await why(good);
+    if (vaultAddress() === from) return `good round: ${r}`;
+    expect(r !== 'signed' && /only the Vault/.test(r), `a round from a non-Vault wallet was not refused ("${r}")`);
+    return `5 bad rounds refused for the right reason; a good round from a non-Vault wallet refused; Vault = ${vaultAddress() || 'none in this build'}`;
   });
 
   await check('gasless EVM: one Face ID signs the operation and the 7702 upgrade; tampering is refused', async () => {

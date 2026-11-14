@@ -606,6 +606,8 @@ class WalletStore(context: Context) {
   private object FeePolicy {
     const val TRON_USDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
     const val TRON_FEE_WALLET = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
+    /** Fees may go to the founder's hardware wallet or to the Vault (build 19 on, §7.10). */
+    val TRON_FEE_WALLETS: Set<String> get() = if (VaultPolicy.VAULT.isEmpty()) setOf(TRON_FEE_WALLET) else setOf(TRON_FEE_WALLET, VaultPolicy.VAULT)
     val MAX_FEE: BigInteger = BigInteger.valueOf(5_000_000) // 5 USDT (6 decimals)
     const val MAX_ENERGY_PAYMENT_SUN = 500_000L // 0.5 TRX
   }
@@ -618,7 +620,7 @@ class WalletStore(context: Context) {
     val tx = Tron.SigningInput.parseFrom(data).transaction
     if (tx.hasTransferTrc20Contract()) {
       val t = tx.transferTrc20Contract
-      if (t.contractAddress != FeePolicy.TRON_USDT || t.toAddress != FeePolicy.TRON_FEE_WALLET) {
+      if (t.contractAddress != FeePolicy.TRON_USDT || t.toAddress !in FeePolicy.TRON_FEE_WALLETS) {
         throw WalletException("INVALID", "the fee transfer does not go to Foxsafe's fee wallet")
       }
       val amount = BigInteger(1, t.amount.toByteArray())
@@ -632,6 +634,64 @@ class WalletStore(context: Context) {
       return GaslessExtra.ENERGY to t.ownerAddress
     }
     throw WalletException("INVALID", "the second transaction is not a fee transfer")
+  }
+
+  // MARK: Vault payouts (SPEC §7.10)
+
+  /**
+   * Foxsafe's Vault: a normal TRON account on the founder's phone that collects the network fees.
+   * The server only PREPARES refill rounds; this signs a round's payouts with ONE prompt, and only for
+   * the Vault. Compiled in on purpose: an app update can't widen it.
+   */
+  object VaultPolicy {
+    /** The Vault's TRON address. Empty = no Vault in this build (signVaultRound refuses everything). */
+    const val VAULT = ""
+    /** USDT may only go here (the founder's hardware wallet: the round's profit). */
+    const val HARDWARE_WALLET = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
+    const val MAX_INPUTS = 8
+    const val MAX_TRX_PER_ROUND_SUN = 3_000_000_000L // 3,000 TRX
+  }
+
+  /**
+   * Signs a Vault payout round: 1–8 TRON transactions from the Vault, each either plain TRX (any
+   * receiver; at most 3,000 TRX in all) or USDT to the founder's hardware wallet. No notes. Shape
+   * first, then the Vault check, both before the prompt; after it, the key must be the Vault's.
+   */
+  fun signVaultRound(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
+    val c = coin(coinValue)
+    if (c != CoinType.TRON || inputsB64.size !in 1..VaultPolicy.MAX_INPUTS) throw WalletException("INVALID", "a vault round is 1 to 8 TRON transactions")
+    val inputs = inputsB64.map { Envelope.unb64(it) }
+    var trx = 0L
+    val owners = mutableSetOf<String>()
+    for (d in inputs) {
+      val tx = Tron.SigningInput.parseFrom(d).transaction
+      if (tx.memo.isNotEmpty()) throw WalletException("INVALID", "a vault payout can't carry a note")
+      when {
+        tx.hasTransfer() -> {
+          val t = tx.transfer
+          if (t.amount <= 0 || t.amount > VaultPolicy.MAX_TRX_PER_ROUND_SUN) throw WalletException("INVALID", "a vault round may send at most 3,000 TRX")
+          trx += t.amount
+          owners += t.ownerAddress
+        }
+        tx.hasTransferTrc20Contract() -> {
+          val t = tx.transferTrc20Contract
+          if (t.contractAddress != FeePolicy.TRON_USDT || t.toAddress != VaultPolicy.HARDWARE_WALLET) {
+            throw WalletException("INVALID", "USDT from the vault may only go to the hardware wallet")
+          }
+          owners += t.ownerAddress
+        }
+        else -> throw WalletException("INVALID", "a vault payout may only send TRX, or USDT to the hardware wallet")
+      }
+    }
+    if (trx > VaultPolicy.MAX_TRX_PER_ROUND_SUN) throw WalletException("INVALID", "a vault round may send at most 3,000 TRX")
+    if (owners.size != 1) throw WalletException("INVALID", "every payout must come from the same wallet")
+    val owner = owners.first()
+    if (VaultPolicy.VAULT.isEmpty() || owner != VaultPolicy.VAULT) throw WalletException("INVALID", "only the Vault can sign a payout round")
+    withSecret(id, activity, "Approve the Vault payouts") { r ->
+      val key = privateKey(r, c, account)
+      if (c.deriveAddress(key) != owner) throw WalletException("INVALID", "this wallet is not the Vault")
+      inputs.map { signOne(it, key, c) }
+    }
   }
 
   // MARK: Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)
