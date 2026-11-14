@@ -645,7 +645,7 @@ class WalletStore(context: Context) {
    */
   object VaultPolicy {
     /** The Vault's TRON address. Empty = no Vault in this build (signVaultRound refuses everything). */
-    const val VAULT = ""
+    const val VAULT = "TR9dqsxAgkBpG5oDMA8FQmPjzfqNBErczM"
     /** USDT may only go here (the founder's hardware wallet: the round's profit). */
     const val HARDWARE_WALLET = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
     const val MAX_INPUTS = 8

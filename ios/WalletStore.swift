@@ -687,7 +687,7 @@ final class WalletStore {
   /// for the Vault. Compiled in on purpose: an app update can't widen it.
   enum VaultPolicy {
     /// The Vault's TRON address. Empty = no Vault in this build (signVaultRound refuses everything).
-    static let vault = ""
+    static let vault = "TR9dqsxAgkBpG5oDMA8FQmPjzfqNBErczM"
     /// USDT may only go here (the founder's hardware wallet: the round's profit).
     static let hardwareWallet = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
     static let maxInputs = 8
