@@ -579,43 +579,59 @@ class WalletStore(context: Context) {
     signTransactions(id, coinValue, listOf(inputB64), account, activity)[0]
 
   /**
-   * A transaction plus, at most, ONE network-fee transfer with one fingerprint /
-   * face prompt (gasless). The batch rule is enforced here, below the app: the
-   * second transaction must pay at most 5 USDT to Foxsafe's fee wallet, so even a
-   * tampered app can't use one prompt to pay anyone else (SPEC §7.2).
+   * A transaction plus Foxsafe's network-fee extras with one fingerprint / face prompt (gasless).
+   * The batch rule is enforced here, below the app (SPEC §7.2). After the first transaction, each
+   * extra one must be either THE fee transfer (at most 5 USDT to Foxsafe's fee wallet, at most one)
+   * or an energy payment (plain TRX, at most 0.5 TRX, at most two; Foxsafe tops the wallet up with
+   * that TRX first, founder 14 Nov 2026), all from this wallet. So even a tampered app can't use one
+   * prompt to pay anyone else more than 2 × 0.5 TRX.
    */
   fun signTransactions(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
     val c = coin(coinValue)
-    if (inputsB64.size !in 1..2) throw WalletException("INVALID", "bad inputs")
+    if (inputsB64.size !in 1..4) throw WalletException("INVALID", "bad inputs")
     val inputs = inputsB64.map { Envelope.unb64(it) }
     // Checked before the prompt, so a refused batch never asks.
-    val feeOwner = if (inputs.size == 2) feeTransferOwner(inputs[1], c) else null
+    val extras = inputs.drop(1).map { gaslessExtraOwner(it, c) }
+    if (extras.count { it.first == GaslessExtra.FEE } > 1) throw WalletException("INVALID", "only one fee transfer is allowed")
+    if (extras.count { it.first == GaslessExtra.ENERGY } > 2) throw WalletException("INVALID", "at most two energy payments are allowed")
     withSecret(id, activity, if (inputs.size > 1) "Confirm the transfer and its network fee" else "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
-      if (feeOwner != null && feeOwner != c.deriveAddress(key)) throw WalletException("INVALID", "the fee transfer is not from this wallet")
+      val own = c.deriveAddress(key)
+      if (extras.any { it.second != own }) throw WalletException("INVALID", "the network fee is not paid from this wallet")
       inputs.map { signOne(it, key, c) }
     }
   }
 
-  /** Foxsafe's fee wallets and the largest fee one prompt may pay. Changing them needs a new build on purpose. */
+  /** Foxsafe's fee wallets and the largest amounts one prompt may pay. Changing them needs a new build on purpose. */
   private object FeePolicy {
     const val TRON_USDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
     const val TRON_FEE_WALLET = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
     val MAX_FEE: BigInteger = BigInteger.valueOf(5_000_000) // 5 USDT (6 decimals)
+    const val MAX_ENERGY_PAYMENT_SUN = 500_000L // 0.5 TRX
   }
 
-  /** Returns the sender if [data] is a valid Foxsafe fee transfer; throws otherwise. */
-  private fun feeTransferOwner(data: ByteArray, c: CoinType): String {
+  private enum class GaslessExtra { FEE, ENERGY }
+
+  /** What an extra gasless transaction is, and its sender; throws if it is neither. */
+  private fun gaslessExtraOwner(data: ByteArray, c: CoinType): Pair<GaslessExtra, String> {
     if (c != CoinType.TRON) throw WalletException("INVALID", "a second transaction is allowed only for TRON network fees")
     val tx = Tron.SigningInput.parseFrom(data).transaction
-    if (!tx.hasTransferTrc20Contract()) throw WalletException("INVALID", "the second transaction is not a fee transfer")
-    val t = tx.transferTrc20Contract
-    if (t.contractAddress != FeePolicy.TRON_USDT || t.toAddress != FeePolicy.TRON_FEE_WALLET) {
-      throw WalletException("INVALID", "the fee transfer does not go to Foxsafe's fee wallet")
+    if (tx.hasTransferTrc20Contract()) {
+      val t = tx.transferTrc20Contract
+      if (t.contractAddress != FeePolicy.TRON_USDT || t.toAddress != FeePolicy.TRON_FEE_WALLET) {
+        throw WalletException("INVALID", "the fee transfer does not go to Foxsafe's fee wallet")
+      }
+      val amount = BigInteger(1, t.amount.toByteArray())
+      if (amount.signum() <= 0 || amount > FeePolicy.MAX_FEE) throw WalletException("INVALID", "the fee is above 5 USDT")
+      return GaslessExtra.FEE to t.ownerAddress
     }
-    val amount = BigInteger(1, t.amount.toByteArray())
-    if (amount.signum() <= 0 || amount > FeePolicy.MAX_FEE) throw WalletException("INVALID", "the fee is above 5 USDT")
-    return t.ownerAddress
+    if (tx.hasTransfer()) {
+      val t = tx.transfer
+      if (t.amount <= 0 || t.amount > FeePolicy.MAX_ENERGY_PAYMENT_SUN) throw WalletException("INVALID", "an energy payment is above 0.5 TRX")
+      if (tx.memo.isNotEmpty()) throw WalletException("INVALID", "an energy payment can't carry a note")
+      return GaslessExtra.ENERGY to t.ownerAddress
+    }
+    throw WalletException("INVALID", "the second transaction is not a fee transfer")
   }
 
   // MARK: Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)

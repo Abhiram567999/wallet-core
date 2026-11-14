@@ -166,6 +166,8 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("signTransaction") { (id: String, coin: Int, input: String, account: Int?) in
       try run { try self.store.signTransaction(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account)) }
     }
+    // Marker: this build's signTransactions also allows up to two energy payments (≤ 0.5 TRX each).
+    Function("signsTronEnergyPayments") { () -> Bool in true }
     AsyncFunction("signTransactions") { (id: String, coin: Int, inputs: [String], account: Int?) in
       try run { try self.store.signTransactions(id: id, coin: try u32(coin), inputsBase64: inputs, account: try idx(account)) }
     }

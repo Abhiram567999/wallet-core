@@ -609,52 +609,73 @@ final class WalletStore {
     try signTransactions(id: id, coin: raw, inputsBase64: [inputBase64], account: account)[0]
   }
 
-  /// A transaction plus, at most, ONE network-fee transfer with one Face ID
-  /// (gasless). The batch rule is enforced here, below the app: the second
-  /// transaction must pay at most 5 USDT to Foxsafe's fee wallet, so even a
-  /// tampered app can't use one Face ID to pay anyone else (SPEC §7.2).
+  /// A transaction plus Foxsafe's network-fee extras with one Face ID (gasless).
+  /// The batch rule is enforced here, below the app (SPEC §7.2). After the first
+  /// transaction, each extra one must be either
+  ///   - THE fee transfer: at most 5 USDT to Foxsafe's fee wallet (at most one), or
+  ///   - an energy payment: plain TRX, at most 0.5 TRX, to an energy seller (at most two;
+  ///     Foxsafe tops the wallet up with that TRX first, founder 14 Nov 2026),
+  /// all from this wallet. So even a tampered app can't use one Face ID to pay
+  /// anyone else more than 2 × 0.5 TRX.
   func signTransactions(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32) throws -> [String] {
     lock.lock(); defer { lock.unlock() }
-    guard let coin = CoinType(rawValue: raw), (1...2).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
+    guard let coin = CoinType(rawValue: raw), (1...4).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
     let inputs = try inputsBase64.map { b64 -> Data in
       guard let d = Data(base64Encoded: b64) else { throw WalletError.invalid("bad input") }
       return d
     }
     // Checked before Face ID, so a refused batch never asks.
-    var feeOwner: String?
-    if inputs.count == 2 { feeOwner = try Self.feeTransferOwner(inputs[1], coin: coin) }
+    var owners: [String] = []
+    var fees = 0, energy = 0
+    for extra in inputs.dropFirst() {
+      let (kind, owner) = try Self.gaslessExtraOwner(extra, coin: coin)
+      if kind == .fee { fees += 1 } else { energy += 1 }
+      owners.append(owner)
+    }
+    guard fees <= 1 else { throw WalletError.invalid("only one fee transfer is allowed") }
+    guard energy <= 2 else { throw WalletError.invalid("at most two energy payments are allowed") }
     return try withSecrets([id], reason: inputs.count > 1 ? "Confirm the transfer and its network fee" : "Confirm the transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
-      if let owner = feeOwner, owner != coin.deriveAddress(privateKey: key) {
-        throw WalletError.invalid("the fee transfer is not from this wallet")
+      let own = coin.deriveAddress(privateKey: key)
+      if owners.contains(where: { $0 != own }) {
+        throw WalletError.invalid("the network fee is not paid from this wallet")
       }
       return try inputs.map { try Self.signOne($0, key: key, coin: coin) }
     }
   }
 
-  /// Foxsafe's fee wallets and the largest fee one Face ID may pay. Changing
+  /// Foxsafe's fee wallets and the largest amounts one Face ID may pay. Changing
   /// them needs a new app build on purpose: an app update can't redirect fees.
   enum FeePolicy {
     static let tronUSDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
     static let tronFeeWallet = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
     static let maxFee: UInt64 = 5_000_000 // 5 USDT (6 decimals)
+    static let maxEnergyPaymentSun: Int64 = 500_000 // 0.5 TRX
   }
 
-  /// Returns the sender if `data` is a valid Foxsafe fee transfer; throws otherwise.
-  static func feeTransferOwner(_ data: Data, coin: CoinType) throws -> String {
+  enum GaslessExtra { case fee, energy }
+
+  /// Returns what an extra gasless transaction is and its sender; throws if it is neither.
+  static func gaslessExtraOwner(_ data: Data, coin: CoinType) throws -> (GaslessExtra, String) {
     guard coin == .tron else { throw WalletError.invalid("a second transaction is allowed only for TRON network fees") }
     let input = try TronSigningInput(serializedBytes: data)
-    guard case .transferTrc20Contract(let t)? = input.transaction.contractOneof else {
+    switch input.transaction.contractOneof {
+    case .transferTrc20Contract(let t)?:
+      guard t.contractAddress == FeePolicy.tronUSDT, t.toAddress == FeePolicy.tronFeeWallet else {
+        throw WalletError.invalid("the fee transfer does not go to Foxsafe's fee wallet")
+      }
+      let digits = t.amount.drop(while: { $0 == 0 })
+      guard digits.count <= 8 else { throw WalletError.invalid("the fee is too large") }
+      let amount = digits.reduce(UInt64(0)) { $0 << 8 | UInt64($1) }
+      guard amount > 0, amount <= FeePolicy.maxFee else { throw WalletError.invalid("the fee is above 5 USDT") }
+      return (.fee, t.ownerAddress)
+    case .transfer(let t)?:
+      guard t.amount > 0, t.amount <= FeePolicy.maxEnergyPaymentSun else { throw WalletError.invalid("an energy payment is above 0.5 TRX") }
+      guard input.transaction.memo.isEmpty else { throw WalletError.invalid("an energy payment can't carry a note") }
+      return (.energy, t.ownerAddress)
+    default:
       throw WalletError.invalid("the second transaction is not a fee transfer")
     }
-    guard t.contractAddress == FeePolicy.tronUSDT, t.toAddress == FeePolicy.tronFeeWallet else {
-      throw WalletError.invalid("the fee transfer does not go to Foxsafe's fee wallet")
-    }
-    let digits = t.amount.drop(while: { $0 == 0 })
-    guard digits.count <= 8 else { throw WalletError.invalid("the fee is too large") }
-    let amount = digits.reduce(UInt64(0)) { $0 << 8 | UInt64($1) }
-    guard amount > 0, amount <= FeePolicy.maxFee else { throw WalletError.invalid("the fee is above 5 USDT") }
-    return t.ownerAddress
   }
 
   // MARK: Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)

@@ -319,6 +319,26 @@ replaced with a higher fee (RBF). `test/vectors/bitcoin.json` deliberately
 names a wrong change address; the signed transaction must match byte for
 byte, paying the change to the wallet's own address.
 
+### 7.2 Gasless TRON batches (one Face ID)
+
+`signTransactions(id, coin, inputs)` signs a TRON transaction plus Foxsafe's
+network-fee extras after ONE Face ID. Checked natively before the prompt
+(shape) and after it (sender), so a changed app can't widen it:
+
+1. 1–4 inputs, TRON only when there is more than one.
+2. Every input after the first is either
+   - **the fee transfer**: USDT (`TR7NHq…Lj6t`) to Foxsafe's fee wallet
+     (`TRmToSto…yEVJ`, compiled in), more than 0 and at most 5 USDT; at most one, or
+   - **an energy payment** (builds with `signsTronEnergyPayments`): plain TRX,
+     more than 0 and at most 0.5 TRX, no note; at most two. Foxsafe's server
+     first sends the wallet that TRX, then the payment buys energy + bandwidth
+     from a "send TRX, get energy" seller for the transfer that follows
+     (founder, 14 Nov 2026).
+3. Every extra input is sent from this wallet.
+
+Worst case with a fully compromised app and server: 5 USDT to Foxsafe's own
+fee wallet and 2 × 0.5 TRX to anyone.
+
 ### 7.5 Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)
 
 Cosmos transactions are signed in Protobuf mode, and Trust Wallet Core's

@@ -89,11 +89,14 @@ export interface NativeWalletCore {
   // built WITHOUT a private key; returns the SigningOutput protobuf (base64).
   signTransaction(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
   /**
-   * A transaction plus at most one Foxsafe network-fee transfer (TRON USDT, ≤ 5 USDT, to the
-   * fee wallet built into the native code) with ONE Face ID. Anything else is refused natively.
-   * Builds from 2026-10-23 on; use `signTransactions` below.
+   * A transaction plus Foxsafe's network-fee extras with ONE Face ID: at most one fee transfer
+   * (TRON USDT, ≤ 5 USDT, to the fee wallet built into the native code) and, from builds with
+   * `signsTronEnergyPayments`, at most two energy payments (plain TRX, ≤ 0.5 TRX each), all from
+   * this wallet. Anything else is refused natively. Builds from 2026-10-23 on; use `signTransactions` below.
    */
   signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
+  /** Present (returns true) in builds whose signTransactions allows TRON energy payments (SPEC §7.2). */
+  signsTronEnergyPayments?(): boolean;
   /**
    * Gasless EVM send with ONE Face ID: signs the EntryPoint 0.8 operation (EIP-712 JSON) and, when
    * `request.upgradeNonce` ≥ 0, the EIP-7702 upgrade to the built-in Simple7702Account. Native code
@@ -228,6 +231,8 @@ export interface GaslessEvmSignature {
 
 /** True when this build can sign gasless EVM sends (native fee rule included). */
 export const canSignGaslessEvm = () => typeof native?.signGaslessEvm === 'function';
+/** This build lets one Face ID also sign up to two TRX energy payments (≤ 0.5 TRX each) in a gasless batch. */
+export const canSignTronEnergyPayments = () => typeof native?.signsTronEnergyPayments === 'function';
 
 export async function signGaslessEvm(id: string, coin: CoinType, typedData: string, request: GaslessEvmRequest, account?: number): Promise<GaslessEvmSignature> {
   if (!native?.signGaslessEvm) throw new Error('UNAVAILABLE: this app build cannot sign fee-free EVM transfers yet');

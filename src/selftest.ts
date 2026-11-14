@@ -6,7 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, evmDappInput, tronOutput, tronTransferInput } from './tx.ts';
@@ -225,7 +225,21 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused([payment, t(feeWallet, 6_000_000n)], 'a fee above 5 USDT');
     await refused([payment, fee, fee], 'a third transaction');
     await refused([payment, t(feeWallet, 2_000_000n, 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN')], 'a fee from another wallet');
-    return 'one unlock for both, same signatures; 4 bad batches refused';
+    if (!canSignTronEnergyPayments()) return 'one unlock for both, same signatures; 4 bad batches refused';
+
+    // Energy payments (SPEC §7.2): up to two plain TRX transfers of at most 0.5 TRX, from this wallet.
+    const trx = (to: string, sun: bigint, owner = from, memo?: string) =>
+      tronTransferInput({ from: owner, to, amount: sun, block, now: 1_760_000_001_000, expiresInMs: 120_000, ...(memo ? { memo } : {}) });
+    const seller = 'TXQ6ejLmJuptqNvRDTFuC8GFzamWeCscLb';
+    const energy = trx(seller, 100_000n);
+    const four = await signTransactions(importedId, 195, [payment, fee, energy, energy]);
+    expect(four.length === 4, 'expected four signed transactions');
+    expect(tronOutput(four[2]!).json === tronOutput(await WalletCore.signTransaction(importedId, 195, energy)).json, 'energy payment differs from signing it alone');
+    await refused([payment, fee, trx(seller, 500_001n)], 'an energy payment above 0.5 TRX');
+    await refused([payment, fee, energy, energy, energy], 'a third energy payment');
+    await refused([payment, energy, trx(seller, 100_000n, 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN')], 'an energy payment from another wallet');
+    await refused([payment, trx(seller, 100_000n, from, 'hi')], 'an energy payment with a note');
+    return 'one unlock for both, same signatures; 4 bad batches refused; energy payments: 4 signed, 4 bad refused';
   });
 
   await check('gasless EVM: one Face ID signs the operation and the 7702 upgrade; tampering is refused', async () => {
