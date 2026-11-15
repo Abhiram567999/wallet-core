@@ -3,12 +3,15 @@
 // the result on a screen the app's JavaScript can't draw or press, before Face ID. So the user
 // confirms what is really signed, not what the app says is signed.
 //
+// Reference and tests only (it reads its word list with node:fs): the app never imports it.
+//
 // Rules of this file:
 // - Everything shown comes from the bytes that are signed. The only outside value is `hint.to`
 //   (a Solana owner address), and it is used only after proving it leads to the signed token account.
 // - Anything that is not a plain send of a coin or token is `other`: the screen then says it can't
 //   read what the transaction does, never a guess.
 
+import { readFileSync } from 'node:fs';
 import { TW } from './proto/tw.js';
 
 export interface Asset {
@@ -232,25 +235,80 @@ export function unitsText(raw: string, decimals: number): string {
 /** The address in groups of four, as the screen shows it. */
 export const grouped = (address: string): string => address.replace(/(.{4})(?=.)/g, '$1 ');
 
-/** The English words of the screen (the native code holds the same sentences in every app language). */
-export function summaryText(s: SendSummary): { title: string; network: string; to: string; fee: string; warning: string } {
+/** The screen's words in every app language (src/sendScreenText.json; native code is generated from it). */
+const TEXT = JSON.parse(readFileSync(new URL('./sendScreenText.json', import.meta.url), 'utf8')) as Record<string, Record<string, string>>;
+
+export function t(key: string, lang: string, vars: Record<string, string> = {}): string {
+  let out = TEXT[key]?.[lang] ?? TEXT[key]?.en ?? key;
+  for (const [k, v] of Object.entries(vars)) out = out.split(`{${k}}`).join(v);
+  return out;
+}
+
+export interface ScreenText {
+  secure: string;
+  title: string;
+  network: string;
+  /** "Asked by {site}" for a dApp request, else empty. */
+  site: string;
+  toLabel: string;
+  /** Address in groups of four; empty when there is no single receiver. */
+  to: string;
+  /** "Your own address on this phone" when `to` belongs to a wallet on this phone. */
+  own: string;
+  fee: string;
+  warning: string;
+  /** The address tick: shown only for someone else's address. */
+  tick: string;
+  slide: string;
+  cancel: string;
+}
+
+/**
+ * Every word the secure screen shows, in `lang`. `own` = the receiver is a wallet on this phone
+ * (native code checks the public addresses it stores). `site` = the dApp's host, for dApp requests.
+ */
+export function screenText(s: SendSummary, lang = 'en', opts: { own?: boolean; site?: string } = {}): ScreenText {
   const amountOf = (a: Asset, raw: string) =>
-    a.symbol && a.decimals !== undefined ? `${unitsText(raw, a.decimals)} ${a.symbol}` : `${unitsText(raw, a.decimals ?? 0)} of token ${a.contract ?? ''}`;
+    a.symbol && a.decimals !== undefined
+      ? `${unitsText(raw, a.decimals)} ${a.symbol}`
+      : t('{amount} of token {contract}', lang, { amount: unitsText(raw, a.decimals ?? 0), contract: a.contract ?? '' });
+  const common = {
+    secure: t("Checked by Foxsafe's secure part", lang),
+    network: t('on {network}', lang, { network: s.network }),
+    site: opts.site ? t('Asked by {site}', lang, { site: opts.site }) : '',
+    toLabel: t('To', lang),
+    own: opts.own ? t('Your own address on this phone', lang) : '',
+    slide: t('Slide to send', lang),
+    cancel: t('Cancel', lang),
+  };
+  const tick = (to: string) => (to && !opts.own ? t("I checked the receiver's address: the marked start, middle and end match.", lang) : '');
   if (s.kind === 'other') {
+    const to = s.to ? grouped(s.to) : '';
     return {
-      title: 'Not a simple send',
-      network: `on ${s.network}`,
-      to: s.to ? grouped(s.to) : '',
-      fee: s.value && s.value !== '0' && s.asset ? `Sends ${amountOf(s.asset, s.value)} with it` : '',
-      warning: "Foxsafe can't read what this transaction does. Go on only if you started it yourself.",
+      ...common,
+      title: t('Not a simple send', lang),
+      to,
+      fee: s.value && s.value !== '0' && s.asset ? t('Sends {amount} with it', lang, { amount: amountOf(s.asset, s.value) }) : '',
+      warning: t("Foxsafe can't read what this transaction does. Go on only if you started it yourself.", lang),
+      tick: tick(to),
     };
   }
-  const fee = [s.feeUsdt ? `${unitsText(s.feeUsdt, 6)} USDT` : '', s.energySun ? `${unitsText(s.energySun, 6)} TRX energy` : ''].filter(Boolean).join(' + ');
+  const parts = [s.feeUsdt ? `${unitsText(s.feeUsdt, 6)} USDT` : '', s.energySun ? t('{amount} TRX energy', lang, { amount: unitsText(s.energySun, 6) }) : ''].filter(Boolean);
+  const to = grouped(s.to);
   return {
-    title: s.all ? `Send all your ${s.asset.symbol ?? ''}`.trim() : `Send ${amountOf(s.asset, s.amount)}`,
-    network: `on ${s.network}`,
-    to: grouped(s.to),
-    fee: fee ? `Network fee: ${fee}` : '',
-    warning: s.note ? 'This transaction carries a note.' : '',
+    ...common,
+    title: s.all ? t('Send all your {symbol}', lang, { symbol: s.asset.symbol ?? '' }) : t('Send {amount}', lang, { amount: amountOf(s.asset, s.amount) }),
+    to,
+    fee: parts.length ? t('Network fee: {fee}', lang, { fee: parts.join(' + ') }) : '',
+    warning: s.note ? t('This transaction carries a note.', lang) : '',
+    tick: tick(to),
   };
+}
+
+/** Which characters of the grouped address are drawn bold: the first 4, the middle 8 and the last 6 (as the app's AddressText). */
+export function markedRanges(address: string): [number, number][] {
+  const n = address.length;
+  if (n <= 18) return [[0, n]];
+  const mid = Math.floor(n / 2) - 4;
+  return [[0, 4], [mid, mid + 8], [n - 6, n]];
 }

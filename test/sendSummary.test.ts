@@ -5,7 +5,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { initWasm, TW } from '@trustwallet/wallet-core';
-import { grouped, sendSummary, summaryText, unitsText, type CoreLike } from '../src/sendSummary.ts';
+import { grouped, screenText, sendSummary, unitsText, type CoreLike } from '../src/sendSummary.ts';
+import { kotlin, swift } from '../scripts/gen-send-screen-text.mjs';
+import { readFileSync } from 'node:fs';
 import { bitcoinTransferInput, evmCallInput, evmTransferInput, solanaTokenTransferInput, solanaTransferInput, tronTransferInput } from '../src/tx.ts';
 
 const core = await initWasm();
@@ -13,7 +15,10 @@ const C = core.CoinType;
 const like = core as unknown as CoreLike;
 const b = (s: string) => Uint8Array.from(Buffer.from(s, 'base64'));
 const sum = (coin: unknown, inputs: string[], hint?: { to?: string }) => sendSummary(like, coin, inputs.map(b), hint);
-const text = (coin: unknown, inputs: string[], hint?: { to?: string }) => summaryText(sum(coin, inputs, hint));
+const text = (coin: unknown, inputs: string[], hint?: { to?: string }) => {
+  const x = screenText(sum(coin, inputs, hint));
+  return { title: x.title, network: x.network, to: x.to, fee: x.fee, warning: x.warning };
+};
 
 const block = { number: 70_000_000, timestamp: 1_760_000_000_000, txTrieRoot: '00'.repeat(32), parentHash: '00'.repeat(32), witnessAddress: `41${'00'.repeat(20)}`, version: 30 };
 const ME = 'TR9dqsxAgkBpG5oDMA8FQmPjzfqNBErczM';
@@ -98,4 +103,22 @@ test('Solana: SOL, and a token only shows the owner address when it leads to the
   assert.equal(text(C.solana, [token(false)]).to, grouped(ata));
   assert.equal(sum(C.solana, [token(false)], { to: from }).kind, 'other');
   assert.equal(sum(C.solana, [token(true, from)]).kind, 'other');
+});
+
+test('the screen speaks the app language, and the tick is only for someone else\'s address', () => {
+  const s = sum(C.tron, [tron(FRIEND, 50_000_000n, USDT)]);
+  const de = screenText(s, 'de');
+  assert.equal(de.title, '50 USDT senden');
+  assert.ok(de.slide.length > 0 && de.slide !== 'Slide to send');
+  assert.ok(de.tick.length > 0);
+  assert.equal(screenText(s, 'de', { own: true }).tick, '');
+  assert.equal(screenText(s, 'en', { site: 'app.uniswap.org' }).site, 'Asked by app.uniswap.org');
+  assert.equal(screenText(s, 'xx').title, 'Send 50 USDT'); // unknown language: English
+});
+
+test('the Swift and Kotlin word lists are generated from the same file and up to date', () => {
+  assert.equal(readFileSync(new URL('../ios/SendScreenText.swift', import.meta.url), 'utf8'), swift());
+  assert.equal(readFileSync(new URL('../android/src/main/java/app/foxsafe/walletcore/SendScreenText.kt', import.meta.url), 'utf8'), kotlin());
+  const text = JSON.parse(readFileSync(new URL('../src/sendScreenText.json', import.meta.url), 'utf8'));
+  for (const [k, v] of Object.entries(text) as [string, Record<string, string>][]) assert.equal(Object.keys(v).length, 22, k);
 });
