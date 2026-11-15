@@ -143,13 +143,17 @@ class FoxsafeWalletCoreModule : Module() {
     }
 
     // Signing and showing the phrase (fingerprint / face / PIN on a real device)
-    AsyncFunction("signTransaction") { id: String, coin: Int, input: String, account: Int? ->
-      call { store.signTransaction(id, coin, input, account ?: 0, activity) }
+    AsyncFunction("signTransaction") { id: String, coin: Int, input: String, account: Int?, hint: String? ->
+      call { store.signTransaction(id, coin, input, account ?: 0, activity, hint) }
     }
+    // Marker: every send is shown on the secure send screen before the prompt (SPEC §7.13). `hint` = {lang?, to?}.
+    Function("confirmsSends") { true }
+    // Development builds only: lets the self-test sign without the screen. Does nothing in release builds.
+    Function("skipSendScreenForTests") { skip: Boolean -> if (BuildConfig.DEBUG) SecureSendScreen.skipForTests = skip }
     // Marker: this build's signTransactions also allows up to two energy payments (≤ 0.5 TRX each).
     Function("signsTronEnergyPayments") { true }
-    AsyncFunction("signTransactions") { id: String, coin: Int, inputs: List<String>, account: Int? ->
-      call { store.signTransactions(id, coin, inputs, account ?: 0, activity) }
+    AsyncFunction("signTransactions") { id: String, coin: Int, inputs: List<String>, account: Int?, hint: String? ->
+      call { store.signTransactions(id, coin, inputs, account ?: 0, activity, hint) }
     }
     // Vault payouts, one prompt (SPEC §7.10). `vaultAddress` is empty when this build has no Vault.
     Function("vaultAddress") { WalletStore.VaultPolicy.VAULT }

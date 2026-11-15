@@ -606,8 +606,40 @@ class WalletStore(context: Context) {
   }
 
   /** Pre-image hash → sign → compile (SPEC §7). The key never reaches JavaScript. */
-  fun signTransaction(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?): String =
-    signTransactions(id, coinValue, listOf(inputB64), account, activity)[0]
+  fun signTransaction(id: String, coinValue: Int, inputB64: String, account: Int, activity: FragmentActivity?, hint: String? = null): String =
+    signTransactions(id, coinValue, listOf(inputB64), account, activity, hint)[0]
+
+  // MARK: Secure send screen (SPEC §7.13)
+
+  /** [json] = the app's hint {lang?, to?}. Only the language and a Solana owner address (checked) are taken from it. */
+  private fun sendHint(json: String?): Pair<String, String?> {
+    val h = runCatching { JSONObject(json ?: return "en" to null) }.getOrNull() ?: return "en" to null
+    val lang = h.optString("lang").takeIf { SendScreenText.all.containsKey(it) } ?: "en"
+    return lang to h.optString("to").ifEmpty { null }
+  }
+
+  /** Every public address of every wallet on this phone (for "your own address"). Caller holds the lock. */
+  private fun ownAddresses(): Set<String> {
+    val out = mutableSetOf<String>()
+    for (key in main.keys("w.")) {
+      val all = runCatching { load(key.removePrefix("w.")).getJSONObject("addresses") }.getOrNull() ?: continue
+      for (acc in all.keys()) {
+        val byCoin = all.optJSONObject(acc) ?: continue
+        for (coinKey in byCoin.keys()) byCoin.optString(coinKey).takeIf { it.isNotEmpty() }?.let { out += if (it.startsWith("0x")) it.lowercase() else it }
+      }
+    }
+    return out
+  }
+
+  /** Shows the secure send screen and throws if the user cancels. Caller holds the lock; runs before the prompt. */
+  private fun confirmSend(summary: SendSummary, activity: FragmentActivity?, lang: String, site: String? = null, feeIsToken: Boolean = false) {
+    val to = if (summary.to.startsWith("0x")) summary.to.lowercase() else summary.to
+    val own = to.isNotEmpty() && to in ownAddresses()
+    if (!SecureSendScreen.confirm(activity, summary.screen(lang, own, site, feeIsToken))) throw WalletException("INVALID", "send cancelled")
+  }
+
+  /** The `hint` string inside a dApp request JSON, if any. */
+  private fun dappHint(request: String): String? = runCatching { JSONObject(request).optString("hint").ifEmpty { null } }.getOrNull()
 
   /**
    * A transaction plus Foxsafe's network-fee extras with one fingerprint / face prompt (gasless).
@@ -617,7 +649,7 @@ class WalletStore(context: Context) {
    * that TRX first, founder 14 Nov 2026), all from this wallet. So even a tampered app can't use one
    * prompt to pay anyone else more than 2 × 0.5 TRX.
    */
-  fun signTransactions(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
+  fun signTransactions(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?, hint: String? = null): List<String> = synchronized(lock) {
     val c = coin(coinValue)
     if (inputsB64.size !in 1..4) throw WalletException("INVALID", "bad inputs")
     // A TRON input can carry a second transaction as raw JSON, which the signer would sign INSTEAD of
@@ -627,6 +659,9 @@ class WalletStore(context: Context) {
     val extras = inputs.drop(1).map { gaslessExtraOwner(it, c) }
     if (extras.count { it.first == GaslessExtra.FEE } > 1) throw WalletException("INVALID", "only one fee transfer is allowed")
     if (extras.count { it.first == GaslessExtra.ENERGY } > 2) throw WalletException("INVALID", "at most two energy payments are allowed")
+    // What is really signed, on a screen the app can't draw or press (SPEC §7.13).
+    val (lang, hintTo) = sendHint(hint)
+    confirmSend(SendSummary.read(inputs, c, hintTo), activity, lang)
     withSecret(id, activity, if (inputs.size > 1) "Confirm the transfer and its network fee" else "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
       val own = c.deriveAddress(key)
@@ -978,6 +1013,12 @@ class WalletStore(context: Context) {
     val initCode = message.optString("initCode", "0x").lowercase()
     if (if (upgradeNonce >= 0) initCode != EvmFeePolicy.DELEGATE.lowercase() else initCode != "0x" && initCode.isNotEmpty()) throw bad("unexpected account upgrade")
     val sender = message.optString("sender").lowercase()
+    run {
+      val known = SendSummary.KNOWN_TOKENS["evm:$chainId"]?.get(token)
+      val summary = SendSummary(true, wallet.core.jni.CoinTypeConfiguration.getName(c), known?.first, known?.second ?: decimals, token,
+        amount = amount.toString(), to = req.optString("to").lowercase(), value = fee.toString())
+      confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true)
+    }
 
     withSecret(id, activity, "Confirm the transfer and its network fee") { r ->
       val key = privateKey(r, c, account)
@@ -1857,6 +1898,7 @@ class WalletStore(context: Context) {
       Ethereum.Transaction.TransactionOneofCase.CONTRACT_GENERIC -> {}
       else -> throw bad("unsupported transaction")
     }
+    confirmSend(SendSummary.read(listOf(data), c, null), activity, sendHint(dappHint(request)).first, site = req.origin)
     withSecret(id, activity, "Confirm the transaction for ${req.origin}") { r ->
       val key = privateKey(r, c, account)
       if (c.deriveAddress(key).lowercase() != req.address.lowercase()) throw bad("not the connected account")
@@ -2014,6 +2056,11 @@ class WalletStore(context: Context) {
     if (!(PB.bytes(value, 1).firstOrNull()?.contentEquals(accountBytes) ?: false)) throw bad("not from this account")
     val digest = Hash.sha256(raw)
     if (req.txID != null && req.txID != hex(digest)) throw bad("the transaction is not the one shown")
+    confirmSend(
+      SendSummary.tronRaw(type, PB.bytes(value, 2).firstOrNull(), PB.ints(value, 3).firstOrNull(), PB.bytes(value, 2).firstOrNull(),
+        if (type == 31L) PB.ints(value, 3).firstOrNull() ?: 0L else 0L, PB.bytes(value, 4).firstOrNull()),
+      activity, sendHint(dappHint(request)).first, site = req.origin,
+    )
     withSecret(id, activity, "Confirm the transaction for ${req.origin}") { r ->
       val key = privateKey(r, CoinType.TRON, account)
       if (CoinType.TRON.deriveAddress(key) != req.address) throw bad("not the connected account")
@@ -2062,6 +2109,12 @@ class WalletStore(context: Context) {
     val createRecipient = req.optBoolean("createRecipient")
     if (toIsTokenAccount && createRecipient) throw bad("inconsistent receiver")
 
+    run {
+      val known = SendSummary.KNOWN_TOKENS["solana"]?.get(mint)
+      val summary = SendSummary(true, wallet.core.jni.CoinTypeConfiguration.getName(CoinType.SOLANA), known?.first, known?.second ?: decimals.toInt(), mint,
+        amount = amount.toString(), to = to, value = fee.toString())
+      confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true)
+    }
     withSecret(id, activity, "Confirm the transfer and its network fee") { r ->
       val key = privateKey(r, CoinType.SOLANA, account)
       val user = CoinType.SOLANA.deriveAddress(key)

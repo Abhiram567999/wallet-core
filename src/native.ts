@@ -87,14 +87,18 @@ export interface NativeWalletCore {
 
   // Signing. `input` is a Trust Wallet Core SigningInput protobuf (base64)
   // built WITHOUT a private key; returns the SigningOutput protobuf (base64).
-  signTransaction(id: string, coin: CoinType, input: string, account?: number): Promise<string>;
+  signTransaction(id: string, coin: CoinType, input: string, account?: number, hint?: string): Promise<string>;
   /**
    * A transaction plus Foxsafe's network-fee extras with ONE Face ID: at most one fee transfer
    * (TRON USDT, ≤ 5 USDT, to the fee wallet built into the native code) and, from builds with
    * `signsTronEnergyPayments`, at most two energy payments (plain TRX, ≤ 0.5 TRX each), all from
    * this wallet. Anything else is refused natively. Builds from 2026-10-23 on; use `signTransactions` below.
    */
-  signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]>;
+  signTransactions?(id: string, coin: CoinType, inputs: string[], account?: number, hint?: string): Promise<string[]>;
+  /** Build 22 on: every send is shown on the secure send screen before Face ID (SPEC §7.13). */
+  confirmsSends?(): boolean;
+  /** Development builds only (the self-test). */
+  skipSendScreenForTests?(skip: boolean): void;
   /** Present (returns true) in builds whose signTransactions allows TRON energy payments (SPEC §7.2). */
   signsTronEnergyPayments?(): boolean;
   /** The Vault's TRON address compiled into this build ('' = none). Build 19 on (SPEC §7.10). */
@@ -225,8 +229,20 @@ export function signVaultRound(id: string, coin: CoinType, inputs: string[], acc
   return native.signVaultRound(id, coin, inputs, account);
 }
 
-export async function signTransactions(id: string, coin: CoinType, inputs: string[], account?: number): Promise<string[]> {
-  if (typeof native?.signTransactions === 'function') return native.signTransactions(id, coin, inputs, account);
+/**
+ * What the secure send screen may use from the app (SPEC §7.13): the app's language, and for a Solana
+ * token send the receiver's own address (the native code checks it leads to the signed token account).
+ */
+export interface SendHint {
+  lang?: string;
+  to?: string;
+}
+
+/** This build shows every send on the native secure screen (the tick and the slide live there). */
+export const canConfirmSends = () => native?.confirmsSends?.() === true;
+
+export async function signTransactions(id: string, coin: CoinType, inputs: string[], account?: number, hint?: SendHint): Promise<string[]> {
+  if (typeof native?.signTransactions === 'function') return native.signTransactions(id, coin, inputs, account, hint ? JSON.stringify(hint) : undefined);
   const out: string[] = [];
   for (const input of inputs) out.push(await WalletCore.signTransaction(id, coin, input, account));
   return out;

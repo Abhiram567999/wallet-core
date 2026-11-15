@@ -164,6 +164,8 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const m = v.derivation.mnemonic[0]!;
     const w = await WalletCore.importMnemonic({ name: 'Imported', words: `  ${m.words.toUpperCase()} `, kind: 'hd', solanaPath: 'trust', passcode: PASSCODE });
     importedId = w.id;
+    // Development builds: sign the test transactions without the secure send screen (SPEC §7.13).
+    (WalletCore as { skipSendScreenForTests?: (skip: boolean) => void }).skipSendScreenForTests?.(true);
     const got = await WalletCore.getAddresses(w.id, [0, 60, 195, 501]);
     for (const a of got) {
       const want = Object.values(m.addresses).find((x) => x.coin === a.coin)!.address;
