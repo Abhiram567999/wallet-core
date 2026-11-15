@@ -1073,7 +1073,7 @@ final class WalletStore {
     let sender = (message["sender"] as? String ?? "").lowercased()
     let checked = try Self.checkedJSON(td)
     let known = SendSummary.knownTokens["evm:\(chainId)"]?[token]
-    var summary = SendSummary(kind: .send, network: CoinTypeConfiguration.getName(type: coin), symbol: known?.0, decimals: known?.1 ?? decimals, contract: token)
+    var summary = SendSummary(kind: .send, network: SendSummary.networkName(coin), symbol: known?.0, decimals: known?.1 ?? decimals, contract: token)
     summary.amount = SendSummary.decimal(amount)
     summary.to = (req["to"] as? String ?? "").lowercased()
     summary.value = SendSummary.decimal(fee)
@@ -1973,7 +1973,7 @@ final class WalletStore {
 
   /// A dApp's TRON transaction (protobuf raw data) for the secure screen: TRX or a token transfer, else "not a simple send".
   static func tronRawSummary(type: UInt64, value: [(Int, PB.V)]) -> SendSummary {
-    let network = CoinTypeConfiguration.getName(type: .tron)
+    let network = SendSummary.networkName(.tron)
     var s = SendSummary(kind: .other, network: network)
     let addr = { (d: Data?) -> String in d.map { Base58.encode(data: $0) } ?? "" }
     if type == 1, let to = PB.bytes(value, 2).first, let amount = PB.ints(value, 3).first {
@@ -2064,7 +2064,7 @@ final class WalletStore {
     if flag("toIsTokenAccount") && flag("createRecipient") { throw bad("inconsistent receiver") }
     // The message is compared byte for byte below, after Face ID; the screen shows the same checked values.
     let known = SendSummary.knownTokens["solana"]?[mint]
-    var summary = SendSummary(kind: .send, network: CoinTypeConfiguration.getName(type: .solana), symbol: known?.0, decimals: known?.1 ?? Int(decimals), contract: mint)
+    var summary = SendSummary(kind: .send, network: SendSummary.networkName(.solana), symbol: known?.0, decimals: known?.1 ?? Int(decimals), contract: mint)
     summary.amount = String(amount)
     summary.to = to
     summary.value = String(fee)

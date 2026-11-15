@@ -32,6 +32,13 @@ struct SendSummary {
   ]
   static let tronUSDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
 
+  /// The network's name as the app writes it ("TRON", "BNB Chain"), not the library's ("Tron", "BNB Smart Chain").
+  static func networkName(_ coin: CoinType) -> String {
+    let names = ["Tron": "TRON", "BNB Smart Chain": "BNB Chain", "Smart Chain": "BNB Chain", "OP Mainnet": "Optimism"]
+    let n = CoinTypeConfiguration.getName(type: coin)
+    return names[n] ?? n
+  }
+
   /// Big-endian bytes as a decimal string (any length).
   static func decimal(_ bytes: Data) -> String {
     var digits: [UInt8] = [0] // little-endian base-10 digits
@@ -71,7 +78,7 @@ struct SendSummary {
   /// Reads `inputs` (the user's transaction, then gasless extras). `hintTo` is only used for a Solana token
   /// send, and only after proving it owns the signed token account.
   static func read(_ inputs: [Data], coin: CoinType, hintTo: String?) -> SendSummary {
-    let network = CoinTypeConfiguration.getName(type: coin)
+    let network = networkName(coin)
     var s = SendSummary(kind: .other, network: network)
     let nativeSymbol = CoinTypeConfiguration.getSymbol(type: coin)
     let nativeDecimals = Int(CoinTypeConfiguration.getDecimals(type: coin))

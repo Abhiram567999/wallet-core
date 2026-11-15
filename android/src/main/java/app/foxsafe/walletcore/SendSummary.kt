@@ -83,6 +83,13 @@ data class SendSummary(
     )
     const val TRON_USDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
 
+    /** The network's name as the app writes it ("TRON", "BNB Chain"), not the library's ("Tron", "BNB Smart Chain"). */
+    fun networkName(c: CoinType): String {
+      val names = mapOf("Tron" to "TRON", "BNB Smart Chain" to "BNB Chain", "Smart Chain" to "BNB Chain", "OP Mainnet" to "Optimism")
+      val n = CoinTypeConfiguration.getName(c)
+      return names[n] ?: n
+    }
+
     fun decimal(bytes: ByteArray): String = if (bytes.isEmpty()) "0" else BigInteger(1, bytes).toString()
 
     fun unitsText(raw: String, decimals: Int): String {
@@ -100,7 +107,7 @@ data class SendSummary(
 
     /** Reads [inputs] (the user's transaction, then gasless extras). [hintTo] is used only for a Solana token send, after proof. */
     fun read(inputs: List<ByteArray>, c: CoinType, hintTo: String?): SendSummary {
-      val network = CoinTypeConfiguration.getName(c)
+      val network = networkName(c)
       val s = SendSummary(false, network)
       val nativeSymbol = CoinTypeConfiguration.getSymbol(c)
       val nativeDecimals = CoinTypeConfiguration.getDecimals(c)
@@ -218,7 +225,7 @@ data class SendSummary(
 
     /** A dApp's TRON transaction (protobuf raw data, already parsed) for the secure screen. */
     fun tronRaw(type: Long, to: ByteArray?, amount: Long?, contract: ByteArray?, callValue: Long, data: ByteArray?): SendSummary {
-      val s = SendSummary(false, CoinTypeConfiguration.getName(CoinType.TRON))
+      val s = SendSummary(false, networkName(CoinType.TRON))
       if (type == 1L && to != null && amount != null) {
         s.send = true; s.symbol = "TRX"; s.decimals = 6; s.amount = amount.toString(); s.to = Base58.encode(to)
       } else if (type == 31L && contract != null) {

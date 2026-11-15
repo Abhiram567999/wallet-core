@@ -17,25 +17,61 @@ enum SecureSendScreen {
     #endif
     guard !Thread.isMainThread else { throw WalletError.crypto("the send screen can't wait on the main thread") }
     let done = DispatchSemaphore(value: 0)
-    var confirmed = false
-    var shown = false
-    DispatchQueue.main.async {
-      guard let top = topViewController() else { done.signal(); return }
-      shown = true
+    let state = State()
+
+    /// Presents once nothing else is appearing or closing. iOS silently ignores a present made while
+    /// another screen is mid-animation, so this waits (up to ~5 s) and then checks the screen is really up;
+    /// if it never appears the call fails instead of waiting forever (it holds the wallet lock).
+    func attempt(_ triesLeft: Int) {
+      guard let top = topViewController() else { state.fail(done); return }
+      if top.isBeingDismissed || top.isBeingPresented || top.presentedViewController?.isBeingDismissed == true {
+        guard triesLeft > 0 else { state.fail(done); return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { attempt(triesLeft - 1) }
+        return
+      }
       var host: UIHostingController<SecureSendView>?
       let finish = { (ok: Bool) in
-        confirmed = ok
-        host?.dismiss(animated: true) { done.signal() }
+        guard state.finish(ok) else { return }
+        if let h = host, h.presentingViewController != nil { h.dismiss(animated: true) { done.signal() } } else { done.signal() }
       }
       host = UIHostingController(rootView: SecureSendView(screen: screen, onDone: finish))
       host!.modalPresentationStyle = .pageSheet
       host!.isModalInPresentation = true // no swipe-away: Cancel or the slide only
       if let sheet = host!.sheetPresentationController { sheet.detents = [.large()]; sheet.prefersGrabberVisible = false }
       top.present(host!, animated: true)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        if host?.presentingViewController == nil { state.fail(done) }
+      }
     }
-    done.wait()
-    guard shown else { throw WalletError.crypto("could not show the send screen") }
-    return confirmed
+    DispatchQueue.main.async { attempt(20) }
+
+    // Ten minutes at most, then it counts as cancelled (nothing is signed).
+    if done.wait(timeout: .now() + 600) == .timedOut {
+      DispatchQueue.main.async { if state.finish(false) { topViewController()?.dismiss(animated: true) } }
+      throw WalletError.invalid("send cancelled: the screen timed out")
+    }
+    if state.failed { throw WalletError.crypto("could not show the send screen. Try again.") }
+    return state.confirmed
+  }
+
+  /// What happened, set once on the main thread and read after the wait.
+  private final class State {
+    private(set) var confirmed = false
+    private(set) var failed = false
+    private var settled = false
+    /// The user's answer; false if something already settled it.
+    func finish(_ ok: Bool) -> Bool {
+      guard !settled else { return false }
+      settled = true
+      confirmed = ok
+      return true
+    }
+    func fail(_ done: DispatchSemaphore) {
+      guard !settled else { return }
+      settled = true
+      failed = true
+      done.signal()
+    }
   }
 
   private static func topViewController() -> UIViewController? {

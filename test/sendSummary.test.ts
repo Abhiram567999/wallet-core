@@ -37,7 +37,7 @@ test('amounts are exact decimal text', () => {
 });
 
 test('TRON: TRX and USDT sends, with the fee-free extras', () => {
-  assert.deepEqual(text(C.tron, [tron(FRIEND, 2_500_000n)]), { title: 'Send 2.5 TRX', network: 'on Tron', to: grouped(FRIEND), fee: '', warning: '' });
+  assert.deepEqual(text(C.tron, [tron(FRIEND, 2_500_000n)]), { title: 'Send 2.5 TRX', network: 'on TRON', to: grouped(FRIEND), fee: '', warning: '' });
   const fee = tron('TRmToStoTAxU414feHAS67w33Qzi4VyEVJ', 2_000_000n, USDT);
   const energy = tron('TXQ6ejLmJuptqNvRDTFuC8GFzamWeCscLb', 100_000n);
   const t = text(C.tron, [tron(FRIEND, 50_000_000n, USDT), fee, energy, energy]);
@@ -66,7 +66,7 @@ const TO = '0x52908400098527886E0F7030069857D2E4169EE7';
 test('EVM: coin and token sends name the network the signature is valid on', () => {
   assert.equal(text(C.ethereum, [evmTransferInput({ ...evm, chainId: 1n, to: TO, amount: 10n ** 17n })]).title, 'Send 0.1 ETH');
   const usdt = text(C.smartChain, [evmTransferInput({ ...evm, chainId: 56n, to: TO, amount: 5n * 10n ** 18n, token: '0x55d398326f99059fF775485246999027B3197955' })]);
-  assert.deepEqual([usdt.title, usdt.network, usdt.to], ['Send 5 USDT', 'on BNB Smart Chain', grouped(TO.toLowerCase())]);
+  assert.deepEqual([usdt.title, usdt.network, usdt.to], ['Send 5 USDT', 'on BNB Chain', grouped(TO.toLowerCase())]);
   // Labelled BNB Chain by the app, signed for Ethereum: not described as a send.
   assert.equal(sum(C.smartChain, [evmTransferInput({ ...evm, chainId: 1n, to: TO, amount: 1n })]).kind, 'other');
 });

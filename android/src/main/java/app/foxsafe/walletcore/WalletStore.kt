@@ -1015,7 +1015,7 @@ class WalletStore(context: Context) {
     val sender = message.optString("sender").lowercase()
     run {
       val known = SendSummary.KNOWN_TOKENS["evm:$chainId"]?.get(token)
-      val summary = SendSummary(true, wallet.core.jni.CoinTypeConfiguration.getName(c), known?.first, known?.second ?: decimals, token,
+      val summary = SendSummary(true, SendSummary.networkName(c), known?.first, known?.second ?: decimals, token,
         amount = amount.toString(), to = req.optString("to").lowercase(), value = fee.toString())
       confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true)
     }
@@ -2111,7 +2111,7 @@ class WalletStore(context: Context) {
 
     run {
       val known = SendSummary.KNOWN_TOKENS["solana"]?.get(mint)
-      val summary = SendSummary(true, wallet.core.jni.CoinTypeConfiguration.getName(CoinType.SOLANA), known?.first, known?.second ?: decimals.toInt(), mint,
+      val summary = SendSummary(true, SendSummary.networkName(CoinType.SOLANA), known?.first, known?.second ?: decimals.toInt(), mint,
         amount = amount.toString(), to = to, value = fee.toString())
       confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true)
     }

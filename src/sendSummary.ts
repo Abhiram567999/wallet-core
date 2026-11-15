@@ -83,6 +83,10 @@ export const KNOWN_TOKENS: Record<string, Record<string, { symbol: string; decim
 
 const TRON_USDT = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
 
+/** The library's network names, as the app writes them ("TRON", "BNB Chain"). */
+const NETWORK_NAMES: Record<string, string> = { Tron: 'TRON', 'BNB Smart Chain': 'BNB Chain', 'Smart Chain': 'BNB Chain', 'OP Mainnet': 'Optimism' };
+export const networkName = (libraryName: string): string => NETWORK_NAMES[libraryName] ?? libraryName;
+
 const bytesToBig = (b: Uint8Array | null | undefined): bigint => {
   let v = 0n;
   for (const x of b ?? []) v = (v << 8n) | BigInt(x);
@@ -104,7 +108,7 @@ function erc20Transfer(data: Uint8Array): { to: string; amount: bigint } | null 
  */
 export function sendSummary(core: CoreLike, coin: unknown, inputs: Uint8Array[], hint: { to?: string } = {}): SendSummary {
   const C = core.CoinTypeConfiguration;
-  const network = C.getName(coin);
+  const network = networkName(C.getName(coin));
   const native: Asset = { symbol: C.getSymbol(coin), decimals: C.getDecimals(coin) };
   const chain = core.CoinTypeExt.blockchain(coin).value;
   const B = core.Blockchain;
