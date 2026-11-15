@@ -184,7 +184,7 @@ export function sendSummary(core: CoreLike, coin: unknown, inputs: Uint8Array[],
 
   if (chain === B.solana!.value) {
     const input = TW.Solana.Proto.SigningInput.decode(first);
-    if (input.rawMessage || (input.privateKeys?.length ?? 0) > 0) return other();
+    if (input.rawMessage || (input.privateKey?.length ?? 0) > 0) return other();
     if (input.transferTransaction) {
       const t = input.transferTransaction;
       const s: SendSummary = { kind: 'send', network, asset: native, amount: String(t.value ?? 0), to: t.recipient ?? '' };
