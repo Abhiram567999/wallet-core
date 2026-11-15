@@ -747,7 +747,39 @@ final class WalletStore {
     /// USDT may only go here (the founder's hardware wallet: the round's profit).
     static let hardwareWallet = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
     static let maxInputs = 8
-    static let maxTrxPerRoundSun: Int64 = 3_000_000_000 // 3,000 TRX
+    /// Most TRX one round may pay, and most TRX the Vault may pay in one UTC day (founder, 16 Nov 2026).
+    static let maxTrxPerRoundSun: Int64 = 1_000_000_000 // 1,000 TRX
+    static let maxTrxPerDaySun: Int64 = 1_000_000_000 // 1,000 TRX
+    /// The only addresses Vault TRX may go to (founder checked them, 16 Nov 2026). A new deposit address needs a new build.
+    static let trxReceivers: Set<String> = [
+      "TT2mzRS777y9518hxKfVL2DTuMG1BpUSqE", // Netts deposit
+      "TJm8MZnZWJdV9ArThSBBtSmSktanSdhe79", // CatFee deposit
+      "THeYpVaHfJkT99TbTskXqeEmi8AyiqYn2U", // TronSave deposit
+      "TB7nNA9KGhXAsjreaGZmuasTdfYEZhx4Yw", // Foxsafe's top-up wallet (0.1 TRX route)
+      // "Send 0.1 TRX, get energy" sellers (energy for the profit transfer), as in the app's energySellers.ts.
+      "TXQ6ejLmJuptqNvRDTFuC8GFzamWeCscLb", "TW1MxjQSJdSFBEU5gwciN6668WfRUggQjv", "TKnrsgMVMg5eo4eXb7mCmcUzBsGBoukgiB",
+      "TN6U9hEWe6xYRFwWCqubMh1GG8YdqvhiYH", "TRy4P7VtpXWeoekqqyJjGzavQeFA4h5XhL",
+    ]
+    /// TRX signed today: {day: "YYYY-MM-DD" (UTC), sun}. Kept beside the recovery copy, so a reinstall doesn't reset it.
+    static let spentAccount = "vault.spent"
+
+    static func today(_ now: Date = Date()) -> String {
+      let f = DateFormatter()
+      f.calendar = Calendar(identifier: .gregorian)
+      f.locale = Locale(identifier: "en_US_POSIX")
+      f.timeZone = TimeZone(identifier: "UTC")
+      f.dateFormat = "yyyy-MM-dd"
+      return f.string(from: now)
+    }
+  }
+
+  private struct VaultSpent: Codable { var day: String; var sun: Int64 }
+
+  /// TRX the Vault has signed for today (UTC).
+  private func vaultSpentToday() -> Int64 {
+    guard let raw = try? recovery.get(VaultPolicy.spentAccount),
+          let s = try? JSONDecoder().decode(VaultSpent.self, from: Data(raw.utf8)), s.day == VaultPolicy.today() else { return 0 }
+    return max(0, s.sun)
   }
 
   /// Signs a Vault payout round: 1–8 TRON transactions from the Vault, each either plain TRX (any
@@ -770,7 +802,8 @@ final class WalletStore {
       guard input.transaction.memo.isEmpty else { throw WalletError.invalid("a vault payout can't carry a note") }
       switch input.transaction.contractOneof {
       case .transfer(let t)?:
-        guard t.amount > 0, t.amount <= VaultPolicy.maxTrxPerRoundSun else { throw WalletError.invalid("a vault round may send at most 3,000 TRX") }
+        guard t.amount > 0, t.amount <= VaultPolicy.maxTrxPerRoundSun else { throw WalletError.invalid("a vault round may send at most 1,000 TRX") }
+        guard VaultPolicy.trxReceivers.contains(t.toAddress) else { throw WalletError.invalid("TRX from the vault may only go to an address on the Vault's list") }
         trx += t.amount
         owners.insert(t.ownerAddress)
       case .transferTrc20Contract(let t)?:
@@ -782,13 +815,21 @@ final class WalletStore {
         throw WalletError.invalid("a vault payout may only send TRX, or USDT to the hardware wallet")
       }
     }
-    guard trx <= VaultPolicy.maxTrxPerRoundSun else { throw WalletError.invalid("a vault round may send at most 3,000 TRX") }
+    guard trx <= VaultPolicy.maxTrxPerRoundSun else { throw WalletError.invalid("a vault round may send at most 1,000 TRX") }
     guard owners.count == 1, let owner = owners.first else { throw WalletError.invalid("every payout must come from the same wallet") }
     guard !VaultPolicy.vault.isEmpty, owner == VaultPolicy.vault else { throw WalletError.invalid("only the Vault can sign a payout round") }
+    let spent = vaultSpentToday()
+    guard spent + trx <= VaultPolicy.maxTrxPerDaySun else {
+      throw WalletError.invalid("the vault may send at most 1,000 TRX a day (\((VaultPolicy.maxTrxPerDaySun - spent) / 1_000_000) TRX left today)")
+    }
     return try withSecrets([id], reason: "Approve the Vault payouts") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       guard coin.deriveAddress(privateKey: key) == owner else { throw WalletError.invalid("this wallet is not the Vault") }
-      return try inputs.map { try Self.signOne($0, key: key, coin: coin) }
+      let signed = try inputs.map { try Self.signOne($0, key: key, coin: coin) }
+      // Counted when signed (even if it is never sent), so the limit can't be beaten by not reporting a send.
+      let next = VaultSpent(day: VaultPolicy.today(), sun: vaultSpentToday() + trx)
+      try recovery.set(String(decoding: try JSONEncoder().encode(next), as: UTF8.self), for: VaultPolicy.spentAccount)
+      return signed
     }
   }
 

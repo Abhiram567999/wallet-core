@@ -269,10 +269,11 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const usd = (to: string, amount: bigint, owner = from) => tronTransferInput({ from: owner, to, amount, token: usdt, feeLimit: 30_000_000n, ...base });
     // The reason shows which rule refused it; shape rules are checked before the Vault check.
     const why = (inputs: string[]) => signVaultRound(importedId, 195, inputs).then(() => 'signed', (e: Error) => String(e?.message ?? e));
-    const netts = 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN';
+    const netts = 'TT2mzRS777y9518hxKfVL2DTuMG1BpUSqE'; // on the Vault's list (Netts deposit)
     const cases: [string[], RegExp, string][] = [
       [[usd('TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV', 1_000_000n)], /hardware wallet/, 'USDT to someone else'],
-      [[trx(netts, 2_000_000_000n), trx(netts, 1_500_000_000n)], /3,000 TRX/, 'more than 3,000 TRX'],
+      [[trx('TCEezhePNTyie5gkrb77zAZLBx9RMffLuN', 1_000_000n)], /Vault's list/, 'TRX to an address not on the list'],
+      [[trx(netts, 600_000_000n), trx(netts, 500_000_000n)], /1,000 TRX/, 'more than 1,000 TRX'],
       [[trx(netts, 1_000_000n, from, 'hi')], /note/, 'a payout with a note'],
       [Array.from({ length: 9 }, () => trx(netts, 1_000_000n)), /1 to 8/, 'nine transactions'],
       [[trx(netts, 1_000_000n), trx(netts, 1_000_000n, 'TRdfD4J3ddSMV5nu5hFDvwzQA4MLS3XdiV')], /same wallet/, 'payouts from two wallets'],
@@ -286,7 +287,7 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const r = await why(good);
     if (vaultAddress() === from) return `good round: ${r}`;
     expect(r !== 'signed' && /only the Vault/.test(r), `a round from a non-Vault wallet was not refused ("${r}")`);
-    return `5 bad rounds refused for the right reason; a good round from a non-Vault wallet refused; Vault = ${vaultAddress() || 'none in this build'}`;
+    return `6 bad rounds refused for the right reason; a good round from a non-Vault wallet refused; Vault = ${vaultAddress() || 'none in this build'}`;
   });
 
   await check('gasless EVM: one Face ID signs the operation and the 7702 upgrade; tampering is refused', async () => {

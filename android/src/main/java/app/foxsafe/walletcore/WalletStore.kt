@@ -694,7 +694,30 @@ class WalletStore(context: Context) {
     /** USDT may only go here (the founder's hardware wallet: the round's profit). */
     const val HARDWARE_WALLET = "TRmToStoTAxU414feHAS67w33Qzi4VyEVJ"
     const val MAX_INPUTS = 8
-    const val MAX_TRX_PER_ROUND_SUN = 3_000_000_000L // 3,000 TRX
+    /** Most TRX one round may pay, and most TRX the Vault may pay in one UTC day (founder, 16 Nov 2026). */
+    const val MAX_TRX_PER_ROUND_SUN = 1_000_000_000L // 1,000 TRX
+    const val MAX_TRX_PER_DAY_SUN = 1_000_000_000L // 1,000 TRX
+    /** The only addresses Vault TRX may go to (founder checked them, 16 Nov 2026). A new deposit address needs a new build. */
+    val TRX_RECEIVERS = setOf(
+      "TT2mzRS777y9518hxKfVL2DTuMG1BpUSqE", // Netts deposit
+      "TJm8MZnZWJdV9ArThSBBtSmSktanSdhe79", // CatFee deposit
+      "THeYpVaHfJkT99TbTskXqeEmi8AyiqYn2U", // TronSave deposit
+      "TB7nNA9KGhXAsjreaGZmuasTdfYEZhx4Yw", // Foxsafe's top-up wallet (0.1 TRX route)
+      // "Send 0.1 TRX, get energy" sellers (energy for the profit transfer), as in the app's energySellers.ts.
+      "TXQ6ejLmJuptqNvRDTFuC8GFzamWeCscLb", "TW1MxjQSJdSFBEU5gwciN6668WfRUggQjv", "TKnrsgMVMg5eo4eXb7mCmcUzBsGBoukgiB",
+      "TN6U9hEWe6xYRFwWCqubMh1GG8YdqvhiYH", "TRy4P7VtpXWeoekqqyJjGzavQeFA4h5XhL",
+    )
+    /** TRX signed today: {day: "YYYY-MM-DD" (UTC), sun}. */
+    const val SPENT_KEY = "vault.spent"
+
+    fun today(now: Long = System.currentTimeMillis()): String =
+      java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).apply { timeZone = java.util.TimeZone.getTimeZone("UTC") }.format(java.util.Date(now))
+  }
+
+  /** TRX the Vault has signed for today (UTC). */
+  private fun vaultSpentToday(): Long {
+    val s = runCatching { JSONObject(main.get(VaultPolicy.SPENT_KEY) ?: return 0L) }.getOrNull() ?: return 0L
+    return if (s.optString("day") == VaultPolicy.today()) maxOf(0L, s.optLong("sun")) else 0L
   }
 
   /**
@@ -714,7 +737,8 @@ class WalletStore(context: Context) {
       when {
         tx.hasTransfer() -> {
           val t = tx.transfer
-          if (t.amount <= 0 || t.amount > VaultPolicy.MAX_TRX_PER_ROUND_SUN) throw WalletException("INVALID", "a vault round may send at most 3,000 TRX")
+          if (t.amount <= 0 || t.amount > VaultPolicy.MAX_TRX_PER_ROUND_SUN) throw WalletException("INVALID", "a vault round may send at most 1,000 TRX")
+          if (t.toAddress !in VaultPolicy.TRX_RECEIVERS) throw WalletException("INVALID", "TRX from the vault may only go to an address on the Vault's list")
           trx += t.amount
           owners += t.ownerAddress
         }
@@ -728,14 +752,21 @@ class WalletStore(context: Context) {
         else -> throw WalletException("INVALID", "a vault payout may only send TRX, or USDT to the hardware wallet")
       }
     }
-    if (trx > VaultPolicy.MAX_TRX_PER_ROUND_SUN) throw WalletException("INVALID", "a vault round may send at most 3,000 TRX")
+    if (trx > VaultPolicy.MAX_TRX_PER_ROUND_SUN) throw WalletException("INVALID", "a vault round may send at most 1,000 TRX")
     if (owners.size != 1) throw WalletException("INVALID", "every payout must come from the same wallet")
     val owner = owners.first()
     if (VaultPolicy.VAULT.isEmpty() || owner != VaultPolicy.VAULT) throw WalletException("INVALID", "only the Vault can sign a payout round")
+    val spent = vaultSpentToday()
+    if (spent + trx > VaultPolicy.MAX_TRX_PER_DAY_SUN) {
+      throw WalletException("INVALID", "the vault may send at most 1,000 TRX a day (${(VaultPolicy.MAX_TRX_PER_DAY_SUN - spent) / 1_000_000} TRX left today)")
+    }
     withSecret(id, activity, "Approve the Vault payouts") { r ->
       val key = privateKey(r, c, account)
       if (c.deriveAddress(key) != owner) throw WalletException("INVALID", "this wallet is not the Vault")
-      inputs.map { signOne(it, key, c) }
+      val signed = inputs.map { signOne(it, key, c) }
+      // Counted when signed (even if it is never sent), so the limit can't be beaten by not reporting a send.
+      main.set(VaultPolicy.SPENT_KEY, JSONObject().put("day", VaultPolicy.today()).put("sun", vaultSpentToday() + trx).toString())
+      signed
     }
   }
 

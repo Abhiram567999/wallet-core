@@ -516,15 +516,20 @@ approves them on the phone (founder, 14 Nov 2026).
 - `FeePolicy` accepts USDT fees to the hardware wallet `TRmToSto…yEVJ` **or**
   the Vault (`VaultPolicy.vault`, compiled in; empty = no Vault).
 - `signVaultRound(id, coin, inputs)` signs 1–8 TRON transactions with ONE
-  Face ID. Before Face ID: every input is a plain TRX transfer (any receiver,
-  at most 3,000 TRX in all) or a USDT `transfer` to the hardware wallet; no
-  notes; all from one sender, and that sender is the compiled Vault address.
-  After Face ID: the key's address must be the Vault.
+  Face ID. Before Face ID: every input is a plain TRX transfer to an address
+  on the compiled list (`VaultPolicy.trxReceivers`: the Netts, CatFee and
+  TronSave deposit addresses, Foxsafe's top-up wallet and the energy sellers;
+  founder, 16 Nov 2026) or a USDT `transfer` to the hardware wallet; no
+  notes; all from one sender, and that sender is the compiled Vault address;
+  at most 1,000 TRX in the round and at most 1,000 TRX signed in the same UTC
+  day (counted when signed, kept beside the recovery copy on iOS and in the
+  main store on Android). After Face ID: the key's address must be the Vault.
 - The swap (USDT → TRX) is a separate, normal Swap with its own Face ID.
 
-Worst case for one "Approve the Vault payouts" Face ID with a fully
-compromised app and server: 3,000 TRX per round from the Vault; USDT can only
-go to his own hardware wallet. This limits `signVaultRound` only: the plain
+Worst case through `signVaultRound` with a fully compromised app and server:
+1,000 TRX a day from the Vault, and only to Foxsafe's own provider accounts and
+sellers; USDT can only go to his own hardware wallet. A new deposit address
+needs a new build. This limits `signVaultRound` only: the plain
 `signTransaction` is not limited for the Vault either (§7.12).
 
 ### 7.11 Polymarket (build 20 on)
@@ -670,7 +675,6 @@ Still open, by design or waiting for a decision:
   prompt can cover beyond that, and what a dApp can ask for; they do not stop
   a tampered app from asking for a normal send to another address. The
   instant-update signing key must be guarded accordingly.
-- Vault TRX receivers are not compiled in and there is no per-day cap.
 - `wipe` and `deleteRecovery` need no passcode (the "forgot my passcode,
   start again" path uses them).
 - Android: the Keystore key is not StrongBox-backed and the app's settings

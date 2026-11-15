@@ -78,3 +78,19 @@ test('passcode: wrong tries are limited natively, and setting the backup passwor
   assert.ok(swift.includes('try PasscodeTries.checkAllowed(recovery)') && kotlin.includes('triesAllowed()'));
   assert.ok(swift.includes('reason: "Set your backup password"') && kotlin.includes('"Set your backup password"'));
 });
+
+test('Vault: TRX only to the listed addresses, at most 1,000 TRX a round and a day, the same on both platforms', () => {
+  const list = ['TT2mzRS777y9518hxKfVL2DTuMG1BpUSqE', 'TJm8MZnZWJdV9ArThSBBtSmSktanSdhe79', 'THeYpVaHfJkT99TbTskXqeEmi8AyiqYn2U', 'TB7nNA9KGhXAsjreaGZmuasTdfYEZhx4Yw',
+    'TXQ6ejLmJuptqNvRDTFuC8GFzamWeCscLb', 'TW1MxjQSJdSFBEU5gwciN6668WfRUggQjv', 'TKnrsgMVMg5eo4eXb7mCmcUzBsGBoukgiB', 'TN6U9hEWe6xYRFwWCqubMh1GG8YdqvhiYH', 'TRy4P7VtpXWeoekqqyJjGzavQeFA4h5XhL'];
+  for (const a of list) {
+    assert.ok(swift.includes(`"${a}"`) && kotlin.includes(`"${a}"`), a);
+    assert.ok(core.AnyAddress.isValid(a, CoinType.tron), `${a} is a valid TRON address`);
+  }
+  assert.match(swift, /maxTrxPerRoundSun: Int64 = 1_000_000_000/);
+  assert.match(swift, /maxTrxPerDaySun: Int64 = 1_000_000_000/);
+  assert.match(kotlin, /MAX_TRX_PER_ROUND_SUN = 1_000_000_000L/);
+  assert.match(kotlin, /MAX_TRX_PER_DAY_SUN = 1_000_000_000L/);
+  // Every energy seller the app may pay is on the Vault's list too, so a round's 0.1 TRX payment is never refused.
+  const sellers = readFileSync(new URL('../../app/src/chain/energySellers.ts', import.meta.url), 'utf8');
+  for (const m of sellers.matchAll(/address: '(T[1-9A-HJ-NP-Za-km-z]{33})'/g)) assert.ok(list.includes(m[1]!), `seller ${m[1]} is on the Vault's list`);
+});
