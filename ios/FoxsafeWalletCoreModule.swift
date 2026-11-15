@@ -163,13 +163,19 @@ public class FoxsafeWalletCoreModule: Module {
     }
 
     // Signing and showing the phrase (ask for Face ID / passcode on device)
-    AsyncFunction("signTransaction") { (id: String, coin: Int, input: String, account: Int?) in
-      try run { try self.store.signTransaction(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account)) }
+    AsyncFunction("signTransaction") { (id: String, coin: Int, input: String, account: Int?, hint: String?) in
+      try run { try self.store.signTransaction(id: id, coin: try u32(coin), inputBase64: input, account: try idx(account), hint: hint) }
     }
+    // Marker: every send is shown on the secure send screen before Face ID (SPEC §7.13). `hint` = {lang?, to?}.
+    Function("confirmsSends") { () -> Bool in true }
+    #if DEBUG
+      // Development builds only: lets the self-test sign without the screen. Release builds have no such switch.
+      Function("skipSendScreenForTests") { (skip: Bool) in SecureSendScreen.skipForTests = skip }
+    #endif
     // Marker: this build's signTransactions also allows up to two energy payments (≤ 0.5 TRX each).
     Function("signsTronEnergyPayments") { () -> Bool in true }
-    AsyncFunction("signTransactions") { (id: String, coin: Int, inputs: [String], account: Int?) in
-      try run { try self.store.signTransactions(id: id, coin: try u32(coin), inputsBase64: inputs, account: try idx(account)) }
+    AsyncFunction("signTransactions") { (id: String, coin: Int, inputs: [String], account: Int?, hint: String?) in
+      try run { try self.store.signTransactions(id: id, coin: try u32(coin), inputsBase64: inputs, account: try idx(account), hint: hint) }
     }
     // Vault payouts, one Face ID (SPEC §7.10). `vaultAddress` is empty when this build has no Vault.
     Function("vaultAddress") { () -> String in WalletStore.VaultPolicy.vault }

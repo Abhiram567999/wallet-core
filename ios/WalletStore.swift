@@ -644,8 +644,36 @@ final class WalletStore {
 
   /// Signs a Trust Wallet Core SigningInput built without a key:
   /// pre-image hash, sign inside this process, compile (SPEC §6).
-  func signTransaction(id: String, coin raw: UInt32, inputBase64: String, account: UInt32) throws -> String {
-    try signTransactions(id: id, coin: raw, inputsBase64: [inputBase64], account: account)[0]
+  func signTransaction(id: String, coin raw: UInt32, inputBase64: String, account: UInt32, hint: String? = nil) throws -> String {
+    try signTransactions(id: id, coin: raw, inputsBase64: [inputBase64], account: account, hint: hint)[0]
+  }
+
+  // MARK: Secure send screen (SPEC §7.13)
+
+  /// `hint` JSON from the app: {lang?, to?}. Only the language and a Solana owner address (checked) are taken from it.
+  static func sendHint(_ json: String?) -> (lang: String, to: String?) {
+    guard let json, let h = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any] else { return ("en", nil) }
+    let lang = (h["lang"] as? String).flatMap { SendScreenText.all[$0] != nil ? $0 : nil } ?? "en"
+    return (lang, h["to"] as? String)
+  }
+
+  /// Every public address of every wallet on this phone (for "your own address"). Caller holds the lock.
+  private func ownAddresses() -> Set<String> {
+    var out = Set<String>()
+    for account in (try? main.accounts(prefix: "w.")) ?? [] {
+      guard let s = try? load(String(account.dropFirst(2))) else { continue }
+      for byCoin in s.addresses.values { for a in byCoin.values { out.insert(a.hasPrefix("0x") ? a.lowercased() : a) } }
+    }
+    return out
+  }
+
+  /// Shows the secure send screen and throws if the user cancels. Caller holds the lock; runs before Face ID.
+  private func confirmSend(_ summary: SendSummary, lang: String, site: String? = nil, feeIsToken: Bool = false) throws {
+    let to = summary.to.hasPrefix("0x") ? summary.to.lowercased() : summary.to
+    let own = !to.isEmpty && ownAddresses().contains(to)
+    guard try SecureSendScreen.confirm(summary.screen(lang: lang, own: own, site: site, feeIsToken: feeIsToken)) else {
+      throw WalletError.invalid("send cancelled")
+    }
   }
 
   /// A transaction plus Foxsafe's network-fee extras with one Face ID (gasless).
@@ -656,7 +684,7 @@ final class WalletStore {
   ///     Foxsafe tops the wallet up with that TRX first, founder 14 Nov 2026),
   /// all from this wallet. So even a tampered app can't use one Face ID to pay
   /// anyone else more than 2 × 0.5 TRX.
-  func signTransactions(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32) throws -> [String] {
+  func signTransactions(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32, hint: String? = nil) throws -> [String] {
     lock.lock(); defer { lock.unlock() }
     guard let coin = CoinType(rawValue: raw), (1...4).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
     var inputs = try inputsBase64.map { b64 -> Data in
@@ -676,6 +704,9 @@ final class WalletStore {
     }
     guard fees <= 1 else { throw WalletError.invalid("only one fee transfer is allowed") }
     guard energy <= 2 else { throw WalletError.invalid("at most two energy payments are allowed") }
+    // What is really signed, on a screen the app can't draw or press (SPEC §7.13).
+    let h = Self.sendHint(hint)
+    try confirmSend(SendSummary.read(inputs, coin: coin, hintTo: h.to), lang: h.lang)
     return try withSecrets([id], reason: inputs.count > 1 ? "Confirm the transfer and its network fee" : "Confirm the transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       let own = coin.deriveAddress(privateKey: key)
@@ -1041,6 +1072,12 @@ final class WalletStore {
     guard upgradeNonce >= 0 ? initCode == EvmFeePolicy.delegate.lowercased() : (initCode == "0x" || initCode.isEmpty) else { throw bad("unexpected account upgrade") }
     let sender = (message["sender"] as? String ?? "").lowercased()
     let checked = try Self.checkedJSON(td)
+    let known = SendSummary.knownTokens["evm:\(chainId)"]?[token]
+    var summary = SendSummary(kind: .send, network: CoinTypeConfiguration.getName(type: coin), symbol: known?.0, decimals: known?.1 ?? decimals, contract: token)
+    summary.amount = SendSummary.decimal(amount)
+    summary.to = (req["to"] as? String ?? "").lowercased()
+    summary.value = SendSummary.decimal(fee)
+    try confirmSend(summary, lang: Self.sendHint(req["hint"] as? String).lang, feeIsToken: true)
 
     return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
@@ -1816,6 +1853,7 @@ final class WalletStore {
     case .contractGeneric?: break
     default: throw bad("unsupported transaction")
     }
+    try confirmSend(SendSummary.read([data], coin: coin, hintTo: nil), lang: Self.sendHint(dappHint(request)).lang, site: req.origin)
     return try withSecrets([id], reason: "Confirm the transaction for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       guard coin.deriveAddress(privateKey: key).lowercased() == req.address.lowercased() else { throw bad("not the connected account") }
@@ -1928,6 +1966,34 @@ final class WalletStore {
     return nil
   }
 
+  /// The `hint` string inside a dApp request JSON ({…, hint: "{\"lang\":…}"}), if any.
+  private func dappHint(_ request: String) -> String? {
+    (try? JSONSerialization.jsonObject(with: Data(request.utf8)) as? [String: Any])?["hint"] as? String
+  }
+
+  /// A dApp's TRON transaction (protobuf raw data) for the secure screen: TRX or a token transfer, else "not a simple send".
+  static func tronRawSummary(type: UInt64, value: [(Int, PB.V)]) -> SendSummary {
+    let network = CoinTypeConfiguration.getName(type: .tron)
+    var s = SendSummary(kind: .other, network: network)
+    let addr = { (d: Data?) -> String in d.map { Base58.encode(data: $0) } ?? "" }
+    if type == 1, let to = PB.bytes(value, 2).first, let amount = PB.ints(value, 3).first {
+      s.kind = .send; s.symbol = "TRX"; s.decimals = 6; s.amount = String(amount); s.to = addr(to)
+    } else if type == 31, let contract = PB.bytes(value, 2).first {
+      let c = addr(contract)
+      let callValue = PB.ints(value, 3).first ?? 0
+      let d = [UInt8](PB.bytes(value, 4).first ?? Data())
+      if callValue == 0, d.count == 68, Array(d[0..<4]) == [0xa9, 0x05, 0x9c, 0xbb], d[4..<15].allSatisfy({ $0 == 0 }), d[15] == 0 || d[15] == 0x41 {
+        let known = SendSummary.knownTokens["tron"]?[c]
+        s.kind = .send; s.symbol = known?.0; s.decimals = known?.1; s.contract = c
+        s.amount = SendSummary.decimal(Data(d[36..<68])); s.to = Base58.encode(data: Data([0x41] + d[16..<36]))
+      } else {
+        s.to = c
+        if callValue > 0 { s.value = String(callValue); s.symbol = "TRX"; s.decimals = 6 }
+      }
+    }
+    return s
+  }
+
   /// A TRON transaction a dApp built (`rawDataHex` = protobuf Transaction.raw; the signature is over its SHA-256, the txID).
   /// Refused before Face ID unless it is exactly one contract of an allowed type (never a permission change), from this
   /// account, with the normal permission (multisig goes through signTronMultisig), no extra signers or scripts, expiring
@@ -1951,6 +2017,7 @@ final class WalletStore {
     guard PB.bytes(value, 1).first == accountBytes else { throw bad("not from this account") }
     let digest = Hash.sha256(data: raw)
     if let want = req.txID, want != digest.hexString { throw bad("the transaction is not the one shown") }
+    try confirmSend(Self.tronRawSummary(type: type, value: value), lang: Self.sendHint(dappHint(request)).lang, site: req.origin)
     return try withSecrets([id], reason: "Confirm the transaction for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: .tron, account: account)
       guard CoinType.tron.deriveAddress(privateKey: key) == req.address else { throw bad("not the connected account") }
@@ -1995,6 +2062,13 @@ final class WalletStore {
     guard let cuLimit = num("computeUnitLimit"), cuLimit <= 1_400_000, let cuPrice = num("computeUnitPrice"), cuPrice <= 10_000_000 else { throw bad("compute budget") }
     for k in [to, feePayer, blockhash] where Base58.decodeNoCheck(string: k)?.count != 32 { throw bad("address") }
     if flag("toIsTokenAccount") && flag("createRecipient") { throw bad("inconsistent receiver") }
+    // The message is compared byte for byte below, after Face ID; the screen shows the same checked values.
+    let known = SendSummary.knownTokens["solana"]?[mint]
+    var summary = SendSummary(kind: .send, network: CoinTypeConfiguration.getName(type: .solana), symbol: known?.0, decimals: known?.1 ?? Int(decimals), contract: mint)
+    summary.amount = String(amount)
+    summary.to = to
+    summary.value = String(fee)
+    try confirmSend(summary, lang: Self.sendHint(str("hint")).lang, feeIsToken: true)
 
     return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
       let key = try Self.privateKey(records[0], coin: .solana, account: account)
