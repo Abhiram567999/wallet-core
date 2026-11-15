@@ -189,6 +189,11 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("signSafe") { id: String, coin: Int, typedData: String, request: String, account: Int? ->
       call { store.signSafe(id, coin, typedData, request, account ?: 0, activity) }
     }
+    // Polymarket (SPEC §7.11). `polymarketBuilderCode` is empty until Foxsafe's builder code is compiled in.
+    Function("polymarketBuilderCode") { WalletStore.PolymarketPolicy.BUILDER_CODE }
+    AsyncFunction("signPolymarket") { id: String, coin: Int, typedData: String, request: String, account: Int? ->
+      call { store.signPolymarket(id, coin, typedData, request, account ?: 0, activity) }
+    }
     AsyncFunction("signMessage") { id: String, coin: Int, message: String, account: Int? ->
       call { store.signMessage(id, coin, message, false, account ?: 0, activity) }
     }

@@ -6,7 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { toHex, utf8 } from './encoding.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, evmDappInput, tronOutput, tronTransferInput } from './tx.ts';
@@ -32,6 +32,13 @@ export interface Vectors {
   gaslessEvm: { coin: number; sender: string; typedData: string; request: GaslessEvmRequest; signature: string; authorization: { r: string; s: string; yParity: number } };
   /** Optional so older app builds without the vector still run the rest. */
   safe?: { coin: number; signer: string; request: SafeSignRequest; allowed: { what: string; typedData: string; signature: string }[]; refused: { what: string; typedData: string }[] };
+  /** Optional so older app builds without the vector still run the rest (SPEC §7.11). */
+  polymarket?: {
+    coin: number;
+    signer: string;
+    allowed: { what: string; typedData: string; request: PolymarketSignRequest; prompt: string; signature: string }[];
+    refused: { what: string; coin?: number; typedData: string; request: PolymarketSignRequest; reason: string }[];
+  };
   /** Optional so older app builds without the vector still run the rest (SPEC §7.9). */
   dapp?: {
     evm: { coin: number; address: string; request: DappSignRequest; messages: { allowed: { what: string; hex: string; signature: string }[]; refused: { what: string; hex: string }[] }; typedData: { allowed: { what: string; typedData: string; signature: string }[]; refused: { what: string; typedData: string }[] } };
@@ -314,6 +321,23 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const openText = await WalletCore.signMessage(importedId, 60, 'hello').then(() => true, () => false);
     expect(!openMessage && !openText, 'open message signing still works');
     return `${sv.allowed.length} signatures equal viem; ${sv.refused.length + 1} tampered versions and open message signing refused`;
+  });
+
+  await check('Polymarket: login, orders and batches equal viem with the right prompt; tampering refused for the right reason (SPEC 7.11)', async () => {
+    if (!canSignPolymarket() || !v.polymarket) return 'this build has no Polymarket signing';
+    const pv = v.polymarket;
+    for (const a of pv.allowed) {
+      const out = await signPolymarket(importedId, pv.coin, a.typedData, a.request);
+      expect(out.signature.toLowerCase() === a.signature.toLowerCase(), `${a.what}: signature differs from viem`);
+      expect(out.signer.toLowerCase() === pv.signer.toLowerCase(), `${a.what}: wrong signer`);
+      expect(out.prompt === a.prompt, `${a.what}: prompt "${out.prompt}", expected "${a.prompt}"`);
+    }
+    // Every refusal happens before Face ID; the reason shows which rule refused it.
+    for (const r of pv.refused) {
+      const why = await signPolymarket(importedId, r.coin ?? pv.coin, r.typedData, r.request).then(() => 'signed', (e: Error) => String(e?.message ?? e));
+      expect(why.includes('Polymarket signature refused') && why.includes(r.reason), `${r.what}: expected "${r.reason}", got "${why}"`);
+    }
+    return `${pv.allowed.length} signatures and prompts equal; ${pv.refused.length} tampered requests refused for the right reason; builder code = ${polymarketBuilderCode() || 'none yet'}`;
   });
 
   await check('TRON multisig: setup and sends sign (signature recovers to this account); tampering is refused', async () => {

@@ -435,7 +435,8 @@ Trust Wallet Core against viem and the self-test checks the native rule.
 `signMessage` and `signTypedData` (sign any text or EIP-712 data after one
 Face ID) are switched off from the same build: they always refuse and never
 open a key. Every signature goes through a function with its own rule
-(`signGaslessEvm`, `signSafe`, and later the dApp and Polymarket ones).
+(`signGaslessEvm`, `signSafe`, the dApp ones (§7.9) and `signPolymarket`
+(§7.11)).
 
 ### 7.8 TRON multisig (account permissions)
 
@@ -518,3 +519,114 @@ approves them on the phone (founder, 14 Nov 2026).
 Worst case with a fully compromised app and server: 3,000 TRX per round
 from the Vault, and only after the founder's Face ID; USDT can only go to
 his own hardware wallet.
+
+### 7.11 Polymarket (build 20 on)
+
+`signPolymarket(id, coin, typedData, request, account?)` is the only way the
+app may sign anything for Polymarket (prediction markets on Polygon). It
+signs one EIP-712 message (`eth_signTypedData_v4` JSON; uints as decimal
+strings, or JSON whole numbers up to 2^53) and returns
+`{signature, signer, prompt}`: `v` = 27/28, `signer` is the wallet's own
+address (EOA), `prompt` is what Face ID showed. `request` is
+`{kind: 'login' | 'order' | 'batch', depositWallet?, label?}`.
+
+Everything below is checked before Face ID. The wallet's own address comes
+from the public addresses stored with it, and after Face ID the key's address
+must match it. The coin must be Polygon (966) and every `chainId` 137. Then
+the message must be exactly one of these three, or it is refused with
+"Polymarket signature refused: …":
+
+1. **login** (Polymarket's CLOB login, Face ID says "Sign in to Polymarket"):
+   domain exactly `{name 'ClobAuthDomain', version '1', chainId 137}` (no
+   verifyingContract); types exactly `EIP712Domain(name, version, chainId)`
+   and `ClobAuth(address address, string timestamp, uint256 nonce, string
+   message)` in that order; `message.address` is this wallet's own address;
+   `message.message` is "This message attests that I control the given
+   wallet"; the timestamp is digits only. A login can't move money; it only
+   gets API keys tied to this address.
+
+2. **order** (a Deposit Wallet order, ERC-7739 wrapper, signatureType 3 =
+   POLY_1271): primaryType `TypedDataSign`; types exactly
+   `EIP712Domain(name, version, chainId, verifyingContract)`,
+   `Order(salt, maker, signer, tokenId, makerAmount, takerAmount, side,
+   signatureType, timestamp, metadata, builder)` and `TypedDataSign(Order
+   contents, string name, string version, uint256 chainId, address
+   verifyingContract, bytes32 salt)`, names, types and order exact, nothing
+   else. Domain `Polymarket CTF Exchange`, chainId 137, and (version,
+   exchange) one of ('3', `0xe333…00Aa`), ('2', `0xE111…996B`), ('2',
+   `0xe222…0F59`). The wrapper is `{name 'DepositWallet', version '1',
+   chainId 137, salt 0}` and its verifyingContract, the order's maker and its
+   signer all equal `request.depositWallet`. signatureType 3, side 0 (buy) or
+   1 (sell), both amounts above 0 and at most 10^15 units (one billion
+   dollars or shares). `builder` must equal the compiled-in
+   `PolymarketPolicy.builderCode`. It is empty until the founder creates
+   Foxsafe's builder profile, and while it is empty `builder` must be 32
+   zero bytes. `polymarketBuilderCode()` returns it ('' = none yet). Face
+   ID's text is computed natively from the amounts (6 decimals both sides):
+   buy: "Buy {takerAmount} shares for up to ${makerAmount} ({price}¢ each)";
+   sell: "Sell {makerAmount} shares for at least ${takerAmount}". After it
+   comes " · " and `request.label` (the app's text, e.g. `Yes · Will X
+   happen?`) with control and invisible characters turned into spaces, cut to
+   80 characters.
+
+   Why there is no check that the deposit wallet belongs to this wallet
+   (CREATE2 address): the Deposit Wallet checks an order's signature against
+   its own owner (ERC-1271), so a signature made for someone else's deposit
+   wallet is useless. A tampered app could only make this wallet sign orders
+   that no exchange accepts.
+
+3. **batch** (a Deposit Wallet batch sent through Polymarket's gasless
+   relayer): primaryType `Batch`; types exactly `EIP712Domain(name, version,
+   chainId, verifyingContract)`, `Batch(address wallet, uint256 nonce,
+   uint256 deadline, Call[] calls)`, `Call(address target, uint256 value,
+   bytes data)`. Domain `{name 'DepositWallet', version '1', chainId 137,
+   verifyingContract}` with verifyingContract = `message.wallet` =
+   `request.depositWallet`. The deadline is at most an hour away. 1 to 20
+   calls, every `value` 0, and every call is exactly one of these. Calldata
+   is decoded natively, exact length, with no extra bytes except
+   redeemPositions' dynamic array:
+   - pUSD `0xC011…2DFB` `approve(spender, amount)`, spender one of the
+     three exchanges, collateralAdapter `0xAdA1…cE1f`,
+     negRiskCollateralAdapter `0xadA2…eAab`, protocolV2Router `0x1212…2600`,
+     CollateralOfframp `0x2957…5854`;
+   - Conditional Tokens `0x4D97…6045` `setApprovalForAll(operator, bool)`,
+     operator one of the v2 exchanges `0xE111…`/`0xe222…`, the two adapters,
+     autoRedeemOperator `0xa120…00af`, binaryModule `0x1000…00Ba`,
+     negRiskModule `0x2000…8933`;
+   - PositionManager `0x006F…9fEF` `setApprovalForAll(operator, bool)`,
+     operator protocolV2Router, the v3 exchange or autoRedeemOperator;
+   - collateralAdapter or negRiskCollateralAdapter
+     `redeemPositions(collateralToken, parentCollectionId, conditionId,
+     indexSets[])` with collateralToken pUSD and parentCollectionId 0;
+   - protocolV2Router `redeem(bytes31 conditionId, outcomeIndex, amount)`
+     with outcomeIndex 0 or 1;
+   - pUSD `transfer(recipient, amount)` to this wallet's own address;
+   - CollateralOfframp `unwrap(asset, to, amount)` with asset USDC.e
+     `0x2791…4174` and `to` this wallet's own address.
+
+   Anything else is refused: other contracts or functions, POL value, calls
+   on the deposit wallet itself (e.g. `authorizeSessionSigner`, so no
+   session key can be added), perps deposits. Face ID's text comes from
+   the calls: "Set up Predictions" (approvals), "Claim winnings" (redeems),
+   "Move ${sum} to your Foxsafe wallet" (transfers and unwraps, 6 decimals),
+   joined with " · " when mixed. Approvals only let Polymarket's own
+   contracts trade or redeem, and money can only leave the deposit wallet
+   to this wallet's own address.
+
+What is signed is rebuilt natively from the checked values (types from the
+rule, uints as decimal strings, lowercase hex), not the app's JSON, so two
+JSON readers can never disagree about what was signed.
+
+`test/vectors/polymarket.json` (made with viem by
+`app/scripts/make-polymarket-vector.mjs` from the public test phrase, never
+a real key) holds the allowed messages with viem's signatures and the
+expected prompts, and 36 tampered requests with the reason each must be
+refused for. `test/polymarket.test.ts` checks that Trust Wallet Core's EIP-712
+signer hashes the nested `TypedDataSign`→`Order` and the `Call[]` array with
+`bytes` exactly like viem, both as sent and in the rebuilt form. It also
+checks that the selectors are keccak256 of their signatures, that iOS and
+Android carry the same contracts, builder code and refusal reasons, and that
+every allowed contract appears in a vector. The on-device self-test runs
+every vector through the native code: signatures, prompts and the reason for
+each refusal. When the builder code is set, regenerate the vector (the
+script reads it from `ios/WalletStore.swift`).

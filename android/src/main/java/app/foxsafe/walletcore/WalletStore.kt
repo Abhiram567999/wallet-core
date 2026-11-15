@@ -1042,6 +1042,386 @@ class WalletStore(context: Context) {
     }
   }
 
+  // MARK: Polymarket (prediction markets on Polygon, SPEC §7.11)
+
+  /** Foxsafe's Polymarket rule, compiled in on purpose: an app update can't loosen it (SPEC §7.11). Mirrors ios/WalletStore.swift. */
+  object PolymarketPolicy {
+    const val COIN = 966 // Polygon
+    const val CHAIN_ID = "137"
+    /**
+     * Foxsafe's Polymarket builder code (bytes32, lowercase 0x…). Empty until the founder creates the
+     * builder profile; while empty, every order's builder field must be 32 zero bytes.
+     */
+    const val BUILDER_CODE = ""
+    val ZERO32 = "0x" + "0".repeat(64)
+    const val LOGIN_MESSAGE = "This message attests that I control the given wallet"
+    const val PUSD = "0xc011a7e12a19f7b1f670d46f03b03f3342e82dfb"
+    const val USDC_E = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
+    const val CONDITIONAL_TOKENS = "0x4d97dcd97ec945f40cf65f87097ace5ea0476045"
+    const val POSITION_MANAGER = "0x006f54f7f9a22e0000cc2ab60031000000ae9fef"
+    const val EXCHANGE_V2A = "0xe111180000d2663c0091e4f400237545b87b996b"
+    const val EXCHANGE_V2B = "0xe2222d279d744050d28e00520010520000310f59"
+    const val EXCHANGE_V3 = "0xe3333700ca9d93003f00f0f71f8515005f6c00aa"
+    const val COLLATERAL_ADAPTER = "0xada100db00ca00073811820692005400218fce1f"
+    const val NEG_RISK_COLLATERAL_ADAPTER = "0xada2005600dec949baf300f4c6120000bdb6eaab"
+    const val PROTOCOL_V2_ROUTER = "0x12121212006e4cd160d18e3f00711da5c3372600"
+    const val COLLATERAL_OFFRAMP = "0x2957922eb93258b93368531d39facca3b4dc5854"
+    const val AUTO_REDEEM_OPERATOR = "0xa1200000d0002264c9a1698e001292d00e1b00af"
+    const val BINARY_MODULE = "0x1000008dd9001b968442c1000017eae6e0da00ba"
+    const val NEG_RISK_MODULE = "0x200000900045e3b6259600682756002200028933"
+    /** Order domains: "version:verifyingContract". */
+    val EXCHANGES = setOf("3:$EXCHANGE_V3", "2:$EXCHANGE_V2A", "2:$EXCHANGE_V2B")
+    val APPROVE_SPENDERS = setOf(EXCHANGE_V2A, EXCHANGE_V2B, EXCHANGE_V3, COLLATERAL_ADAPTER, NEG_RISK_COLLATERAL_ADAPTER, PROTOCOL_V2_ROUTER, COLLATERAL_OFFRAMP)
+    val CTF_OPERATORS = setOf(EXCHANGE_V2A, EXCHANGE_V2B, COLLATERAL_ADAPTER, NEG_RISK_COLLATERAL_ADAPTER, AUTO_REDEEM_OPERATOR, BINARY_MODULE, NEG_RISK_MODULE)
+    val POSITION_OPERATORS = setOf(PROTOCOL_V2_ROUTER, EXCHANGE_V3, AUTO_REDEEM_OPERATOR)
+    val REDEEM_CONTRACTS = setOf(COLLATERAL_ADAPTER, NEG_RISK_COLLATERAL_ADAPTER)
+    // Function selectors: the first 4 bytes of keccak256(signature); test/polymarket.test.ts recomputes them.
+    const val APPROVE = "095ea7b3" // approve(address,uint256)
+    const val SET_APPROVAL_FOR_ALL = "a22cb465" // setApprovalForAll(address,bool)
+    const val REDEEM_POSITIONS = "01b7037c" // redeemPositions(address,bytes32,bytes32,uint256[])
+    const val REDEEM = "d217a3cc" // redeem(bytes31,uint256,uint256)
+    const val TRANSFER = "a9059cbb" // transfer(address,uint256)
+    const val UNWRAP = "8cc7104f" // unwrap(address,address,uint256)
+    const val MAX_CALLS = 20
+    const val MAX_DEADLINE_SECONDS = 3600L
+    /** Largest order amount or pUSD move, in 6-decimal units (10^15 = 1,000,000,000.000000). */
+    const val MAX_AMOUNT = 1_000_000_000_000_000L
+    const val MAX_LABEL = 80
+    val DOMAIN_FIELDS = listOf("name:string", "version:string", "chainId:uint256", "verifyingContract:address")
+    val LOGIN_TYPES = mapOf(
+      "EIP712Domain" to listOf("name:string", "version:string", "chainId:uint256"),
+      "ClobAuth" to listOf("address:address", "timestamp:string", "nonce:uint256", "message:string"),
+    )
+    val ORDER_TYPES = mapOf(
+      "EIP712Domain" to DOMAIN_FIELDS,
+      "Order" to listOf(
+        "salt:uint256", "maker:address", "signer:address", "tokenId:uint256", "makerAmount:uint256", "takerAmount:uint256",
+        "side:uint8", "signatureType:uint8", "timestamp:uint256", "metadata:bytes32", "builder:bytes32",
+      ),
+      "TypedDataSign" to listOf("contents:Order", "name:string", "version:string", "chainId:uint256", "verifyingContract:address", "salt:bytes32"),
+    )
+    val BATCH_TYPES = mapOf(
+      "EIP712Domain" to DOMAIN_FIELDS,
+      "Batch" to listOf("wallet:address", "nonce:uint256", "deadline:uint256", "calls:Call[]"),
+      "Call" to listOf("target:address", "value:uint256", "data:bytes"),
+    )
+  }
+
+  /** A uint from typed data as a plain decimal string: a decimal string below 2^256, or a JSON whole number up to 2^53. */
+  private fun pmUint(v: Any?): String? {
+    val max53 = 1L shl 53
+    return when (v) {
+      is Boolean -> null
+      is Int, is Long -> (v as Number).toLong().takeIf { it in 0..max53 }?.toString()
+      is Double -> if (v >= 0 && v <= max53.toDouble() && v == Math.floor(v)) v.toLong().toString() else null
+      is String -> {
+        if (v.isEmpty() || v.length > 78 || !v.all { it in '0'..'9' }) return null
+        val n = BigInteger(v)
+        if (n.bitLength() > 256) null else n.toString()
+      }
+      else -> null
+    }
+  }
+
+  private fun pmHex(v: Any?, bytes: Int?): String? {
+    val s = (v as? String)?.lowercase() ?: return null
+    if (!s.startsWith("0x")) return null
+    val h = s.substring(2)
+    if (h.length % 2 != 0 || !h.all { it in '0'..'9' || it in 'a'..'f' }) return null
+    if (bytes != null && h.length != bytes * 2) return null
+    return s
+  }
+
+  private fun pmAddress(v: Any?) = pmHex(v, 20)
+
+  /** 6-decimal units as text: 5500000 → "5.5" (money: "5.50"). */
+  private fun pmUnits(n: Long, money: Boolean): String {
+    val whole = n / 1_000_000
+    val frac = n % 1_000_000
+    if (frac == 0L) return whole.toString()
+    var f = frac.toString().padStart(6, '0').trimEnd('0')
+    if (money && f.length == 1) f += "0"
+    return "$whole.$f"
+  }
+
+  /**
+   * The app's label (e.g. "Yes · Will X happen?") made safe for the prompt: control and invisible format
+   * characters become spaces, spaces are collapsed, at most 80 characters (code points).
+   */
+  private fun pmLabel(v: Any?): String {
+    val s = v as? String ?: return ""
+    val out = mutableListOf<Int>()
+    var i = 0
+    while (i < s.length) {
+      val cp = s.codePointAt(i)
+      i += Character.charCount(cp)
+      val t = Character.getType(cp)
+      val c = if (t == Character.CONTROL.toInt() || t == Character.FORMAT.toInt() || t == Character.LINE_SEPARATOR.toInt() ||
+        t == Character.PARAGRAPH_SEPARATOR.toInt()) ' '.code else cp
+      if (c == ' '.code && (out.isEmpty() || out.last() == ' '.code)) continue
+      out += c
+    }
+    val cut = out.take(PolymarketPolicy.MAX_LABEL).toMutableList()
+    while (cut.isNotEmpty() && cut.last() == ' '.code) cut.removeAt(cut.size - 1)
+    return String(cut.toIntArray(), 0, cut.size)
+  }
+
+  private sealed class PolymarketCall {
+    object Setup : PolymarketCall()
+    object Claim : PolymarketCall()
+    class Move(val amount: Long) : PolymarketCall()
+  }
+
+  /** What one Deposit Wallet call does, or throws why it is refused. Calldata is decoded by hand, exact length. */
+  private fun polymarketCall(target: String, data: ByteArray, own: String): PolymarketCall {
+    fun bad(why: String) = WalletException("INVALID", "Polymarket signature refused: $why")
+    val p = PolymarketPolicy
+    if (data.size < 4) throw bad("a call Foxsafe does not allow")
+    val selector = hex(data.copyOfRange(0, 4))
+    fun word(i: Int): ByteArray? = if (4 + 32 * i + 32 <= data.size) data.copyOfRange(4 + 32 * i, 4 + 32 * i + 32) else null
+    fun address(i: Int): String? {
+      val w = word(i) ?: return null
+      if ((0 until 12).any { w[it] != 0.toByte() }) return null
+      return "0x" + hex(w.copyOfRange(12, 32))
+    }
+    fun small(i: Int): Long? {
+      val w = word(i) ?: return null
+      if ((0 until 25).any { w[it] != 0.toByte() }) return null // < 2^56, so a Long never overflows
+      var v = 0L
+      for (k in 25 until 32) v = (v shl 8) or (w[k].toLong() and 0xff)
+      return v
+    }
+    fun size(words: Int) { if (data.size != 4 + 32 * words) throw bad("unreadable call") }
+    when {
+      target == p.PUSD && selector == p.APPROVE -> {
+        size(2)
+        if (address(0)?.let { it in p.APPROVE_SPENDERS } != true) throw bad("approval for an unknown spender")
+        return PolymarketCall.Setup
+      }
+      (target == p.CONDITIONAL_TOKENS || target == p.POSITION_MANAGER) && selector == p.SET_APPROVAL_FOR_ALL -> {
+        size(2)
+        val allowed = if (target == p.CONDITIONAL_TOKENS) p.CTF_OPERATORS else p.POSITION_OPERATORS
+        if (address(0)?.let { it in allowed } != true) throw bad("approval for an unknown operator")
+        val flag = small(1)
+        if (flag == null || flag > 1) throw bad("unreadable call")
+        return PolymarketCall.Setup
+      }
+      target in p.REDEEM_CONTRACTS && selector == p.REDEEM_POSITIONS -> {
+        // collateralToken, parentCollectionId, conditionId, offset (0x80), then indexSets: length + items.
+        val offset = small(3)
+        val n = small(4)
+        if (offset != 128L || n == null || n !in 1L..256L) throw bad("unreadable call")
+        size(5 + n.toInt())
+        if (address(0) != p.PUSD) throw bad("redeem with another collateral")
+        if (word(1)!!.any { it != 0.toByte() }) throw bad("redeem of a nested position")
+        return PolymarketCall.Claim
+      }
+      target == p.PROTOCOL_V2_ROUTER && selector == p.REDEEM -> {
+        size(3)
+        if (word(0)!![31] != 0.toByte()) throw bad("unreadable call") // bytes31: last byte is padding
+        val outcome = small(1)
+        if (outcome == null || outcome > 1) throw bad("redeem of an unknown outcome")
+        return PolymarketCall.Claim
+      }
+      target == p.PUSD && selector == p.TRANSFER -> {
+        size(2)
+        if (address(0) != own) throw bad("a transfer to someone else")
+        val amount = small(1)
+        if (amount == null || amount > p.MAX_AMOUNT) throw bad("amount too large")
+        return PolymarketCall.Move(amount)
+      }
+      target == p.COLLATERAL_OFFRAMP && selector == p.UNWRAP -> {
+        size(3)
+        if (address(0) != p.USDC_E) throw bad("unwrap to another token")
+        if (address(1) != own) throw bad("unwrap to someone else")
+        val amount = small(2)
+        if (amount == null || amount > p.MAX_AMOUNT) throw bad("amount too large")
+        return PolymarketCall.Move(amount)
+      }
+      else -> throw bad("a call Foxsafe does not allow")
+    }
+  }
+
+  /**
+   * Signs ONE Polymarket EIP-712 message, after the fingerprint prompt. Refuses first unless the coin is Polygon,
+   * every chainId is 137 and it is exactly one of (SPEC §7.11):
+   * - kind "login": Polymarket's CLOB login (ClobAuth) for this wallet's own address,
+   * - kind "order": a Deposit Wallet order (ERC-7739 TypedDataSign over Order, signatureType 3) on one of the
+   *   three CTF exchanges, maker = signer = the deposit wallet, Foxsafe's builder code,
+   * - kind "batch": a Deposit Wallet batch (1–20 calls, no POL, deadline within an hour) of only the allowed
+   *   approvals, redeems, and moves of pUSD / USDC.e to this wallet's own address.
+   * What is signed is rebuilt here from the checked values, so two JSON readers can't disagree about it.
+   * [request] JSON: {kind, depositWallet?, label?}. Returns JSON {signature (v = 27/28), signer, prompt}.
+   */
+  fun signPolymarket(id: String, coinValue: Int, typedData: String, request: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "Polymarket signature refused: $why")
+    if (coinValue != PolymarketPolicy.COIN) throw bad("wrong network")
+    val c = coin(coinValue)
+    // This wallet's own address, from the public addresses stored with it (no secret needed).
+    val stored = load(id).optJSONObject("addresses")?.optJSONObject(account.toString())
+    val own = (stored?.optString(coinValue.toString())?.ifEmpty { null } ?: stored?.optString("60")?.ifEmpty { null })?.lowercase()
+    if (own == null || pmAddress(own) == null) throw bad("this wallet has no Polygon address")
+    val (json, prompt) = polymarketCheck(typedData, request, own, System.currentTimeMillis() / 1000)
+
+    withSecret(id, activity, prompt) { r ->
+      val key = privateKey(r, c, account)
+      val signer = c.deriveAddress(key)
+      if (signer.lowercase() != own) throw bad("not this wallet")
+      val sig = unhex(EthereumMessageSigner.signTypedMessage(key, json).removePrefix("0x"))
+      if (sig == null || sig.size != 65) throw WalletException("CRYPTO", "signing failed")
+      if ((sig[64].toInt() and 0xff) < 27) sig[64] = (sig[64] + 27).toByte()
+      JSONObject().put("signature", "0x" + hex(sig)).put("signer", signer).put("prompt", prompt).toString()
+    }
+  }
+
+  /**
+   * The Polymarket rule itself (no keys, no storage): checks [typedData] against [request] for the wallet [own]
+   * (lowercase 0x address) at time [now] (unix seconds). Returns the canonical JSON to sign and the prompt.
+   */
+  internal fun polymarketCheck(typedData: String, request: String, own: String, now: Long): Pair<String, String> {
+    fun bad(why: String) = WalletException("INVALID", "Polymarket signature refused: $why")
+    val p = PolymarketPolicy
+    val td = try { JSONObject(typedData) } catch (e: Exception) { throw bad("unreadable") }
+    val req = try { JSONObject(request) } catch (e: Exception) { throw bad("unreadable") }
+    val types = td.optJSONObject("types") ?: throw bad("unreadable")
+    val domain = td.optJSONObject("domain") ?: throw bad("unreadable")
+    val message = td.optJSONObject("message") ?: throw bad("unreadable")
+    val primary = td.opt("primaryType") as? String ?: throw bad("unreadable")
+    fun fields(name: String): List<String> {
+      val a = types.optJSONArray(name) ?: return emptyList()
+      return (0 until a.length()).map { val f = a.optJSONObject(it); "${f?.opt("name") as? String ?: ""}:${f?.opt("type") as? String ?: ""}" }
+    }
+    fun keys(o: JSONObject) = o.keys().asSequence().toSet()
+    fun typesAre(want: Map<String, List<String>>) = keys(types) == want.keys && want.all { fields(it.key) == it.value }
+    fun typesJson(t: Map<String, List<String>>) = JSONObject().apply {
+      for ((name, list) in t) put(name, JSONArray(list.map { f -> JSONObject().put("name", f.substringBefore(':')).put("type", f.substringAfter(':')) }))
+    }
+    fun str(o: JSONObject, k: String) = o.opt(k) as? String
+    if (pmUint(domain.opt("chainId")) != p.CHAIN_ID) throw bad("wrong network")
+
+    val canonical = JSONObject().put("primaryType", primary)
+    val prompt: String
+    when (req.opt("kind") as? String ?: "") {
+      "login" -> {
+        if (primary != "ClobAuth" || !typesAre(p.LOGIN_TYPES) || keys(domain) != setOf("name", "version", "chainId") ||
+          str(domain, "name") != "ClobAuthDomain" || str(domain, "version") != "1" ||
+          keys(message) != setOf("address", "timestamp", "nonce", "message")
+        ) throw bad("not a Polymarket login")
+        if (str(message, "message") != p.LOGIN_MESSAGE) throw bad("the login message is not Polymarket's")
+        val address = pmAddress(message.opt("address"))
+        if (address == null || address != own) throw bad("the login is not for this wallet")
+        val ts = str(message, "timestamp")
+        val nonce = pmUint(message.opt("nonce"))
+        if (ts == null || ts.length !in 1..20 || !ts.all { it in '0'..'9' } || nonce == null) throw bad("unreadable")
+        canonical.put("types", typesJson(p.LOGIN_TYPES))
+        canonical.put("domain", JSONObject().put("name", "ClobAuthDomain").put("version", "1").put("chainId", p.CHAIN_ID))
+        canonical.put("message", JSONObject().put("address", address).put("timestamp", ts).put("nonce", nonce).put("message", p.LOGIN_MESSAGE))
+        prompt = "Sign in to Polymarket"
+      }
+      "order" -> {
+        val ct = message.opt("contents") as? JSONObject
+        if (primary != "TypedDataSign" || !typesAre(p.ORDER_TYPES) || keys(domain) != setOf("name", "version", "chainId", "verifyingContract") ||
+          str(domain, "name") != "Polymarket CTF Exchange" ||
+          keys(message) != setOf("contents", "name", "version", "chainId", "verifyingContract", "salt") ||
+          ct == null || keys(ct) != p.ORDER_TYPES.getValue("Order").map { it.substringBefore(':') }.toSet()
+        ) throw bad("not a Polymarket order")
+        val version = str(domain, "version")
+        val exchange = pmAddress(domain.opt("verifyingContract"))
+        if (version == null || exchange == null || "$version:$exchange" !in p.EXCHANGES) throw bad("not a Polymarket exchange")
+        if (str(message, "name") != "DepositWallet" || str(message, "version") != "1" || pmHex(message.opt("salt"), 32) != p.ZERO32) {
+          throw bad("not a deposit wallet order")
+        }
+        if (pmUint(message.opt("chainId")) != p.CHAIN_ID) throw bad("wrong network")
+        val wallet = pmAddress(req.opt("depositWallet"))
+        if (wallet == null || pmAddress(message.opt("verifyingContract")) != wallet || pmAddress(ct.opt("maker")) != wallet ||
+          pmAddress(ct.opt("signer")) != wallet
+        ) throw bad("not your deposit wallet")
+        if (pmUint(ct.opt("signatureType")) != "3") throw bad("wrong signature type")
+        val side = pmUint(ct.opt("side"))
+        if (side != "0" && side != "1") throw bad("wrong side")
+        val makerS = pmUint(ct.opt("makerAmount"))
+        val takerS = pmUint(ct.opt("takerAmount"))
+        val maker = makerS?.toLongOrNull()
+        val taker = takerS?.toLongOrNull()
+        if (maker == null || taker == null || maker <= 0 || taker <= 0 || maker > p.MAX_AMOUNT || taker > p.MAX_AMOUNT) throw bad("bad amount")
+        val builder = pmHex(ct.opt("builder"), 32)
+        if (builder == null || builder != (if (p.BUILDER_CODE.isEmpty()) p.ZERO32 else p.BUILDER_CODE.lowercase())) throw bad("wrong builder code")
+        val salt = pmUint(ct.opt("salt"))
+        val tokenId = pmUint(ct.opt("tokenId"))
+        val timestamp = pmUint(ct.opt("timestamp"))
+        val metadata = pmHex(ct.opt("metadata"), 32)
+        if (salt == null || tokenId == null || timestamp == null || metadata == null) throw bad("unreadable")
+        canonical.put("types", typesJson(p.ORDER_TYPES))
+        canonical.put("domain", JSONObject().put("name", "Polymarket CTF Exchange").put("version", version).put("chainId", p.CHAIN_ID).put("verifyingContract", exchange))
+        canonical.put(
+          "message", JSONObject()
+            .put(
+              "contents", JSONObject().put("salt", salt).put("maker", wallet).put("signer", wallet).put("tokenId", tokenId)
+                .put("makerAmount", makerS).put("takerAmount", takerS).put("side", side).put("signatureType", "3")
+                .put("timestamp", timestamp).put("metadata", metadata).put("builder", builder),
+            )
+            .put("name", "DepositWallet").put("version", "1").put("chainId", p.CHAIN_ID).put("verifyingContract", wallet).put("salt", p.ZERO32),
+        )
+        var text = if (side == "0") {
+          val tenths = (maker * 1000 + taker / 2) / taker // price in tenths of a cent
+          val price = if (tenths % 10 == 0L) (tenths / 10).toString() else "${tenths / 10}.${tenths % 10}"
+          "Buy ${pmUnits(taker, false)} shares for up to $${pmUnits(maker, true)} (${price}¢ each)"
+        } else {
+          "Sell ${pmUnits(maker, false)} shares for at least $${pmUnits(taker, true)}"
+        }
+        val label = pmLabel(req.opt("label"))
+        if (label.isNotEmpty()) text += " · $label"
+        prompt = text
+      }
+      "batch" -> {
+        if (primary != "Batch" || !typesAre(p.BATCH_TYPES) || keys(domain) != setOf("name", "version", "chainId", "verifyingContract") ||
+          str(domain, "name") != "DepositWallet" || str(domain, "version") != "1" ||
+          keys(message) != setOf("wallet", "nonce", "deadline", "calls")
+        ) throw bad("not a deposit wallet batch")
+        val wallet = pmAddress(req.opt("depositWallet"))
+        if (wallet == null || pmAddress(domain.opt("verifyingContract")) != wallet || pmAddress(message.opt("wallet")) != wallet) {
+          throw bad("not your deposit wallet")
+        }
+        val nonce = pmUint(message.opt("nonce"))
+        val deadlineS = pmUint(message.opt("deadline"))
+        if (nonce == null || deadlineS == null) throw bad("unreadable")
+        val deadline = deadlineS.toLongOrNull()
+        if (deadline == null || deadline > now + p.MAX_DEADLINE_SECONDS) throw bad("the deadline is more than an hour away")
+        val calls = message.opt("calls") as? JSONArray
+        if (calls == null || calls.length() !in 1..p.MAX_CALLS) throw bad("a batch has 1 to 20 calls")
+        var setup = false
+        var claim = false
+        var moves = false
+        var moved = 0L
+        val out = JSONArray()
+        for (k in 0 until calls.length()) {
+          val call = calls.opt(k) as? JSONObject ?: throw bad("unreadable call")
+          val target = pmAddress(call.opt("target"))
+          val value = pmUint(call.opt("value"))
+          val dataHex = pmHex(call.opt("data"), null)
+          if (keys(call) != setOf("target", "value", "data") || target == null || value == null || dataHex == null) throw bad("unreadable call")
+          if (value != "0") throw bad("a call sends POL")
+          when (val what = polymarketCall(target, unhex(dataHex.substring(2))!!, own)) {
+            is PolymarketCall.Setup -> setup = true
+            is PolymarketCall.Claim -> claim = true
+            is PolymarketCall.Move -> { moves = true; moved += what.amount }
+          }
+          out.put(JSONObject().put("target", target).put("value", "0").put("data", dataHex))
+        }
+        canonical.put("types", typesJson(p.BATCH_TYPES))
+        canonical.put("domain", JSONObject().put("name", "DepositWallet").put("version", "1").put("chainId", p.CHAIN_ID).put("verifyingContract", wallet))
+        canonical.put("message", JSONObject().put("wallet", wallet).put("nonce", nonce).put("deadline", deadlineS).put("calls", out))
+        val parts = mutableListOf<String>()
+        if (setup) parts += "Set up Predictions"
+        if (claim) parts += "Claim winnings"
+        if (moves) parts += "Move $${pmUnits(moved, true)} to your Foxsafe wallet"
+        prompt = parts.joinToString(" · ")
+      }
+      else -> throw bad("unknown kind")
+    }
+    return Pair(canonical.toString(), prompt)
+  }
+
   // MARK: TRON multisig (account permissions)
 
   /** Foxsafe's TRON multisig rule, compiled in on purpose (SPEC §7.8). */
@@ -1711,8 +2091,8 @@ class WalletStore(context: Context) {
   /**
    * Open message signing is switched off (9 Nov 2026): signing ANY text or EIP-712 data after one prompt is how
    * drainer sites take tokens without a transaction (Permit, Permit2, NFT listings). Every signature now goes
-   * through a function with its own compiled-in rule (signGaslessEvm, signSafe, and the planned dApp / Polymarket
-   * ones). Kept so older JS keeps compiling; it never opens a key (SPEC §7.7).
+   * through a function with its own compiled-in rule (signGaslessEvm, signSafe, the dApp ones,
+   * signPolymarket). Kept so older JS keeps compiling; it never opens a key (SPEC §7.7).
    */
   @Suppress("UNUSED_PARAMETER")
   fun signMessage(id: String, coinValue: Int, message: String, typed: Boolean, account: Int, activity: FragmentActivity?): String =

@@ -111,6 +111,10 @@ export interface NativeWalletCore {
   signGaslessEvm?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
   /** Safe owner signature for one EIP-712 SafeTx, with Foxsafe's compiled-in Safe rule (SPEC §7.7). */
   signSafe?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
+  /** Foxsafe's Polymarket builder code compiled into this build ('' = none yet). Polymarket builds on (SPEC §7.11). */
+  polymarketBuilderCode?(): string;
+  /** One Polymarket EIP-712 signature (login, Deposit Wallet order or batch) with the compiled-in rule (SPEC §7.11). */
+  signPolymarket?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
   /** dApp signatures with Foxsafe's compiled-in dApp rule (SPEC §7.9). Build 16 on. */
   signDappMessage?(id: string, coin: CoinType, messageHex: string, request: string, account?: number): Promise<string>;
   signDappTypedData?(id: string, coin: CoinType, typedData: string, request: string, account?: number): Promise<string>;
@@ -271,6 +275,40 @@ export const canSignSafe = () => typeof native?.signSafe === 'function';
 export async function signSafe(id: string, coin: CoinType, typedData: string, request: SafeSignRequest, account?: number): Promise<SafeSignature> {
   if (!native?.signSafe) throw new Error('UNAVAILABLE: this app build cannot sign shared wallet transactions yet');
   return JSON.parse(await native.signSafe(id, coin, typedData, JSON.stringify(request), account)) as SafeSignature;
+}
+
+/**
+ * What a Polymarket signature is for (SPEC §7.11). The native rule refuses anything that isn't exactly one of these.
+ * - login: Polymarket's CLOB login (ClobAuth) for this wallet's own address.
+ * - order: a Deposit Wallet order (ERC-7739 TypedDataSign over Order, signatureType 3); maker = signer = depositWallet.
+ * - batch: a Deposit Wallet batch for Polymarket's relayer (setup approvals, claims, moves to this wallet).
+ */
+export interface PolymarketSignRequest {
+  kind: 'login' | 'order' | 'batch';
+  /** The user's Polymarket Deposit Wallet (order and batch). */
+  depositWallet?: string;
+  /** Orders: what the user is buying or selling, e.g. `Yes · Will X happen?` (added to the Face ID prompt, cut to 80 characters). */
+  label?: string;
+}
+
+export interface PolymarketSignature {
+  /** 65 bytes, v = 27/28. Orders: the ECDSA part; wrap it as ERC-7739 for signatureType 3. */
+  signature: string;
+  /** The wallet's own address (EOA) that signed. */
+  signer: string;
+  /** The Face ID prompt the native code showed, computed from the signed data. */
+  prompt: string;
+}
+
+/** True when this build can sign for Polymarket (native Polymarket rule included). */
+export const canSignPolymarket = () => typeof native?.signPolymarket === 'function';
+/** Foxsafe's Polymarket builder code compiled into this build, or '' (none yet, or an older build). */
+export const polymarketBuilderCode = (): string => (typeof native?.polymarketBuilderCode === 'function' ? native.polymarketBuilderCode() : '');
+
+/** `typedData` is eth_signTypedData_v4 JSON (types include EIP712Domain; uints as decimal strings or numbers). */
+export async function signPolymarket(id: string, coin: CoinType, typedData: string, request: PolymarketSignRequest, account?: number): Promise<PolymarketSignature> {
+  if (!native?.signPolymarket) throw new Error('UNAVAILABLE: this app build cannot sign Polymarket yet');
+  return JSON.parse(await native.signPolymarket(id, coin, typedData, JSON.stringify(request), account)) as PolymarketSignature;
 }
 
 /**

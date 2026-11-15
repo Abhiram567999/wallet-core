@@ -1059,6 +1059,330 @@ final class WalletStore {
     }
   }
 
+  // MARK: Polymarket (prediction markets on Polygon, SPEC §7.11)
+
+  /// Foxsafe's Polymarket rule, compiled in on purpose: an app update can't loosen it (SPEC §7.11).
+  /// The only way the app may sign anything for Polymarket.
+  enum PolymarketPolicy {
+    static let coin: UInt32 = 966 // Polygon
+    static let chainId = "137"
+    /// Foxsafe's Polymarket builder code (bytes32, lowercase 0x…). Empty until the founder creates the
+    /// builder profile; while empty, every order's builder field must be 32 zero bytes.
+    static let builderCode = ""
+    static let zero32 = "0x" + String(repeating: "0", count: 64)
+    static let loginMessage = "This message attests that I control the given wallet"
+    static let pUSD = "0xc011a7e12a19f7b1f670d46f03b03f3342e82dfb"
+    static let usdcE = "0x2791bca1f2de4661ed88a30c99a7a9449aa84174"
+    static let conditionalTokens = "0x4d97dcd97ec945f40cf65f87097ace5ea0476045"
+    static let positionManager = "0x006f54f7f9a22e0000cc2ab60031000000ae9fef"
+    static let exchangeV2a = "0xe111180000d2663c0091e4f400237545b87b996b"
+    static let exchangeV2b = "0xe2222d279d744050d28e00520010520000310f59"
+    static let exchangeV3 = "0xe3333700ca9d93003f00f0f71f8515005f6c00aa"
+    static let collateralAdapter = "0xada100db00ca00073811820692005400218fce1f"
+    static let negRiskCollateralAdapter = "0xada2005600dec949baf300f4c6120000bdb6eaab"
+    static let protocolV2Router = "0x12121212006e4cd160d18e3f00711da5c3372600"
+    static let collateralOfframp = "0x2957922eb93258b93368531d39facca3b4dc5854"
+    static let autoRedeemOperator = "0xa1200000d0002264c9a1698e001292d00e1b00af"
+    static let binaryModule = "0x1000008dd9001b968442c1000017eae6e0da00ba"
+    static let negRiskModule = "0x200000900045e3b6259600682756002200028933"
+    /// Order domains: "version:verifyingContract".
+    static let exchanges: Set<String> = ["3:" + exchangeV3, "2:" + exchangeV2a, "2:" + exchangeV2b]
+    static let approveSpenders: Set<String> = [exchangeV2a, exchangeV2b, exchangeV3, collateralAdapter, negRiskCollateralAdapter, protocolV2Router, collateralOfframp]
+    static let ctfOperators: Set<String> = [exchangeV2a, exchangeV2b, collateralAdapter, negRiskCollateralAdapter, autoRedeemOperator, binaryModule, negRiskModule]
+    static let positionOperators: Set<String> = [protocolV2Router, exchangeV3, autoRedeemOperator]
+    static let redeemContracts: Set<String> = [collateralAdapter, negRiskCollateralAdapter]
+    // Function selectors: the first 4 bytes of keccak256(signature); test/polymarket.test.ts recomputes them.
+    static let approve = "095ea7b3" // approve(address,uint256)
+    static let setApprovalForAll = "a22cb465" // setApprovalForAll(address,bool)
+    static let redeemPositions = "01b7037c" // redeemPositions(address,bytes32,bytes32,uint256[])
+    static let redeem = "d217a3cc" // redeem(bytes31,uint256,uint256)
+    static let transfer = "a9059cbb" // transfer(address,uint256)
+    static let unwrap = "8cc7104f" // unwrap(address,address,uint256)
+    static let maxCalls = 20
+    static let maxDeadlineSeconds: UInt64 = 3600
+    /// Largest order amount or pUSD move, in 6-decimal units (10^15 = 1,000,000,000.000000).
+    static let maxAmount: UInt64 = 1_000_000_000_000_000
+    static let maxLabel = 80
+    static let domainFields = ["name:string", "version:string", "chainId:uint256", "verifyingContract:address"]
+    static let loginTypes: [String: [String]] = [
+      "EIP712Domain": ["name:string", "version:string", "chainId:uint256"],
+      "ClobAuth": ["address:address", "timestamp:string", "nonce:uint256", "message:string"],
+    ]
+    static let orderTypes: [String: [String]] = [
+      "EIP712Domain": domainFields,
+      "Order": ["salt:uint256", "maker:address", "signer:address", "tokenId:uint256", "makerAmount:uint256", "takerAmount:uint256",
+                "side:uint8", "signatureType:uint8", "timestamp:uint256", "metadata:bytes32", "builder:bytes32"],
+      "TypedDataSign": ["contents:Order", "name:string", "version:string", "chainId:uint256", "verifyingContract:address", "salt:bytes32"],
+    ]
+    static let batchTypes: [String: [String]] = [
+      "EIP712Domain": domainFields,
+      "Batch": ["wallet:address", "nonce:uint256", "deadline:uint256", "calls:Call[]"],
+      "Call": ["target:address", "value:uint256", "data:bytes"],
+    ]
+  }
+
+  /// A uint from typed data as a plain decimal string: a decimal string below 2^256, or a JSON whole number up to 2^53.
+  static func pmUint(_ v: Any?) -> String? {
+    if let n = v as? NSNumber {
+      guard CFGetTypeID(n) != CFBooleanGetTypeID() else { return nil }
+      let s = n.stringValue
+      guard !s.isEmpty, s.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }), let u = UInt64(s), u <= 1 << 53 else { return nil }
+      return String(u)
+    }
+    guard let s = v as? String, uint256(s) != nil else { return nil }
+    let t = s.drop(while: { $0 == "0" })
+    return t.isEmpty ? "0" : String(t)
+  }
+
+  static func pmHex(_ v: Any?, bytes: Int?) -> String? {
+    guard let s = (v as? String)?.lowercased(), s.hasPrefix("0x") else { return nil }
+    let h = s.dropFirst(2)
+    guard h.count % 2 == 0, h.utf8.allSatisfy({ ($0 >= 48 && $0 <= 57) || ($0 >= 97 && $0 <= 102) }) else { return nil }
+    if let bytes, h.count != bytes * 2 { return nil }
+    return s
+  }
+
+  static func pmAddress(_ v: Any?) -> String? { pmHex(v, bytes: 20) }
+
+  /// 6-decimal units as text: 5500000 → "5.5" (money: "5.50").
+  static func pmUnits(_ n: UInt64, money: Bool) -> String {
+    let whole = n / 1_000_000, frac = n % 1_000_000
+    guard frac > 0 else { return String(whole) }
+    var f = String(frac)
+    f = String(repeating: "0", count: 6 - f.count) + f
+    while f.hasSuffix("0") { f.removeLast() }
+    if money && f.count == 1 { f += "0" }
+    return "\(whole).\(f)"
+  }
+
+  /// The app's label (e.g. "Yes · Will X happen?") made safe for the Face ID prompt: control and invisible
+  /// format characters become spaces, spaces are collapsed, at most 80 characters (code points).
+  static func pmLabel(_ v: Any?) -> String {
+    guard let s = v as? String else { return "" }
+    let space: Unicode.Scalar = " "
+    var out = String.UnicodeScalarView()
+    for u in s.unicodeScalars {
+      let c: Unicode.Scalar
+      switch u.properties.generalCategory {
+      case .control, .format, .lineSeparator, .paragraphSeparator: c = space
+      default: c = u
+      }
+      if c == space && (out.isEmpty || out.last == space) { continue }
+      out.append(c)
+    }
+    var t = Array(out.prefix(PolymarketPolicy.maxLabel))
+    while t.last == space { t.removeLast() }
+    var r = String.UnicodeScalarView()
+    r.append(contentsOf: t)
+    return String(r)
+  }
+
+  enum PolymarketCall { case setup, claim, move(UInt64) }
+
+  /// What one Deposit Wallet call does, or throws why it is refused. Calldata is decoded by hand, exact length.
+  static func polymarketCall(target: String, data: Data, own: String) throws -> PolymarketCall {
+    let bad = { (why: String) in WalletError.invalid("Polymarket signature refused: \(why)") }
+    let P = PolymarketPolicy.self
+    let b = [UInt8](data)
+    guard b.count >= 4 else { throw bad("a call Foxsafe does not allow") }
+    let selector = Data(b[0..<4]).hexString
+    func word(_ i: Int) -> ArraySlice<UInt8>? { 4 + 32 * i + 32 <= b.count ? b[(4 + 32 * i)..<(4 + 32 * i + 32)] : nil }
+    func address(_ i: Int) -> String? {
+      guard let w = word(i), w.prefix(12).allSatisfy({ $0 == 0 }) else { return nil }
+      return "0x" + Data(w.suffix(20)).hexString
+    }
+    func small(_ i: Int) -> UInt64? {
+      guard let w = word(i), w.prefix(24).allSatisfy({ $0 == 0 }) else { return nil }
+      return w.suffix(8).reduce(UInt64(0)) { $0 << 8 | UInt64($1) }
+    }
+    func size(_ words: Int) throws { guard b.count == 4 + 32 * words else { throw bad("unreadable call") } }
+    switch (target, selector) {
+    case (P.pUSD, P.approve):
+      try size(2)
+      guard let spender = address(0), P.approveSpenders.contains(spender) else { throw bad("approval for an unknown spender") }
+      return .setup
+    case (P.conditionalTokens, P.setApprovalForAll), (P.positionManager, P.setApprovalForAll):
+      try size(2)
+      let allowed = target == P.conditionalTokens ? P.ctfOperators : P.positionOperators
+      guard let op = address(0), allowed.contains(op) else { throw bad("approval for an unknown operator") }
+      guard let flag = small(1), flag <= 1 else { throw bad("unreadable call") }
+      return .setup
+    case (let t, P.redeemPositions) where P.redeemContracts.contains(t):
+      // collateralToken, parentCollectionId, conditionId, offset (0x80), then indexSets: length + items.
+      guard let offset = small(3), offset == 128, let n = small(4), (1...256).contains(n) else { throw bad("unreadable call") }
+      try size(5 + Int(n))
+      guard address(0) == P.pUSD else { throw bad("redeem with another collateral") }
+      guard let parent = word(1), parent.allSatisfy({ $0 == 0 }) else { throw bad("redeem of a nested position") }
+      return .claim
+    case (P.protocolV2Router, P.redeem):
+      try size(3)
+      guard let cond = word(0), cond.last == 0 else { throw bad("unreadable call") } // bytes31: last byte is padding
+      guard let outcome = small(1), outcome <= 1 else { throw bad("redeem of an unknown outcome") }
+      return .claim
+    case (P.pUSD, P.transfer):
+      try size(2)
+      guard address(0) == own else { throw bad("a transfer to someone else") }
+      guard let amount = small(1), amount <= P.maxAmount else { throw bad("amount too large") }
+      return .move(amount)
+    case (P.collateralOfframp, P.unwrap):
+      try size(3)
+      guard address(0) == P.usdcE else { throw bad("unwrap to another token") }
+      guard address(1) == own else { throw bad("unwrap to someone else") }
+      guard let amount = small(2), amount <= P.maxAmount else { throw bad("amount too large") }
+      return .move(amount)
+    default:
+      throw bad("a call Foxsafe does not allow")
+    }
+  }
+
+  /// Signs ONE Polymarket EIP-712 message, after Face ID. Refuses before Face ID unless the coin is Polygon,
+  /// every chainId is 137 and it is exactly one of (SPEC §7.11):
+  /// - kind "login": Polymarket's CLOB login (ClobAuth) for this wallet's own address,
+  /// - kind "order": a Deposit Wallet order (ERC-7739 TypedDataSign over Order, signatureType 3) on one of the
+  ///   three CTF exchanges, maker = signer = the deposit wallet, Foxsafe's builder code,
+  /// - kind "batch": a Deposit Wallet batch (1–20 calls, no POL, deadline within an hour) of only the allowed
+  ///   approvals, redeems, and moves of pUSD / USDC.e to this wallet's own address.
+  /// What is signed is rebuilt here from the checked values, so two JSON readers can't disagree about it.
+  /// `request` JSON: {kind, depositWallet?, label?}. Returns JSON {signature (v = 27/28), signer, prompt}.
+  func signPolymarket(id: String, coin raw: UInt32, typedData: String, request: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("Polymarket signature refused: \(why)") }
+    guard raw == PolymarketPolicy.coin, let coin = CoinType(rawValue: raw) else { throw bad("wrong network") }
+    // This wallet's own address, from the public addresses stored with it (no secret needed).
+    let stored = try load(id).addresses[String(account)]
+    guard let own = (stored?[String(raw)] ?? stored?["60"])?.lowercased(), Self.pmAddress(own) != nil else { throw bad("this wallet has no Polygon address") }
+    let (json, prompt) = try Self.polymarketCheck(typedData: typedData, request: request, own: own, now: UInt64(max(0, Date().timeIntervalSince1970)))
+
+    return try withSecrets([id], reason: prompt) { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      let signer = coin.deriveAddress(privateKey: key)
+      guard signer.lowercased() == own else { throw bad("not this wallet") }
+      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: json)
+      if sig.hasPrefix("0x") { sig = String(sig.dropFirst(2)) }
+      guard sig.count == 130, var bytes = Data(hexString: sig) else { throw WalletError.crypto("signing failed") }
+      if bytes[64] < 27 { bytes[64] += 27 }
+      let out: [String: Any] = ["signature": "0x" + bytes.hexString, "signer": signer, "prompt": prompt]
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
+  /// The Polymarket rule itself (no keys, no storage): checks `typedData` against `request` for the wallet `own`
+  /// (lowercase 0x address) at time `now` (unix seconds). Returns the canonical JSON to sign and the prompt.
+  static func polymarketCheck(typedData: String, request: String, own: String, now: UInt64) throws -> (json: String, prompt: String) {
+    let bad = { (why: String) in WalletError.invalid("Polymarket signature refused: \(why)") }
+    let P = PolymarketPolicy.self
+    guard let td = try? JSONSerialization.jsonObject(with: Data(typedData.utf8)) as? [String: Any],
+          let types = td["types"] as? [String: Any], let domain = td["domain"] as? [String: Any], let message = td["message"] as? [String: Any],
+          let primary = td["primaryType"] as? String,
+          let req = try? JSONSerialization.jsonObject(with: Data(request.utf8)) as? [String: Any] else { throw bad("unreadable") }
+    func fields(_ name: String) -> [String] {
+      ((types[name] as? [[String: Any]]) ?? []).map { "\($0["name"] as? String ?? ""):\($0["type"] as? String ?? "")" }
+    }
+    func typesAre(_ want: [String: [String]]) -> Bool {
+      Set(types.keys) == Set(want.keys) && want.allSatisfy { fields($0.key) == $0.value }
+    }
+    func typesJSON(_ t: [String: [String]]) -> [String: Any] {
+      t.mapValues { $0.map { f -> [String: String] in let p = f.split(separator: ":"); return ["name": String(p[0]), "type": String(p[1])] } }
+    }
+    guard Self.pmUint(domain["chainId"]) == P.chainId else { throw bad("wrong network") }
+
+    let kind = req["kind"] as? String ?? ""
+    var canonical: [String: Any] = ["primaryType": primary]
+    let prompt: String
+    switch kind {
+    case "login":
+      guard primary == "ClobAuth", typesAre(P.loginTypes), Set(domain.keys) == ["name", "version", "chainId"],
+            domain["name"] as? String == "ClobAuthDomain", domain["version"] as? String == "1",
+            Set(message.keys) == ["address", "timestamp", "nonce", "message"] else { throw bad("not a Polymarket login") }
+      guard message["message"] as? String == P.loginMessage else { throw bad("the login message is not Polymarket's") }
+      guard let address = Self.pmAddress(message["address"]), address == own else { throw bad("the login is not for this wallet") }
+      guard let ts = message["timestamp"] as? String, (1...20).contains(ts.count), ts.utf8.allSatisfy({ $0 >= 48 && $0 <= 57 }),
+            let nonce = Self.pmUint(message["nonce"]) else { throw bad("unreadable") }
+      canonical["types"] = typesJSON(P.loginTypes)
+      canonical["domain"] = ["name": "ClobAuthDomain", "version": "1", "chainId": P.chainId]
+      canonical["message"] = ["address": address, "timestamp": ts, "nonce": nonce, "message": P.loginMessage]
+      prompt = "Sign in to Polymarket"
+
+    case "order":
+      guard primary == "TypedDataSign", typesAre(P.orderTypes), Set(domain.keys) == ["name", "version", "chainId", "verifyingContract"],
+            domain["name"] as? String == "Polymarket CTF Exchange",
+            Set(message.keys) == ["contents", "name", "version", "chainId", "verifyingContract", "salt"],
+            let c = message["contents"] as? [String: Any],
+            Set(c.keys) == Set(P.orderTypes["Order"]!.map { String($0.split(separator: ":")[0]) }) else { throw bad("not a Polymarket order") }
+      guard let version = domain["version"] as? String, let exchange = Self.pmAddress(domain["verifyingContract"]),
+            P.exchanges.contains("\(version):\(exchange)") else { throw bad("not a Polymarket exchange") }
+      guard message["name"] as? String == "DepositWallet", message["version"] as? String == "1",
+            Self.pmHex(message["salt"], bytes: 32) == P.zero32 else { throw bad("not a deposit wallet order") }
+      guard Self.pmUint(message["chainId"]) == P.chainId else { throw bad("wrong network") }
+      guard let wallet = Self.pmAddress(req["depositWallet"]), Self.pmAddress(message["verifyingContract"]) == wallet,
+            Self.pmAddress(c["maker"]) == wallet, Self.pmAddress(c["signer"]) == wallet else { throw bad("not your deposit wallet") }
+      guard Self.pmUint(c["signatureType"]) == "3" else { throw bad("wrong signature type") }
+      guard let side = Self.pmUint(c["side"]), side == "0" || side == "1" else { throw bad("wrong side") }
+      guard let makerS = Self.pmUint(c["makerAmount"]), let takerS = Self.pmUint(c["takerAmount"]), let maker = UInt64(makerS), let taker = UInt64(takerS),
+            maker > 0, taker > 0, maker <= P.maxAmount, taker <= P.maxAmount else { throw bad("bad amount") }
+      guard let builder = Self.pmHex(c["builder"], bytes: 32), builder == (P.builderCode.isEmpty ? P.zero32 : P.builderCode.lowercased()) else {
+        throw bad("wrong builder code")
+      }
+      guard let salt = Self.pmUint(c["salt"]), let tokenId = Self.pmUint(c["tokenId"]), let timestamp = Self.pmUint(c["timestamp"]),
+            let metadata = Self.pmHex(c["metadata"], bytes: 32) else { throw bad("unreadable") }
+      canonical["types"] = typesJSON(P.orderTypes)
+      canonical["domain"] = ["name": "Polymarket CTF Exchange", "version": version, "chainId": P.chainId, "verifyingContract": exchange]
+      canonical["message"] = [
+        "contents": ["salt": salt, "maker": wallet, "signer": wallet, "tokenId": tokenId, "makerAmount": makerS, "takerAmount": takerS,
+                     "side": side, "signatureType": "3", "timestamp": timestamp, "metadata": metadata, "builder": builder],
+        "name": "DepositWallet", "version": "1", "chainId": P.chainId, "verifyingContract": wallet, "salt": P.zero32,
+      ] as [String: Any]
+      var text: String
+      if side == "0" {
+        let tenths = (maker * 1000 + taker / 2) / taker // price in tenths of a cent
+        let price = tenths % 10 == 0 ? String(tenths / 10) : "\(tenths / 10).\(tenths % 10)"
+        text = "Buy \(Self.pmUnits(taker, money: false)) shares for up to $\(Self.pmUnits(maker, money: true)) (\(price)¢ each)"
+      } else {
+        text = "Sell \(Self.pmUnits(maker, money: false)) shares for at least $\(Self.pmUnits(taker, money: true))"
+      }
+      let label = Self.pmLabel(req["label"])
+      if !label.isEmpty { text += " · " + label }
+      prompt = text
+
+    case "batch":
+      guard primary == "Batch", typesAre(P.batchTypes), Set(domain.keys) == ["name", "version", "chainId", "verifyingContract"],
+            domain["name"] as? String == "DepositWallet", domain["version"] as? String == "1",
+            Set(message.keys) == ["wallet", "nonce", "deadline", "calls"] else { throw bad("not a deposit wallet batch") }
+      guard let wallet = Self.pmAddress(req["depositWallet"]), Self.pmAddress(domain["verifyingContract"]) == wallet,
+            Self.pmAddress(message["wallet"]) == wallet else { throw bad("not your deposit wallet") }
+      guard let nonce = Self.pmUint(message["nonce"]), let deadlineS = Self.pmUint(message["deadline"]) else { throw bad("unreadable") }
+      guard let deadline = UInt64(deadlineS), deadline <= now + P.maxDeadlineSeconds else { throw bad("the deadline is more than an hour away") }
+      guard let calls = message["calls"] as? [[String: Any]], (1...P.maxCalls).contains(calls.count) else { throw bad("a batch has 1 to 20 calls") }
+      var setup = false, claim = false, moved: UInt64 = 0, moves = false
+      var out: [[String: Any]] = []
+      for call in calls {
+        guard Set(call.keys) == ["target", "value", "data"], let target = Self.pmAddress(call["target"]), let value = Self.pmUint(call["value"]),
+              let dataHex = Self.pmHex(call["data"], bytes: nil), let data = Data(hexString: String(dataHex.dropFirst(2))) ?? (dataHex == "0x" ? Data() : nil) else {
+          throw bad("unreadable call")
+        }
+        guard value == "0" else { throw bad("a call sends POL") }
+        switch try Self.polymarketCall(target: target, data: data, own: own) {
+        case .setup: setup = true
+        case .claim: claim = true
+        case .move(let amount): moves = true; moved += amount
+        }
+        out.append(["target": target, "value": "0", "data": dataHex])
+      }
+      canonical["types"] = typesJSON(P.batchTypes)
+      canonical["domain"] = ["name": "DepositWallet", "version": "1", "chainId": P.chainId, "verifyingContract": wallet]
+      canonical["message"] = ["wallet": wallet, "nonce": nonce, "deadline": deadlineS, "calls": out] as [String: Any]
+      var parts: [String] = []
+      if setup { parts.append("Set up Predictions") }
+      if claim { parts.append("Claim winnings") }
+      if moves { parts.append("Move $\(Self.pmUnits(moved, money: true)) to your Foxsafe wallet") }
+      prompt = parts.joined(separator: " · ")
+
+    default:
+      throw bad("unknown kind")
+    }
+    return (String(data: try JSONSerialization.data(withJSONObject: canonical), encoding: .utf8)!, prompt)
+  }
+
   // MARK: TRON multisig (account permissions)
 
   /// Foxsafe's TRON multisig rule, compiled in on purpose (SPEC §7.8).
@@ -1687,8 +2011,8 @@ final class WalletStore {
 
   /// Open message signing is switched off (9 Nov 2026): signing ANY text or EIP-712 data after one Face ID
   /// is how drainer sites take tokens without a transaction (Permit, Permit2, NFT listings). Every signature
-  /// now goes through a function with its own compiled-in rule (signGaslessEvm, signSafe, and the planned
-  /// dApp / Polymarket ones). Kept so older JS keeps compiling; it never opens a key (SPEC §7.7).
+  /// now goes through a function with its own compiled-in rule (signGaslessEvm, signSafe, the dApp ones,
+  /// signPolymarket). Kept so older JS keeps compiling; it never opens a key (SPEC §7.7).
   func signMessage(id: String, coin raw: UInt32, message: String, typed: Bool, account: UInt32) throws -> String {
     throw WalletError.invalid("open message signing is turned off: use a dedicated signing function")
   }
