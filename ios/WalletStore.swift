@@ -181,11 +181,50 @@ final class WalletStore {
   private func checkPasscode(_ passcode: String) throws -> Bool {
     guard let raw = try main.get("passcode"),
           let v = try? JSONDecoder().decode(Verifier.self, from: Data(raw.utf8)) else { throw WalletError.passcode("no passcode set") }
+    try PasscodeTries.checkAllowed(recovery)
     let hash = try Envelope.argon2id(passcode, salt: Data(base64Encoded: v.salt)!, m: v.m, t: v.t)
     let expected = Data(base64Encoded: v.hash)!
     // Constant-time comparison.
-    return hash.withUnsafeBytes { a in
+    let ok = hash.withUnsafeBytes { a in
       a.count == expected.count && zip(a, expected).reduce(0) { $0 | ($1.0 ^ $1.1) } == 0
+    }
+    PasscodeTries.record(recovery, ok: ok)
+    return ok
+  }
+
+  /// Wrong-passcode limit, kept below the app so a changed app can't skip it (security audit 15 Nov 2026).
+  /// The first 5 wrong tries are free; then each further wrong try locks passcode checks for 1, 5, 15, then
+  /// 60 minutes. A right passcode clears the count. It lives next to the recovery copy, so deleting and
+  /// reinstalling the app doesn't reset it. Nothing is ever erased by wrong tries.
+  enum PasscodeTries {
+    static let account = "tries"
+    static let free = 5
+    static let waitsMinutes: [Double] = [1, 5, 15, 60]
+    private struct State: Codable { var n: Int; var at: Double }
+
+    private static func read(_ store: KeychainStore) -> State? {
+      guard let raw = try? store.get(account) else { return nil }
+      return try? JSONDecoder().decode(State.self, from: Data(raw.utf8))
+    }
+
+    /// Seconds still to wait after `n` wrong tries, the last at `at` (unix seconds).
+    static func waitLeft(n: Int, at: Double, now: Double) -> Double {
+      guard n >= free else { return 0 }
+      let wait = waitsMinutes[min(n - free, waitsMinutes.count - 1)] * 60
+      // A clock moved backwards doesn't shorten the wait.
+      return max(0, wait - max(0, now - at))
+    }
+
+    static func checkAllowed(_ store: KeychainStore) throws {
+      guard let s = read(store) else { return }
+      let left = waitLeft(n: s.n, at: s.at, now: Date().timeIntervalSince1970)
+      if left > 0 { throw WalletError.passcode("too many wrong tries; try again in \(Int((left / 60).rounded(.up))) min") }
+    }
+
+    static func record(_ store: KeychainStore, ok: Bool) {
+      if ok { try? store.delete(account); return }
+      let s = State(n: (read(store)?.n ?? 0) + 1, at: Date().timeIntervalSince1970)
+      if let data = try? JSONEncoder().encode(s) { try? store.set(String(decoding: data, as: UTF8.self), for: account) }
     }
   }
 
@@ -620,10 +659,13 @@ final class WalletStore {
   func signTransactions(id: String, coin raw: UInt32, inputsBase64: [String], account: UInt32) throws -> [String] {
     lock.lock(); defer { lock.unlock() }
     guard let coin = CoinType(rawValue: raw), (1...4).contains(inputsBase64.count) else { throw WalletError.invalid("bad coin or inputs") }
-    let inputs = try inputsBase64.map { b64 -> Data in
+    var inputs = try inputsBase64.map { b64 -> Data in
       guard let d = Data(base64Encoded: b64) else { throw WalletError.invalid("bad input") }
       return d
     }
+    // A TRON input can carry a second transaction as raw JSON, which the signer would sign INSTEAD of
+    // the `transaction` the rules below read. Every TRON input is rebuilt from its `transaction` only.
+    if coin == .tron { inputs = try inputs.map { try Self.tronTransactionOnly($0) } }
     // Checked before Face ID, so a refused batch never asks.
     var owners: [String] = []
     var fees = 0, energy = 0
@@ -656,6 +698,20 @@ final class WalletStore {
   }
 
   enum GaslessExtra { case fee, energy }
+
+  /// A TRON SigningInput holding ONLY its `transaction`. Trust Wallet Core signs `raw_json` instead of
+  /// `transaction` when both are present, so a rule that reads `transaction` could be shown a small decoy
+  /// while something else is signed (security audit 15 Nov 2026). Raw JSON is refused; a key or any other
+  /// extra field is dropped by rebuilding the input.
+  static func tronTransactionOnly(_ data: Data) throws -> Data {
+    let input = try TronSigningInput(serializedBytes: data)
+    guard input.rawJson.isEmpty, input.hasTransaction else {
+      throw WalletError.invalid("this TRON transaction is in a form Foxsafe does not sign")
+    }
+    var clean = TronSigningInput()
+    clean.transaction = input.transaction
+    return try clean.serializedData()
+  }
 
   /// Returns what an extra gasless transaction is and its sender; throws if it is neither.
   static func gaslessExtraOwner(_ data: Data, coin: CoinType) throws -> (GaslessExtra, String) {
@@ -705,7 +761,7 @@ final class WalletStore {
     }
     let inputs = try inputsBase64.map { b64 -> Data in
       guard let d = Data(base64Encoded: b64) else { throw WalletError.invalid("bad input") }
-      return d
+      return try Self.tronTransactionOnly(d) // what is checked below is exactly what is signed
     }
     var trx: Int64 = 0
     var owners = Set<String>()
@@ -819,6 +875,7 @@ final class WalletStore {
         guard Set(tx.keys).isSubset(of: allowed), tx["TransactionType"] as? String == "Payment", tx["Amount"] is String,
               (tx["Flags"] as? Int ?? 0) == 0 else { throw unsupported }
         if let own, tx["Account"] as? String != own { throw notOwn }
+        i.rawJson = try checkedJSON(tx) // sign the fields that were checked, not the app's text
       } else {
         guard case .opPayment(let pay)? = i.operationOneof, case .amount? = pay.amountOneof else { throw unsupported }
         if let own, i.account != own { throw notOwn }
@@ -942,11 +999,12 @@ final class WalletStore {
     let initCode = (message["initCode"] as? String ?? "0x").lowercased()
     guard upgradeNonce >= 0 ? initCode == EvmFeePolicy.delegate.lowercased() : (initCode == "0x" || initCode.isEmpty) else { throw bad("unexpected account upgrade") }
     let sender = (message["sender"] as? String ?? "").lowercased()
+    let checked = try Self.checkedJSON(td)
 
     return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       guard sender == coin.deriveAddress(privateKey: key).lowercased() else { throw bad("not sent by this wallet") }
-      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: typedData)
+      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: checked)
       if !sig.hasPrefix("0x") { sig = "0x" + sig }
       guard sig.count == 132 else { throw WalletError.crypto("signing failed") }
       var out: [String: Any] = ["signature": sig]
@@ -1010,10 +1068,11 @@ final class WalletStore {
     let dataHex = (message["data"] as? String ?? "0x").lowercased()
     guard dataHex.hasPrefix("0x"), let data = dataHex.count == 2 ? Data() : Data(hexString: String(dataHex.dropFirst(2))) else { throw bad("unreadable data") }
     if let why = Self.safeCallProblem(to: to, operation: op, data: data, safe: safe, depth: 0) { throw bad(why) }
+    let checked = try Self.checkedJSON(td)
 
     return try withSecrets([id], reason: "Approve this shared wallet transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
-      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: typedData)
+      var sig = EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: checked)
       if sig.hasPrefix("0x") { sig = String(sig.dropFirst(2)) }
       guard sig.count == 130, var bytes = Data(hexString: sig) else { throw WalletError.crypto("signing failed") }
       if bytes[64] < 27 { bytes[64] += 27 }
@@ -1553,6 +1612,9 @@ final class WalletStore {
     static let tokenPrograms = ["TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"]
     /// Permit2 batch permits: several tokens at (near) the maximum amount is the classic one-signature drain.
     static let permit2Batches: Set<String> = ["PermitBatch", "PermitBatchTransferFrom", "PermitBatchWitnessTransferFrom"]
+    /// EIP-712 messages that only Foxsafe's own signing functions may sign, never a dApp (primary types; domain names, lowercase).
+    static let ownPrimaryTypes: Set<String> = ["PackedUserOperation", "TypedDataSign", "Batch", "ClobAuth"]
+    static let ownDomainNames: Set<String> = ["erc4337", "depositwallet", "clobauthdomain", "polymarket ctf exchange"]
   }
 
   struct DappRequest {
@@ -1623,6 +1685,12 @@ final class WalletStore {
     guard let primary = td["primaryType"] as? String, let types = td["types"] as? [String: Any], types[primary] != nil,
           let domain = td["domain"] as? [String: Any], let message = td["message"] as? [String: Any] else { return "unreadable" }
     if primary == "SafeTx" { return "a Safe transaction: open it in Foxsafe's shared wallet screen" }
+    // Messages only Foxsafe's own screens may sign (signGaslessEvm, signPolymarket): from a site they could move
+    // the tokens of a wallet upgraded for fee-free sends, or a Polymarket deposit wallet.
+    let domainName = (domain["name"] as? String ?? "").lowercased()
+    if DappPolicy.ownPrimaryTypes.contains(primary) || DappPolicy.ownDomainNames.contains(domainName) {
+      return "only Foxsafe's own screens can sign this kind of message"
+    }
     if let c = domain["chainId"] {
       guard let want = req.chainId, dappNumber(c) == want else { return "it is for another network" }
     } else if domain["verifyingContract"] != nil {
@@ -1681,10 +1749,11 @@ final class WalletStore {
     guard let req = Self.dappRequest(request), req.chainId != nil,
           let td = try? JSONSerialization.jsonObject(with: Data(typedData.utf8)) as? [String: Any] else { throw bad("unreadable") }
     if let why = Self.typedDataProblem(td, req: req) { throw bad(why) }
+    let checked = try Self.checkedJSON(td)
     return try withSecrets([id], reason: "Sign for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       guard coin.deriveAddress(privateKey: key).lowercased() == req.address.lowercased() else { throw bad("not the connected account") }
-      return try Self.dappSignedOut(EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: typedData))
+      return try Self.dappSignedOut(EthereumMessageSigner.signTypedMessage(privateKey: key, messageJson: checked))
     }
   }
 
@@ -1948,6 +2017,16 @@ final class WalletStore {
     return "0x" + body.hexString
   }
 
+  /// The JSON text of an object this code has already parsed and checked. Apple's reader keeps the FIRST copy of a
+  /// key written twice and Trust Wallet Core's signer the LAST, so signing the app's own text could sign something
+  /// the rule never saw. Signing this text instead means the two can't differ (security audit 15 Nov 2026).
+  static func checkedJSON(_ object: [String: Any]) throws -> String {
+    guard JSONSerialization.isValidJSONObject(object), let text = String(data: try JSONSerialization.data(withJSONObject: object), encoding: .utf8) else {
+      throw WalletError.invalid("unreadable")
+    }
+    return text
+  }
+
   /// "0x" + 40 hex → 32-byte ABI word.
   static func addressWord(_ a: String) -> Data? {
     let hex = a.lowercased().hasPrefix("0x") ? String(a.dropFirst(2)) : a
@@ -2040,6 +2119,7 @@ final class WalletStore {
   /// needed to re-lock the restored entries with it.
   func restore(passcode: String, currentPasscode: String?) throws -> [[String: Any]] {
     lock.lock(); defer { lock.unlock() }
+    try PasscodeTries.checkAllowed(recovery)
     let cache = KeyCache()
     var opened: [(account: String, records: [Record], env: Envelope.Parsed)] = []
     for account in try recovery.accounts(prefix: "w.") {
@@ -2048,7 +2128,9 @@ final class WalletStore {
         opened.append((account, try Self.decodeVault(data), env))
       }
     }
+    if opened.isEmpty, try !recovery.accounts(prefix: "w.").isEmpty { PasscodeTries.record(recovery, ok: false) }
     guard !opened.isEmpty else { throw WalletError.passcode("wrong passcode, or nothing to recover") }
+    PasscodeTries.record(recovery, ok: true)
 
     let hasPasscode = try main.get("passcode") != nil
     var lockWith = passcode
@@ -2129,6 +2211,12 @@ final class WalletStore {
     lock.lock(); defer { lock.unlock() }
     guard password.count >= Self.minBackupPasswordLength else { throw WalletError.invalid("the backup password needs at least \(Self.minBackupPasswordLength) characters") }
     try requirePasscode(passcode)
+    // The backup file opens with this password alone, so whoever sets it can read every wallet. The passcode
+    // is typed in the app's own screens; Face ID (the wallet's hardware key, the same check as sending) is
+    // asked here as well, so the passcode by itself is not enough (security audit 15 Nov 2026).
+    if let first = try main.accounts(prefix: "w.").first {
+      _ = try withSecrets([String(first.dropFirst(2))], reason: "Set your backup password") { _ in true }
+    }
     let (m, t) = Envelope.defaultArgon2
     let salt = Envelope.random(16)
     var key = try Envelope.argon2id(password, salt: salt, m: m, t: t).withUnsafeBytes { Data($0) }
@@ -2146,7 +2234,11 @@ final class WalletStore {
     guard let b = try backupSetting() else { throw WalletError.invalid("set a backup password first") }
     let cache = KeyCache()
     var key: Data
-    do { key = try Envelope.open(b.key, .passcode(passcode), expect: .recovery, cache: cache) } catch { throw WalletError.passcode("wrong passcode") }
+    try PasscodeTries.checkAllowed(recovery)
+    do { key = try Envelope.open(b.key, .passcode(passcode), expect: .recovery, cache: cache) } catch {
+      PasscodeTries.record(recovery, ok: false)
+      throw WalletError.passcode("wrong passcode")
+    }
     defer { key.resetBytes(in: 0..<key.count) }
     let records = try main.accounts(prefix: "w.").sorted().map { account -> Record in
       guard let entry = try recovery.get(account) else { throw WalletError.notFound("no recovery entry for \(account)") }

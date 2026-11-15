@@ -336,8 +336,14 @@ network-fee extras after ONE Face ID. Checked natively before the prompt
      (founder, 14 Nov 2026).
 3. Every extra input is sent from this wallet.
 
-Worst case with a fully compromised app and server: 5 USDT to Foxsafe's own
-fee wallet and 2 × 0.5 TRX to anyone.
+Worst case for the extras with a fully compromised app and server: 5 USDT to
+Foxsafe's own fee wallet and 2 × 0.5 TRX to anyone. The first transaction is
+the user's own send and is not limited here (see §7.12).
+
+Every TRON input is rebuilt from its `transaction` before it is checked and
+signed, and an input carrying `raw_json` is refused: Trust Wallet Core signs
+`raw_json` instead of `transaction` when both are present, so a rule reading
+`transaction` could otherwise be shown a small decoy (§7.12).
 
 ### 7.5 Cosmos family (THORChain, Cosmos Hub, Osmosis, Injective …)
 
@@ -516,9 +522,10 @@ approves them on the phone (founder, 14 Nov 2026).
   After Face ID: the key's address must be the Vault.
 - The swap (USDT → TRX) is a separate, normal Swap with its own Face ID.
 
-Worst case with a fully compromised app and server: 3,000 TRX per round
-from the Vault, and only after the founder's Face ID; USDT can only go to
-his own hardware wallet.
+Worst case for one "Approve the Vault payouts" Face ID with a fully
+compromised app and server: 3,000 TRX per round from the Vault; USDT can only
+go to his own hardware wallet. This limits `signVaultRound` only: the plain
+`signTransaction` is not limited for the Vault either (§7.12).
 
 ### 7.11 Polymarket (build 20 on)
 
@@ -630,3 +637,42 @@ every allowed contract appears in a vector. The on-device self-test runs
 every vector through the native code: signatures, prompts and the reason for
 each refusal. When the builder code is set, regenerate the vector (the
 script reads it from `ios/WalletStore.swift`).
+
+### 7.12 Changes after the security audit of 15 Nov 2026 (build 21 on)
+
+- **TRON raw JSON.** `signTransactions` and `signVaultRound` rebuild every TRON
+  input from its `transaction` field and refuse `raw_json` (§7.2, §7.10).
+  `test/audit.test.ts` proves the library behaviour this guards against.
+- **dApp typed data.** `signDappTypedData` also refuses primary types
+  `PackedUserOperation`, `TypedDataSign`, `Batch`, `ClobAuth` and domain names
+  `ERC4337`, `DepositWallet`, `ClobAuthDomain`, `Polymarket CTF Exchange`: the
+  messages only `signGaslessEvm` and `signPolymarket` may sign.
+- **iOS signs the JSON it checked.** Apple's JSON reader keeps the first copy
+  of a key written twice; Trust Wallet Core keeps the last. `signGaslessEvm`,
+  `signSafe`, `signDappTypedData` and XRP memo payments now sign the JSON
+  written back from the checked object, never the app's text. (Android's
+  reader keeps the last copy, like the signer.)
+- **Backup password.** `setBackupPassword` needs the passcode AND the wallet's
+  hardware key (Face ID / fingerprint prompt "Set your backup password") when
+  the phone holds a wallet. `buildBackup` still needs only the passcode, so
+  the file can be rebuilt after every wallet change; it is sealed with the key
+  of the password set under Face ID, and that key never reaches the app.
+- **Wrong passcodes.** After 5 wrong tries each further wrong try locks
+  passcode checks for 1, 5, 15, then 60 minutes (`PASSCODE: too many wrong
+  tries; try again in N min`). A right passcode clears the count. iOS keeps
+  the count beside the recovery copy (survives a reinstall); Android in the
+  main store. Wrong tries never erase anything.
+
+Still open, by design or waiting for a decision:
+
+- `signTransaction` signs whatever single transaction the app builds, with
+  the prompt "Confirm the transaction". The rules in §7.2–7.11 limit what one
+  prompt can cover beyond that, and what a dApp can ask for; they do not stop
+  a tampered app from asking for a normal send to another address. The
+  instant-update signing key must be guarded accordingly.
+- Vault TRX receivers are not compiled in and there is no per-day cap.
+- `wipe` and `deleteRecovery` need no passcode (the "forgot my passcode,
+  start again" path uses them).
+- Android: the Keystore key is not StrongBox-backed and the app's settings
+  are included in Android backup (§3.1 describes the intended design).
+

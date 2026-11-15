@@ -49,6 +49,10 @@ class WalletStore(context: Context) {
 
   companion object {
     const val MIN_PASSCODE = 6
+    /** Wrong-passcode limit: where the count is kept, free tries, then the wait after each further wrong try. */
+    const val TRIES_KEY = "tries"
+    const val TRIES_FREE = 5
+    val TRIES_WAIT_MINUTES = longArrayOf(1, 5, 15, 60)
     const val MIN_BACKUP_PASSWORD = 8
     val DEFAULT_COINS = listOf(0, 60, 195, 501)
 
@@ -178,8 +182,35 @@ class WalletStore(context: Context) {
 
   private fun checkPasscode(passcode: String): Boolean {
     val v = JSONObject(main.get("passcode") ?: throw WalletException("PASSCODE", "no passcode set"))
+    triesAllowed()
     val hash = Envelope.argon2id(passcode, Envelope.unb64(v.getString("salt")), v.getInt("m"), v.getInt("t"))
-    return MessageDigest.isEqual(hash, Envelope.unb64(v.getString("hash")))
+    val ok = MessageDigest.isEqual(hash, Envelope.unb64(v.getString("hash")))
+    recordTry(ok)
+    return ok
+  }
+
+  // Wrong-passcode limit, kept below the app so a changed app can't skip it (security audit 15 Nov 2026).
+  // The first 5 wrong tries are free; then each further wrong try locks passcode checks for 1, 5, 15, then
+  // 60 minutes. A right passcode clears the count. Nothing is ever erased by wrong tries.
+
+  /** Milliseconds still to wait after [n] wrong tries, the last at [at]. */
+  internal fun triesWaitLeft(n: Int, at: Long, now: Long): Long {
+    if (n < TRIES_FREE) return 0
+    val wait = TRIES_WAIT_MINUTES[minOf(n - TRIES_FREE, TRIES_WAIT_MINUTES.size - 1)] * 60_000L
+    // A clock moved backwards doesn't shorten the wait.
+    return maxOf(0L, wait - maxOf(0L, now - at))
+  }
+
+  private fun triesAllowed() {
+    val s = runCatching { JSONObject(main.get(TRIES_KEY) ?: return) }.getOrNull() ?: return
+    val left = triesWaitLeft(s.optInt("n"), s.optLong("at"), System.currentTimeMillis())
+    if (left > 0) throw WalletException("PASSCODE", "too many wrong tries; try again in ${(left + 59_999) / 60_000} min")
+  }
+
+  private fun recordTry(ok: Boolean) {
+    if (ok) { if (main.get(TRIES_KEY) != null) main.delete(TRIES_KEY); return }
+    val n = runCatching { JSONObject(main.get(TRIES_KEY) ?: "{}").optInt("n") }.getOrDefault(0) + 1
+    runCatching { main.set(TRIES_KEY, JSONObject().put("n", n).put("at", System.currentTimeMillis()).toString()) }
   }
 
   private fun requirePasscode(passcode: String) {
@@ -589,7 +620,9 @@ class WalletStore(context: Context) {
   fun signTransactions(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
     val c = coin(coinValue)
     if (inputsB64.size !in 1..4) throw WalletException("INVALID", "bad inputs")
-    val inputs = inputsB64.map { Envelope.unb64(it) }
+    // A TRON input can carry a second transaction as raw JSON, which the signer would sign INSTEAD of
+    // the `transaction` the rules below read. Every TRON input is rebuilt from its `transaction` only.
+    val inputs = inputsB64.map { Envelope.unb64(it) }.map { if (c == CoinType.TRON) tronTransactionOnly(it) else it }
     // Checked before the prompt, so a refused batch never asks.
     val extras = inputs.drop(1).map { gaslessExtraOwner(it, c) }
     if (extras.count { it.first == GaslessExtra.FEE } > 1) throw WalletException("INVALID", "only one fee transfer is allowed")
@@ -613,6 +646,18 @@ class WalletStore(context: Context) {
   }
 
   private enum class GaslessExtra { FEE, ENERGY }
+
+  /**
+   * A TRON SigningInput holding ONLY its `transaction`. Trust Wallet Core signs `raw_json` instead of
+   * `transaction` when both are present, so a rule that reads `transaction` could be shown a small decoy
+   * while something else is signed (security audit 15 Nov 2026). Raw JSON is refused; a key or any other
+   * extra field is dropped by rebuilding the input.
+   */
+  private fun tronTransactionOnly(data: ByteArray): ByteArray {
+    val input = try { Tron.SigningInput.parseFrom(data) } catch (e: Exception) { throw WalletException("INVALID", "bad input") }
+    if (input.rawJson.isNotEmpty() || !input.hasTransaction()) throw WalletException("INVALID", "this TRON transaction is in a form Foxsafe does not sign")
+    return Tron.SigningInput.newBuilder().setTransaction(input.transaction).build().toByteArray()
+  }
 
   /** What an extra gasless transaction is, and its sender; throws if it is neither. */
   private fun gaslessExtraOwner(data: ByteArray, c: CoinType): Pair<GaslessExtra, String> {
@@ -660,7 +705,7 @@ class WalletStore(context: Context) {
   fun signVaultRound(id: String, coinValue: Int, inputsB64: List<String>, account: Int, activity: FragmentActivity?): List<String> = synchronized(lock) {
     val c = coin(coinValue)
     if (c != CoinType.TRON || inputsB64.size !in 1..VaultPolicy.MAX_INPUTS) throw WalletException("INVALID", "a vault round is 1 to 8 TRON transactions")
-    val inputs = inputsB64.map { Envelope.unb64(it) }
+    val inputs = inputsB64.map { tronTransactionOnly(Envelope.unb64(it)) } // what is checked below is exactly what is signed
     var trx = 0L
     val owners = mutableSetOf<String>()
     for (d in inputs) {
@@ -1597,6 +1642,9 @@ class WalletStore(context: Context) {
     val TOKEN_PROGRAMS = listOf("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb")
     /** Permit2 batch permits: several tokens at (near) the maximum amount is the classic one-signature drain. */
     val PERMIT2_BATCHES = setOf("PermitBatch", "PermitBatchTransferFrom", "PermitBatchWitnessTransferFrom")
+    /** EIP-712 messages that only Foxsafe's own signing functions may sign, never a dApp (primary types; domain names, lowercase). */
+    val OWN_PRIMARY_TYPES = setOf("PackedUserOperation", "TypedDataSign", "Batch", "ClobAuth")
+    val OWN_DOMAIN_NAMES = setOf("erc4337", "depositwallet", "clobauthdomain", "polymarket ctf exchange")
     val HUGE: BigInteger = BigInteger.ONE.shiftLeft(159)
   }
 
@@ -1682,6 +1730,11 @@ class WalletStore(context: Context) {
     val message = td.optJSONObject("message")
     if (primary.isEmpty() || types == null || !types.has(primary) || domain == null || message == null) return "unreadable"
     if (primary == "SafeTx") return "a Safe transaction: open it in Foxsafe's shared wallet screen"
+    // Messages only Foxsafe's own screens may sign (signGaslessEvm, signPolymarket): from a site they could move
+    // the tokens of a wallet upgraded for fee-free sends, or a Polymarket deposit wallet.
+    if (primary in DappPolicy.OWN_PRIMARY_TYPES || domain.optString("name").lowercase() in DappPolicy.OWN_DOMAIN_NAMES) {
+      return "only Foxsafe's own screens can sign this kind of message"
+    }
     if (domain.has("chainId")) {
       if (req.chainId == null || dappNumber(domain.opt("chainId")) != req.chainId) return "it is for another network"
     } else if (domain.has("verifyingContract")) {
@@ -2114,6 +2167,7 @@ class WalletStore(context: Context) {
   }
 
   fun restore(passcode: String, currentPasscode: String?): JSONArray = synchronized(lock) {
+    triesAllowed()
     val cache = Envelope.KeyCache()
     try {
       val opened = recovery.keys("w.").mapNotNull { account ->
@@ -2121,7 +2175,11 @@ class WalletStore(context: Context) {
         val env = runCatching { Envelope.parse(json) }.getOrNull() ?: return@mapNotNull null
         runCatching { Triple(account, decodeVault(Envelope.open(json, Envelope.Source.Passcode(passcode), Envelope.Kind.RECOVERY, cache)), env) }.getOrNull()
       }
-      if (opened.isEmpty()) throw WalletException("PASSCODE", "wrong passcode, or nothing to recover")
+      if (opened.isEmpty()) {
+        if (recovery.keys("w.").isNotEmpty()) recordTry(false)
+        throw WalletException("PASSCODE", "wrong passcode, or nothing to recover")
+      }
+      recordTry(true)
 
       var lockWith = passcode
       if (main.get("passcode") == null) {
@@ -2187,9 +2245,13 @@ class WalletStore(context: Context) {
   fun hasBackupPassword(): Boolean = synchronized(lock) { main.get("backup") != null }
 
   /** Sets or replaces the backup password. Backups made with an earlier password keep that password. */
-  fun setBackupPassword(password: String, passcode: String) = synchronized(lock) {
+  fun setBackupPassword(password: String, passcode: String, activity: FragmentActivity?) = synchronized(lock) {
     if (password.length < MIN_BACKUP_PASSWORD) throw WalletException("INVALID", "the backup password needs at least $MIN_BACKUP_PASSWORD characters")
     requirePasscode(passcode)
+    // The backup file opens with this password alone, so whoever sets it can read every wallet. The passcode
+    // is typed in the app's own screens; the fingerprint / face prompt (the wallet's hardware key, the same
+    // check as sending) is asked here as well, so the passcode by itself is not enough (security audit 15 Nov 2026).
+    main.keys("w.").firstOrNull()?.let { withSecret(it.removePrefix("w."), activity, "Set your backup password") { } }
     val salt = Envelope.random(16)
     val key = Envelope.argon2id(password, salt, Envelope.DEFAULT_M, Envelope.DEFAULT_T)
     try {
@@ -2211,10 +2273,12 @@ class WalletStore(context: Context) {
     val b = JSONObject(main.get("backup") ?: throw WalletException("INVALID", "set a backup password first"))
     val cache = Envelope.KeyCache()
     var key: ByteArray? = null
+    triesAllowed()
     try {
       key = try {
         Envelope.open(b.getString("key"), Envelope.Source.Passcode(passcode), Envelope.Kind.RECOVERY, cache)
       } catch (e: WalletException) {
+        recordTry(false)
         throw WalletException("PASSCODE", "wrong passcode")
       }
       val records = main.keys("w.").sorted().map { account ->

@@ -246,7 +246,16 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refused([payment, fee, energy, energy, energy], 'a third energy payment');
     await refused([payment, energy, trx(seller, 100_000n, 'TCEezhePNTyie5gkrb77zAZLBx9RMffLuN')], 'an energy payment from another wallet');
     await refused([payment, trx(seller, 100_000n, from, 'hi')], 'an energy payment with a note');
-    return 'one unlock for both, same signatures; 4 bad batches refused; energy payments: 4 signed, 4 bad refused';
+    // A TRON input may not carry raw JSON: the signer would sign that instead of the transaction the rule read.
+    const unb64 = (t: string) => Uint8Array.from(atob(t), (c) => c.charCodeAt(0));
+    const hide = (input: string) => {
+      const m = TW.Tron.Proto.SigningInput.decode(unb64(input));
+      m.rawJson = '{"txID":"00","raw_data":{},"raw_data_hex":"00"}';
+      return btoa(String.fromCharCode(...TW.Tron.Proto.SigningInput.encode(m).finish()));
+    };
+    await refused([payment, fee, hide(energy)], 'an energy payment hiding another transaction as raw JSON');
+    await refused([hide(payment)], 'a TRON transaction given as raw JSON');
+    return 'one unlock for both, same signatures; 4 bad batches refused; energy payments: 4 signed, 4 bad refused; raw JSON refused';
   });
 
   await check('Vault payouts: only the Vault, only TRX or USDT to the hardware wallet (SPEC 7.10)', async () => {
