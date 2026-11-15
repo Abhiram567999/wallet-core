@@ -680,3 +680,29 @@ Still open, by design or waiting for a decision:
 - Android: the Keystore key is not StrongBox-backed and the app's settings
   are included in Android backup (§3.1 describes the intended design).
 
+
+### 7.13 Secure send screen (planned for build 22; branch `secure-send-screen`)
+
+Founder, 16 Nov 2026. Today the user checks the receiver and amount on the Review screen, which
+the app's JavaScript draws, and Face ID then says only "Confirm the transaction". JavaScript that
+was tampered with (a stolen instant-update key) could show one receiver and have another signed.
+
+From build 22, `signTransactions` (and so `signTransaction`) shows a screen of its own before
+Face ID, drawn by the native code and filled only from the SigningInput bytes that will be signed:
+
+- title "Send 50 USDT", the network, the whole receiver address in groups of four with start,
+  middle and end marked, and the fee-free extras (USDT fee, TRX energy) signed with the same Face ID;
+- the tick "I checked the receiver's address…" and "Slide to send" live on this screen. The app's
+  Review screen keeps every detail and ends with one button that opens it;
+- anything that is not a plain send of a coin or token (a swap's contract call, an approval, a
+  network this screen can't read yet) shows "Not a simple send … Foxsafe can't read what this
+  transaction does", never a guess;
+- the app can't draw, change or press it, and can't skip it: it is part of signing.
+
+`src/sendSummary.ts` is the reference for what is shown (`sendSummary`, `summaryText`);
+`test/sendSummary.test.ts` builds transactions with the app's own builders and reads them back.
+The Swift and Kotlin code mirrors it and the on-device self-test runs the same cases.
+
+Not shown on purpose: the contact's name (app data) and the value in money (server prices).
+`canConfirmSends()` tells the app the build has this screen; older builds keep the tick and
+slide on Review.
