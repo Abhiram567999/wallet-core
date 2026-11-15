@@ -249,6 +249,8 @@ export async function signTransactions(id: string, coin: CoinType, inputs: strin
 }
 
 export interface GaslessEvmRequest {
+  /** Build 22 on: JSON {lang} for the secure send screen (SPEC §7.13). */
+  hint?: string;
   token: string;
   to: string;
   amount: string; // base units
@@ -332,6 +334,8 @@ export async function signPolymarket(id: string, coin: CoinType, typedData: stri
  * the in-app browser's real address, or the WalletConnect peer's verified URL. Sign-in messages must name it.
  */
 export interface DappSignRequest {
+  /** Build 22 on: JSON {lang} for the secure send screen (SPEC §7.13). */
+  hint?: string;
   origin: string;
   /** The connected account: 0x… (EVM), base58 (Solana), T… (TRON). The native signer refuses any other. */
   address: string;
@@ -403,6 +407,8 @@ export async function signTronMultisig(id: string, rawDataHex: string, request: 
 }
 
 export interface GaslessSolanaRequest {
+  /** Build 22 on: JSON {lang} for the secure send screen (SPEC §7.13). */
+  hint?: string;
   to: string;
   mint: string;
   amount: string;
