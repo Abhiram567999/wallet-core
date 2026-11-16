@@ -69,8 +69,21 @@ object SecureSendScreen {
           w.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
           w.setDimAmount(0.4f)
           w.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+          // The strip behind the system navigation bar matches the popup instead of showing black.
+          val dark = (act.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+          @Suppress("DEPRECATION")
+          w.navigationBarColor = if (dark) Color.BLACK else Color.WHITE
+          // Draw under the navigation bar (the popup pads itself for it), so no black strip shows below it.
+          if (android.os.Build.VERSION.SDK_INT >= 30) w.setDecorFitsSystemWindows(false)
+          w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+          if (!dark && android.os.Build.VERSION.SDK_INT >= 30) {
+            w.insetsController?.setSystemBarsAppearance(
+              android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS, android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS)
+          }
         }
-        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) // no screenshots or screen recording of it
+        // No screenshots or screen recording of it in the app people install; development builds allow them, so the
+        // screen can be checked on the test emulator.
+        if (!BuildConfig.DEBUG) dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         dialog.show()
       } catch (e: Exception) {
         latch.countDown()
@@ -101,7 +114,6 @@ object SecureSendScreen {
     }
     val root = LinearLayout(c).apply {
       orientation = LinearLayout.VERTICAL
-      fitsSystemWindows = true
       background = GradientDrawable().apply {
         setColor(p.bg)
         val r = dp(c, 28f)
@@ -155,6 +167,14 @@ object SecureSendScreen {
       setOnClickListener { finish(false) }
     }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
     root.addView(bottom)
+    // The popup draws under the navigation bar: keep Cancel above it.
+    val basePad = dp(c, 12f).toInt()
+    root.setOnApplyWindowInsetsListener { _, insets ->
+      val nav = if (android.os.Build.VERSION.SDK_INT >= 30) insets.getInsets(android.view.WindowInsets.Type.navigationBars()).bottom
+      else @Suppress("DEPRECATION") insets.systemWindowInsetBottom
+      bottom.setPadding(pad, dp(c, 8f).toInt(), pad, basePad + nav)
+      insets
+    }
     return root
   }
 
