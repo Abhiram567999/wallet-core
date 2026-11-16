@@ -273,8 +273,7 @@ object SecureSendScreen {
       val dir = if (rtl) -1f else 1f
       paint.color = labelColor; paint.alpha = (255 * labelAlpha).toInt()
       paint.textSize = dp(context, 17f); paint.textAlign = Paint.Align.CENTER; paint.typeface = Typeface.DEFAULT_BOLD
-      val labelCenter = (k + pad) / 2f + w / 2f
-      val cx = if (rtl) w - labelCenter else labelCenter
+      val cx = w / 2f // centred on the whole bar (founder, 16 Nov 2026)
       canvas.drawText(label, cx + 24f * p * dir, h / 2f - (paint.descent() + paint.ascent()) / 2f, paint)
       paint.alpha = 255
       paint.color = arrowColor; paint.textSize = dp(context, 22f)
