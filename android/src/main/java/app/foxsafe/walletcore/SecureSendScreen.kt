@@ -50,7 +50,7 @@ object SecureSendScreen {
     ContextCompat.getMainExecutor(act).execute {
       try {
         // A popup from the bottom, only as tall as what it shows (founder, 16 Nov 2026).
-        val dialog = Dialog(act, android.R.style.Theme_DeviceDefault_DayNight_Dialog_NoActionBar)
+        val dialog = Dialog(act, android.R.style.Theme_Translucent_NoTitleBar)
         var finished = false
         val finish = { ok: Boolean ->
           if (!finished) {
