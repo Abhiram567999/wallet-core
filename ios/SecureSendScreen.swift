@@ -161,7 +161,7 @@ struct SecureSendView: View {
           .buttonStyle(.plain)
           .accessibilityAddTraits(checked ? .isSelected : [])
         }
-        SlideToSend(label: screen.slide, enabled: canSlide && !finished) {
+        SlideToSend(label: screen.slide, enabled: canSlide && !finished, accent: mark) {
           finished = true
           onDone(true)
         }
@@ -204,49 +204,113 @@ struct SecureSendView: View {
   }
 }
 
-/// Drag the knob to the end to send. A tap can't send by accident. VoiceOver gets a plain action.
+/// Drag the handle to the end to send. A tap can't send by accident. VoiceOver gets a plain action.
+/// Looks and moves like the app's own SlideToConfirm (src/ui/SlideToConfirm.tsx): a clear Liquid Glass
+/// track, a handle of glass tinted with the button colour, and the trail behind the handle filling with
+/// that colour as it moves while the label fades (founder, 16 Nov 2026: "same as before").
 struct SlideToSend: View {
   let label: String
   let enabled: Bool
+  /// The user's button colour (Settings › Appearance); ink when "Black".
+  var accent: Color = Color(.label)
   let onSlide: () -> Void
   @State private var offset: CGFloat = 0
+  @State private var start: CGFloat = 0
+  @State private var held = false
+  @State private var fired = false
+  @Environment(\.colorScheme) private var scheme
+  @Environment(\.layoutDirection) private var direction
   private let height: CGFloat = 64
   private let pad: CGFloat = 5
+  private let trackRadius: CGFloat = 20
+  private var knobRadius: CGFloat { trackRadius - pad }
+  /// How far (share of the track) counts as "slid to the end".
+  private let doneAt: CGFloat = 0.8
+  /// Clear glass alone is nearly invisible on white: the app's softGlass tint.
+  private var soft: Color { Color(.sRGB, red: 120 / 255, green: 120 / 255, blue: 128 / 255, opacity: scheme == .dark ? 0.26 : 0.09) }
 
   var body: some View {
     GeometryReader { geo in
       let knob = height - pad * 2
       let travel = max(1, geo.size.width - knob - pad * 2)
+      let p = min(max(offset / travel, 0), 1)
       ZStack(alignment: .leading) {
-        RoundedRectangle(cornerRadius: 20).fill(Color(.secondarySystemBackground))
-        Text(label).font(.system(size: 16, weight: .medium)).foregroundColor(Color(.secondaryLabel)).frame(maxWidth: .infinity)
-        RoundedRectangle(cornerRadius: 15)
-          .fill(enabled ? Color(.label) : Color(.tertiaryLabel))
-          .overlay(Image(systemName: "arrow.right").font(.system(size: 20, weight: .semibold)).foregroundColor(Color(.systemBackground)))
+        // Track: clear Liquid Glass.
+        GlassShape(radius: trackRadius, tint: soft, fallback: scheme == .dark ? Color(red: 0x23 / 255, green: 0x23 / 255, blue: 0x26 / 255) : Color(red: 0xF2 / 255, green: 0xF2 / 255, blue: 0xF5 / 255))
+        // The trail behind the handle fills with the button colour as it moves.
+        RoundedRectangle(cornerRadius: trackRadius, style: .continuous)
+          .fill(accent)
+          .frame(width: knob + pad * 2 + offset)
+          .opacity(p)
+          .allowsHitTesting(false)
+        Text(label)
+          .font(.system(size: 17, weight: .semibold))
+          .foregroundColor(Color(.secondaryLabel))
+          .lineLimit(1)
+          .frame(maxWidth: .infinity)
+          .padding(.leading, knob + pad)
+          .opacity(max(0, 1 - p / 0.55))
+          .offset(x: 24 * p)
+          .allowsHitTesting(false)
+        // Handle: a rounded square of tinted Liquid Glass.
+        GlassShape(radius: knobRadius, tint: accent, fallback: accent)
+          .overlay(Image(systemName: direction == .rightToLeft ? "arrow.left" : "arrow.right").font(.system(size: 20, weight: .semibold)).foregroundColor(Color(.systemBackground)))
           .frame(width: knob, height: knob)
+          .scaleEffect(held ? 1.06 : 1)
           .offset(x: pad + offset)
-          .gesture(
-            DragGesture()
-              .onChanged { g in if enabled { offset = min(max(0, g.translation.width), travel) } }
-              .onEnded { _ in
-                guard enabled else { return }
-                if offset >= travel * 0.8 {
-                  offset = travel
-                  UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                  onSlide()
-                } else {
-                  withAnimation(.spring(response: 0.3)) { offset = 0 }
-                }
-              }
-          )
+          .allowsHitTesting(false)
       }
+      .contentShape(Rectangle())
+      .gesture(
+        DragGesture(minimumDistance: 0)
+          .onChanged { g in
+            guard enabled, !fired else { return }
+            if !held {
+              start = offset
+              withAnimation(.easeOut(duration: 0.16)) { held = true }
+              UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            }
+            offset = min(max(start + g.translation.width, 0), travel)
+          }
+          .onEnded { g in
+            withAnimation(.easeOut(duration: 0.16)) { held = false }
+            guard enabled, !fired else { return }
+            let pos = start + g.translation.width
+            // A quick flick toward the end counts too.
+            let speed = g.predictedEndTranslation.width - g.translation.width
+            if pos >= travel * doneAt || (pos >= travel * 0.5 && speed > 120) {
+              fired = true
+              withAnimation(.easeOut(duration: 0.14)) { offset = travel }
+              UINotificationFeedbackGenerator().notificationOccurred(.success)
+              onSlide()
+            } else {
+              withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) { offset = 0 }
+            }
+          }
+      )
     }
     .frame(height: height)
-    .opacity(enabled ? 1 : 0.6)
+    .opacity(enabled ? 1 : 0.45)
     .accessibilityElement()
     .accessibilityLabel(label)
     .accessibilityAddTraits(.isButton)
-    .accessibilityAction { if enabled { onSlide() } }
+    .accessibilityAction { if enabled && !fired { fired = true; onSlide() } }
+  }
+}
+
+/// Liquid Glass on iOS 26 and later (tinted, like the app's Glass); an opaque fill before that.
+private struct GlassShape: View {
+  let radius: CGFloat
+  let tint: Color
+  let fallback: Color
+
+  var body: some View {
+    let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+    if #available(iOS 26.0, *) {
+      Color.clear.glassEffect(.regular.tint(tint), in: shape)
+    } else {
+      shape.fill(fallback)
+    }
   }
 }
 

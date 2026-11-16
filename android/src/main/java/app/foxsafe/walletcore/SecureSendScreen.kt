@@ -159,7 +159,9 @@ object SecureSendScreen {
       bottom.addView(tick)
       bottom.addView(gap(10f))
     }
-    slider = SlideView(c, s.slide, p.text, p.bg, p.card, p.secondary, p.faint) { finish(true) }.apply { enabledToSend = s.tick.isEmpty() }
+    val accent = s.markHex?.let { runCatching { Color.parseColor(it) }.getOrNull() } ?: p.text
+    val softTrack = if (dark) Color.rgb(0x23, 0x23, 0x26) else Color.rgb(0xF2, 0xF2, 0xF5)
+    slider = SlideView(c, s.slide, accent, p.bg, softTrack, p.secondary) { finish(true) }.apply { enabledToSend = s.tick.isEmpty() }
     bottom.addView(slider, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(c, 64f).toInt()))
     bottom.addView(text(s.cancel, 16f, p.secondary).apply {
       gravity = Gravity.CENTER
@@ -195,18 +197,30 @@ object SecureSendScreen {
     return out
   }
 
-  /** Drag the knob to the end to send; a tap can't send by accident. TalkBack gets a plain click. */
+  /**
+   * Drag the handle to the end to send; a tap can't send by accident. TalkBack gets a plain click.
+   * Looks and moves like the app's own SlideToConfirm on Android (src/ui/SlideToConfirm.tsx): a soft
+   * track, a handle in the button colour, and the trail behind the handle filling with that colour as it
+   * moves while the label fades (founder, 16 Nov 2026: "same as before").
+   */
   @SuppressLint("ViewConstructor")
   private class SlideView(
-    c: Context, private val label: String, private val knobColor: Int, private val arrowColor: Int,
-    private val trackColor: Int, private val labelColor: Int, private val disabledColor: Int, private val onSlide: () -> Unit,
+    c: Context, private val label: String, private val accent: Int, private val arrowColor: Int,
+    private val trackColor: Int, private val labelColor: Int, private val onSlide: () -> Unit,
   ) : View(c) {
     var enabledToSend = false
-      set(v) { field = v; alpha = if (v) 1f else 0.6f; invalidate() }
+      set(v) { field = v; alpha = if (v) 1f else 0.45f; invalidate() }
     private var offset = 0f
+    private var start = 0f
+    private var downX = 0f
+    private var held = 0f // 0 = resting, 1 = held (handle grows to 1.06)
     private var done = false
+    private var anim: android.animation.ValueAnimator? = null
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val pad = dp(c, 5f)
+    private val trackRadius = dp(c, 20f)
+    private val knobRadius = trackRadius - pad
+    private val tracker = android.view.VelocityTracker.obtain()
 
     init {
       contentDescription = label
@@ -214,34 +228,86 @@ object SecureSendScreen {
       setOnClickListener { if (enabledToSend && !done && isAccessibilityFocused) { done = true; onSlide() } }
     }
 
-    private fun travel() = (width - height).toFloat().coerceAtLeast(1f)
+    private fun knob() = height - pad * 2
+    private fun travel() = (width - knob() - pad * 2).coerceAtLeast(1f)
+    private val rtl get() = layoutDirection == View.LAYOUT_DIRECTION_RTL
+
+    private fun animateTo(to: Float, ms: Long, spring: Boolean) {
+      anim?.cancel()
+      anim = android.animation.ValueAnimator.ofFloat(offset, to).apply {
+        duration = ms
+        interpolator = if (spring) android.view.animation.OvershootInterpolator(0.8f) else android.view.animation.DecelerateInterpolator()
+        addUpdateListener { offset = it.animatedValue as Float; invalidate() }
+        start()
+      }
+    }
+
+    private fun animateHeld(to: Float) {
+      android.animation.ValueAnimator.ofFloat(held, to).apply {
+        duration = 160
+        addUpdateListener { held = it.animatedValue as Float; invalidate() }
+        start()
+      }
+    }
 
     override fun onDraw(canvas: Canvas) {
-      val h = height.toFloat()
+      val w = width.toFloat(); val h = height.toFloat(); val k = knob()
+      val p = (offset / travel()).coerceIn(0f, 1f)
+      canvas.save()
+      if (rtl) canvas.scale(-1f, 1f, w / 2f, h / 2f) // mirror the drawing; the label is drawn unmirrored below
+      // Track.
       paint.color = trackColor
-      canvas.drawRoundRect(RectF(0f, 0f, width.toFloat(), h), dp(context, 20f), dp(context, 20f), paint)
-      paint.color = labelColor; paint.textSize = dp(context, 16f); paint.textAlign = Paint.Align.CENTER; paint.typeface = Typeface.DEFAULT_BOLD
-      canvas.drawText(label, width / 2f, h / 2f - (paint.descent() + paint.ascent()) / 2f, paint)
-      val knob = h - pad * 2
+      canvas.drawRoundRect(RectF(0f, 0f, w, h), trackRadius, trackRadius, paint)
+      // The trail behind the handle fills with the button colour as it moves.
+      paint.color = accent; paint.alpha = (255 * p).toInt()
+      canvas.drawRoundRect(RectF(0f, 0f, k + pad * 2 + offset, h), trackRadius, trackRadius, paint)
+      paint.alpha = 255
+      // Handle in the button colour, a little bigger while held.
       val x = pad + offset
-      paint.color = if (enabledToSend) knobColor else disabledColor
-      canvas.drawRoundRect(RectF(x, pad, x + knob, pad + knob), dp(context, 15f), dp(context, 15f), paint)
+      val grow = k * 0.03f * held
+      paint.color = accent
+      canvas.drawRoundRect(RectF(x - grow, pad - grow, x + k + grow, pad + k + grow), knobRadius, knobRadius, paint)
+      canvas.restore()
+      // Label: fades out by 55 % and drifts toward the end; arrow on the handle.
+      val labelAlpha = (1f - p / 0.55f).coerceIn(0f, 1f)
+      val dir = if (rtl) -1f else 1f
+      paint.color = labelColor; paint.alpha = (255 * labelAlpha).toInt()
+      paint.textSize = dp(context, 17f); paint.textAlign = Paint.Align.CENTER; paint.typeface = Typeface.DEFAULT_BOLD
+      val labelCenter = (k + pad) / 2f + w / 2f
+      val cx = if (rtl) w - labelCenter else labelCenter
+      canvas.drawText(label, cx + 24f * p * dir, h / 2f - (paint.descent() + paint.ascent()) / 2f, paint)
+      paint.alpha = 255
       paint.color = arrowColor; paint.textSize = dp(context, 22f)
-      canvas.drawText("→", x + knob / 2f, h / 2f - (paint.descent() + paint.ascent()) / 2f, paint)
+      val kc = x + k / 2f
+      canvas.drawText(if (rtl) "←" else "→", if (rtl) w - kc else kc, h / 2f - (paint.descent() + paint.ascent()) / 2f, paint)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(e: MotionEvent): Boolean {
       if (!enabledToSend || done) return true
-      when (e.action) {
-        MotionEvent.ACTION_DOWN -> parent?.requestDisallowInterceptTouchEvent(true)
-        MotionEvent.ACTION_MOVE -> { offset = (e.x - height / 2f).coerceIn(0f, travel()); invalidate() }
+      val dir = if (rtl) -1f else 1f
+      tracker.addMovement(e)
+      when (e.actionMasked) {
+        MotionEvent.ACTION_DOWN -> {
+          parent?.requestDisallowInterceptTouchEvent(true)
+          anim?.cancel(); start = offset; downX = e.x
+          animateHeld(1f)
+          performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
+        }
+        MotionEvent.ACTION_MOVE -> { offset = (start + (e.x - downX) * dir).coerceIn(0f, travel()); invalidate() }
         MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-          if (offset >= travel() * 0.8f) {
-            offset = travel(); done = true; invalidate()
+          animateHeld(0f)
+          tracker.computeCurrentVelocity(1000)
+          val v = tracker.xVelocity * dir / resources.displayMetrics.density // dp per second
+          tracker.clear()
+          val m = travel()
+          // A quick flick toward the end counts too.
+          if (e.actionMasked == MotionEvent.ACTION_UP && (offset >= m * 0.8f || (offset >= m * 0.5f && v > 1200f))) {
+            done = true
+            animateTo(m, 140, spring = false)
             performHapticFeedback(HapticFeedbackConstants.CONFIRM)
             onSlide()
-          } else { offset = 0f; invalidate() }
+          } else animateTo(0f, 320, spring = true)
         }
       }
       return true
