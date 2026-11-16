@@ -571,9 +571,10 @@ the message must be exactly one of these three, or it is refused with
    signer all equal `request.depositWallet`. signatureType 3, side 0 (buy) or
    1 (sell), both amounts above 0 and at most 10^15 units (one billion
    dollars or shares). `builder` must equal the compiled-in
-   `PolymarketPolicy.builderCode`. It is empty until the founder creates
-   Foxsafe's builder profile, and while it is empty `builder` must be 32
-   zero bytes. `polymarketBuilderCode()` returns it ('' = none yet). Face
+   `PolymarketPolicy.builderCode`, Foxsafe's builder code
+   0x200dd1f35b63047f5e80336dbc8ddffbf617fac25fc9a81ebd3168ca38ac4cb4 (set
+   16 Nov 2026; builds before it carry '' and require 32 zero bytes).
+   `polymarketBuilderCode()` returns it. Face
    ID's text is computed natively from the amounts (6 decimals both sides):
    buy: "Buy {takerAmount} shares for up to ${makerAmount} ({price}¢ each)";
    sell: "Sell {makerAmount} shares for at least ${takerAmount}". After it

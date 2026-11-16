@@ -1125,10 +1125,10 @@ class WalletStore(context: Context) {
     const val COIN = 966 // Polygon
     const val CHAIN_ID = "137"
     /**
-     * Foxsafe's Polymarket builder code (bytes32, lowercase 0x…). Empty until the founder creates the
-     * builder profile; while empty, every order's builder field must be 32 zero bytes.
+     * Foxsafe's Polymarket builder code (bytes32, lowercase 0x…; public, from the founder's builder
+     * profile, 16 Nov 2026). Every order must carry exactly this code, which earns Foxsafe's fee.
      */
-    const val BUILDER_CODE = ""
+    const val BUILDER_CODE = "0x200dd1f35b63047f5e80336dbc8ddffbf617fac25fc9a81ebd3168ca38ac4cb4"
     val ZERO32 = "0x" + "0".repeat(64)
     const val LOGIN_MESSAGE = "This message attests that I control the given wallet"
     const val PUSD = "0xc011a7e12a19f7b1f670d46f03b03f3342e82dfb"
