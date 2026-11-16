@@ -268,6 +268,12 @@ export interface ScreenText {
 }
 
 /**
+ * The token standard shown after the network for token sends ("on TRON (TRC-20)"), as exchanges
+ * write it (founder, 16 Nov 2026). Only TRON, Solana and Ethereum-style tokens are read as sends.
+ */
+export const tokenStandard = (network: string): string => (network === 'TRON' ? 'TRC-20' : network === 'BNB Chain' ? 'BEP-20' : network === 'Solana' ? 'SPL' : 'ERC-20');
+
+/**
  * Every word the secure screen shows, in `lang`. `own` = the receiver is a wallet on this phone
  * (native code checks the public addresses it stores). `site` = the dApp's host, for dApp requests.
  */
@@ -278,7 +284,7 @@ export function screenText(s: SendSummary, lang = 'en', opts: { own?: boolean; s
       : t('{amount} of token {contract}', lang, { amount: unitsText(raw, a.decimals ?? 0), contract: a.contract ?? '' });
   const common = {
     secure: t("Checked by Foxsafe's secure part", lang),
-    network: t('on {network}', lang, { network: s.network }),
+    network: t('on {network}', lang, { network: s.kind === 'send' && s.asset?.contract ? `${s.network} (${tokenStandard(s.network)})` : s.network }),
     site: opts.site ? t('Asked by {site}', lang, { site: opts.site }) : '',
     toLabel: t('To', lang),
     own: opts.own ? t('Your own address on this phone', lang) : '',

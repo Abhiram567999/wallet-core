@@ -63,7 +63,7 @@ data class SendSummary(
     }
     return Screen(
       secure = t("Checked by Foxsafe's secure part", lang, emptyMap()), title = title,
-      network = t("on {network}", lang, mapOf("network" to network)),
+      network = t("on {network}", lang, mapOf("network" to (if (send && contract != null) "$network (${tokenStandard(network)})" else network))),
       site = site?.let { t("Asked by {site}", lang, mapOf("site" to it)) } ?: "",
       toLabel = t("To", lang, emptyMap()), to = grouped,
       own = if (own) t("Your own address on this phone", lang, emptyMap()) else "", fee = fee, warning = warning,
@@ -73,6 +73,9 @@ data class SendSummary(
   }
 
   companion object {
+    /** The token standard shown after the network for token sends ("on TRON (TRC-20)"). Mirrors tokenStandard in src/sendSummary.ts. */
+    fun tokenStandard(network: String): String = when (network) { "TRON" -> "TRC-20"; "BNB Chain" -> "BEP-20"; "Solana" -> "SPL"; else -> "ERC-20" }
+
     val KNOWN_TOKENS: Map<String, Map<String, Pair<String, Int>>> = mapOf(
       "tron" to mapOf("TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t" to ("USDT" to 6), "TEkxiTehnzSmSe2XqrBj4w32RUN966rdz8" to ("USDC" to 6)),
       "solana" to mapOf("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB" to ("USDT" to 6), "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" to ("USDC" to 6)),

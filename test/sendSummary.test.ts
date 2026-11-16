@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { initWasm, TW } from '@trustwallet/wallet-core';
-import { grouped, screenText, sendSummary, unitsText, type CoreLike } from '../src/sendSummary.ts';
+import { grouped, screenText, sendSummary, tokenStandard, unitsText, type CoreLike } from '../src/sendSummary.ts';
 import { kotlin, swift } from '../scripts/gen-send-screen-text.mjs';
 import { readFileSync } from 'node:fs';
 import { bitcoinTransferInput, evmCallInput, evmTransferInput, solanaTokenTransferInput, solanaTransferInput, tronTransferInput } from '../src/tx.ts';
@@ -42,6 +42,7 @@ test('TRON: TRX and USDT sends, with the fee-free extras', () => {
   const energy = tron('TXQ6ejLmJuptqNvRDTFuC8GFzamWeCscLb', 100_000n);
   const t = text(C.tron, [tron(FRIEND, 50_000_000n, USDT), fee, energy, energy]);
   assert.equal(t.title, 'Send 50 USDT');
+  assert.equal(t.network, 'on TRON (TRC-20)'); // token standard after the network; plain TRX stays "on TRON"
   assert.equal(t.to, grouped(FRIEND));
   assert.equal(t.fee, 'Network fee: 2 USDT + 0.2 TRX energy');
 });
@@ -66,7 +67,7 @@ const TO = '0x52908400098527886E0F7030069857D2E4169EE7';
 test('EVM: coin and token sends name the network the signature is valid on', () => {
   assert.equal(text(C.ethereum, [evmTransferInput({ ...evm, chainId: 1n, to: TO, amount: 10n ** 17n })]).title, 'Send 0.1 ETH');
   const usdt = text(C.smartChain, [evmTransferInput({ ...evm, chainId: 56n, to: TO, amount: 5n * 10n ** 18n, token: '0x55d398326f99059fF775485246999027B3197955' })]);
-  assert.deepEqual([usdt.title, usdt.network, usdt.to], ['Send 5 USDT', 'on BNB Chain', grouped(TO.toLowerCase())]);
+  assert.deepEqual([usdt.title, usdt.network, usdt.to], ['Send 5 USDT', 'on BNB Chain (BEP-20)', grouped(TO.toLowerCase())]);
   // Labelled BNB Chain by the app, signed for Ethereum: not described as a send.
   assert.equal(sum(C.smartChain, [evmTransferInput({ ...evm, chainId: 1n, to: TO, amount: 1n })]).kind, 'other');
 });
@@ -133,4 +134,12 @@ test('the native button colour lists match the app (Settings › Appearance)', (
     assert.ok(swiftSrc.includes(`"${id}": "${hex}"`), `iOS ${id}`);
     assert.ok(kotlinSrc.includes(`"${id}" to "${hex}"`), `Android ${id}`);
   }
+});
+
+test('token standard after the network: the same rule in TypeScript, Swift and Kotlin', () => {
+  assert.deepEqual(['TRON', 'BNB Chain', 'Solana', 'Ethereum', 'Base', 'Polygon'].map(tokenStandard), ['TRC-20', 'BEP-20', 'SPL', 'ERC-20', 'ERC-20', 'ERC-20']);
+  const swiftSrc = readFileSync(new URL('../ios/SendSummary.swift', import.meta.url), 'utf8');
+  const kotlinSrc = readFileSync(new URL('../android/src/main/java/app/foxsafe/walletcore/SendSummary.kt', import.meta.url), 'utf8');
+  assert.ok(swiftSrc.includes('network == "TRON" ? "TRC-20" : network == "BNB Chain" ? "BEP-20" : network == "Solana" ? "SPL" : "ERC-20"'), 'iOS');
+  assert.ok(kotlinSrc.includes('"TRON" -> "TRC-20"; "BNB Chain" -> "BEP-20"; "Solana" -> "SPL"; else -> "ERC-20"'), 'Android');
 });
