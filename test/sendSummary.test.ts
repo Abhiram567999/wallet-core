@@ -122,3 +122,15 @@ test('the Swift and Kotlin word lists are generated from the same file and up to
   const text = JSON.parse(readFileSync(new URL('../src/sendScreenText.json', import.meta.url), 'utf8'));
   for (const [k, v] of Object.entries(text) as [string, Record<string, string>][]) assert.equal(Object.keys(v).length, 22, k);
 });
+
+test('the native button colour lists match the app (Settings › Appearance)', () => {
+  const tokens = readFileSync(new URL('../../app/src/theme/tokens.ts', import.meta.url), 'utf8');
+  const swiftSrc = readFileSync(new URL('../ios/SendSummary.swift', import.meta.url), 'utf8');
+  const kotlinSrc = readFileSync(new URL('../android/src/main/java/app/foxsafe/walletcore/SendSummary.kt', import.meta.url), 'utf8');
+  const list = [...tokens.matchAll(/\{ id: '(\w+)', name: '[^']*', hex: '(#[0-9A-F]{6})' \}/g)].map((m) => [m[1]!, m[2]!]);
+  assert.ok(list.length >= 10);
+  for (const [id, hex] of list) {
+    assert.ok(swiftSrc.includes(`"${id}": "${hex}"`), `iOS ${id}`);
+    assert.ok(kotlinSrc.includes(`"${id}" to "${hex}"`), `Android ${id}`);
+  }
+});

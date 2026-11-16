@@ -632,10 +632,12 @@ class WalletStore(context: Context) {
   }
 
   /** Shows the secure send screen and throws if the user cancels. Caller holds the lock; runs before the prompt. */
-  private fun confirmSend(summary: SendSummary, activity: FragmentActivity?, lang: String, site: String? = null, feeIsToken: Boolean = false) {
+  private fun confirmSend(summary: SendSummary, activity: FragmentActivity?, lang: String, site: String? = null, feeIsToken: Boolean = false, hint: String? = null) {
     val to = if (summary.to.startsWith("0x")) summary.to.lowercase() else summary.to
     val own = to.isNotEmpty() && to in ownAddresses()
-    if (!SecureSendScreen.confirm(activity, summary.screen(lang, own, site, feeIsToken))) throw WalletException("INVALID", "send cancelled")
+    val colour = runCatching { SendSummary.BUTTON_COLOURS[JSONObject(hint ?: "{}").optString("color")] }.getOrNull()
+    val screen = summary.screen(lang, own, site, feeIsToken).copy(markHex = colour)
+    if (!SecureSendScreen.confirm(activity, screen)) throw WalletException("INVALID", "send cancelled")
   }
 
   /** The `hint` string inside a dApp request JSON, if any. */
@@ -661,7 +663,7 @@ class WalletStore(context: Context) {
     if (extras.count { it.first == GaslessExtra.ENERGY } > 2) throw WalletException("INVALID", "at most two energy payments are allowed")
     // What is really signed, on a screen the app can't draw or press (SPEC §7.13).
     val (lang, hintTo) = sendHint(hint)
-    confirmSend(SendSummary.read(inputs, c, hintTo), activity, lang)
+    confirmSend(SendSummary.read(inputs, c, hintTo), activity, lang, hint = hint)
     withSecret(id, activity, if (inputs.size > 1) "Confirm the transfer and its network fee" else "Confirm the transaction") { r ->
       val key = privateKey(r, c, account)
       val own = c.deriveAddress(key)
@@ -1017,7 +1019,7 @@ class WalletStore(context: Context) {
       val known = SendSummary.KNOWN_TOKENS["evm:$chainId"]?.get(token)
       val summary = SendSummary(true, SendSummary.networkName(c), known?.first, known?.second ?: decimals, token,
         amount = amount.toString(), to = req.optString("to").lowercase(), value = fee.toString())
-      confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true)
+      confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true, hint = req.optString("hint").ifEmpty { null })
     }
 
     withSecret(id, activity, "Confirm the transfer and its network fee") { r ->
@@ -1898,7 +1900,7 @@ class WalletStore(context: Context) {
       Ethereum.Transaction.TransactionOneofCase.CONTRACT_GENERIC -> {}
       else -> throw bad("unsupported transaction")
     }
-    confirmSend(SendSummary.read(listOf(data), c, null), activity, sendHint(dappHint(request)).first, site = req.origin)
+    confirmSend(SendSummary.read(listOf(data), c, null), activity, sendHint(dappHint(request)).first, site = req.origin, hint = dappHint(request))
     withSecret(id, activity, "Confirm the transaction for ${req.origin}") { r ->
       val key = privateKey(r, c, account)
       if (c.deriveAddress(key).lowercase() != req.address.lowercase()) throw bad("not the connected account")
@@ -2059,7 +2061,7 @@ class WalletStore(context: Context) {
     confirmSend(
       SendSummary.tronRaw(type, PB.bytes(value, 2).firstOrNull(), PB.ints(value, 3).firstOrNull(), PB.bytes(value, 2).firstOrNull(),
         if (type == 31L) PB.ints(value, 3).firstOrNull() ?: 0L else 0L, PB.bytes(value, 4).firstOrNull()),
-      activity, sendHint(dappHint(request)).first, site = req.origin,
+      activity, sendHint(dappHint(request)).first, site = req.origin, hint = dappHint(request),
     )
     withSecret(id, activity, "Confirm the transaction for ${req.origin}") { r ->
       val key = privateKey(r, CoinType.TRON, account)
@@ -2113,7 +2115,7 @@ class WalletStore(context: Context) {
       val known = SendSummary.KNOWN_TOKENS["solana"]?.get(mint)
       val summary = SendSummary(true, SendSummary.networkName(CoinType.SOLANA), known?.first, known?.second ?: decimals.toInt(), mint,
         amount = amount.toString(), to = to, value = fee.toString())
-      confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true)
+      confirmSend(summary, activity, sendHint(req.optString("hint").ifEmpty { null }).first, feeIsToken = true, hint = req.optString("hint").ifEmpty { null })
     }
     withSecret(id, activity, "Confirm the transfer and its network fee") { r ->
       val key = privateKey(r, CoinType.SOLANA, account)

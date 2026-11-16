@@ -190,7 +190,16 @@ struct SendSummary {
     var secure, title, network, site, toLabel, to, own, fee, warning, tick, slide, cancel: String
     /// The address without spaces, for marking its start, middle and end.
     var rawTo: String
+    /// The user's button colour for the marked letters; nil = ink (black, white in dark mode).
+    var markHex: String? = nil
   }
+
+  /// The app's button colours (app/src/theme/tokens.ts BUTTON_COLOURS). The app sends only the id; the colour comes
+  /// from this list, so a changed app can't make the marked letters invisible (e.g. white on white).
+  static let buttonColours: [String: String] = [
+    "graphite": "#5B5B61", "blue": "#0A84FF", "indigo": "#5E5CE6", "purple": "#A259FF", "pink": "#FF375F", "red": "#FF453A",
+    "orange": "#FF9F0A", "yellow": "#E6B800", "green": "#30B158", "teal": "#30B0C7", "mint": "#4FC3B8",
+  ]
 
   func screen(lang: String, own: Bool, site: String?, feeIsToken: Bool = false) -> Screen {
     let T = SendScreenText.t

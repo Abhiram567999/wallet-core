@@ -33,6 +33,8 @@ data class SendSummary(
   data class Screen(
     val secure: String, val title: String, val network: String, val site: String, val toLabel: String, val to: String,
     val own: String, val fee: String, val warning: String, val tick: String, val slide: String, val cancel: String, val rawTo: String,
+    /** The user's button colour for the marked letters; null = ink. */
+    val markHex: String? = null,
   )
 
   fun screen(lang: String, own: Boolean, site: String?, feeIsToken: Boolean = false): Screen {
@@ -82,6 +84,12 @@ data class SendSummary(
       "evm:10" to mapOf("0x94b008aa00579c1307b0ef2c499ad98a8ce58e58" to ("USDT" to 6), "0x0b2c639c533813f4aa9d7837caf62653d097ff85" to ("USDC" to 6)),
     )
     const val TRON_USDT = "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t"
+
+    /** The app's button colours (app/src/theme/tokens.ts). The app sends only the id, so it can't pick an invisible colour. */
+    val BUTTON_COLOURS = mapOf(
+      "graphite" to "#5B5B61", "blue" to "#0A84FF", "indigo" to "#5E5CE6", "purple" to "#A259FF", "pink" to "#FF375F", "red" to "#FF453A",
+      "orange" to "#FF9F0A", "yellow" to "#E6B800", "green" to "#30B158", "teal" to "#30B0C7", "mint" to "#4FC3B8",
+    )
 
     /** The network's name as the app writes it ("TRON", "BNB Chain"), not the library's ("Tron", "BNB Smart Chain"). */
     fun networkName(c: CoinType): String {

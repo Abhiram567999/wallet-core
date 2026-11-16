@@ -657,6 +657,12 @@ final class WalletStore {
     return (lang, h["to"] as? String)
   }
 
+  /// The button colour named in the hint ({color: id}), looked up in the native list; nil = ink.
+  static func sendHintColour(_ json: String?) -> String? {
+    guard let json, let h = try? JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any], let id = h["color"] as? String else { return nil }
+    return SendSummary.buttonColours[id]
+  }
+
   /// Every public address of every wallet on this phone (for "your own address"). Caller holds the lock.
   private func ownAddresses() -> Set<String> {
     var out = Set<String>()
@@ -668,10 +674,12 @@ final class WalletStore {
   }
 
   /// Shows the secure send screen and throws if the user cancels. Caller holds the lock; runs before Face ID.
-  private func confirmSend(_ summary: SendSummary, lang: String, site: String? = nil, feeIsToken: Bool = false) throws {
+  private func confirmSend(_ summary: SendSummary, lang: String, site: String? = nil, feeIsToken: Bool = false, hint: String? = nil) throws {
     let to = summary.to.hasPrefix("0x") ? summary.to.lowercased() : summary.to
     let own = !to.isEmpty && ownAddresses().contains(to)
-    guard try SecureSendScreen.confirm(summary.screen(lang: lang, own: own, site: site, feeIsToken: feeIsToken)) else {
+    var screen = summary.screen(lang: lang, own: own, site: site, feeIsToken: feeIsToken)
+    screen.markHex = Self.sendHintColour(hint)
+    guard try SecureSendScreen.confirm(screen) else {
       throw WalletError.invalid("send cancelled")
     }
   }
@@ -706,7 +714,7 @@ final class WalletStore {
     guard energy <= 2 else { throw WalletError.invalid("at most two energy payments are allowed") }
     // What is really signed, on a screen the app can't draw or press (SPEC §7.13).
     let h = Self.sendHint(hint)
-    try confirmSend(SendSummary.read(inputs, coin: coin, hintTo: h.to), lang: h.lang)
+    try confirmSend(SendSummary.read(inputs, coin: coin, hintTo: h.to), lang: h.lang, hint: hint)
     return try withSecrets([id], reason: inputs.count > 1 ? "Confirm the transfer and its network fee" : "Confirm the transaction") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       let own = coin.deriveAddress(privateKey: key)
@@ -1077,7 +1085,7 @@ final class WalletStore {
     summary.amount = SendSummary.decimal(amount)
     summary.to = (req["to"] as? String ?? "").lowercased()
     summary.value = SendSummary.decimal(fee)
-    try confirmSend(summary, lang: Self.sendHint(req["hint"] as? String).lang, feeIsToken: true)
+    try confirmSend(summary, lang: Self.sendHint(req["hint"] as? String).lang, feeIsToken: true, hint: req["hint"] as? String)
 
     return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
@@ -1853,7 +1861,7 @@ final class WalletStore {
     case .contractGeneric?: break
     default: throw bad("unsupported transaction")
     }
-    try confirmSend(SendSummary.read([data], coin: coin, hintTo: nil), lang: Self.sendHint(dappHint(request)).lang, site: req.origin)
+    try confirmSend(SendSummary.read([data], coin: coin, hintTo: nil), lang: Self.sendHint(dappHint(request)).lang, site: req.origin, hint: dappHint(request))
     return try withSecrets([id], reason: "Confirm the transaction for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
       guard coin.deriveAddress(privateKey: key).lowercased() == req.address.lowercased() else { throw bad("not the connected account") }
@@ -2017,7 +2025,7 @@ final class WalletStore {
     guard PB.bytes(value, 1).first == accountBytes else { throw bad("not from this account") }
     let digest = Hash.sha256(data: raw)
     if let want = req.txID, want != digest.hexString { throw bad("the transaction is not the one shown") }
-    try confirmSend(Self.tronRawSummary(type: type, value: value), lang: Self.sendHint(dappHint(request)).lang, site: req.origin)
+    try confirmSend(Self.tronRawSummary(type: type, value: value), lang: Self.sendHint(dappHint(request)).lang, site: req.origin, hint: dappHint(request))
     return try withSecrets([id], reason: "Confirm the transaction for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: .tron, account: account)
       guard CoinType.tron.deriveAddress(privateKey: key) == req.address else { throw bad("not the connected account") }
@@ -2068,7 +2076,7 @@ final class WalletStore {
     summary.amount = String(amount)
     summary.to = to
     summary.value = String(fee)
-    try confirmSend(summary, lang: Self.sendHint(str("hint")).lang, feeIsToken: true)
+    try confirmSend(summary, lang: Self.sendHint(str("hint")).lang, feeIsToken: true, hint: str("hint"))
 
     return try withSecrets([id], reason: "Confirm the transfer and its network fee") { records in
       let key = try Self.privateKey(records[0], coin: .solana, account: account)

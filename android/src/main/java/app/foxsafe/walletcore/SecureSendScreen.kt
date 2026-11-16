@@ -49,7 +49,8 @@ object SecureSendScreen {
     var confirmed = false
     ContextCompat.getMainExecutor(act).execute {
       try {
-        val dialog = Dialog(act, android.R.style.Theme_DeviceDefault_DayNight)
+        // A popup from the bottom, only as tall as what it shows (founder, 16 Nov 2026).
+        val dialog = Dialog(act, android.R.style.Theme_DeviceDefault_DayNight_Dialog_NoActionBar)
         var finished = false
         val finish = { ok: Boolean ->
           if (!finished) {
@@ -62,7 +63,13 @@ object SecureSendScreen {
         dialog.setContentView(build(act, screen, finish))
         dialog.setCancelable(true) // the back button cancels
         dialog.setOnCancelListener { finish(false) }
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window?.let { w ->
+          w.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+          w.setGravity(Gravity.BOTTOM)
+          w.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+          w.setDimAmount(0.4f)
+          w.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        }
         dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE) // no screenshots or screen recording of it
         dialog.show()
       } catch (e: Exception) {
@@ -92,8 +99,16 @@ object SecureSendScreen {
       text = t; setTextSize(TypedValue.COMPLEX_UNIT_SP, size); setTextColor(color)
       if (bold) setTypeface(typeface, Typeface.BOLD)
     }
-    val root = LinearLayout(c).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(p.bg); fitsSystemWindows = true }
-    val body = LinearLayout(c).apply { orientation = LinearLayout.VERTICAL; setPadding(pad, dp(c, 28f).toInt(), pad, pad) }
+    val root = LinearLayout(c).apply {
+      orientation = LinearLayout.VERTICAL
+      fitsSystemWindows = true
+      background = GradientDrawable().apply {
+        setColor(p.bg)
+        val r = dp(c, 28f)
+        cornerRadii = floatArrayOf(r, r, r, r, 0f, 0f, 0f, 0f)
+      }
+    }
+    val body = LinearLayout(c).apply { orientation = LinearLayout.VERTICAL; setPadding(pad, dp(c, 24f).toInt(), pad, dp(c, 8f).toInt()) }
     fun gap(h: Float) = View(c).apply { layoutParams = LinearLayout.LayoutParams(1, dp(c, h).toInt()) }
 
     body.addView(text("🔒  " + s.secure, 13f, p.secondary))
@@ -111,7 +126,7 @@ object SecureSendScreen {
       card.addView(text(s.toLabel, 14f, p.secondary))
       card.addView(gap(6f))
       card.addView(TextView(c).apply {
-        text = marked(s.rawTo, p); setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f); typeface = Typeface.MONOSPACE; setTextIsSelectable(true)
+        text = marked(s.rawTo, p, s.markHex); setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f); typeface = Typeface.MONOSPACE; setTextIsSelectable(true)
       })
       if (s.own.isNotEmpty()) { card.addView(gap(6f)); card.addView(text(s.own, 14f, p.secondary)) }
       body.addView(card)
@@ -119,7 +134,7 @@ object SecureSendScreen {
     if (s.fee.isNotEmpty()) { body.addView(gap(14f)); body.addView(text(s.fee, 15f, p.text)) }
     if (s.warning.isNotEmpty()) { body.addView(gap(14f)); body.addView(text(s.warning, 15f, p.red, bold = true)) }
 
-    root.addView(ScrollView(c).apply { addView(body) }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f))
+    root.addView(ScrollView(c).apply { addView(body) }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
     val bottom = LinearLayout(c).apply { orientation = LinearLayout.VERTICAL; setPadding(pad, dp(c, 8f).toInt(), pad, dp(c, 12f).toInt()) }
     lateinit var slider: SlideView
@@ -144,7 +159,8 @@ object SecureSendScreen {
   }
 
   /** The address in groups of four; its first 4, middle 8 and last 6 characters bold (as the app's AddressText). */
-  private fun marked(address: String, p: Palette): CharSequence {
+  private fun marked(address: String, p: Palette, markHex: String?): CharSequence {
+    val mark = markHex?.let { runCatching { Color.parseColor(it) }.getOrNull() } ?: p.text
     val n = address.length
     val mid = n / 2 - 4
     val out = SpannableStringBuilder()
@@ -153,7 +169,7 @@ object SecureSendScreen {
       val bold = n <= 18 || i < 4 || (i >= mid && i < mid + 8) || i >= n - 6
       val start = out.length
       out.append(ch)
-      out.setSpan(ForegroundColorSpan(if (bold) p.text else p.secondary), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+      out.setSpan(ForegroundColorSpan(if (bold) mark else p.secondary), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
       if (bold) out.setSpan(StyleSpan(Typeface.BOLD), start, start + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
     return out

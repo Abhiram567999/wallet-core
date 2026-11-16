@@ -34,10 +34,20 @@ enum SecureSendScreen {
         guard state.finish(ok) else { return }
         if let h = host, h.presentingViewController != nil { h.dismiss(animated: true) { done.signal() } } else { done.signal() }
       }
-      host = UIHostingController(rootView: SecureSendView(screen: screen, onDone: finish))
+      // A popup from the bottom, only as tall as what it shows (founder, 16 Nov 2026: "lot of space is empty").
+      let size = SheetHeight()
+      host = UIHostingController(rootView: SecureSendView(screen: screen, onDone: finish, onHeight: { h in
+        guard abs(size.value - h) > 1, let sheet = host?.sheetPresentationController else { return }
+        size.value = h
+        sheet.animateChanges { sheet.invalidateDetents() }
+      }))
       host!.modalPresentationStyle = .pageSheet
       host!.isModalInPresentation = true // no swipe-away: Cancel or the slide only
-      if let sheet = host!.sheetPresentationController { sheet.detents = [.large()]; sheet.prefersGrabberVisible = false }
+      if let sheet = host!.sheetPresentationController {
+        sheet.detents = [.custom(identifier: .init("content")) { context in min(size.value, context.maximumDetentValue) }]
+        sheet.prefersGrabberVisible = false
+        sheet.preferredCornerRadius = 28
+      }
       top.present(host!, animated: true)
       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
         if host?.presentingViewController == nil { state.fail(done) }
@@ -53,6 +63,9 @@ enum SecureSendScreen {
     if state.failed { throw WalletError.crypto("could not show the send screen. Try again.") }
     return state.confirmed
   }
+
+  /// The popup's height, measured by the view.
+  private final class SheetHeight { var value: CGFloat = 460 }
 
   /// What happened, set once on the main thread and read after the wait.
   private final class State {
@@ -88,6 +101,7 @@ enum SecureSendScreen {
 struct SecureSendView: View {
   let screen: SendSummary.Screen
   let onDone: (Bool) -> Void
+  var onHeight: (CGFloat) -> Void = { _ in }
   @State private var checked = false
   @State private var finished = false
 
@@ -95,14 +109,14 @@ struct SecureSendView: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
-      ScrollView {
+      VStack(alignment: .leading, spacing: 0) {
         VStack(alignment: .leading, spacing: 14) {
           HStack(spacing: 6) {
             Image(systemName: "lock.fill").font(.system(size: 12, weight: .semibold))
             Text(screen.secure).font(.system(size: 13))
           }
           .foregroundColor(Color(.secondaryLabel))
-          .padding(.top, 24)
+          .padding(.top, 22)
 
           VStack(alignment: .leading, spacing: 4) {
             Text(screen.title).font(.system(size: 30, weight: .semibold)).foregroundColor(Color(.label)).fixedSize(horizontal: false, vertical: true)
@@ -161,12 +175,18 @@ struct SecureSendView: View {
         .padding(.bottom, 8)
       }
       .padding(.horizontal, 20)
-      .padding(.top, 8)
+      .padding(.top, 18)
     }
+    .fixedSize(horizontal: false, vertical: true)
+    .background(GeometryReader { g in Color.clear.onAppear { onHeight(g.size.height) }.onChange(of: g.size.height) { onHeight($0) } })
+    .frame(maxHeight: .infinity, alignment: .top)
     .background(Color(.systemBackground).ignoresSafeArea())
   }
 
-  /// The address in groups of four; its first 4, middle 8 and last 6 characters bold (as the app's AddressText).
+  /// The user's button colour (Settings › Appearance), as the app's AddressText marks addresses; ink when "Black".
+  private var mark: Color { screen.markHex.flatMap(Color.init(hex:)) ?? Color(.label) }
+
+  /// The address in groups of four; its first 4, middle 8 and last 6 characters bold in the button colour (as the app's AddressText).
   private var address: Text {
     let raw = Array(screen.rawTo)
     let n = raw.count
@@ -178,7 +198,7 @@ struct SecureSendView: View {
     var out = Text("")
     for (i, c) in raw.enumerated() {
       if i > 0 && i % 4 == 0 { out = out + Text(" ") }
-      out = out + Text(String(c)).fontWeight(bold[i] ? .bold : .regular).foregroundColor(bold[i] ? Color(.label) : Color(.secondaryLabel))
+      out = out + Text(String(c)).fontWeight(bold[i] ? .bold : .regular).foregroundColor(bold[i] ? mark : Color(.secondaryLabel))
     }
     return out
   }
@@ -227,5 +247,13 @@ struct SlideToSend: View {
     .accessibilityLabel(label)
     .accessibilityAddTraits(.isButton)
     .accessibilityAction { if enabled { onSlide() } }
+  }
+}
+
+extension Color {
+  /// "#RRGGBB" only.
+  init?(hex: String) {
+    guard hex.count == 7, hex.hasPrefix("#"), let v = UInt32(hex.dropFirst(), radix: 16) else { return nil }
+    self.init(red: Double((v >> 16) & 0xff) / 255, green: Double((v >> 8) & 0xff) / 255, blue: Double(v & 0xff) / 255)
   }
 }

@@ -236,6 +236,8 @@ export function signVaultRound(id: string, coin: CoinType, inputs: string[], acc
 export interface SendHint {
   lang?: string;
   to?: string;
+  /** The button colour id (Settings › Appearance) for the marked address letters; the native code holds the colours. */
+  color?: string;
 }
 
 /** This build shows every send on the native secure screen (the tick and the slide live there). */
