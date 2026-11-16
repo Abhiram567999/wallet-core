@@ -39,10 +39,10 @@ struct SendSummary {
     return names[n] ?? n
   }
 
-  /// The token standard shown after the network for token sends ("on TRON (TRC-20)"). Mirrors tokenStandard in src/sendSummary.ts.
-  static func tokenStandard(_ network: String) -> String {
-    network == "TRON" ? "TRC-20" : network == "BNB Chain" ? "BEP-20" : network == "Solana" ? "SPL" : "ERC-20"
-  }
+  /// The token standard shown after the network for token sends ("on TRON (TRC-20)"); empty for other networks.
+  /// Mirrors tokenStandard in src/sendSummary.ts and the app's list.
+  static let tokenStandards = ["Ethereum": "ERC-20", "TRON": "TRC-20", "BNB Chain": "BEP-20", "Solana": "SPL"]
+  static func tokenStandard(_ network: String) -> String { tokenStandards[network] ?? "" }
 
   /// Big-endian bytes as a decimal string (any length).
   static func decimal(_ bytes: Data) -> String {
@@ -213,7 +213,7 @@ struct SendSummary {
       return T("{amount} of token {contract}", lang, ["amount": SendSummary.unitsText(raw, decimals ?? 0), "contract": contract ?? ""])
     }
     let to = SendSummary.grouped(self.to)
-    var sc = Screen(secure: T("Checked by Foxsafe's secure part", lang, [:]), title: "", network: T("on {network}", lang, ["network": kind == .send && contract != nil ? "\(network) (\(SendSummary.tokenStandard(network)))" : network]),
+    var sc = Screen(secure: T("Checked by Foxsafe's secure part", lang, [:]), title: "", network: T("on {network}", lang, ["network": kind == .send && contract != nil && !SendSummary.tokenStandard(network).isEmpty ? "\(network) (\(SendSummary.tokenStandard(network)))" : network]),
                     site: site.map { T("Asked by {site}", lang, ["site": $0]) } ?? "", toLabel: T("To", lang, [:]), to: to,
                     own: own ? T("Your own address on this phone", lang, [:]) : "", fee: "", warning: "",
                     tick: !to.isEmpty && !own ? T("I checked the receiver's address: the marked start, middle and end match.", lang, [:]) : "",

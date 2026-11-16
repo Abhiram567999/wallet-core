@@ -136,10 +136,12 @@ test('the native button colour lists match the app (Settings › Appearance)', (
   }
 });
 
-test('token standard after the network: the same rule in TypeScript, Swift and Kotlin', () => {
-  assert.deepEqual(['TRON', 'BNB Chain', 'Solana', 'Ethereum', 'Base', 'Polygon'].map(tokenStandard), ['TRC-20', 'BEP-20', 'SPL', 'ERC-20', 'ERC-20', 'ERC-20']);
+test('token standard after the network: the app list, the same in TypeScript, Swift and Kotlin', () => {
+  assert.deepEqual(['Ethereum', 'TRON', 'BNB Chain', 'Solana', 'Base', 'Polygon'].map(tokenStandard), ['ERC-20', 'TRC-20', 'BEP-20', 'SPL', '', '']);
+  const app = readFileSync(new URL('../../app/src/wallet/groups.ts', import.meta.url), 'utf8');
+  for (const [coin, std] of [['60', 'ERC-20'], ['195', 'TRC-20'], ['20000714', 'BEP-20'], ['501', 'SPL']]) assert.ok(app.includes(`${coin}: '${std}'`), `app ${std}`);
   const swiftSrc = readFileSync(new URL('../ios/SendSummary.swift', import.meta.url), 'utf8');
   const kotlinSrc = readFileSync(new URL('../android/src/main/java/app/foxsafe/walletcore/SendSummary.kt', import.meta.url), 'utf8');
-  assert.ok(swiftSrc.includes('network == "TRON" ? "TRC-20" : network == "BNB Chain" ? "BEP-20" : network == "Solana" ? "SPL" : "ERC-20"'), 'iOS');
-  assert.ok(kotlinSrc.includes('"TRON" -> "TRC-20"; "BNB Chain" -> "BEP-20"; "Solana" -> "SPL"; else -> "ERC-20"'), 'Android');
+  assert.ok(swiftSrc.includes('["Ethereum": "ERC-20", "TRON": "TRC-20", "BNB Chain": "BEP-20", "Solana": "SPL"]'), 'iOS');
+  assert.ok(kotlinSrc.includes('mapOf("Ethereum" to "ERC-20", "TRON" to "TRC-20", "BNB Chain" to "BEP-20", "Solana" to "SPL")'), 'Android');
 });
