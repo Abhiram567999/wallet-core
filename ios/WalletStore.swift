@@ -1211,9 +1211,9 @@ final class WalletStore {
   enum PolymarketPolicy {
     static let coin: UInt32 = 966 // Polygon
     static let chainId = "137"
-    /// Foxsafe's Polymarket builder code (bytes32, lowercase 0x…). Empty until the founder creates the
-    /// builder profile; while empty, every order's builder field must be 32 zero bytes.
-    static let builderCode = ""
+    /// Foxsafe's Polymarket builder code (bytes32, lowercase 0x…; public, from the founder's builder
+    /// profile, 16 Nov 2026). Every order must carry exactly this code, which earns Foxsafe's fee.
+    static let builderCode = "0x200dd1f35b63047f5e80336dbc8ddffbf617fac25fc9a81ebd3168ca38ac4cb4"
     static let zero32 = "0x" + String(repeating: "0", count: 64)
     static let loginMessage = "This message attests that I control the given wallet"
     static let pUSD = "0xc011a7e12a19f7b1f670d46f03b03f3342e82dfb"
