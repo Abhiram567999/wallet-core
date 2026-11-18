@@ -5,6 +5,7 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { concat, toHex, utf8 } from './encoding.ts';
 import { agentProofText } from './agentProof.ts';
+import { XMTP_IDENTITY_REFUSED } from './xmtpIdentityTexts.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { canBackupWithPassword, canSaveBackupFile, canSignAgentProof, signAgentProof, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
@@ -48,7 +49,7 @@ export interface Vectors {
   };
   /** Optional: test/vectors/agent-proof.json; without it the AI agent proof check still recovers every signature (SPEC §7.14). */
   agentProof?: { pairingId: string; evm: { signature: string }; tron: { signature: string }; solana: { signature: string } };
-  /** Optional: test/vectors/xmtp-identity.json; without it the check uses its own XMTP texts (SPEC §7.15). */
+  /** Optional: test/vectors/xmtp-identity.json; without it the check uses the same texts from src/xmtpIdentityTexts.ts (SPEC §7.15). */
   xmtpIdentity?: { refused: { what: string; text: string }[] };
 }
 
@@ -549,8 +550,8 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     if (!canSignDapp() || !v.dapp) return 'this build has no dApp signing';
     const d = v.dapp;
     const b64 = (b: Uint8Array) => { let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x); };
-    const own = `XMTP : Authenticate to inbox\n\nInbox ID: ${'ab'.repeat(32)}\nCurrent time: 2026-11-19T12:00:00Z\n\n- Grant messaging access to app\n  (ID: ${'cd'.repeat(32)})\n\nFor more info: https://xmtp.org/signatures`;
-    const texts = v.xmtpIdentity?.refused.map((r) => r.text) ?? [own, own.toUpperCase(), `Welcome!\n\n${own}\n\nNonce: 7`, 'XMTP : Create Identity\n0a24\n\nFor more info: https://xmtp.org/signatures/'];
+    // The vector file's texts (libxmtp's own templates, the add-device attack, case and place variants, XMTP V2).
+    const texts = (v.xmtpIdentity?.refused ?? XMTP_IDENTITY_REFUSED).map((r) => r.text);
     let refusedCount = 0;
     for (const text of texts) {
       // Ethereum (the identity XMTP checks), TRON and Solana: all refused, so no dApp path signs it.

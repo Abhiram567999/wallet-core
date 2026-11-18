@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
 import { isXmtpIdentityText, XMTP_IDENTITY_MARKERS } from '../src/xmtpIdentity.ts';
+import { XMTP_IDENTITY_REFUSED } from '../src/xmtpIdentityTexts.ts';
 import { fromUtf8 } from '../src/encoding.ts';
 
 const load = (f: string) => JSON.parse(readFileSync(new URL(`./vectors/${f}`, import.meta.url), 'utf8'));
@@ -33,4 +34,8 @@ test('XMTP identity: the markers are lowercase and the native copies match this 
   // Both dApp message signers (EVM/TRON and Solana) check it, on both platforms.
   assert.equal(swift.split('XmtpIdentity.isIdentityText(text)').length - 1, 2);
   assert.equal(kotlin.split('XmtpIdentity.isIdentityText(text)').length - 1, 2);
+});
+
+test('XMTP identity: the self-test texts are exactly the vector file', () => {
+  assert.deepEqual(XMTP_IDENTITY_REFUSED, v.refused);
 });
