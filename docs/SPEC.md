@@ -749,3 +749,7 @@ the text and signature per family for the test phrase, account 0 (Solana on both
 dApp messages and bad pairing ids; `test/agent-proof.test.ts` checks Trust Wallet Core's signers against it,
 and the on-device self-test signs four proofs (Ethereum, BNB Chain, TRON, Solana; each signature recovers to the
 account) and checks every refusal. Apps before build 23 have no `signAgentProof`, and their `signDappMessage` still signs this text.
+So build 23 alone does not make a proof trustworthy: a site can still get an older phone to sign exactly this
+text (rewording it would not help, the old signer signs any readable text). The proof stays an abuse check that
+grants nothing until builds before 23 can no longer use the app at all (a forced minimum version), or until the
+grant also needs something an older build cannot produce.
