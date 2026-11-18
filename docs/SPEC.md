@@ -747,5 +747,5 @@ attacker's pairing. So:
 (`scripts/make-agent-proof-vector.ts`: Trust Wallet Core keys, noble signatures, a made-up pairing id) holds
 the text and signature per family for the test phrase, account 0 (Solana on both paths), the refused
 dApp messages and bad pairing ids; `test/agent-proof.test.ts` checks Trust Wallet Core's signers against it,
-and the on-device self-test signs the three proofs (each signature recovers to the account) and checks every
-refusal. Apps before build 23 have no `signAgentProof`, and their `signDappMessage` still signs this text.
+and the on-device self-test signs four proofs (Ethereum, BNB Chain, TRON, Solana; each signature recovers to the
+account) and checks every refusal. Apps before build 23 have no `signAgentProof`, and their `signDappMessage` still signs this text.

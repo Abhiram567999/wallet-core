@@ -1933,7 +1933,8 @@ final class WalletStore {
       return b.count == 25 && b.starts(with: Array("pr_".utf8)) && b.dropFirst(3).allSatisfy { pairingChars.contains($0) }
     }
 
-    static func isProofText(_ text: String) -> Bool { text.lowercased().contains(marker) }
+    /// Literal (UTF-16) search: Swift's `contains` compares whole characters, so a combining mark after the phrase would hide it.
+    static func isProofText(_ text: String) -> Bool { text.lowercased().range(of: marker, options: .literal) != nil }
   }
 
   /// Proves to Foxsafe's server that this account is the wallet an AI agent connects to: signs AgentProof.text for the
