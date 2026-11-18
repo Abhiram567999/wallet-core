@@ -48,6 +48,8 @@ export interface Vectors {
   };
   /** Optional: test/vectors/agent-proof.json; without it the AI agent proof check still recovers every signature (SPEC §7.14). */
   agentProof?: { pairingId: string; evm: { signature: string }; tron: { signature: string }; solana: { signature: string } };
+  /** Optional: test/vectors/xmtp-identity.json; without it the check uses its own XMTP texts (SPEC §7.15). */
+  xmtpIdentity?: { refused: { what: string; text: string }[] };
 }
 
 export interface CheckResult {
@@ -541,6 +543,26 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
       refusedCount++;
     }
     return `4 proofs recover to this account${v.agentProof ? ' and equal noble' : ''}; ${refusedCount} requests refused`;
+  });
+
+  await check('XMTP chat sign-in: the dApp signers refuse every XMTP identity text before Face ID', async () => {
+    if (!canSignDapp() || !v.dapp) return 'this build has no dApp signing';
+    const d = v.dapp;
+    const b64 = (b: Uint8Array) => { let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x); };
+    const own = `XMTP : Authenticate to inbox\n\nInbox ID: ${'ab'.repeat(32)}\nCurrent time: 2026-11-19T12:00:00Z\n\n- Grant messaging access to app\n  (ID: ${'cd'.repeat(32)})\n\nFor more info: https://xmtp.org/signatures`;
+    const texts = v.xmtpIdentity?.refused.map((r) => r.text) ?? [own, own.toUpperCase(), `Welcome!\n\n${own}\n\nNonce: 7`, 'XMTP : Create Identity\n0a24\n\nFor more info: https://xmtp.org/signatures/'];
+    let refusedCount = 0;
+    for (const text of texts) {
+      // Ethereum (the identity XMTP checks), TRON and Solana: all refused, so no dApp path signs it.
+      for (const coin of [60, 195, 501]) {
+        const p = coin === 501
+          ? signDappSolana(importedId, 'message', b64(utf8(text)), d.solana.request)
+          : signDappMessage(importedId, coin, `0x${toHex(utf8(text))}`, coin === 195 ? d.tron.request : d.evm.request);
+        await rejects(p, 'XMTP chat sign-in');
+        refusedCount++;
+      }
+    }
+    return `${refusedCount} XMTP identity requests refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {
