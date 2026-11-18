@@ -1816,6 +1816,7 @@ final class WalletStore {
     let hex = messageHex.lowercased().hasPrefix("0x") ? String(messageHex.dropFirst(2)) : messageHex
     guard let req = Self.dappRequest(request), let bytes = Data(hexString: hex) else { throw bad("unreadable") }
     guard let text = Self.dappText(bytes) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
+    if AgentProof.isProofText(text) { throw AgentProof.refused }
     if let why = Self.signInProblem(text, req: req, caseSensitive: coin.blockchain == .tron) { throw bad(why) }
     return try withSecrets([id], reason: "Sign a message for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
@@ -1885,6 +1886,7 @@ final class WalletStore {
     switch kind {
     case "message":
       guard let text = Self.dappText(payload) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
+      if AgentProof.isProofText(text) { throw AgentProof.refused }
       if let why = Self.signInProblem(text, req: req, caseSensitive: true) { throw bad(why) }
     case "transaction":
       guard let parsed = Self.solanaTransaction(tx) else { throw bad("unreadable transaction") }
@@ -1905,6 +1907,59 @@ final class WalletStore {
         out["transaction"] = Data(tx).base64EncodedString()
       }
       return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
+  // MARK: AI agent connect proof (SPEC §7.14, build 23)
+
+  /// The text Foxsafe's server (mcp.thefoxsafe.com, proofMessage) checks to know the phone owns the addresses an AI agent
+  /// connects to. Only signAgentProof signs it, building it here; the dApp signers refuse any text that contains it, so a
+  /// site can't get it signed for an attacker's pairing.
+  enum AgentProof {
+    static let site = "mcp.thefoxsafe.com"
+    /// Lowercase; refused anywhere in a dApp message, in any case.
+    static let marker = "connect an ai agent to this wallet"
+    static let refused = WalletError.invalid("signature refused: this text can only be signed from Foxsafe's own AI agents screen")
+    static let pairingChars = Set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-".utf8)
+
+    static func text(pairingId: String, address: String) -> String {
+      ["Foxsafe: connect an AI agent to this wallet.", "", "Address: \(address)", "Code: \(pairingId)", "Site: \(site)", "",
+       "Signing this is free and moves no money."].joined(separator: "\n")
+    }
+
+    /// "pr_" and 22 of A–Z a–z 0–9 _ - (checked by hand: a regex "$" also matches before a final line break).
+    static func isPairingId(_ s: String) -> Bool {
+      let b = Array(s.utf8)
+      return b.count == 25 && b.starts(with: Array("pr_".utf8)) && b.dropFirst(3).allSatisfy { pairingChars.contains($0) }
+    }
+
+    static func isProofText(_ text: String) -> Bool { text.lowercased().contains(marker) }
+  }
+
+  /// Proves to Foxsafe's server that this account is the wallet an AI agent connects to: signs AgentProof.text for the
+  /// account's own address and `pairingId`, built here (the app never passes text). EVM (any EVM coin) and TRON:
+  /// EIP-191 personal_sign / TRON message V2, 0x signature with v = 27/28. Solana (501): ed25519 over the UTF-8 bytes,
+  /// base58. Refused before Face ID unless the coin is one of these and `pairingId` is valid. Returns {address, signature}.
+  func signAgentProof(id: String, coin raw: UInt32, pairingId: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("agent proof refused: \(why)") }
+    guard let coin = CoinType(rawValue: raw), [.ethereum, .tron, .solana].contains(coin.blockchain) else { throw bad("network") }
+    guard AgentProof.isPairingId(pairingId) else { throw bad("unreadable code") }
+    return try withSecrets([id], reason: "Connect an AI agent") { records in
+      let key = try Self.privateKey(records[0], coin: coin, account: account)
+      let address = coin.deriveAddress(privateKey: key)
+      let text = AgentProof.text(pairingId: pairingId, address: address)
+      let signature: String
+      switch coin.blockchain {
+      case .solana:
+        guard let sig = key.sign(digest: Data(text.utf8), curve: .ed25519), sig.count == 64 else { throw WalletError.crypto("signing failed") }
+        signature = Base58.encodeNoCheck(data: sig)
+      case .tron:
+        signature = try Self.dappSignedOut(TronMessageSigner.signMessage(privateKey: key, message: text))
+      default:
+        signature = try Self.dappSignedOut(EthereumMessageSigner.signMessage(privateKey: key, message: "0x" + Data(text.utf8).hexString))
+      }
+      return String(data: try JSONSerialization.data(withJSONObject: ["address": address, "signature": signature]), encoding: .utf8)!
     }
   }
 

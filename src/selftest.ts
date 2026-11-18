@@ -3,10 +3,11 @@
 // Development builds only. It WIPES all wallets on the device it runs on.
 
 import { sha256 } from '@noble/hashes/sha2.js';
-import { toHex, utf8 } from './encoding.ts';
+import { concat, toHex, utf8 } from './encoding.ts';
+import { agentProofText } from './agentProof.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignAgentProof, signAgentProof, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, evmDappInput, tronOutput, tronTransferInput } from './tx.ts';
@@ -45,6 +46,8 @@ export interface Vectors {
     tron: { coin: number; address: string; request: DappSignRequest; message: { hex: string; signature: string } };
     solana: { address: string; request: DappSignRequest };
   };
+  /** Optional: test/vectors/agent-proof.json; without it the AI agent proof check still recovers every signature (SPEC §7.14). */
+  agentProof?: { pairingId: string; evm: { signature: string }; tron: { signature: string }; solana: { signature: string } };
 }
 
 export interface CheckResult {
@@ -487,6 +490,57 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     await refuses(signDappSolana(importedId, 'message', b64(transfer.slice(65)), d.solana.request), 'a Solana transaction passed off as a message');
     await refuses(signDappSolana(importedId, 'message', b64(new TextEncoder().encode(`evil.example wants you to sign in with your Solana account:\n${d.solana.address}`)), d.solana.request), 'a Solana sign-in for another site');
     return `${d.evm.messages.allowed.length + d.evm.typedData.allowed.length + 1} signatures equal viem/noble, 3 EVM + 1 TRON + 2 Solana signed; ${refusedCount} drainer or tampered requests refused`;
+  });
+
+  await check('AI agent proof: signAgentProof signs the server text (signature recovers to this account); dApp signers refuse that text', async () => {
+    if (!canSignAgentProof() || !v.dapp) return 'this build has no AI agent proof';
+    const d = v.dapp;
+    const PAIRING = v.agentProof?.pairingId ?? 'pr_Foxsafe-test_pairing01';
+    const b64 = (b: Uint8Array) => { let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x); };
+    /** The 20-byte account an EIP-191 / TRON V2 signature of `text` recovers to. */
+    const recover20 = (prefix: string, text: string, sigHex: string) => {
+      const bytes = utf8(text);
+      const sig = fromHex(sigHex.replace(/^0x/, ''));
+      const hash = keccak_256(concat(utf8(`${prefix}${bytes.length}`), bytes));
+      const pub = secp256k1.Signature.fromBytes(sig.slice(0, 64), 'compact').addRecoveryBit(sig[64]! - 27).recoverPublicKey(hash).toBytes(false);
+      return keccak_256(pub.slice(1)).slice(12);
+    };
+    // One proof per family (Ethereum and BNB Chain share the EVM key), each checked like the server checks it.
+    for (const coin of [60, 20000714]) {
+      const p = await signAgentProof(importedId, coin, PAIRING);
+      expect(p.address === d.evm.address, `EVM proof address ${p.address}`);
+      expect(`0x${toHex(recover20('\x19Ethereum Signed Message:\n', agentProofText(PAIRING, p.address), p.signature))}` === p.address.toLowerCase(), 'EVM proof does not recover to the address');
+      if (v.agentProof) expect(p.signature.toLowerCase() === v.agentProof.evm.signature.toLowerCase(), 'EVM proof differs from noble');
+    }
+    const t = await signAgentProof(importedId, 195, PAIRING);
+    const body = new Uint8Array([0x41, ...recover20('\x19TRON Signed Message:\n', agentProofText(PAIRING, t.address), t.signature)]);
+    expect(t.address === d.tron.address && base58Encode(new Uint8Array([...body, ...sha256(sha256(body)).slice(0, 4)])) === t.address, 'TRON proof does not recover to the address');
+    if (v.agentProof) expect(t.signature.toLowerCase() === v.agentProof.tron.signature.toLowerCase(), 'TRON proof differs from noble');
+    const s = await signAgentProof(importedId, 501, PAIRING);
+    expect(s.address === d.solana.address && ed25519.verify(base58Decode(s.signature), utf8(agentProofText(PAIRING, s.address)), base58Decode(s.address)), 'Solana proof does not verify');
+    if (v.agentProof) expect(s.signature === v.agentProof.solana.signature, 'Solana proof differs from noble');
+    // Refused before Face ID: other networks and unreadable pairing ids (a line break would add a line to the text).
+    let refusedCount = 0;
+    for (const [coin, id] of [[0, PAIRING], [60, 'pr_short'], [60, `${PAIRING}\n`], [60, PAIRING.toUpperCase()], [195, `${PAIRING.slice(0, -1)}!`]] as const) {
+      await rejects(signAgentProof(importedId, coin, id), 'agent proof refused');
+      refusedCount++;
+    }
+    // The same text through the dApp signers (in-app browser, WalletConnect): refused, whatever the case or place.
+    const evmText = agentProofText(PAIRING, d.evm.address);
+    const texts: [number, string][] = [
+      [60, evmText], [195, agentProofText(PAIRING, d.tron.address)], [501, agentProofText(PAIRING, d.solana.address)],
+      [60, evmText.toUpperCase()], [60, evmText.replace('connect an AI agent to this wallet', 'Connect An Ai Agent To This Wallet')],
+      [60, `Welcome to Example!\n\n${evmText}\n\nNonce: 8122`], [195, 'Please CONNECT an AI agent to this WALLET to continue. Nonce: 99'],
+      [501, 'Sign to connect an ai agent to this wallet.'],
+    ];
+    for (const [coin, text] of texts) {
+      const p = coin === 501
+        ? signDappSolana(importedId, 'message', b64(utf8(text)), d.solana.request)
+        : signDappMessage(importedId, coin, `0x${toHex(utf8(text))}`, coin === 195 ? d.tron.request : d.evm.request);
+      await rejects(p, "only be signed from Foxsafe's own AI agents screen");
+      refusedCount++;
+    }
+    return `4 proofs recover to this account${v.agentProof ? ' and equal noble' : ''}; ${refusedCount} requests refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

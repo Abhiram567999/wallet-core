@@ -1847,6 +1847,7 @@ class WalletStore(context: Context) {
     val req = dappRequest(request) ?: throw bad("unreadable")
     val bytes = unhex(messageHex.lowercase().removePrefix("0x")) ?: throw bad("unreadable")
     val text = dappText(bytes) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
+    if (AgentProof.isProofText(text)) throw AgentProof.refused()
     signInProblem(text, req, c.blockchain() == Blockchain.TRON)?.let { throw bad(it) }
     withSecret(id, activity, "Sign a message for ${req.origin}") { r ->
       val key = privateKey(r, c, account)
@@ -1998,6 +1999,7 @@ class WalletStore(context: Context) {
     when (kind) {
       "message" -> {
         val text = dappText(payload) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
+        if (AgentProof.isProofText(text)) throw AgentProof.refused()
         signInProblem(text, req, true)?.let { throw bad(it) }
       }
       "transaction" -> {
@@ -2021,6 +2023,60 @@ class WalletStore(context: Context) {
         out.put("transaction", Envelope.b64(tx))
       }
       out.toString()
+    }
+  }
+
+  // AI agent connect proof (SPEC §7.14, build 23)
+
+  /**
+   * The text Foxsafe's server (mcp.thefoxsafe.com, proofMessage) checks to know the phone owns the addresses an AI agent
+   * connects to. Only signAgentProof signs it, building it here; the dApp signers refuse any text that contains it, so a
+   * site can't get it signed for an attacker's pairing. Mirrors ios/WalletStore.swift.
+   */
+  private object AgentProof {
+    const val SITE = "mcp.thefoxsafe.com"
+    /** Lowercase; refused anywhere in a dApp message, in any case. */
+    const val MARKER = "connect an ai agent to this wallet"
+    private val PAIRING_CHARS = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").toSet()
+
+    fun refused() = WalletException("INVALID", "signature refused: this text can only be signed from Foxsafe's own AI agents screen")
+
+    fun text(pairingId: String, address: String): String =
+      listOf("Foxsafe: connect an AI agent to this wallet.", "", "Address: $address", "Code: $pairingId", "Site: $SITE", "",
+        "Signing this is free and moves no money.").joinToString("\n")
+
+    /** "pr_" and 22 of A–Z a–z 0–9 _ - (checked by hand: a regex "$" also matches before a final line break). */
+    fun isPairingId(s: String): Boolean = s.length == 25 && s.startsWith("pr_") && s.drop(3).all { it in PAIRING_CHARS }
+
+    fun isProofText(text: String): Boolean = text.lowercase().contains(MARKER)
+  }
+
+  /**
+   * Proves to Foxsafe's server that this account is the wallet an AI agent connects to: signs AgentProof.text for the
+   * account's own address and [pairingId], built here (the app never passes text). EVM (any EVM coin) and TRON:
+   * EIP-191 personal_sign / TRON message V2, 0x signature with v = 27/28. Solana (501): ed25519 over the UTF-8 bytes,
+   * base58. Refused before the prompt unless the coin is one of these and [pairingId] is valid. Returns {address, signature}.
+   */
+  fun signAgentProof(id: String, coinValue: Int, pairingId: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "agent proof refused: $why")
+    val c = coin(coinValue)
+    val chain = c.blockchain()
+    if (chain != Blockchain.ETHEREUM && chain != Blockchain.TRON && chain != Blockchain.SOLANA) throw bad("network")
+    if (!AgentProof.isPairingId(pairingId)) throw bad("unreadable code")
+    withSecret(id, activity, "Connect an AI agent") { r ->
+      val key = privateKey(r, c, account)
+      val address = c.deriveAddress(key)
+      val text = AgentProof.text(pairingId, address)
+      val signature = when (chain) {
+        Blockchain.SOLANA -> {
+          val sig = key.sign(text.toByteArray(Charsets.UTF_8), Curve.ED25519) ?: throw WalletException("CRYPTO", "signing failed")
+          if (sig.size != 64) throw WalletException("CRYPTO", "signing failed")
+          Base58.encodeNoCheck(sig)
+        }
+        Blockchain.TRON -> dappSignedOut(TronMessageSigner.signMessage(key, text))
+        else -> dappSignedOut(EthereumMessageSigner.signMessage(key, "0x" + hex(text.toByteArray(Charsets.UTF_8))))
+      }
+      JSONObject().put("address", address).put("signature", signature).toString()
     }
   }
 

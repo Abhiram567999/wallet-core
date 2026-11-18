@@ -214,6 +214,10 @@ public class FoxsafeWalletCoreModule: Module {
     AsyncFunction("signDappTron") { (id: String, rawDataHex: String, request: String, account: Int?) in
       try run { try self.store.signDappTron(id: id, rawDataHex: rawDataHex, request: request, account: try idx(account)) }
     }
+    // AI agent connect proof (SPEC §7.14, build 23): the native code builds the text; the app passes only the pairing id.
+    AsyncFunction("signAgentProof") { (id: String, coin: Int, pairingId: String, account: Int?) in
+      try run { try self.store.signAgentProof(id: id, coin: try u32(coin), pairingId: pairingId, account: try idx(account)) }
+    }
     AsyncFunction("signTronMultisig") { (id: String, rawDataHex: String, request: String, account: Int?) in
       try run { try self.store.signTronMultisig(id: id, rawDataHex: rawDataHex, request: request, account: try idx(account)) }
     }

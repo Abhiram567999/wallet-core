@@ -490,10 +490,10 @@ the rule; after Face ID it also refuses if the key's address is not `address`.
 
 | Function | Signs | Refused unless |
 |---|---|---|
-| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. |
+| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet", in any case (§7.14). |
 | `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. |
 | `signDappEvm(id, coin, input, request)` | EVM transaction (SigningInput without a key, `evmDappInput`) | chain id equals `chainId`; legacy or EIP-1559 only (no user operation, no EIP-7702 authorization, no SetCode mode); a value transfer to an address, or a contract call / deployment; no key inside. |
-| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked. Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
+| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text (build 23 on, §7.14). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
 | `signDappTron(id, rawDataHex, request)` | TRON transaction raw data | exactly one contract of an allowed type (transfers, contract calls, staking, votes; never `AccountPermissionUpdate`), owner = `address`, permission id 0 (multisig is §7.8), no extra signers or scripts, expiry in the future and ≤ 24 h, and `txID` (if given) = sha256(raw). |
 
 Unlimited approvals (`approve`, `setApprovalForAll`, Permit, single Permit2),
@@ -707,3 +707,45 @@ The Swift and Kotlin code mirrors it and the on-device self-test runs the same c
 Not shown on purpose: the contact's name (app data) and the value in money (server prices).
 `canConfirmSends()` tells the app the build has this screen; older builds keep the tick and
 slide on Review.
+
+
+### 7.14 AI agent connect proof (build 23)
+
+When an AI agent connects to a wallet, Foxsafe's server (`mcp.thefoxsafe.com`, foxsafe-server
+`src/agents/proof.ts` → `proofMessage`) lets the phone prove it owns the connected addresses by signing
+this text, one network family being enough (lines joined with `\n`, no final line break):
+
+```
+Foxsafe: connect an AI agent to this wallet.
+
+Address: <the account's address on that network>
+Code: <pairing id>
+Site: mcp.thefoxsafe.com
+
+Signing this is free and moves no money.
+```
+
+A site could ask the user, through the in-app browser or WalletConnect, to sign the same text for an
+attacker's pairing. So:
+
+- **Only `signAgentProof(id, coin, pairingId, account?)` signs it.** The native code builds the text from
+  the address it derives for that account and `pairingId`; the app never passes text. Before Face ID it
+  refuses other networks and any `pairingId` that is not `pr_` + 22 of `A–Z a–z 0–9 _ -` (checked by hand,
+  so a final line break can't add a line). One Face ID, "Connect an AI agent". EVM (60 and every EVM coin):
+  EIP-191 `personal_sign`; TRON (195): `signMessageV2` (keccak256 of `"\x19TRON Signed Message:\n"` + byte
+  length + text); both 0x hex with v = 27/28. Solana (501): ed25519 over the UTF-8 bytes, base58. Returns
+  `{address, signature}`; the app sends `address` as returned (its EIP-55 case is part of the text).
+  `canSignAgentProof()` tells the app the build has it.
+- **The dApp signers refuse it.** `signDappMessage` (EVM, TRON) and `signDappSolana` with kind `"message"`
+  refuse, before Face ID, any readable text containing "connect an ai agent to this wallet" (lowercased,
+  anywhere in the text): "signature refused: this text can only be signed from Foxsafe's own AI agents
+  screen". Typed data and transactions are signed over other bytes (EIP-712 hash, transaction hash,
+  TRON txID), and a Solana transaction's message can't be this text (its header would claim 70 signers and
+  115 keys), so none of them gives a signature the server accepts.
+
+`src/agentProof.ts` is the reference text. `test/vectors/agent-proof.json`
+(`scripts/make-agent-proof-vector.ts`: Trust Wallet Core keys, noble signatures, a made-up pairing id) holds
+the text and signature per family for the test phrase, account 0 (Solana on both paths), the refused
+dApp messages and bad pairing ids; `test/agent-proof.test.ts` checks Trust Wallet Core's signers against it,
+and the on-device self-test signs the three proofs (each signature recovers to the account) and checks every
+refusal. Apps before build 23 have no `signAgentProof`, and their `signDappMessage` still signs this text.
