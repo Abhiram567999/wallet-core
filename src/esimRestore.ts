@@ -1,4 +1,4 @@
-// eSIM restore proof (docs/SPEC.md §7.15, build 23). After a lost phone, the new phone proves to Foxsafe's server
+// eSIM restore proof (docs/SPEC.md §7.16, build 23). After a lost phone, the new phone proves to Foxsafe's server
 // that it holds the wallet that paid for the eSIMs by signing this exact text, which the native signEsimRestore
 // builds itself (the app passes only the server's one-time code and this phone's eSIM id). This file is the
 // reference the tests and the self-test check the native text against; it must stay equal to foxsafe-server

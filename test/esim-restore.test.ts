@@ -1,4 +1,4 @@
-// eSIM restore proof (SPEC §7.15): Trust Wallet Core's signers (the ones the native signEsimRestore uses) must give
+// eSIM restore proof (SPEC §7.16): Trust Wallet Core's signers (the ones the native signEsimRestore uses) must give
 // the independent noble signatures in esim-restore.json for the text src/esimRestore.ts builds, and every restore text a
 // site could send must trip the dApp refusal while no allowed dApp message does. The native refusals and a
 // signEsimRestore round trip run in the on-device self-test.
@@ -12,6 +12,7 @@ import { secp256k1 } from '@noble/curves/secp256k1.js';
 import { keccak_256 } from '@noble/hashes/sha3.js';
 import { esimRestoreText, isEsimRestoreCode, isEsimRestorePhone, isEsimRestoreText, ESIM_RESTORE_MARKER } from '../src/esimRestore.ts';
 import { isAgentProofText } from '../src/agentProof.ts';
+import { isXmtpIdentityText } from '../src/xmtpIdentity.ts';
 import { base58Decode, base58Encode } from '../src/solana.ts';
 import { concat, fromUtf8, toHex, utf8 } from '../src/encoding.ts';
 import { SOLANA_PATHS } from '../src/hd.ts';
@@ -48,6 +49,8 @@ test('eSIM restore: the text is the server template for each address, the fixed 
     assert.equal(esimRestoreText(v.code, v.phone, v[k].address), v[k].text, k);
     assert.ok(isEsimRestoreText(v[k].text), k);
     assert.ok(!isAgentProofText(v[k].text), k);
+    // The dApp signers check the XMTP texts first: the restore text must not trip them (its own refusal names the eSIM screen).
+    assert.ok(!isXmtpIdentityText(v[k].text), k);
     assert.ok(!v[k].text.endsWith('\n') && v[k].text.split('\n').length === 8, k);
   }
   assert.equal(v.site, 'api.thefoxsafe.com');
@@ -89,7 +92,10 @@ test('eSIM restore Solana: Trust Wallet Core ed25519 over the UTF-8 text equals 
 
 test('eSIM restore: every refused dApp message contains the marker; no allowed dApp message does', () => {
   assert.ok(v.refused.length >= 6);
-  for (const r of v.refused) assert.ok(isEsimRestoreText(fromUtf8(hexBytes(r.hex))), r.what);
+  for (const r of v.refused) {
+    assert.ok(isEsimRestoreText(fromUtf8(hexBytes(r.hex))), r.what);
+    assert.ok(!isXmtpIdentityText(fromUtf8(hexBytes(r.hex))), `${r.what}: would be refused as XMTP first`);
+  }
   for (const m of [...dapp.evm.messages.allowed, dapp.tron.message]) assert.ok(!isEsimRestoreText(fromUtf8(hexBytes(m.hex))), m.what ?? 'TRON message');
   assert.equal(ESIM_RESTORE_MARKER, ESIM_RESTORE_MARKER.toLowerCase());
 });

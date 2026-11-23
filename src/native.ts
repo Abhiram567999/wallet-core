@@ -127,7 +127,7 @@ export interface NativeWalletCore {
   signDappTron?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /** AI agent connect proof: the native code builds and signs the text (SPEC §7.14). Returns JSON {address, signature}. Build 23 on. */
   signAgentProof?(id: string, coin: CoinType, pairingId: string, account?: number): Promise<string>;
-  /** eSIM restore proof: the native code builds and signs the text per network family (SPEC §7.15). Returns JSON [{coin, address, signature}]. Build 23 on. */
+  /** eSIM restore proof: the native code builds and signs the text per network family (SPEC §7.16). Returns JSON [{coin, address, signature}]. Build 23 on. */
   signEsimRestore?(id: string, code: string, phone: string, account?: number): Promise<string>;
   /** TRON multisig: one Foxsafe-made permission setup or multisig send, with its compiled-in rule (SPEC §7.8). */
   signTronMultisig?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
@@ -427,7 +427,7 @@ export interface EsimRestoreSignature {
 
 /**
  * Proves to Foxsafe's server that this account is the wallet that paid for some eSIMs, so they move to this phone
- * (SPEC §7.15). `code`: the server's one-time "er_" + 22 characters. `phone`: SHA-256 hex of this phone's eSIM key.
+ * (SPEC §7.16). `code`: the server's one-time "er_" + 22 characters. `phone`: SHA-256 hex of this phone's eSIM key.
  * The native code builds the text (esimRestoreText) for each network family the wallet has; one Face ID
  * "Move eSIMs to this phone".
  */

@@ -1,4 +1,4 @@
-// Writes test/vectors/esim-restore.json: the eSIM restore proof (SPEC §7.15) for the test phrase, account 0, with a
+// Writes test/vectors/esim-restore.json: the eSIM restore proof (SPEC §7.16) for the test phrase, account 0, with a
 // fixed, made-up one-time code and phone id. Keys come from Trust Wallet Core's HD wallet (the addresses are pinned
 // by derivation.json and hd.json); the text comes from src/esimRestore.ts; the signatures are made with noble,
 // independently of the Trust Wallet Core signers the native signEsimRestore uses. Also the dApp messages the native

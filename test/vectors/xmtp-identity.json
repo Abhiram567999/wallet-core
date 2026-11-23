@@ -1,0 +1,51 @@
+{
+  "note": "XMTP identity texts the dApp message signers refuse (SPEC §7.15). Templates from libxmtp crates/xmtp_id/src/associations/unsigned_actions.rs (main c038bd4, 19 Nov 2026).",
+  "refused": [
+    {
+      "what": "libxmtp test text: every action (unsigned_actions.rs)",
+      "text": "XMTP : Authenticate to inbox\n\nInbox ID: fcd18d86276d7a99fe522dba9660c420f03c8648785ada7c5daae232a3df77a9\nCurrent time: 1970-01-01T00:00:00Z\n\n- Create inbox\n  (Owner: 0x1234567890abcdef1234567890abcdef12345678)\n- Link address to inbox\n  (Address: 0x4567890abcdef1234567890abcdef12345678123)\n- Grant messaging access to app\n  (ID: 010203)\n- Unlink address from inbox\n  (Address: 0x4567890abcdef1234567890abcdef12345678123)\n- Revoke messaging access from app\n  (ID: 010203)\n- Change inbox recovery address\n  (Address: 0x7890abcdef1234567890abcdef12345678123456)\n\nFor more info: https://xmtp.org/signatures"
+    },
+    {
+      "what": "libxmtp test text: claim handle",
+      "text": "XMTP : Authenticate to inbox\n\nInbox ID: fcd18d86276d7a99fe522dba9660c420f03c8648785ada7c5daae232a3df77a9\nCurrent time: 2024-04-10T12:00:00Z\n\n- Claim handle\n  (Handle: nick#2341)\n\nFor more info: https://xmtp.org/signatures"
+    },
+    {
+      "what": "attack: add a site's device to the user's inbox",
+      "text": "XMTP : Authenticate to inbox\n\nInbox ID: fcd18d86276d7a99fe522dba9660c420f03c8648785ada7c5daae232a3df77a9\nCurrent time: 2026-11-19T12:00:00Z\n\n- Grant messaging access to app\n  (ID: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08)\n\nFor more info: https://xmtp.org/signatures"
+    },
+    {
+      "what": "first sign-in: create inbox + add device",
+      "text": "XMTP : Authenticate to inbox\n\nInbox ID: fcd18d86276d7a99fe522dba9660c420f03c8648785ada7c5daae232a3df77a9\nCurrent time: 2026-11-19T12:00:00Z\n\n- Create inbox\n  (Owner: 0x9858effd232b4033e47d90003d41ec34ecaeda94)\n- Grant messaging access to app\n  (ID: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08)\n\nFor more info: https://xmtp.org/signatures"
+    },
+    {
+      "what": "upper case",
+      "text": "XMTP : AUTHENTICATE TO INBOX\n\nINBOX ID: FCD18D86276D7A99FE522DBA9660C420F03C8648785ADA7C5DAAE232A3DF77A9\nCURRENT TIME: 2026-11-19T12:00:00Z\n\n- GRANT MESSAGING ACCESS TO APP\n  (ID: 9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08)\n\nFOR MORE INFO: HTTPS://XMTP.ORG/SIGNATURES"
+    },
+    {
+      "what": "inside a longer message",
+      "text": "Welcome to Example!\n\nXMTP : Authenticate to inbox\n\nInbox ID: fcd18d86276d7a99fe522dba9660c420f03c8648785ada7c5daae232a3df77a9\nCurrent time: 2026-11-19T12:00:00Z\n\n- Grant messaging access to app\n  (ID: 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08)\n\nFor more info: https://xmtp.org/signatures\n\nNonce: 8122"
+    },
+    {
+      "what": "footer only (header changed)",
+      "text": "XMTP: Authenticate to inbox\n\n- Grant messaging access to app\n  (ID: 01)\n\nFor more info: https://xmtp.org/signatures"
+    },
+    {
+      "what": "XMTP V2 create identity",
+      "text": "XMTP : Create Identity\n0a2408011220\n\nFor more info: https://xmtp.org/signatures/"
+    },
+    {
+      "what": "XMTP V2 enable identity",
+      "text": "XMTP : Enable Identity\n0a2408011220\n\nFor more info: https://xmtp.org/signatures/"
+    }
+  ],
+  "allowed": [
+    {
+      "what": "a site that mentions XMTP",
+      "text": "Welcome to xmtp.chat! Sign this message to prove you own this wallet. Nonce: 42"
+    },
+    {
+      "what": "a normal sign-in text",
+      "text": "example.com wants you to sign in with your Ethereum account:\n0x9858EfFD232B4033E47d90003D41EC34EcaEda94\n\nURI: https://example.com\nVersion: 1\nChain ID: 1\nNonce: 32891756\nIssued At: 2026-11-19T12:00:00Z"
+    }
+  ]
+}

@@ -490,10 +490,10 @@ the rule; after Face ID it also refuses if the key's address is not `address`.
 
 | Function | Signs | Refused unless |
 |---|---|---|
-| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet" (§7.14) or "move my eSIMs to this phone" (§7.15), in any case. |
+| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet" (§7.14), an XMTP chat sign-in text (§7.15) or "move my eSIMs to this phone" (§7.16), in any case. |
 | `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. |
 | `signDappEvm(id, coin, input, request)` | EVM transaction (SigningInput without a key, `evmDappInput`) | chain id equals `chainId`; legacy or EIP-1559 only (no user operation, no EIP-7702 authorization, no SetCode mode); a value transfer to an address, or a contract call / deployment; no key inside. |
-| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text or the eSIM restore text (build 23 on, §7.14, §7.15). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
+| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text, an XMTP chat sign-in text or the eSIM restore text (build 23 on, §7.14, §7.15, §7.16). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
 | `signDappTron(id, rawDataHex, request)` | TRON transaction raw data | exactly one contract of an allowed type (transfers, contract calls, staking, votes; never `AccountPermissionUpdate`), owner = `address`, permission id 0 (multisig is §7.8), no extra signers or scripts, expiry in the future and ≤ 24 h, and `txID` (if given) = sha256(raw). |
 
 Unlimited approvals (`approve`, `setApprovalForAll`, Permit, single Permit2),
@@ -754,7 +754,46 @@ text (rewording it would not help, the old signer signs any readable text). The 
 grants nothing until builds before 23 can no longer use the app at all (a forced minimum version), or until the
 grant also needs something an older build cannot produce.
 
-### 7.15 eSIM restore proof (build 23)
+### 7.15 XMTP chat sign-in texts (build 23)
+
+XMTP (the chat network Family, the Base app and Coinbase Wallet use, and Foxsafe Chat's planned base) ties a
+chat identity ("inbox") to an Ethereum address with a readable text the address signs with EIP-191
+`personal_sign`. libxmtp builds it as (crates/xmtp_id/src/associations/unsigned_actions.rs):
+
+```
+XMTP : Authenticate to inbox
+
+Inbox ID: <inbox id>
+Current time: <RFC 3339>
+
+- Create inbox / Link address to inbox / Grant messaging access to app / Link passkey to inbox /
+  Unlink address from inbox / Revoke messaging access from app / Unlink passkey from inbox /
+  Change inbox recovery address / Claim handle
+  (<Owner|Address|ID|Passkey|Handle>: <value>)
+
+For more info: https://xmtp.org/signatures
+```
+
+A site that gets this signed for the user's address (in-app browser or WalletConnect) adds its own device
+("Grant messaging access to app") to the user's chat identity, or creates one: it then receives the messages
+other XMTP apps send to that address and writes as the user. So `signDappMessage` (EVM, TRON) and
+`signDappSolana` with kind `"message"` refuse, before Face ID, any readable text containing (lowercased,
+anywhere) "xmtp : authenticate to inbox", "xmtp.org/signatures", or XMTP V2's old "xmtp : create identity" /
+"xmtp : enable identity": "signature refused: this is an XMTP chat sign-in, and signing it would let the site
+read and send your chat messages. Foxsafe never signs it for a site". XMTP checks the exact bytes it built, so a
+reworded text gives a signature XMTP rejects. Typed data and transactions sign other bytes.
+
+Cost: a Foxsafe wallet can't sign in to another XMTP web app through the browser or WalletConnect. Foxsafe
+Chat signs its own sign-in with a separate signer (planned with the chat-only key), never through the dApp path.
+Apps before build 23 still sign these texts, so this protects only phones that have updated: a site can still get an older phone to sign one (as with §7.14). What removes it for chat is Foxsafe Chat's chat-only key (planned): the money key then never needs to sign an XMTP text at all.
+
+`src/xmtpIdentity.ts` is the reference marker list. `test/vectors/xmtp-identity.json` holds libxmtp's own test
+texts, the attack shape (add a device), case and place variants, the V2 texts and allowed texts;
+`test/xmtp-identity.test.ts` checks the list, that the Swift and Kotlin copies match it and that
+`src/xmtpIdentityTexts.ts` holds the same texts; the on-device self-test sends every one of them through the EVM,
+TRON and Solana dApp signers.
+
+### 7.16 eSIM restore proof (build 23)
 
 eSIMs bought in Foxsafe belong to the phone that bought them (the server keeps only the SHA-256 of that phone's
 eSIM key). After a lost phone, the new phone moves them over by proving it holds the wallet that paid. Foxsafe's

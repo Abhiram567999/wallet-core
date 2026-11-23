@@ -1848,6 +1848,7 @@ class WalletStore(context: Context) {
     val bytes = unhex(messageHex.lowercase().removePrefix("0x")) ?: throw bad("unreadable")
     val text = dappText(bytes) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
     if (AgentProof.isProofText(text)) throw AgentProof.refused()
+    if (XmtpIdentity.isIdentityText(text)) throw XmtpIdentity.refused()
     if (EsimRestore.isRestoreText(text)) throw EsimRestore.refused()
     signInProblem(text, req, c.blockchain() == Blockchain.TRON)?.let { throw bad(it) }
     withSecret(id, activity, "Sign a message for ${req.origin}") { r ->
@@ -2001,6 +2002,7 @@ class WalletStore(context: Context) {
       "message" -> {
         val text = dappText(payload) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
         if (AgentProof.isProofText(text)) throw AgentProof.refused()
+        if (XmtpIdentity.isIdentityText(text)) throw XmtpIdentity.refused()
         if (EsimRestore.isRestoreText(text)) throw EsimRestore.refused()
         signInProblem(text, req, true)?.let { throw bad(it) }
       }
@@ -2025,6 +2027,26 @@ class WalletStore(context: Context) {
         out.put("transaction", Envelope.b64(tx))
       }
       out.toString()
+    }
+  }
+
+  // XMTP chat sign-in texts (SPEC §7.15, build 23)
+
+  /**
+   * XMTP ties a chat identity to an Ethereum address with a readable text the wallet signs ("XMTP : Authenticate to
+   * inbox …", e.g. "- Grant messaging access to app (ID: <device key>)"). A site that gets it signed adds its own device to
+   * the user's chat identity, then reads and writes their messages. The dApp signers refuse every such text, anywhere and
+   * in any case. Mirrors ios/WalletStore.swift and src/xmtpIdentity.ts.
+   */
+  private object XmtpIdentity {
+    /** Lowercase. */
+    val MARKERS = listOf("xmtp : authenticate to inbox", "xmtp.org/signatures", "xmtp : create identity", "xmtp : enable identity")
+
+    fun refused() = WalletException("INVALID", "signature refused: this is an XMTP chat sign-in, and signing it would let the site read and send your chat messages. Foxsafe never signs it for a site")
+
+    fun isIdentityText(text: String): Boolean {
+      val low = text.lowercase()
+      return MARKERS.any { low.contains(it) }
     }
   }
 
@@ -2082,7 +2104,7 @@ class WalletStore(context: Context) {
     }
   }
 
-  // eSIM restore proof (SPEC §7.15, build 23)
+  // eSIM restore proof (SPEC §7.16, build 23)
 
   /**
    * The text Foxsafe's server (api.thefoxsafe.com, esim restoreText) checks before it moves the eSIMs a wallet paid for to
