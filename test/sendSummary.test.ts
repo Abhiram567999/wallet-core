@@ -104,6 +104,15 @@ test('Solana: SOL, and a token only shows the owner address when it leads to the
   assert.equal(text(C.solana, [token(false)]).to, grouped(ata));
   assert.equal(sum(C.solana, [token(false)], { to: from }).kind, 'other');
   assert.equal(sum(C.solana, [token(true, from)]).kind, 'other');
+  // A note (MoneyGram's order code) is signed and shown as a note; amount and receiver are unchanged.
+  const withMemo = (createRecipientAccount: boolean) =>
+    solanaTokenTransferInput({ from, mint, decimals: 6, amount: 12_340_000n, senderTokenAddress: core.SolanaAddress.createWithString(from).defaultTokenAddress(mint), recipient: owner, recipientTokenAddress: ata, createRecipientAccount, recentBlockhash: hash, memo: '1bd8f7d7-6096-4ff1-8cb4-ee94daf66dac' });
+  for (const create of [false, true]) {
+    const m = sum(C.solana, [withMemo(create)], { to: owner });
+    assert.equal(m.note, true);
+    assert.equal(text(C.solana, [withMemo(create)], { to: owner }).title, 'Send 12.34 USDT');
+  }
+  assert.notEqual(sum(C.solana, [token(false)], { to: owner }).note, true);
 });
 
 test('the screen speaks the app language, and the tick is only for someone else\'s address', () => {

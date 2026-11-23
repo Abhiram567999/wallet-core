@@ -329,6 +329,8 @@ export interface SolanaTokenTransfer {
   /** The recipient has no account for this token yet: create it (the sender pays ~0.002 SOL rent). */
   createRecipientAccount: boolean;
   recentBlockhash: string;
+  /** Note on the transfer (Memo program), e.g. the order code MoneyGram matches a cash-out deposit by. Shown as a note on the secure screen. */
+  memo?: string;
 }
 
 export function solanaTokenTransferInput(p: SolanaTokenTransfer): string {
@@ -339,6 +341,7 @@ export function solanaTokenTransferInput(p: SolanaTokenTransfer): string {
     recipientTokenAddress: p.recipientTokenAddress,
     amount: Number(p.amount),
     decimals: p.decimals,
+    ...(p.memo ? { memo: p.memo } : {}),
   };
   return enc(
     P.SigningInput.encode(
