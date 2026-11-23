@@ -5,9 +5,10 @@
 import { sha256 } from '@noble/hashes/sha2.js';
 import { concat, toHex, utf8 } from './encoding.ts';
 import { agentProofText } from './agentProof.ts';
+import { esimRestoreText } from './esimRestore.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
-import { canBackupWithPassword, canSaveBackupFile, canSignAgentProof, signAgentProof, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
+import { canBackupWithPassword, canSaveBackupFile, canSignAgentProof, signAgentProof, canSignEsimRestore, signEsimRestore, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
 import { associatedTokenAddress, base58Decode } from './solana.ts';
 import { gaslessSolanaMessage } from './solanaGasless.ts';
 import { bitcoinOutput, evmDappInput, tronOutput, tronTransferInput } from './tx.ts';
@@ -48,6 +49,8 @@ export interface Vectors {
   };
   /** Optional: test/vectors/agent-proof.json; without it the AI agent proof check still recovers every signature (SPEC §7.14). */
   agentProof?: { pairingId: string; evm: { signature: string }; tron: { signature: string }; solana: { signature: string } };
+  /** Optional: test/vectors/esim-restore.json; without it the eSIM restore check still verifies every signature (SPEC §7.15). */
+  esimRestore?: { code: string; phone: string; evm: { signature: string }; tron: { signature: string }; solana: { signature: string } };
 }
 
 export interface CheckResult {
@@ -541,6 +544,54 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
       refusedCount++;
     }
     return `4 proofs recover to this account${v.agentProof ? ' and equal noble' : ''}; ${refusedCount} requests refused`;
+  });
+
+  await check('eSIM restore: one Face ID signs the server text for EVM, TRON and Solana (each verifies to this account); dApp signers refuse that text', async () => {
+    if (!canSignEsimRestore() || !v.dapp) return 'this build has no eSIM restore proof';
+    const d = v.dapp;
+    const CODE = v.esimRestore?.code ?? 'er_Foxsafe-test_restore01';
+    const PHONE = v.esimRestore?.phone ?? '0f'.repeat(16) + 'a1'.repeat(16);
+    const b64 = (b: Uint8Array) => { let x = ''; for (const c of b) x += String.fromCharCode(c); return btoa(x); };
+    const recover20 = (prefix: string, text: string, sigHex: string) => {
+      const bytes = utf8(text);
+      const sig = fromHex(sigHex.replace(/^0x/, ''));
+      const hash = keccak_256(concat(utf8(`${prefix}${bytes.length}`), bytes));
+      const pub = secp256k1.Signature.fromBytes(sig.slice(0, 64), 'compact').addRecoveryBit(sig[64]! - 27).recoverPublicKey(hash).toBytes(false);
+      return keccak_256(pub.slice(1)).slice(12);
+    };
+    const proofs = await signEsimRestore(importedId, CODE, PHONE);
+    expect(proofs.map((p) => p.coin).join(',') === '60,195,501', `families ${proofs.map((p) => p.coin).join(',')}`);
+    const [e, t, s] = proofs as [typeof proofs[0], typeof proofs[0], typeof proofs[0]];
+    expect(e.address === d.evm.address && `0x${toHex(recover20('\x19Ethereum Signed Message:\n', esimRestoreText(CODE, PHONE, e.address), e.signature))}` === e.address.toLowerCase(), 'EVM restore proof does not recover to the address');
+    const body = new Uint8Array([0x41, ...recover20('\x19TRON Signed Message:\n', esimRestoreText(CODE, PHONE, t.address), t.signature)]);
+    expect(t.address === d.tron.address && base58Encode(new Uint8Array([...body, ...sha256(sha256(body)).slice(0, 4)])) === t.address, 'TRON restore proof does not recover to the address');
+    expect(s.address === d.solana.address && ed25519.verify(base58Decode(s.signature), utf8(esimRestoreText(CODE, PHONE, s.address)), base58Decode(s.address)), 'Solana restore proof does not verify');
+    if (v.esimRestore) {
+      expect(e.signature.toLowerCase() === v.esimRestore.evm.signature.toLowerCase(), 'EVM restore proof differs from noble');
+      expect(t.signature.toLowerCase() === v.esimRestore.tron.signature.toLowerCase(), 'TRON restore proof differs from noble');
+      expect(s.signature === v.esimRestore.solana.signature, 'Solana restore proof differs from noble');
+    }
+    // Refused before Face ID: unreadable codes or phone ids (a line break would add a line to the text).
+    let refusedCount = 0;
+    for (const [code, phone] of [['er_short', PHONE], [`${CODE}\n`, PHONE], [CODE.toUpperCase(), PHONE], [CODE, PHONE.toUpperCase()], [CODE, `${PHONE}\n`], [CODE, PHONE.slice(1)]] as const) {
+      await rejects(signEsimRestore(importedId, code, phone), 'eSIM restore refused');
+      refusedCount++;
+    }
+    // The same text through the dApp signers (in-app browser, WalletConnect): refused, whatever the case or place.
+    const evmText = esimRestoreText(CODE, PHONE, d.evm.address);
+    const texts: [number, string][] = [
+      [60, evmText], [195, esimRestoreText(CODE, PHONE, d.tron.address)], [501, esimRestoreText(CODE, PHONE, d.solana.address)],
+      [60, evmText.toUpperCase()], [60, `Welcome to Example!\n\n${evmText}\n\nNonce: 8122`],
+      [195, 'Please MOVE my eSIMs to this PHONE to continue. Nonce: 99'], [501, 'Sign to move my esims to this phone.'],
+    ];
+    for (const [coin, text] of texts) {
+      const p = coin === 501
+        ? signDappSolana(importedId, 'message', b64(utf8(text)), d.solana.request)
+        : signDappMessage(importedId, coin, `0x${toHex(utf8(text))}`, coin === 195 ? d.tron.request : d.evm.request);
+      await rejects(p, "only be signed from Foxsafe's own eSIM screen");
+      refusedCount++;
+    }
+    return `3 restore proofs verify to this account${v.esimRestore ? ' and equal noble' : ''}; ${refusedCount} requests refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

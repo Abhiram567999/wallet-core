@@ -1848,6 +1848,7 @@ class WalletStore(context: Context) {
     val bytes = unhex(messageHex.lowercase().removePrefix("0x")) ?: throw bad("unreadable")
     val text = dappText(bytes) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
     if (AgentProof.isProofText(text)) throw AgentProof.refused()
+    if (EsimRestore.isRestoreText(text)) throw EsimRestore.refused()
     signInProblem(text, req, c.blockchain() == Blockchain.TRON)?.let { throw bad(it) }
     withSecret(id, activity, "Sign a message for ${req.origin}") { r ->
       val key = privateKey(r, c, account)
@@ -2000,6 +2001,7 @@ class WalletStore(context: Context) {
       "message" -> {
         val text = dappText(payload) ?: throw bad("Foxsafe can only sign readable text, not hidden data")
         if (AgentProof.isProofText(text)) throw AgentProof.refused()
+        if (EsimRestore.isRestoreText(text)) throw EsimRestore.refused()
         signInProblem(text, req, true)?.let { throw bad(it) }
       }
       "transaction" -> {
@@ -2077,6 +2079,75 @@ class WalletStore(context: Context) {
         else -> dappSignedOut(EthereumMessageSigner.signMessage(key, "0x" + hex(text.toByteArray(Charsets.UTF_8))))
       }
       JSONObject().put("address", address).put("signature", signature).toString()
+    }
+  }
+
+  // eSIM restore proof (SPEC §7.15, build 23)
+
+  /**
+   * The text Foxsafe's server (api.thefoxsafe.com, esim restoreText) checks before it moves the eSIMs a wallet paid for to
+   * a new phone. Only signEsimRestore signs it, building it here; the dApp signers refuse any text that contains it, so a
+   * site can't get it signed for an attacker's phone. Mirrors ios/WalletStore.swift.
+   */
+  private object EsimRestore {
+    const val SITE = "api.thefoxsafe.com"
+    /** Lowercase; refused anywhere in a dApp message, in any case. */
+    const val MARKER = "move my esims to this phone"
+    private val CODE_CHARS = ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-").toSet()
+    private val HEX_CHARS = ("0123456789abcdef").toSet()
+
+    fun refused() = WalletException("INVALID", "signature refused: this text can only be signed from Foxsafe's own eSIM screen")
+
+    fun text(code: String, phone: String, address: String): String =
+      listOf("Foxsafe: move my eSIMs to this phone.", "", "Address: $address", "Phone: $phone", "Code: $code", "Site: $SITE", "",
+        "Signing this is free and moves no money.").joinToString("\n")
+
+    /** "er_" and 22 of A–Z a–z 0–9 _ - (checked by hand: a regex "$" also matches before a final line break). */
+    fun isCode(s: String): Boolean = s.length == 25 && s.startsWith("er_") && s.drop(3).all { it in CODE_CHARS }
+
+    /** 64 lowercase hex characters (SHA-256 of this phone's eSIM key). */
+    fun isPhone(s: String): Boolean = s.length == 64 && s.all { it in HEX_CHARS }
+
+    fun isRestoreText(text: String): Boolean = text.lowercase().contains(MARKER)
+  }
+
+  /**
+   * Proves to Foxsafe's server that this account is the wallet that paid for some eSIMs, so they move to this phone: signs
+   * EsimRestore.text for the account's own address on each network family the wallet has (a phrase wallet: EVM, TRON and
+   * Solana; a private-key wallet: its own family), built here (the app never passes text). One prompt. EVM and TRON:
+   * EIP-191 personal_sign / TRON message V2, 0x signature with v = 27/28. Solana: ed25519 over the UTF-8 bytes, base58.
+   * Refused before the prompt unless [code] and [phone] are valid. Returns [{coin, address, signature}].
+   */
+  fun signEsimRestore(id: String, code: String, phone: String, account: Int, activity: FragmentActivity?): String = synchronized(lock) {
+    fun bad(why: String) = WalletException("INVALID", "eSIM restore refused: $why")
+    if (!EsimRestore.isCode(code)) throw bad("unreadable code")
+    if (!EsimRestore.isPhone(phone)) throw bad("unreadable phone")
+    withSecret(id, activity, "Move eSIMs to this phone") { r ->
+      val families = setOf(Blockchain.ETHEREUM, Blockchain.TRON, Blockchain.SOLANA)
+      val coins = if (r.words != null) {
+        listOf(CoinType.ETHEREUM, CoinType.TRON, CoinType.SOLANA)
+      } else {
+        val own = r.keyCoin?.let { coin(it) } ?: throw bad("network")
+        if (own.blockchain() !in families) throw bad("network")
+        listOf(if (own.blockchain() == Blockchain.ETHEREUM) CoinType.ETHEREUM else own)
+      }
+      val out = JSONArray()
+      for (c in coins) {
+        val key = privateKey(r, c, account)
+        val address = c.deriveAddress(key)
+        val text = EsimRestore.text(code, phone, address)
+        val signature = when (c.blockchain()) {
+          Blockchain.SOLANA -> {
+            val sig = key.sign(text.toByteArray(Charsets.UTF_8), Curve.ED25519) ?: throw WalletException("CRYPTO", "signing failed")
+            if (sig.size != 64) throw WalletException("CRYPTO", "signing failed")
+            Base58.encodeNoCheck(sig)
+          }
+          Blockchain.TRON -> dappSignedOut(TronMessageSigner.signMessage(key, text))
+          else -> dappSignedOut(EthereumMessageSigner.signMessage(key, "0x" + hex(text.toByteArray(Charsets.UTF_8))))
+        }
+        out.put(JSONObject().put("coin", c.value()).put("address", address).put("signature", signature))
+      }
+      out.toString()
     }
   }
 

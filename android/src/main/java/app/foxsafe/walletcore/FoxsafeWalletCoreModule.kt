@@ -191,6 +191,10 @@ class FoxsafeWalletCoreModule : Module() {
     AsyncFunction("signAgentProof") { id: String, coin: Int, pairingId: String, account: Int? ->
       call { store.signAgentProof(id, coin, pairingId, account ?: 0, activity) }
     }
+    // eSIM restore proof (SPEC §7.15, build 23): the native code builds the text; the app passes only the code and this phone's id.
+    AsyncFunction("signEsimRestore") { id: String, code: String, phone: String, account: Int? ->
+      call { store.signEsimRestore(id, code, phone, account ?: 0, activity) }
+    }
     AsyncFunction("signTronMultisig") { id: String, rawDataHex: String, request: String, account: Int? ->
       call { store.signTronMultisig(id, rawDataHex, request, account ?: 0, activity) }
     }

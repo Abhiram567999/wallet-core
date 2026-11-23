@@ -490,10 +490,10 @@ the rule; after Face ID it also refuses if the key's address is not `address`.
 
 | Function | Signs | Refused unless |
 |---|---|---|
-| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet", in any case (§7.14). |
+| `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet" (§7.14) or "move my eSIMs to this phone" (§7.15), in any case. |
 | `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. |
 | `signDappEvm(id, coin, input, request)` | EVM transaction (SigningInput without a key, `evmDappInput`) | chain id equals `chainId`; legacy or EIP-1559 only (no user operation, no EIP-7702 authorization, no SetCode mode); a value transfer to an address, or a contract call / deployment; no key inside. |
-| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text (build 23 on, §7.14). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
+| `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text or the eSIM restore text (build 23 on, §7.14, §7.15). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
 | `signDappTron(id, rawDataHex, request)` | TRON transaction raw data | exactly one contract of an allowed type (transfers, contract calls, staking, votes; never `AccountPermissionUpdate`), owner = `address`, permission id 0 (multisig is §7.8), no extra signers or scripts, expiry in the future and ≤ 24 h, and `txID` (if given) = sha256(raw). |
 
 Unlimited approvals (`approve`, `setApprovalForAll`, Permit, single Permit2),
@@ -753,3 +753,46 @@ So build 23 alone does not make a proof trustworthy: a site can still get an old
 text (rewording it would not help, the old signer signs any readable text). The proof stays an abuse check that
 grants nothing until builds before 23 can no longer use the app at all (a forced minimum version), or until the
 grant also needs something an older build cannot produce.
+
+### 7.15 eSIM restore proof (build 23)
+
+eSIMs bought in Foxsafe belong to the phone that bought them (the server keeps only the SHA-256 of that phone's
+eSIM key). After a lost phone, the new phone moves them over by proving it holds the wallet that paid. Foxsafe's
+server (`api.thefoxsafe.com`, foxsafe-server `src/esim/restore.ts` → `restoreText`) gives the new phone a one-time
+code and checks this text, signed per network family (lines joined with `\n`, no final line break):
+
+```
+Foxsafe: move my eSIMs to this phone.
+
+Address: <the account's address on that network>
+Phone: <SHA-256 hex of the new phone's eSIM key>
+Code: <one-time code>
+Site: api.thefoxsafe.com
+
+Signing this is free and moves no money.
+```
+
+A site could ask the user, through the in-app browser or WalletConnect, to sign the same text for an attacker's
+code and phone, and the server would then move the user's eSIMs (and their install codes) to the attacker. So:
+
+- **Only `signEsimRestore(id, code, phone, account?)` signs it.** The native code builds the text from the
+  addresses it derives for that account; the app passes only `code` and `phone`. Before Face ID it refuses any
+  `code` that is not `er_` + 22 of `A–Z a–z 0–9 _ -` and any `phone` that is not 64 lowercase hex (both checked by
+  hand, so a final line break can't add a line). One Face ID, "Move eSIMs to this phone", signs every family the
+  wallet has: a phrase wallet EVM (coin 60, the same address on every EVM network), TRON (195) and Solana (501, the
+  wallet's own Solana path); a private-key wallet only its own family. Signatures as in §7.14 (EIP-191 / TRON
+  `signMessageV2`, 0x hex with v = 27/28; Solana ed25519 over the UTF-8 bytes, base58). Returns
+  `[{coin, address, signature}]`; the app sends each `address` as returned. `canSignEsimRestore()` tells the app the
+  build has it.
+- **The dApp signers refuse it.** `signDappMessage` (EVM, TRON) and `signDappSolana` with kind `"message"` refuse,
+  before Face ID, any readable text containing "move my esims to this phone" (lowercased, anywhere in the text):
+  "signature refused: this text can only be signed from Foxsafe's own eSIM screen". Typed data and transactions
+  are signed over other bytes, as in §7.14.
+
+`src/esimRestore.ts` is the reference text. `test/vectors/esim-restore.json` (`scripts/make-esim-restore-vector.ts`:
+Trust Wallet Core keys, noble signatures, a made-up code and phone) holds the text and signature per family for the
+test phrase, account 0 (Solana on both paths), the refused dApp messages and bad codes and phones;
+`test/esim-restore.test.ts` checks Trust Wallet Core's signers against it, and the on-device self-test signs the
+three proofs in one call (each verifies to the account) and checks every refusal. As in §7.14, builds before 23
+still sign this text through `signDappMessage`, so the server keeps restore switched off until builds before 23 can
+no longer use the app (a forced minimum version).

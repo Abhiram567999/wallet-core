@@ -1817,6 +1817,7 @@ final class WalletStore {
     guard let req = Self.dappRequest(request), let bytes = Data(hexString: hex) else { throw bad("unreadable") }
     guard let text = Self.dappText(bytes) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
     if AgentProof.isProofText(text) { throw AgentProof.refused }
+    if EsimRestore.isRestoreText(text) { throw EsimRestore.refused }
     if let why = Self.signInProblem(text, req: req, caseSensitive: coin.blockchain == .tron) { throw bad(why) }
     return try withSecrets([id], reason: "Sign a message for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
@@ -1887,6 +1888,7 @@ final class WalletStore {
     case "message":
       guard let text = Self.dappText(payload) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
       if AgentProof.isProofText(text) { throw AgentProof.refused }
+      if EsimRestore.isRestoreText(text) { throw EsimRestore.refused }
       if let why = Self.signInProblem(text, req: req, caseSensitive: true) { throw bad(why) }
     case "transaction":
       guard let parsed = Self.solanaTransaction(tx) else { throw bad("unreadable transaction") }
@@ -1961,6 +1963,80 @@ final class WalletStore {
         signature = try Self.dappSignedOut(EthereumMessageSigner.signMessage(privateKey: key, message: "0x" + Data(text.utf8).hexString))
       }
       return String(data: try JSONSerialization.data(withJSONObject: ["address": address, "signature": signature]), encoding: .utf8)!
+    }
+  }
+
+  // MARK: eSIM restore proof (SPEC §7.15, build 23)
+
+  /// The text Foxsafe's server (api.thefoxsafe.com, esim restoreText) checks before it moves the eSIMs a wallet paid for
+  /// to a new phone. Only signEsimRestore signs it, building it here; the dApp signers refuse any text that contains it,
+  /// so a site can't get it signed for an attacker's phone.
+  enum EsimRestore {
+    static let site = "api.thefoxsafe.com"
+    /// Lowercase; refused anywhere in a dApp message, in any case.
+    static let marker = "move my esims to this phone"
+    static let refused = WalletError.invalid("signature refused: this text can only be signed from Foxsafe's own eSIM screen")
+    static let codeChars = Set("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-".utf8)
+    static let hexChars = Set("0123456789abcdef".utf8)
+
+    static func text(code: String, phone: String, address: String) -> String {
+      ["Foxsafe: move my eSIMs to this phone.", "", "Address: \(address)", "Phone: \(phone)", "Code: \(code)", "Site: \(site)", "",
+       "Signing this is free and moves no money."].joined(separator: "\n")
+    }
+
+    /// "er_" and 22 of A–Z a–z 0–9 _ - (checked by hand: a regex "$" also matches before a final line break).
+    static func isCode(_ s: String) -> Bool {
+      let b = Array(s.utf8)
+      return b.count == 25 && b.starts(with: Array("er_".utf8)) && b.dropFirst(3).allSatisfy { codeChars.contains($0) }
+    }
+
+    /// 64 lowercase hex characters (SHA-256 of this phone's eSIM key).
+    static func isPhone(_ s: String) -> Bool {
+      let b = Array(s.utf8)
+      return b.count == 64 && b.allSatisfy { hexChars.contains($0) }
+    }
+
+    /// Literal (UTF-16) search: Swift's `contains` compares whole characters, so a combining mark after the phrase would hide it.
+    static func isRestoreText(_ text: String) -> Bool { text.lowercased().range(of: marker, options: .literal) != nil }
+  }
+
+  /// Proves to Foxsafe's server that this account is the wallet that paid for some eSIMs, so they move to this phone:
+  /// signs EsimRestore.text for the account's own address on each network family the wallet has (a phrase wallet: EVM,
+  /// TRON and Solana; a private-key wallet: its own family), built here (the app never passes text). One Face ID.
+  /// EVM and TRON: EIP-191 personal_sign / TRON message V2, 0x signature with v = 27/28. Solana: ed25519 over the UTF-8
+  /// bytes, base58. Refused before Face ID unless `code` and `phone` are valid. Returns [{coin, address, signature}].
+  func signEsimRestore(id: String, code: String, phone: String, account: UInt32) throws -> String {
+    lock.lock(); defer { lock.unlock() }
+    let bad = { (why: String) in WalletError.invalid("eSIM restore refused: \(why)") }
+    guard EsimRestore.isCode(code) else { throw bad("unreadable code") }
+    guard EsimRestore.isPhone(phone) else { throw bad("unreadable phone") }
+    return try withSecrets([id], reason: "Move eSIMs to this phone") { records in
+      let r = records[0]
+      let coins: [CoinType]
+      if r.words != nil {
+        coins = [.ethereum, .tron, .solana]
+      } else {
+        guard let raw = r.keyCoin, let own = CoinType(rawValue: raw), [.ethereum, .tron, .solana].contains(own.blockchain) else { throw bad("network") }
+        coins = [own.blockchain == .ethereum ? .ethereum : own]
+      }
+      var out: [[String: Any]] = []
+      for coin in coins {
+        let key = try Self.privateKey(r, coin: coin, account: account)
+        let address = coin.deriveAddress(privateKey: key)
+        let text = EsimRestore.text(code: code, phone: phone, address: address)
+        let signature: String
+        switch coin.blockchain {
+        case .solana:
+          guard let sig = key.sign(digest: Data(text.utf8), curve: .ed25519), sig.count == 64 else { throw WalletError.crypto("signing failed") }
+          signature = Base58.encodeNoCheck(data: sig)
+        case .tron:
+          signature = try Self.dappSignedOut(TronMessageSigner.signMessage(privateKey: key, message: text))
+        default:
+          signature = try Self.dappSignedOut(EthereumMessageSigner.signMessage(privateKey: key, message: "0x" + Data(text.utf8).hexString))
+        }
+        out.append(["coin": Int(coin.rawValue), "address": address, "signature": signature])
+      }
+      return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
     }
   }
 

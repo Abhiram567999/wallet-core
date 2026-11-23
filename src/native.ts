@@ -127,6 +127,8 @@ export interface NativeWalletCore {
   signDappTron?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /** AI agent connect proof: the native code builds and signs the text (SPEC §7.14). Returns JSON {address, signature}. Build 23 on. */
   signAgentProof?(id: string, coin: CoinType, pairingId: string, account?: number): Promise<string>;
+  /** eSIM restore proof: the native code builds and signs the text per network family (SPEC §7.15). Returns JSON [{coin, address, signature}]. Build 23 on. */
+  signEsimRestore?(id: string, code: string, phone: string, account?: number): Promise<string>;
   /** TRON multisig: one Foxsafe-made permission setup or multisig send, with its compiled-in rule (SPEC §7.8). */
   signTronMultisig?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /**
@@ -409,6 +411,29 @@ export interface AgentProofSignature {
 export async function signAgentProof(id: string, coin: CoinType, pairingId: string, account?: number): Promise<AgentProofSignature> {
   if (!native?.signAgentProof) throw new Error('UNAVAILABLE: this app build cannot connect AI agents yet');
   return JSON.parse(await native.signAgentProof(id, coin, pairingId, account)) as AgentProofSignature;
+}
+
+/** True when this build has signEsimRestore (build 23 on). Older builds have no safe way to sign the restore proof. */
+export const canSignEsimRestore = () => typeof native?.signEsimRestore === 'function';
+
+export interface EsimRestoreSignature {
+  /** 60 (every EVM network), 195 (TRON) or 501 (Solana). */
+  coin: number;
+  /** The address in the signed text, exactly as the native code derived it (EIP-55 case on EVM): send it verbatim. */
+  address: string;
+  /** EVM and TRON: 0x hex, 65 bytes, v = 27/28. Solana: base58. */
+  signature: string;
+}
+
+/**
+ * Proves to Foxsafe's server that this account is the wallet that paid for some eSIMs, so they move to this phone
+ * (SPEC §7.15). `code`: the server's one-time "er_" + 22 characters. `phone`: SHA-256 hex of this phone's eSIM key.
+ * The native code builds the text (esimRestoreText) for each network family the wallet has; one Face ID
+ * "Move eSIMs to this phone".
+ */
+export async function signEsimRestore(id: string, code: string, phone: string, account?: number): Promise<EsimRestoreSignature[]> {
+  if (!native?.signEsimRestore) throw new Error('UNAVAILABLE: this app build cannot move eSIMs yet');
+  return JSON.parse(await native.signEsimRestore(id, code, phone, account)) as EsimRestoreSignature[];
 }
 
 export type TronMultisigRequest =
