@@ -1,0 +1,87 @@
+{
+  "note": "Test phrase and a made-up pairing id only; never fund it. Made by scripts/make-agent-proof-vector.ts (keys: Trust Wallet Core HD wallet; signatures: noble).",
+  "pairingId": "pr_Foxsafe-test_pairing01",
+  "site": "mcp.thefoxsafe.com",
+  "account": 0,
+  "evm": {
+    "coin": 60,
+    "address": "0x9858EfFD232B4033E47d90003D41EC34EcaEda94",
+    "text": "Foxsafe: connect an AI agent to this wallet.\n\nAddress: 0x9858EfFD232B4033E47d90003D41EC34EcaEda94\nCode: pr_Foxsafe-test_pairing01\nSite: mcp.thefoxsafe.com\n\nSigning this is free and moves no money.",
+    "signature": "0xba8407d5a734abf67c4f87ce2d8fba7566b0881b032f59acc858190cd683fe892c7dc1beadd2503406a2c8f9acbac749da5c582281451f722023b3ae139f92731c"
+  },
+  "tron": {
+    "coin": 195,
+    "address": "TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH",
+    "text": "Foxsafe: connect an AI agent to this wallet.\n\nAddress: TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH\nCode: pr_Foxsafe-test_pairing01\nSite: mcp.thefoxsafe.com\n\nSigning this is free and moves no money.",
+    "signature": "0xf966f36d5e46d7b5ae6ef9cdbe385e9f801ca2d9cb67f315a195262874f3d2f3409f52b2bcc1830c168adf979e2f00925cfbead3f298e2940b948abe048514931c"
+  },
+  "solana": {
+    "coin": 501,
+    "solanaPath": "trust",
+    "path": "m/44'/501'/0'",
+    "address": "GjJyeC1r2RgkuoCWMyPYkCWSGSGLcz266EaAkLA27AhL",
+    "text": "Foxsafe: connect an AI agent to this wallet.\n\nAddress: GjJyeC1r2RgkuoCWMyPYkCWSGSGLcz266EaAkLA27AhL\nCode: pr_Foxsafe-test_pairing01\nSite: mcp.thefoxsafe.com\n\nSigning this is free and moves no money.",
+    "signature": "Vd2rU9u9WKqvowqgcxbLDgATao691LousPgcxrvCw1ajHrMdobyxkZqog8GqSBq6UbCcXJfnz5Ssg66HpWw5Ena"
+  },
+  "solanaPhantom": {
+    "coin": 501,
+    "solanaPath": "phantom",
+    "path": "m/44'/501'/0'/0'",
+    "address": "HAgk14JpMQLgt6rVgv7cBQFJWFto5Dqxi472uT3DKpqk",
+    "text": "Foxsafe: connect an AI agent to this wallet.\n\nAddress: HAgk14JpMQLgt6rVgv7cBQFJWFto5Dqxi472uT3DKpqk\nCode: pr_Foxsafe-test_pairing01\nSite: mcp.thefoxsafe.com\n\nSigning this is free and moves no money.",
+    "signature": "5xHu7STwJj8cZYEWtSNPosu77YmmDxoiX13b2Ny8ihDQZYMBAuUPusUUkWFRZpk72JizbwfPJQ5vR2vmYHNTgSd8"
+  },
+  "refused": [
+    {
+      "what": "the EVM proof text, as a site would send it",
+      "coin": 60,
+      "hex": "0x466f78736166653a20636f6e6e65637420616e204149206167656e7420746f20746869732077616c6c65742e0a0a416464726573733a203078393835384566464432333242343033334534376439303030334434314543333445636145646139340a436f64653a2070725f466f78736166652d746573745f70616972696e6730310a536974653a206d63702e746865666f78736166652e636f6d0a0a5369676e696e672074686973206973206672656520616e64206d6f766573206e6f206d6f6e65792e"
+    },
+    {
+      "what": "the TRON proof text, as a site would send it",
+      "coin": 195,
+      "hex": "0x466f78736166653a20636f6e6e65637420616e204149206167656e7420746f20746869732077616c6c65742e0a0a416464726573733a205455455a53644b736f4448514d655a77696874646f42694e34367a786847575964480a436f64653a2070725f466f78736166652d746573745f70616972696e6730310a536974653a206d63702e746865666f78736166652e636f6d0a0a5369676e696e672074686973206973206672656520616e64206d6f766573206e6f206d6f6e65792e"
+    },
+    {
+      "what": "the Solana proof text, as a site would send it",
+      "coin": 501,
+      "hex": "0x466f78736166653a20636f6e6e65637420616e204149206167656e7420746f20746869732077616c6c65742e0a0a416464726573733a20476a4a79654331723252676b756f43574d7950596b4357534753474c637a3236364561416b4c41323741684c0a436f64653a2070725f466f78736166652d746573745f70616972696e6730310a536974653a206d63702e746865666f78736166652e636f6d0a0a5369676e696e672074686973206973206672656520616e64206d6f766573206e6f206d6f6e65792e"
+    },
+    {
+      "what": "the proof text in capitals",
+      "coin": 60,
+      "hex": "0x464f58534146453a20434f4e4e45435420414e204149204147454e5420544f20544849532057414c4c45542e0a0a414444524553533a203058393835384546464432333242343033334534374439303030334434314543333445434145444139340a434f44453a2050525f464f58534146452d544553545f50414952494e4730310a534954453a204d43502e544845464f58534146452e434f4d0a0a5349474e494e472054484953204953204652454520414e44204d4f564553204e4f204d4f4e45592e"
+    },
+    {
+      "what": "the proof text in mixed case",
+      "coin": 60,
+      "hex": "0x466f78736166653a20436f6e6e65637420416e204169204167656e7420546f20546869732057616c6c65742e0a0a416464726573733a203078393835384566464432333242343033334534376439303030334434314543333445636145646139340a436f64653a2070725f466f78736166652d746573745f70616972696e6730310a536974653a206d63702e746865666f78736166652e636f6d0a0a5369676e696e672074686973206973206672656520616e64206d6f766573206e6f206d6f6e65792e"
+    },
+    {
+      "what": "the proof text inside a longer message",
+      "coin": 60,
+      "hex": "0x57656c636f6d6520746f204578616d706c65210a0a466f78736166653a20636f6e6e65637420616e204149206167656e7420746f20746869732077616c6c65742e0a0a416464726573733a203078393835384566464432333242343033334534376439303030334434314543333445636145646139340a436f64653a2070725f466f78736166652d746573745f70616972696e6730310a536974653a206d63702e746865666f78736166652e636f6d0a0a5369676e696e672074686973206973206672656520616e64206d6f766573206e6f206d6f6e65792e0a0a4e6f6e63653a2038313232"
+    },
+    {
+      "what": "the phrase mid-sentence",
+      "coin": 195,
+      "hex": "0x506c6561736520434f4e4e45435420616e204149206167656e7420746f20746869732057414c4c455420746f20636f6e74696e75652e204e6f6e63653a203939"
+    },
+    {
+      "what": "the phrase mid-sentence (Solana)",
+      "coin": 501,
+      "hex": "0x5369676e20746f20636f6e6e65637420616e206169206167656e7420746f20746869732077616c6c65742e"
+    }
+  ],
+  "badPairingIds": [
+    "pr_short",
+    "pr_Foxsafe-test_pairing012",
+    "pr_Foxsafe-test_pairing0",
+    "PR_Foxsafe-test_pairing01",
+    "pr_Foxsafe-test_pairing0!",
+    "pr_Foxsafe-test_pairiné01",
+    " pr_Foxsafe-test_pairing1",
+    "pr_Foxsafe-test_pairing\n",
+    "pr_Foxsafe-test_pairing01\n"
+  ]
+}

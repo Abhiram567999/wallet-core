@@ -125,6 +125,8 @@ export interface NativeWalletCore {
   signDappEvm?(id: string, coin: CoinType, input: string, request: string, account?: number): Promise<string>;
   signDappSolana?(id: string, kind: 'message' | 'transaction', payload: string, request: string, account?: number): Promise<string>;
   signDappTron?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
+  /** AI agent connect proof: the native code builds and signs the text (SPEC §7.14). Returns JSON {address, signature}. Build 23 on. */
+  signAgentProof?(id: string, coin: CoinType, pairingId: string, account?: number): Promise<string>;
   /** TRON multisig: one Foxsafe-made permission setup or multisig send, with its compiled-in rule (SPEC §7.8). */
   signTronMultisig?(id: string, rawDataHex: string, request: string, account?: number): Promise<string>;
   /**
@@ -387,6 +389,26 @@ export async function signDappSolana(id: string, kind: 'message' | 'transaction'
 export async function signDappTron(id: string, rawDataHex: string, request: DappSignRequest, account?: number): Promise<{ signature: string; txID: string }> {
   if (!native?.signDappTron) throw dappUnavailable();
   return JSON.parse(await native.signDappTron(id, rawDataHex, JSON.stringify(request), account)) as { signature: string; txID: string };
+}
+
+/** True when this build has signAgentProof (build 23 on). Older builds have no safe way to sign the proof. */
+export const canSignAgentProof = () => typeof native?.signAgentProof === 'function';
+
+export interface AgentProofSignature {
+  /** The address in the signed text, exactly as the native code derived it (EIP-55 case on EVM): send it verbatim. */
+  address: string;
+  /** EVM and TRON: 0x hex, 65 bytes, v = 27/28. Solana: base58. */
+  signature: string;
+}
+
+/**
+ * Proves to Foxsafe's server that this account owns its address on one network family, for an AI agent pairing
+ * (SPEC §7.14). `coin`: 60 or any EVM coin, 195 (TRON) or 501 (Solana). `pairingId`: "pr_" + 22 characters. The
+ * native code builds the text (agentProofText) from the address it derives; one Face ID "Connect an AI agent".
+ */
+export async function signAgentProof(id: string, coin: CoinType, pairingId: string, account?: number): Promise<AgentProofSignature> {
+  if (!native?.signAgentProof) throw new Error('UNAVAILABLE: this app build cannot connect AI agents yet');
+  return JSON.parse(await native.signAgentProof(id, coin, pairingId, account)) as AgentProofSignature;
 }
 
 export type TronMultisigRequest =
