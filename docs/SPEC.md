@@ -753,3 +753,42 @@ So build 23 alone does not make a proof trustworthy: a site can still get an old
 text (rewording it would not help, the old signer signs any readable text). The proof stays an abuse check that
 grants nothing until builds before 23 can no longer use the app at all (a forced minimum version), or until the
 grant also needs something an older build cannot produce.
+
+### 7.15 XMTP chat sign-in texts (build 23)
+
+XMTP (the chat network Family, the Base app and Coinbase Wallet use, and Foxsafe Chat's planned base) ties a
+chat identity ("inbox") to an Ethereum address with a readable text the address signs with EIP-191
+`personal_sign`. libxmtp builds it as (crates/xmtp_id/src/associations/unsigned_actions.rs):
+
+```
+XMTP : Authenticate to inbox
+
+Inbox ID: <inbox id>
+Current time: <RFC 3339>
+
+- Create inbox / Link address to inbox / Grant messaging access to app / Link passkey to inbox /
+  Unlink address from inbox / Revoke messaging access from app / Unlink passkey from inbox /
+  Change inbox recovery address / Claim handle
+  (<Owner|Address|ID|Passkey|Handle>: <value>)
+
+For more info: https://xmtp.org/signatures
+```
+
+A site that gets this signed for the user's address (in-app browser or WalletConnect) adds its own device
+("Grant messaging access to app") to the user's chat identity, or creates one: it then receives the messages
+other XMTP apps send to that address and writes as the user. So `signDappMessage` (EVM, TRON) and
+`signDappSolana` with kind `"message"` refuse, before Face ID, any readable text containing (lowercased,
+anywhere) "xmtp : authenticate to inbox", "xmtp.org/signatures", or XMTP V2's old "xmtp : create identity" /
+"xmtp : enable identity": "signature refused: this is an XMTP chat sign-in, and signing it would let the site
+read and send your chat messages. Foxsafe never signs it for a site". XMTP checks the exact bytes it built, so a
+reworded text gives a signature XMTP rejects. Typed data and transactions sign other bytes.
+
+Cost: a Foxsafe wallet can't sign in to another XMTP web app through the browser or WalletConnect. Foxsafe
+Chat signs its own sign-in with a separate signer (planned with the chat-only key), never through the dApp path.
+Apps before build 23 still sign these texts, so this protects only phones that have updated: a site can still get an older phone to sign one (as with §7.14). What removes it for chat is Foxsafe Chat's chat-only key (planned): the money key then never needs to sign an XMTP text at all.
+
+`src/xmtpIdentity.ts` is the reference marker list. `test/vectors/xmtp-identity.json` holds libxmtp's own test
+texts, the attack shape (add a device), case and place variants, the V2 texts and allowed texts;
+`test/xmtp-identity.test.ts` checks the list, that the Swift and Kotlin copies match it and that
+`src/xmtpIdentityTexts.ts` holds the same texts; the on-device self-test sends every one of them through the EVM,
+TRON and Solana dApp signers.

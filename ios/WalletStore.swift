@@ -1817,6 +1817,7 @@ final class WalletStore {
     guard let req = Self.dappRequest(request), let bytes = Data(hexString: hex) else { throw bad("unreadable") }
     guard let text = Self.dappText(bytes) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
     if AgentProof.isProofText(text) { throw AgentProof.refused }
+    if XmtpIdentity.isIdentityText(text) { throw XmtpIdentity.refused }
     if let why = Self.signInProblem(text, req: req, caseSensitive: coin.blockchain == .tron) { throw bad(why) }
     return try withSecrets([id], reason: "Sign a message for \(req.origin)") { records in
       let key = try Self.privateKey(records[0], coin: coin, account: account)
@@ -1887,6 +1888,7 @@ final class WalletStore {
     case "message":
       guard let text = Self.dappText(payload) else { throw bad("Foxsafe can only sign readable text, not hidden data") }
       if AgentProof.isProofText(text) { throw AgentProof.refused }
+      if XmtpIdentity.isIdentityText(text) { throw XmtpIdentity.refused }
       if let why = Self.signInProblem(text, req: req, caseSensitive: true) { throw bad(why) }
     case "transaction":
       guard let parsed = Self.solanaTransaction(tx) else { throw bad("unreadable transaction") }
@@ -1907,6 +1909,25 @@ final class WalletStore {
         out["transaction"] = Data(tx).base64EncodedString()
       }
       return String(data: try JSONSerialization.data(withJSONObject: out), encoding: .utf8)!
+    }
+  }
+
+  // MARK: XMTP chat sign-in texts (SPEC §7.15, build 23)
+
+  /// XMTP ties a chat identity to an Ethereum address with a readable text the wallet signs ("XMTP : Authenticate to
+  /// inbox …", e.g. "- Grant messaging access to app (ID: <device key>)"). A site that gets it signed adds its own device to
+  /// the user's chat identity, then reads and writes their messages. The dApp signers refuse every such text, anywhere
+  /// and in any case. Markers from libxmtp crates/xmtp_id/src/associations/unsigned_actions.rs (header, footer) plus the
+  /// old XMTP V2 texts. Mirrors src/xmtpIdentity.ts and the Kotlin XmtpIdentity.
+  enum XmtpIdentity {
+    /// Lowercase.
+    static let markers = ["xmtp : authenticate to inbox", "xmtp.org/signatures", "xmtp : create identity", "xmtp : enable identity"]
+    static let refused = WalletError.invalid("signature refused: this is an XMTP chat sign-in, and signing it would let the site read and send your chat messages. Foxsafe never signs it for a site")
+
+    /// Literal (UTF-16) search, as AgentProof: a combining mark after a marker can't hide it.
+    static func isIdentityText(_ text: String) -> Bool {
+      let low = text.lowercased()
+      return markers.contains { low.range(of: $0, options: .literal) != nil }
     }
   }
 
