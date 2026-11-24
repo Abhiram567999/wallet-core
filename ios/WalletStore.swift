@@ -1739,6 +1739,55 @@ final class WalletStore {
     }
   }
 
+  /// True when any object in the JSON text has the same key twice, keys compared after decoding escapes (SPEC §7.17).
+  /// Apple's reader keeps the first copy of a repeated key and JavaScript the last, so the app could show one value and
+  /// this sign another; a real dApp never repeats a key. Works on UTF-16 units. Mirrors src/jsonKeys.ts and the Kotlin copy.
+  static func jsonRepeatsKey(_ text: String) -> Bool {
+    let u = Array(text.utf16)
+    var stack: [(keys: Set<[UInt16]>?, wantKey: Bool)] = []
+    var i = 0
+    while i < u.count {
+      switch u[i] {
+      case 0x7B: stack.append((keys: Set<[UInt16]>(), wantKey: true))          // {
+      case 0x5B: stack.append((keys: nil, wantKey: false))                     // [
+      case 0x7D, 0x5D: if !stack.isEmpty { stack.removeLast() }               // } ]
+      case 0x2C: if let top = stack.last, top.keys != nil { stack[stack.count - 1].wantKey = true }  // ,
+      case 0x3A: if !stack.isEmpty { stack[stack.count - 1].wantKey = false }  // :
+      case 0x22:                                                               // "
+        var key: [UInt16] = []
+        var j = i + 1
+        while j < u.count && u[j] != 0x22 {
+          if u[j] == 0x5C && j + 1 < u.count {
+            let e = u[j + 1]
+            switch e {
+            case 0x75:                                                         // \uXXXX
+              let end = min(j + 6, u.count)
+              if let v = UInt16(String(decoding: u[min(j + 2, end)..<end], as: UTF16.self), radix: 16) { key.append(v) }
+              j += 6
+            case 0x6E: key.append(0x0A); j += 2                                // \n
+            case 0x74: key.append(0x09); j += 2                                // \t
+            case 0x72: key.append(0x0D); j += 2                                // \r
+            case 0x62: key.append(0x08); j += 2                                // \b
+            case 0x66: key.append(0x0C); j += 2                                // \f
+            default: key.append(e); j += 2                                     // \" \\ \/
+            }
+          } else {
+            key.append(u[j]); j += 1
+          }
+        }
+        if let top = stack.last, top.wantKey, var keys = top.keys {
+          if keys.contains(key) { return true }
+          keys.insert(key)
+          stack[stack.count - 1].keys = keys
+        }
+        i = j
+      default: break
+      }
+      i += 1
+    }
+    return false
+  }
+
   static func dappNumber(_ v: Any?) -> UInt64? {
     if let n = v as? NSNumber, CFGetTypeID(n) != CFBooleanGetTypeID() { return n.uint64Value }
     guard let s = (v as? String)?.lowercased(), !s.isEmpty else { return nil }
@@ -1857,6 +1906,8 @@ final class WalletStore {
     lock.lock(); defer { lock.unlock() }
     let bad = { (why: String) in WalletError.invalid("signature refused: \(why)") }
     guard let coin = CoinType(rawValue: raw), coin.blockchain == .ethereum else { throw bad("network") }
+    // Before parsing: this reader keeps the first copy of a repeated key, the app's the last (SPEC §7.17).
+    if Self.jsonRepeatsKey(typedData) { throw bad("it gives the same field twice, so it could show one thing and sign another") }
     guard let req = Self.dappRequest(request), req.chainId != nil,
           let td = try? JSONSerialization.jsonObject(with: Data(typedData.utf8)) as? [String: Any] else { throw bad("unreadable") }
     if let why = Self.typedDataProblem(td, req: req) { throw bad(why) }

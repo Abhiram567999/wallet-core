@@ -7,6 +7,7 @@ import { concat, toHex, utf8 } from './encoding.ts';
 import { agentProofText } from './agentProof.ts';
 import { XMTP_IDENTITY_REFUSED } from './xmtpIdentityTexts.ts';
 import { HYPERLIQUID_REFUSED } from './hyperliquidTypedDataSamples.ts';
+import { REPEATED_KEY_SAMPLES } from './jsonKeys.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { canBackupWithPassword, canSaveBackupFile, canSignAgentProof, signAgentProof, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
@@ -577,6 +578,12 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
     const samples = v.hyperliquid?.refused ?? HYPERLIQUID_REFUSED;
     for (const s of samples) await rejects(signDappTypedData(importedId, 60, s.typedData, d.evm.request), 'Hyperliquid account action');
     return `${samples.length} Hyperliquid requests refused`;
+  });
+
+  await check('typed data that repeats a key is refused before Face ID (readers disagree on which copy counts)', async () => {
+    if (!canSignDapp() || !v.dapp) return 'this build has no dApp signing';
+    for (const s of REPEATED_KEY_SAMPLES) await rejects(signDappTypedData(importedId, 60, s.typedData, v.dapp.evm.request), 'same field twice');
+    return `${REPEATED_KEY_SAMPLES.length} requests with a repeated key refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

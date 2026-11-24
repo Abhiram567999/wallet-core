@@ -491,7 +491,7 @@ the rule; after Face ID it also refuses if the key's address is not `address`.
 | Function | Signs | Refused unless |
 |---|---|---|
 | `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet", in any case (§7.14). |
-| `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. Build after 23: never a Hyperliquid account action (§7.17). |
+| `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. Build after 23: never a Hyperliquid account action, never JSON that repeats a key (§7.17). |
 | `signDappEvm(id, coin, input, request)` | EVM transaction (SigningInput without a key, `evmDappInput`) | chain id equals `chainId`; legacy or EIP-1559 only (no user operation, no EIP-7702 authorization, no SetCode mode); a value transfer to an address, or a contract call / deployment; no key inside. |
 | `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text (build 23 on, §7.14). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
 | `signDappTron(id, rawDataHex, request)` | TRON transaction raw data | exactly one contract of an allowed type (transfers, contract calls, staking, votes; never `AccountPermissionUpdate`), owner = `address`, permission id 0 (multisig is §7.8), no extra signers or scripts, expiry in the future and ≤ 24 h, and `txID` (if given) = sha256(raw). |
@@ -829,3 +829,15 @@ the L1 form and typed data that must not be caught; `test/hyperliquid.test.ts` c
 Swift and Kotlin copies use the same constants inside `typedDataProblem` before the network check, and that
 `src/hyperliquidTypedDataSamples.ts` holds the same samples; the on-device self-test sends every one through
 `signDappTypedData`.
+
+**Repeated keys (same build).** JSON readers disagree on a key written twice in one object: JavaScript (the app's
+review screen and its checks) keeps the last copy, Apple's reader (this signer on iPhone, which signs the JSON it
+wrote back) keeps the first. So `"spender": A, "spender": B` could be shown as B and signed as A, and a domain
+written as `"name": "HyperliquidSignTransaction", "name": "x"` passes a check that reads the last copy. A real dApp
+never repeats a key, so `signDappTypedData` scans the text before parsing it and refuses any object with the same
+key twice (keys compared after decoding escapes, so `"name"` and `"n\u0061me"` are one key): "signature refused: it
+gives the same field twice, so it could show one thing and sign another". The app refuses the same before its review
+(`app/src/features/dapp/typedJson.ts`, which also refuses unquoted numbers of 2^53 or more and hands one rewritten
+text to the review, its checks and this signer). `src/jsonKeys.ts` is the reference scanner; `test/hyperliquid.test.ts`
+checks it on the samples, on every typed data in `test/vectors/dapp.json` and that Swift and Kotlin call it before
+parsing; the self-test sends `REPEATED_KEY_SAMPLES` through `signDappTypedData`.

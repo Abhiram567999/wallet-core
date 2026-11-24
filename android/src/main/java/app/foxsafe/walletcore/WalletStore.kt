@@ -1756,6 +1756,50 @@ class WalletStore(context: Context) {
     return (name == HyperliquidTypedData.L1_DOMAIN_NAME && (l1Chain || type == HyperliquidTypedData.L1_TYPE)) || (type == HyperliquidTypedData.L1_TYPE && l1Chain)
   }
 
+  /**
+   * True when any object in the JSON text has the same key twice, keys compared after decoding escapes (SPEC §7.17).
+   * Readers disagree on a repeated key (Apple keeps the first copy, JavaScript and org.json the last), so the app could
+   * show one value and a signer sign another; a real dApp never repeats a key. Mirrors src/jsonKeys.ts and the Swift copy.
+   */
+  private fun jsonRepeatsKey(text: String): Boolean {
+    class Frame(val keys: MutableSet<String>?, var wantKey: Boolean)
+    val stack = ArrayList<Frame>()
+    var i = 0
+    while (i < text.length) {
+      when (text[i]) {
+        '{' -> stack.add(Frame(HashSet(), true))
+        '[' -> stack.add(Frame(null, false))
+        '}', ']' -> if (stack.isNotEmpty()) stack.removeAt(stack.size - 1)
+        ',' -> { val top = stack.lastOrNull(); if (top?.keys != null) top.wantKey = true }
+        ':' -> { val top = stack.lastOrNull(); if (top != null) top.wantKey = false }
+        '"' -> {
+          val key = StringBuilder()
+          var j = i + 1
+          while (j < text.length && text[j] != '"') {
+            if (text[j] == '\\' && j + 1 < text.length) {
+              when (val e = text[j + 1]) {
+                'u' -> { text.substring(minOf(j + 2, text.length), minOf(j + 6, text.length)).toIntOrNull(16)?.let { key.append(it.toChar()) }; j += 6 }
+                'n' -> { key.append('\n'); j += 2 }
+                't' -> { key.append('\t'); j += 2 }
+                'r' -> { key.append('\r'); j += 2 }
+                'b' -> { key.append('\b'); j += 2 }
+                'f' -> { key.append('\u000C'); j += 2 }
+                else -> { key.append(e); j += 2 }
+              }
+            } else {
+              key.append(text[j]); j += 1
+            }
+          }
+          val top = stack.lastOrNull()
+          if (top != null && top.wantKey && top.keys != null && !top.keys.add(key.toString())) return true
+          i = j
+        }
+      }
+      i++
+    }
+    return false
+  }
+
   private fun dappNumber(v: Any?): Long? {
     if (v is Boolean) return null
     if (v is Number) return v.toLong()
@@ -1892,6 +1936,8 @@ class WalletStore(context: Context) {
     fun bad(why: String) = WalletException("INVALID", "signature refused: $why")
     val c = coin(coinValue)
     if (c.blockchain() != Blockchain.ETHEREUM) throw bad("network")
+    // Before parsing: readers disagree on a repeated key (Apple keeps the first copy, JavaScript the last; SPEC §7.17).
+    if (jsonRepeatsKey(typedData)) throw bad("it gives the same field twice, so it could show one thing and sign another")
     val req = dappRequest(request)?.takeIf { it.chainId != null } ?: throw bad("unreadable")
     val td = try { JSONObject(typedData) } catch (e: Exception) { throw bad("unreadable") }
     typedDataProblem(td, req)?.let { throw bad(it) }

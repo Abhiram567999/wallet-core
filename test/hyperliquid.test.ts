@@ -55,3 +55,34 @@ test('Hyperliquid: the native copies use the same constants and run in typedData
 test('Hyperliquid: the self-test samples are exactly the vector file', () => {
   assert.deepEqual(HYPERLIQUID_REFUSED, v.refused);
 });
+
+// Repeated keys (SPEC §7.17): JavaScript keeps the last copy and Apple's reader the first, so signDappTypedData
+// refuses any typed data that repeats a key, before parsing it.
+test('repeated keys: every sample is caught; keys repeated in different objects, arrays or strings are not', async () => {
+  const { jsonRepeatsKey, REPEATED_KEY_SAMPLES } = await import('../src/jsonKeys.ts');
+  assert.ok(REPEATED_KEY_SAMPLES.length >= 4);
+  for (const s of REPEATED_KEY_SAMPLES) {
+    assert.ok(jsonRepeatsKey(s.typedData), s.what);
+    JSON.parse(s.typedData); // valid JSON: only the repeat is wrong
+  }
+  assert.ok(!jsonRepeatsKey('{"a":{"name":1},"b":{"name":2},"c":[{"name":3},{"name":4}],"d":"\\"name\\":1,\\"name\\":2"}'));
+  assert.ok(jsonRepeatsKey('{"a":1,"b":{"x":[1,{"y":2,"y":3}]}}'));
+  assert.ok(jsonRepeatsKey('{"\\n":1,"\\u000a":2}'));
+  // Every typed data dApps sign today (and the Hyperliquid samples) has no repeated key.
+  for (const t of [...dapp.evm.typedData.allowed, ...dapp.evm.typedData.refused, ...v.refused, ...v.allowed]) assert.ok(!jsonRepeatsKey(t.typedData), t.what);
+});
+
+test('repeated keys: Swift and Kotlin refuse them first thing in signDappTypedData, before parsing', () => {
+  const swift = readFileSync(new URL('../ios/WalletStore.swift', import.meta.url), 'utf8');
+  const kotlin = readFileSync(new URL('../android/src/main/java/app/foxsafe/walletcore/WalletStore.kt', import.meta.url), 'utf8');
+  const why = 'it gives the same field twice, so it could show one thing and sign another';
+  const before = (src: string, fn: string, call: string, parse: string) => {
+    const at = src.indexOf(fn);
+    const c = src.indexOf(call, at);
+    return at >= 0 && c > at && c < src.indexOf(parse, at);
+  };
+  assert.ok(before(swift, 'func signDappTypedData(', `if Self.jsonRepeatsKey(typedData) { throw bad("${why}") }`, 'JSONSerialization.jsonObject'));
+  assert.ok(before(kotlin, 'fun signDappTypedData(', `if (jsonRepeatsKey(typedData)) throw bad("${why}")`, 'JSONObject(typedData)'));
+  assert.ok(swift.includes('static func jsonRepeatsKey(_ text: String) -> Bool'));
+  assert.ok(kotlin.includes('private fun jsonRepeatsKey(text: String): Boolean'));
+});
