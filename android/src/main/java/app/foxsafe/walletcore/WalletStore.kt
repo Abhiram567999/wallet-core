@@ -1733,6 +1733,29 @@ class WalletStore(context: Context) {
   }
 
   /** A number written as a JSON number, a decimal string or a 0x hex string. */
+  /**
+   * Hyperliquid account actions (SPEC §7.17, build after 23): typed data that names no contract, so §7.9's rule let it
+   * through. Signed for a site it moves the user's Hyperliquid money (UsdSend, SpotSend, Withdraw, SendAsset), lets the
+   * site's key trade the account (ApproveAgent), or signs a hidden exchange action (the L1 "Agent" form). Refused from
+   * every dApp; Foxsafe's own perps screens use a dedicated signer. Mirrors src/hyperliquidTypedData.ts and the Swift copy.
+   */
+  private object HyperliquidTypedData {
+    const val DOMAIN_NAME = "hyperliquidsigntransaction"
+    const val TYPE_PREFIX = "hyperliquidtransaction:"
+    const val L1_DOMAIN_NAME = "exchange"
+    const val L1_CHAIN_ID = 1337L
+    const val L1_TYPE = "agent"
+    const val REFUSAL = "this is a Hyperliquid account action, which could move or trade the money in your Hyperliquid account. Foxsafe never signs it for a site"
+  }
+
+  private fun isHyperliquidAction(domain: JSONObject, primary: String): Boolean {
+    val name = domain.optString("name").trim().lowercase()
+    val type = primary.trim().lowercase()
+    if (name == HyperliquidTypedData.DOMAIN_NAME || type.startsWith(HyperliquidTypedData.TYPE_PREFIX)) return true
+    val l1Chain = dappNumber(domain.opt("chainId")) == HyperliquidTypedData.L1_CHAIN_ID
+    return (name == HyperliquidTypedData.L1_DOMAIN_NAME && (l1Chain || type == HyperliquidTypedData.L1_TYPE)) || (type == HyperliquidTypedData.L1_TYPE && l1Chain)
+  }
+
   private fun dappNumber(v: Any?): Long? {
     if (v is Boolean) return null
     if (v is Number) return v.toLong()
@@ -1809,6 +1832,8 @@ class WalletStore(context: Context) {
     if (primary in DappPolicy.OWN_PRIMARY_TYPES || domain.optString("name").lowercase() in DappPolicy.OWN_DOMAIN_NAMES) {
       return "only Foxsafe's own screens can sign this kind of message"
     }
+    // Hyperliquid account actions (SPEC §7.17): before the network check, so a matching chain id can't let one through.
+    if (isHyperliquidAction(domain, primary)) return HyperliquidTypedData.REFUSAL
     if (domain.has("chainId")) {
       if (req.chainId == null || dappNumber(domain.opt("chainId")) != req.chainId) return "it is for another network"
     } else if (domain.has("verifyingContract")) {

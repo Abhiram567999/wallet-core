@@ -1,0 +1,66 @@
+// The Hyperliquid typed data the on-device self-test sends through signDappTypedData (SPEC §7.17). Same list as
+// test/vectors/hyperliquid.json → refused (test/hyperliquid.test.ts checks they are equal). Kept here as code
+// because the app bundles wallet-core's source, not its test files.
+
+export const HYPERLIQUID_REFUSED: { what: string; typedData: string }[] = [
+  {
+    "what": "HyperliquidTransaction:UsdSend on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:UsdSend\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:UsdSend\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "HyperliquidTransaction:SpotSend on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:SpotSend\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"token\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:SpotSend\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"token\":\"USDC:0x6d1e7cde53ba9467b783cb7c530ce054\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "HyperliquidTransaction:Withdraw on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:Withdraw\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:Withdraw\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "HyperliquidTransaction:SendAsset on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:SendAsset\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"sourceDex\",\"type\":\"string\"},{\"name\":\"destinationDex\",\"type\":\"string\"},{\"name\":\"token\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"fromSubAccount\",\"type\":\"string\"},{\"name\":\"nonce\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:SendAsset\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"sourceDex\":\"\",\"destinationDex\":\"spot\",\"token\":\"USDC:0x6d1e7cde53ba9467b783cb7c530ce054\",\"amount\":\"1000\",\"fromSubAccount\":\"\",\"nonce\":1763985600000}}"
+  },
+  {
+    "what": "HyperliquidTransaction:ApproveAgent on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:ApproveAgent\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"agentAddress\",\"type\":\"address\"},{\"name\":\"agentName\",\"type\":\"string\"},{\"name\":\"nonce\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:ApproveAgent\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"agentAddress\":\"0x000000000000000000000000000000000000bEEF\",\"agentName\":\"\",\"nonce\":1763985600000}}"
+  },
+  {
+    "what": "HyperliquidTransaction:ApproveBuilderFee on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:ApproveBuilderFee\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"maxFeeRate\",\"type\":\"string\"},{\"name\":\"builder\",\"type\":\"address\"},{\"name\":\"nonce\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:ApproveBuilderFee\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"maxFeeRate\":\"1%\",\"builder\":\"0x000000000000000000000000000000000000bEEF\",\"nonce\":1763985600000}}"
+  },
+  {
+    "what": "HyperliquidTransaction:UsdClassTransfer on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:UsdClassTransfer\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"toPerp\",\"type\":\"bool\"},{\"name\":\"nonce\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:UsdClassTransfer\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"amount\":\"1000\",\"toPerp\":false,\"nonce\":1763985600000}}"
+  },
+  {
+    "what": "UsdSend with Hyperliquid mainnet signing chain 42161",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:UsdSend\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:UsdSend\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":42161,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "Withdraw with the chain id as a hex string",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:Withdraw\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:Withdraw\",\"domain\":{\"name\":\"HyperliquidSignTransaction\",\"version\":\"1\",\"chainId\":\"0x1\",\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "domain name in another case",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:UsdSend\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:UsdSend\",\"domain\":{\"name\":\"HYPERLIQUIDSIGNTRANSACTION\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "Hyperliquid type under another domain name",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"HyperliquidTransaction:Withdraw\":[{\"name\":\"hyperliquidChain\",\"type\":\"string\"},{\"name\":\"destination\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"string\"},{\"name\":\"time\",\"type\":\"uint64\"}]},\"primaryType\":\"HyperliquidTransaction:Withdraw\",\"domain\":{\"name\":\"Some app\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"hyperliquidChain\":\"Mainnet\",\"destination\":\"0x000000000000000000000000000000000000bEEF\",\"amount\":\"1000\",\"time\":1763985600000}}"
+  },
+  {
+    "what": "L1 action (Exchange, 1337, Agent)",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Agent\":[{\"name\":\"source\",\"type\":\"string\"},{\"name\":\"connectionId\",\"type\":\"bytes32\"}]},\"primaryType\":\"Agent\",\"domain\":{\"name\":\"Exchange\",\"version\":\"1\",\"chainId\":1337,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"source\":\"a\",\"connectionId\":\"0xabababababababababababababababababababababababababababababababab\"}}"
+  },
+  {
+    "what": "L1 Agent under the Exchange domain on the connected network",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Agent\":[{\"name\":\"source\",\"type\":\"string\"},{\"name\":\"connectionId\",\"type\":\"bytes32\"}]},\"primaryType\":\"Agent\",\"domain\":{\"name\":\"Exchange\",\"version\":\"1\",\"chainId\":1,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"source\":\"a\",\"connectionId\":\"0xabababababababababababababababababababababababababababababababab\"}}"
+  },
+  {
+    "what": "L1 Agent on 1337 under another domain name",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Agent\":[{\"name\":\"source\",\"type\":\"string\"},{\"name\":\"connectionId\",\"type\":\"bytes32\"}]},\"primaryType\":\"Agent\",\"domain\":{\"name\":\"Other\",\"version\":\"1\",\"chainId\":1337,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"source\":\"a\",\"connectionId\":\"0xabababababababababababababababababababababababababababababababab\"}}"
+  },
+  {
+    "what": "Exchange domain on 1337 with another type",
+    "typedData": "{\"types\":{\"EIP712Domain\":[{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"version\",\"type\":\"string\"},{\"name\":\"chainId\",\"type\":\"uint256\"},{\"name\":\"verifyingContract\",\"type\":\"address\"}],\"Order\":[{\"name\":\"source\",\"type\":\"string\"},{\"name\":\"connectionId\",\"type\":\"bytes32\"}]},\"primaryType\":\"Order\",\"domain\":{\"name\":\"Exchange\",\"version\":\"1\",\"chainId\":1337,\"verifyingContract\":\"0x0000000000000000000000000000000000000000\"},\"message\":{\"source\":\"a\",\"connectionId\":\"0xabababababababababababababababababababababababababababababababab\"}}"
+  }
+];

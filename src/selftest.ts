@@ -6,6 +6,7 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { concat, toHex, utf8 } from './encoding.ts';
 import { agentProofText } from './agentProof.ts';
 import { XMTP_IDENTITY_REFUSED } from './xmtpIdentityTexts.ts';
+import { HYPERLIQUID_REFUSED } from './hyperliquidTypedDataSamples.ts';
 import { open } from './envelope.ts';
 import { ed25519 } from '@noble/curves/ed25519.js';
 import { canBackupWithPassword, canSaveBackupFile, canSignAgentProof, signAgentProof, canSignDapp, canSignGaslessEvm, canSignTronEnergyPayments, canSignVaultRound, signVaultRound, vaultAddress, canSignGaslessSolana, canSignSafe, canSignPolymarket, polymarketBuilderCode, signPolymarket, canSignTronMultisig, signDappEvm, signDappMessage, signDappSolana, signDappTron, signDappTypedData, signGaslessEvm, signGaslessSolana, signSafe, signTronMultisig, signTransactions, WalletCore, type DappSignRequest, type GaslessEvmRequest, type GaslessSolanaRequest, type PolymarketSignRequest, type SafeSignRequest } from './native.ts';
@@ -51,6 +52,8 @@ export interface Vectors {
   agentProof?: { pairingId: string; evm: { signature: string }; tron: { signature: string }; solana: { signature: string } };
   /** Optional: test/vectors/xmtp-identity.json; without it the check uses the same texts from src/xmtpIdentityTexts.ts (SPEC §7.15). */
   xmtpIdentity?: { refused: { what: string; text: string }[] };
+  /** Optional: test/vectors/hyperliquid.json; without it the check uses the same typed data from src/hyperliquidTypedDataSamples.ts (SPEC §7.17). */
+  hyperliquid?: { refused: { what: string; typedData: string }[] };
 }
 
 export interface CheckResult {
@@ -564,6 +567,16 @@ export async function runSelfTest(v: Vectors, log: (r: CheckResult) => void = ()
       }
     }
     return `${refusedCount} XMTP identity requests refused`;
+  });
+
+  await check('Hyperliquid account actions: signDappTypedData refuses every one before Face ID', async () => {
+    if (!canSignDapp() || !v.dapp) return 'this build has no dApp signing';
+    const d = v.dapp;
+    // UsdSend, SpotSend, Withdraw, SendAsset, ApproveAgent, … on the connected network (they would pass §7.9 alone),
+    // case and chain-id variants, and the L1 "Agent" form.
+    const samples = v.hyperliquid?.refused ?? HYPERLIQUID_REFUSED;
+    for (const s of samples) await rejects(signDappTypedData(importedId, 60, s.typedData, d.evm.request), 'Hyperliquid account action');
+    return `${samples.length} Hyperliquid requests refused`;
   });
 
   await check('gasless Solana: one Face ID signs payment + fee; tampering is refused', async () => {

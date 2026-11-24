@@ -7,3 +7,4 @@ export { associatedTokenAddress, base58Decode, base58Encode, TOKEN_PROGRAM } fro
 export { readTronMultisigRaw, type TronMultisigRead, tronMultisigRaw, tronTxId, tronAddressBytes, ACTIVE_OPERATIONS, TRON_MULTISIG_TOKENS, type TronMultisigAction, type TronBlockRef } from './tronMultisig.ts';
 export { agentProofText, isAgentPairingId, isAgentProofText, AGENT_PROOF_MARKER, AGENT_PROOF_SITE } from './agentProof.ts';
 export { isXmtpIdentityText, XMTP_IDENTITY_MARKERS } from './xmtpIdentity.ts';
+export { isHyperliquidTypedData } from './hyperliquidTypedData.ts';

@@ -491,7 +491,7 @@ the rule; after Face ID it also refuses if the key's address is not `address`.
 | Function | Signs | Refused unless |
 |---|---|---|
 | `signDappMessage(id, coin, messageHex, request)` | EVM `personal_sign` (EIP-191, exact bytes), TRON message (TronWeb V2 prefix) | the bytes are readable text: valid UTF-8, ≤ 16 KB, no control characters except line breaks and tabs, no bidi overrides or zero-width marks. Hashes, transactions and other binary data are never signed as "messages". A sign-in message (EIP-4361) must name `origin`, `address` and, if it has one, `chainId`. Build 23 on: never text containing "connect an AI agent to this wallet", in any case (§7.14). |
-| `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. |
+| `signDappTypedData(id, coin, typedData, request)` | EIP-712 (`eth_signTypedData_v4`) | `domain.chainId` equals `chainId`; data naming a `verifyingContract` must name a network; not a `SafeTx` (§7.7 only); not a Permit2 batch of two or more tokens where any amount is ≥ 2^159; not a Seaport `OrderComponents` where no consideration pays the offerer. Build after 23: never a Hyperliquid account action (§7.17). |
 | `signDappEvm(id, coin, input, request)` | EVM transaction (SigningInput without a key, `evmDappInput`) | chain id equals `chainId`; legacy or EIP-1559 only (no user operation, no EIP-7702 authorization, no SetCode mode); a value transfer to an address, or a contract call / deployment; no key inside. |
 | `signDappSolana(id, kind, payload, request)` | Solana message (`kind` "message") or whole serialized transaction, legacy or v0 (`kind` "transaction") | message: readable text as above, sign-in domain/address checked, never the AI agent proof text (build 23 on, §7.14). Transaction: this account is one of the required signers; no System `Assign` / `AssignWithSeed` of this account; no Token / Token-2022 `SetAuthority` signed by this account. Only our signature slot is filled; nothing is broadcast. |
 | `signDappTron(id, rawDataHex, request)` | TRON transaction raw data | exactly one contract of an allowed type (transfers, contract calls, staking, votes; never `AccountPermissionUpdate`), owner = `address`, permission id 0 (multisig is §7.8), no extra signers or scripts, expiry in the future and ≤ 24 h, and `txID` (if given) = sha256(raw). |
@@ -792,3 +792,40 @@ texts, the attack shape (add a device), case and place variants, the V2 texts an
 `test/xmtp-identity.test.ts` checks the list, that the Swift and Kotlin copies match it and that
 `src/xmtpIdentityTexts.ts` holds the same texts; the on-device self-test sends every one of them through the EVM,
 TRON and Solana dApp signers.
+
+
+### 7.17 Hyperliquid account actions (build after 23)
+
+(§7.16 is the eSIM restore signer, on its own branch.)
+
+Hyperliquid signs its user actions as EIP-712 typed data that names no contract (`verifyingContract` is the zero
+address), so the typed-data rule of §7.9 let them through as long as `domain.chainId` matched, and the app could
+only call them "Foxsafe can't read this". Signed for a site, they act on the user's Hyperliquid account with no
+on-chain transaction and nothing the secure send screen sees:
+
+- domain `HyperliquidSignTransaction`, primary type `HyperliquidTransaction:<Action>` (the signing chain id is
+  whatever the site picks, 42161 on mainnet): `UsdSend`, `SpotSend`, `Withdraw` and `SendAsset` move Hyperliquid
+  money to an address the site chose; `ApproveAgent` lets the site's key trade the account (it can't withdraw, but
+  it can empty the account by trading against its own orders); `ApproveBuilderFee`, `UsdClassTransfer` and the
+  rest change the account.
+- the L1 form: domain `Exchange`, chain id 1337, primary type `Agent` `{source, connectionId}`, where
+  `connectionId` is a hash of an order or another exchange action, so what is signed can't be shown.
+
+So `signDappTypedData` refuses, before Face ID and before its network check, typed data whose domain name
+(trimmed, any case) is "hyperliquidsigntransaction", whose primary type starts with "hyperliquidtransaction:",
+or the L1 form: domain name "exchange" with chain id 1337 or type "agent", or type "agent" on chain 1337.
+"Exchange" or "Agent" alone, on another chain, is not refused. Refusal: "signature refused: this is a Hyperliquid
+account action, which could move or trade the money in your Hyperliquid account. Foxsafe never signs it for a site".
+
+Cost: hyperliquid.xyz can't be used from the Foxsafe browser or over WalletConnect. Foxsafe's own perps screens
+(planned) sign with dedicated functions that build the typed data natively from plain arguments, never through
+the dApp path. Apps before this build still sign these from a site; the app's own check
+(`app/src/features/dapp/hyperliquidRefusal.ts`, the same rule, before the review screen and again before Face ID)
+covers them with an instant update.
+
+`src/hyperliquidTypedData.ts` is the reference rule. `test/vectors/hyperliquid.json` holds every user-signed action
+with the field lists of Hyperliquid's Python SDK (signing.py) on the connected network, case and chain-id variants,
+the L1 form and typed data that must not be caught; `test/hyperliquid.test.ts` checks the rule against it, that the
+Swift and Kotlin copies use the same constants inside `typedDataProblem` before the network check, and that
+`src/hyperliquidTypedDataSamples.ts` holds the same samples; the on-device self-test sends every one through
+`signDappTypedData`.
